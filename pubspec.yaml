@@ -1,0 +1,13 @@
+name: rx
+version: 0.0.1
+
+author: Lukas Renggli <renggli@gmail.com>
+homepage: https://www.lukas-renggli.ch
+description: Rx Dart
+
+environment:
+  sdk: '>=2.3.0 <3.0.0'
+dependencies:
+  meta: ^1.1.0
+dev_dependencies:
+  test: ^1.6.0
