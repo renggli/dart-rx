@@ -41,7 +41,7 @@ class _TimerSubscription with Subscription {
   void _start() {
     _update();
     if (period == null) {
-      subscription = const EmptySubscription();
+      subscription = const InactiveSubscription();
       observer.complete();
     } else {
       subscription = scheduler.schedulePeriodic(period, _update);

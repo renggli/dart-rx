@@ -17,8 +17,8 @@ abstract class Subscription {
   void unsubscribe();
 }
 
-class EmptySubscription implements Subscription {
-  const EmptySubscription();
+class InactiveSubscription implements Subscription {
+  const InactiveSubscription();
 
   @override
   bool get isSubscribed => false;

@@ -17,6 +17,6 @@ class _ThrowErrorObservable<T> with Observable<T> {
   @override
   Subscription subscribe(Observer observer) {
     observer.error(error, stackTrace);
-    return const EmptySubscription();
+    return const InactiveSubscription();
   }
 }

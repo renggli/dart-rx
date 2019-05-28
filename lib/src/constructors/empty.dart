@@ -13,6 +13,6 @@ class _EmptyObservable<T> with Observable<T> {
   @override
   Subscription subscribe(Observer<void> observer) {
     observer.complete();
-    return const EmptySubscription();
+    return const InactiveSubscription();
   }
 }

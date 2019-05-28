@@ -17,6 +17,6 @@ class _IterableObservable<T> with Observable<T> {
   Subscription subscribe(Observer<T> observer) {
     iterable.forEach(observer.next);
     observer.complete();
-    return const EmptySubscription();
+    return const InactiveSubscription();
   }
 }

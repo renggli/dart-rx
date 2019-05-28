@@ -53,6 +53,6 @@ abstract class SynchronousScheduler extends ZoneScheduler {
   @override
   Subscription schedule(Callback callback) {
     callback();
-    return const EmptySubscription();
+    return const InactiveSubscription();
   }
 }
