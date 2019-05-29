@@ -8,7 +8,7 @@ import 'package:rx/src/core/subscription.dart';
 Observable<T> empty<T>() => _EmptyObservable<T>();
 
 class _EmptyObservable<T> with Observable<T> {
-  _EmptyObservable();
+  const _EmptyObservable();
 
   @override
   Subscription subscribe(Observer<void> observer) {

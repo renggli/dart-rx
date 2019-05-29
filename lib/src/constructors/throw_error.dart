@@ -12,7 +12,7 @@ class _ThrowErrorObservable<T> with Observable<T> {
   final Object error;
   final StackTrace stackTrace;
 
-  _ThrowErrorObservable(this.error, this.stackTrace);
+  const _ThrowErrorObservable(this.error, this.stackTrace);
 
   @override
   Subscription subscribe(Observer observer) {

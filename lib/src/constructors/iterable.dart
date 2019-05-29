@@ -11,7 +11,7 @@ Observable<T> fromIterable<T>(Iterable<T> iterable) =>
 class _IterableObservable<T> with Observable<T> {
   final Iterable<T> iterable;
 
-  _IterableObservable(this.iterable);
+  const _IterableObservable(this.iterable);
 
   @override
   Subscription subscribe(Observer<T> observer) {

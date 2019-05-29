@@ -14,14 +14,14 @@ class _TimerObservable with Observable<int> {
   final Duration delay;
   final Duration period;
 
-  _TimerObservable(this.delay, this.period);
+  const _TimerObservable(this.delay, this.period);
 
   @override
   Subscription subscribe(Observer<int> observer) =>
       _TimerSubscription(delay, period, observer);
 }
 
-class _TimerSubscription with Subscription {
+class _TimerSubscription implements Subscription {
   final Duration delay;
   final Duration period;
   final Observer<int> observer;

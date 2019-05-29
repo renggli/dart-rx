@@ -12,7 +12,7 @@ Observable<T> fromFuture<T>(Future<T> future) => _FutureObservable<T>(future);
 class _FutureObservable<T> with Observable<T> {
   final Future<T> future;
 
-  _FutureObservable(this.future);
+  const _FutureObservable(this.future);
 
   @override
   Subscription subscribe(Observer<T> observer) {

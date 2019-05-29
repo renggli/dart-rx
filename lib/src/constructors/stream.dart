@@ -12,7 +12,7 @@ Observable<T> fromStream<T>(Stream<T> stream) => _StreamObservable<T>(stream);
 class _StreamObservable<T> with Observable<T> {
   final Stream<T> stream;
 
-  _StreamObservable(this.stream);
+  const _StreamObservable(this.stream);
 
   @override
   Subscription subscribe(Observer<T> observer) {
