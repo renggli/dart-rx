@@ -9,5 +9,6 @@ environment:
   sdk: '>=2.3.0 <3.0.0'
 dependencies:
   meta: ^1.1.0
+  more: ^1.17.0
 dev_dependencies:
   test: ^1.6.0
