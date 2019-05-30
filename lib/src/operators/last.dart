@@ -7,10 +7,10 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 
 /// Returns the last element of an observable sequence.
-Operator<T, T> last<T>() => const _LastOperator();
+Operator<T, T> last<T>() => _LastOperator();
 
 class _LastOperator<T> implements Operator<T, T> {
-  const _LastOperator();
+  _LastOperator();
 
   @override
   Subscription call(Observable<T> source, Observer<T> destination) =>

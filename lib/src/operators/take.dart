@@ -12,7 +12,7 @@ Operator<T, T> take<T>({int count = 1}) => _TakeOperator<T>(count);
 class _TakeOperator<T> implements Operator<T, T> {
   final int count;
 
-  const _TakeOperator(this.count);
+  _TakeOperator(this.count);
 
   @override
   Subscription call(Observable<T> source, Observer<T> destination) =>

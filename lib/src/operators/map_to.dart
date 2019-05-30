@@ -13,7 +13,7 @@ Operator<T, S> mapTo<T, S>(S constant) => _MapToOperator(constant);
 class _MapToOperator<T, S> implements Operator<T, S> {
   final S constant;
 
-  const _MapToOperator(this.constant);
+  _MapToOperator(this.constant);
 
   @override
   Subscription call(Observable<T> source, Observer<S> destination) =>

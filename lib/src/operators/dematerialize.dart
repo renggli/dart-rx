@@ -7,8 +7,7 @@ import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 
-Operator<Notification<T>, T> dematerialize<T>() =>
-    _DematerializeOperator<T>();
+Operator<Notification<T>, T> dematerialize<T>() => _DematerializeOperator<T>();
 
 class _DematerializeOperator<T> implements Operator<Notification<T>, T> {
   _DematerializeOperator();

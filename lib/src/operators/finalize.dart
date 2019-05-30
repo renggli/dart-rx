@@ -16,7 +16,7 @@ Operator<T, T> finalize<T>(FinalizeFunction finalizeFunction) =>
 class _FinalizeOperator<T> implements Operator<T, T> {
   final FinalizeFunction finalize;
 
-  const _FinalizeOperator(this.finalize);
+  _FinalizeOperator(this.finalize);
 
   @override
   Subscription call(Observable<T> source, Observer<T> destination) =>
