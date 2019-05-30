@@ -6,7 +6,9 @@ typedef TeardownLogic = void Function();
 
 abstract class Subscription {
   factory Subscription.of(Object object) {
-    if (object is TeardownLogic) {
+    if (object is Subscription) {
+      return object;
+    } else if (object is TeardownLogic) {
       return TeardownSubscription(object);
     }
     return ActiveSubscription();

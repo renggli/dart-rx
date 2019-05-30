@@ -95,7 +95,7 @@ class InnerSubscriber<T, R> extends Subscriber<R> {
 class OuterSubscriber<T, R> extends Subscriber<T> {
   OuterSubscriber(Observer<R> destination) : super(destination);
 
-  void notifyNext(T outerValue, R innerValue, int intouterIndex, int innerIndex,
+  void notifyNext(T outerValue, R innerValue, int outerIndex, int innerIndex,
           InnerSubscriber<T, R> innerSubscriber) =>
       destination.next(innerValue);
 
