@@ -1,0 +1,22 @@
+library rx.constructors.just;
+
+import 'package:rx/src/core/observable.dart';
+import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/core/scheduler.dart';
+import 'package:rx/src/core/subscription.dart';
+
+/// An [Observable] with a single element.
+Observable<T> just<T>(T value,
+        {Scheduler scheduler = const ImmediateScheduler()}) =>
+    _JustObservable<T>(value, scheduler);
+
+class _JustObservable<T> with Observable<T> {
+  final T value;
+  final Scheduler scheduler;
+
+  const _JustObservable(this.value, this.scheduler);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      scheduler.schedule(() => observer.next(value));
+}
