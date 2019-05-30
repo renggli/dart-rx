@@ -1,6 +1,7 @@
 library rx.core;
 
 export 'src/core/functions.dart';
+export 'src/core/notifications.dart';
 export 'src/core/observable.dart';
 export 'src/core/observer.dart';
 export 'src/core/operator.dart';

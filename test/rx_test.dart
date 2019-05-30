@@ -23,15 +23,21 @@ void main() {
       .lift(map((value) => '${value * value}'))
       .lift(filter((value) => value.length < 3));
 
-  transformed.subscribe(printObserver('One'));
-  transformed.subscribe(printObserver('Two'));
+  transformed
+      .lift(materialize())
+      .lift(dematerialize())
+      .subscribe(printObserver('Example'));
 
-//  final obs = timer(Duration(seconds: 2), Duration(milliseconds: 500));
+//  transformed.subscribe(printObserver('One'));
+//  transformed.subscribe(printObserver('Two'));
+//
+//  final obs =
+//      timer(delay: Duration(seconds: 2), period: Duration(milliseconds: 500));
 //  final subs1 = obs.subscribe(printObserver('1'));
 //  final subs2 = obs.subscribe(printObserver('2'));
 //
-//  timer(Duration(seconds: 3))
+//  timer(delay: Duration(seconds: 3))
 //      .subscribe(Observer(complete: () => subs1.unsubscribe()));
-//  timer(Duration(seconds: 5))
+//  timer(delay: Duration(seconds: 5))
 //      .subscribe(Observer(complete: () => subs2.unsubscribe()));
 }
