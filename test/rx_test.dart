@@ -28,9 +28,9 @@ void main() {
       .lift(dematerialize())
       .subscribe(printObserver('Example'));
 
-//  transformed.subscribe(printObserver('One'));
-//  transformed.subscribe(printObserver('Two'));
-//
+  transformed.subscribe(printObserver('One'));
+  transformed.subscribe(printObserver('Two'));
+
 //  final obs =
 //      timer(delay: Duration(seconds: 2), period: Duration(milliseconds: 500));
 //  final subs1 = obs.subscribe(printObserver('1'));

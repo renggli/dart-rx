@@ -1,107 +1,22 @@
 library rx.core.subscription;
 
-import 'dart:async' as async;
-
-typedef TeardownLogic = void Function();
+import 'package:rx/src/subscriptions/anonymous.dart';
+import 'package:rx/src/subscriptions/empty.dart';
 
 abstract class Subscription {
-  factory Subscription.of(Object object) {
-    if (object is Subscription) {
-      return object;
-    } else if (object is TeardownLogic) {
-      return TeardownSubscription(object);
-    }
-    return ActiveSubscription();
-  }
+  const Subscription();
 
-  bool get isSubscribed;
+  /// Creates a [Subscription] that invokes the specified action when
+  /// unsubscribed.
+  factory Subscription.create(UnsubscribeAction unsubscribeAction) =>
+      AnonymousSubscription(unsubscribeAction);
 
+  /// Creates a [Subscription] that does nothing when unsubscribed.
+  factory Subscription.empty() => const EmptySubscription();
+
+  /// Returns true, if this [Subscription] is no longer active.
+  bool get isClosed;
+
+  /// Disposes the resources held by this [Subscription].
   void unsubscribe();
-}
-
-class InactiveSubscription implements Subscription {
-  const InactiveSubscription();
-
-  @override
-  bool get isSubscribed => false;
-
-  @override
-  void unsubscribe() {}
-}
-
-class ActiveSubscription implements Subscription {
-  @override
-  bool isSubscribed = true;
-
-  @override
-  void unsubscribe() => isSubscribed = false;
-}
-
-class TeardownSubscription implements Subscription {
-  final TeardownLogic teardownLogic;
-
-  TeardownSubscription(this.teardownLogic);
-
-  @override
-  bool isSubscribed = true;
-
-  @override
-  void unsubscribe() {
-    if (isSubscribed) {
-      isSubscribed = false;
-      teardownLogic();
-    }
-  }
-}
-
-class CompositeSubscription implements Subscription {
-  final Set<Subscription> subscriptions = {};
-
-  CompositeSubscription();
-
-  @override
-  bool isSubscribed = true;
-
-  void add(Subscription subscription) {
-    if (isSubscribed) {
-      subscriptions.add(subscription);
-    } else {
-      subscription.unsubscribe();
-    }
-  }
-
-  @override
-  void unsubscribe() {
-    if (isSubscribed) {
-      for (final subscription in subscriptions) {
-        subscription.unsubscribe();
-      }
-      subscriptions.clear();
-      isSubscribed = false;
-    }
-  }
-}
-
-class TimerSubscription extends ActiveSubscription {
-  final async.Timer timer;
-
-  TimerSubscription(this.timer);
-
-  @override
-  void unsubscribe() {
-    super.unsubscribe();
-    timer.cancel();
-  }
-}
-
-class StreamSubscription extends ActiveSubscription {
-  final async.StreamSubscription stream;
-
-  StreamSubscription(this.stream);
-
-  @override
-  void unsubscribe() {
-    super.unsubscribe();
-    stream.cancel();
-  }
 }

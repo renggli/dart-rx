@@ -8,7 +8,7 @@ import 'package:rx/src/core/subscription.dart';
 
 typedef ListConstructor<T> = List<T> Function();
 
-List<T> defaultListConstructor<T>() => [];
+List<T> defaultListConstructor<T>() => <T>[];
 
 /// Returns an [Iterable] from an observable sequence.
 Operator<T, List<T>> toList<T>(

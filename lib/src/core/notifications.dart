@@ -29,7 +29,7 @@ class ErrorNotification<T> implements Notification<T> {
   final Object error;
   final StackTrace stackTrace;
 
-  ErrorNotification(this.error, this.stackTrace);
+  ErrorNotification(this.error, [this.stackTrace]);
 
   @override
   void observe(Observer<T> observer) => observer.error(error, stackTrace);

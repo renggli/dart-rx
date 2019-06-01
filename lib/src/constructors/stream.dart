@@ -1,10 +1,11 @@
 library rx.constructors.stream;
 
-import 'dart:async';
+import 'dart:async' show Stream;
 
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/subscription.dart';
+import 'package:rx/src/subscriptions/stream.dart';
 
 /// An [Observable] that emits the values of a [Stream].
 Observable<T> fromStream<T>(Stream<T> stream) => _StreamObservable<T>(stream);

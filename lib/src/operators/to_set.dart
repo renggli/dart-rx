@@ -8,7 +8,7 @@ import 'package:rx/src/core/subscription.dart';
 
 typedef SetConstructor<T> = Set<T> Function();
 
-Set<T> defaultSetConstructor<T>() => {};
+Set<T> defaultSetConstructor<T>() => <T>{};
 
 /// Returns an [Iterable] from an observable sequence.
 Operator<T, Set<T>> toSet<T>(
