@@ -1,7 +1,7 @@
 library rx.core.subscription;
 
 import 'package:rx/src/subscriptions/anonymous.dart';
-import 'package:rx/src/subscriptions/empty.dart';
+import 'package:rx/src/subscriptions/closed.dart';
 
 abstract class Subscription {
   const Subscription();
@@ -12,7 +12,7 @@ abstract class Subscription {
       AnonymousSubscription(unsubscribeAction);
 
   /// Creates a [Subscription] that does nothing when unsubscribed.
-  factory Subscription.empty() => const EmptySubscription();
+  factory Subscription.closed() => const ClosedSubscription();
 
   /// Returns true, if this [Subscription] is no longer active.
   bool get isClosed;

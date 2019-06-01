@@ -1,4 +1,4 @@
-library rx.schedulers.standard;
+library rx.schedulers.zone;
 
 import 'dart:async' show Zone;
 

@@ -1,5 +1,6 @@
 library rx.subscriptions.composite;
 
+import 'package:rx/core.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 
@@ -9,6 +10,8 @@ class CompositeSubscription extends StatefulSubscription {
   List<Subscription> _subscriptions = [];
 
   CompositeSubscription();
+
+  List<Subscription> get subscriptions => [..._subscriptions];
 
   void add(Subscription subscription) {
     if (isClosed) {
@@ -32,8 +35,16 @@ class CompositeSubscription extends StatefulSubscription {
     final subscriptions = _subscriptions;
     super.unsubscribe();
     _subscriptions = [];
+    final errors = [];
     for (final subscription in subscriptions) {
-      subscription.unsubscribe();
+      try {
+        subscription.unsubscribe();
+      } catch (error) {
+        errors.add(error);
+      }
+    }
+    if (errors.isNotEmpty) {
+      throw errors.first;
     }
   }
 }

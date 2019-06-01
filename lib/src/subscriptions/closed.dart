@@ -1,9 +1,9 @@
-library rx.subscriptions.empty;
+library rx.subscriptions.closed;
 
 import 'package:rx/src/core/subscription.dart';
 
-class EmptySubscription extends Subscription {
-  const EmptySubscription();
+class ClosedSubscription extends Subscription {
+  const ClosedSubscription();
 
   @override
   bool get isClosed => true;
