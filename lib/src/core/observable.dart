@@ -25,7 +25,7 @@ class SubscribeObservable<T> with Observable<T> {
   @override
   Subscription subscribe(Observer<T> observer) {
     final subscriber = Subscriber<T>(
-        PluggableObserver<T>(observer.next, observer.error, observer.complete));
+        AnonymousObserver<T>(observer.next, observer.error, observer.complete));
     subscribeFunction(subscriber);
     return subscriber;
   }

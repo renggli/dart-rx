@@ -6,7 +6,7 @@ import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/schedulers.dart';
 
-Observer<T> printObserver<T>(String name) => PluggableObserver(
+Observer<T> printObserver<T>(String name) => AnonymousObserver(
       (value) => print('$name.next($value)'),
       (error, [stackTrace]) => print('$name.error($error)'),
       () => print('$name.complete()'),

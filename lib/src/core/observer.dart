@@ -12,7 +12,7 @@ abstract class Observer<T> {
     ErrorFunction error = _errorFunctionDefault,
     CompleteFunction complete = _completeFunctionDefault,
   }) =>
-      PluggableObserver(next, error, complete);
+      AnonymousObserver(next, error, complete);
 
   void next(T value);
 
@@ -21,12 +21,12 @@ abstract class Observer<T> {
   void complete();
 }
 
-class PluggableObserver<T> implements Observer<T> {
+class AnonymousObserver<T> implements Observer<T> {
   final NextFunction<T> _nextFunction;
   final ErrorFunction _errorFunction;
   final CompleteFunction _completeFunction;
 
-  PluggableObserver(
+  AnonymousObserver(
       [this._nextFunction, this._errorFunction, this._completeFunction]);
 
   @override
@@ -40,10 +40,10 @@ class PluggableObserver<T> implements Observer<T> {
   void complete() => _completeFunction();
 }
 
-class DelegateOberver<T> implements Observer<T> {
+class DelegateObserver<T> implements Observer<T> {
   final Observer<T> _delegate;
 
-  DelegateOberver(this._delegate);
+  DelegateObserver(this._delegate);
 
   @override
   void next(T value) => _delegate.next(value);
