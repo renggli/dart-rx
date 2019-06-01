@@ -4,6 +4,7 @@ import 'dart:async' show Zone;
 
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
+import 'package:rx/src/schedulers/action.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 import 'package:rx/src/subscriptions/timer.dart';
 
@@ -15,16 +16,9 @@ class ZoneScheduler extends Scheduler {
 
   @override
   Subscription schedule(Callback callback) {
-    final subscription = StatefulSubscription();
-    Zone.current.scheduleMicrotask(() => _schedule(subscription, callback));
-    return subscription;
-  }
-
-  void _schedule(Subscription subscription, Callback callback) {
-    if (subscription.isClosed) {
-      return;
-    }
-    callback();
+    final action = SchedulerAction(callback);
+    Zone.current.scheduleMicrotask(action.run);
+    return action;
   }
 
   @override

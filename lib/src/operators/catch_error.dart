@@ -1,10 +1,6 @@
 library rx.operators.catch_error;
 
 import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
 
 typedef CatchErrorHandler<T> = Observable<T>
     Function(Observable<T> caught, Object error, [StackTrace stackTrace]);

@@ -1,5 +1,7 @@
 library rx.core.scheduler;
 
+import 'package:rx/subscriptions.dart';
+
 import 'subscription.dart';
 
 typedef Callback = void Function();
