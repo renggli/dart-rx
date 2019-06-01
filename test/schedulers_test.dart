@@ -1,8 +1,6 @@
 library rx.test.schedulers_test;
 
-import 'package:rx/schedulers.dart';
 import 'package:rx/subscriptions.dart';
-
 import 'package:test/test.dart';
 
 void main() {

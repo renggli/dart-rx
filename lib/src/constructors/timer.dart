@@ -25,7 +25,7 @@ class _TimerObservable with Observable<int> {
   @override
   Subscription subscribe(Observer<int> observer) {
     final subscription = SequentialSubscription();
-    subscription.current = scheduler.scheduleTimeout(delay, () {
+    subscription.current = scheduler.scheduleRelative(delay, () {
       observer.next(0);
       if (period == null) {
         observer.complete();

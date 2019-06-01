@@ -1,7 +1,6 @@
 library rx.subscriptions;
 
 export 'src/core/subscription.dart';
-
 export 'src/subscriptions/anonymous.dart';
 export 'src/subscriptions/closed.dart';
 export 'src/subscriptions/composite.dart';

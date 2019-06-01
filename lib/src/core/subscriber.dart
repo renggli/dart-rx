@@ -53,7 +53,8 @@ class Subscriber<T> extends CompositeSubscription implements Observer<T> {
 //  final int outerIndex;
 //  int index = 0;
 //
-//  InnerSubscriber(this.parent, this.outerValue, this.outerIndex) : super(null);
+//  InnerSubscriber(this.parent, this.outerValue, this.outerIndex) :
+//  super(null);
 //
 //  @override
 //  void onNext(R value) {

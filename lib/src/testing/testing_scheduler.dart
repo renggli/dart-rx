@@ -24,7 +24,7 @@ class TestScheduler extends Scheduler {
 
   TestScheduler();
 
-  int _millis = 0;
+  final int _millis = 0;
 
   @override
   DateTime get now => DateTime.fromMillisecondsSinceEpoch(_millis);
@@ -36,7 +36,10 @@ class TestScheduler extends Scheduler {
   Subscription scheduleIteration(IterationCallback callback) => null;
 
   @override
-  Subscription scheduleTimeout(Duration duration, Callback callback) => null;
+  Subscription scheduleAbsolute(DateTime dateTime, Callback callback) => null;
+
+  @override
+  Subscription scheduleRelative(Duration duration, Callback callback) => null;
 
   @override
   Subscription schedulePeriodic(Duration duration, Callback callback) => null;

@@ -38,34 +38,35 @@ class AsyncScheduler extends Scheduler {
   }
 
   @override
-  Subscription scheduleTimeout(Duration duration, Callback callback) {
-    final timestamp = now.add(duration);
-    final scheduled = _scheduled.putIfAbsent(timestamp, () => []);
-    final action = SchedulerAction(callback);
-    scheduled.add(action);
-    return action;
-  }
+  Subscription scheduleAbsolute(DateTime dateTime, Callback callback) =>
+      _scheduleAt(dateTime, SchedulerAction(callback));
 
   @override
-  Subscription schedulePeriodic(Duration duration, Callback callback) {
-    final action = SchedulerAction((action) {
-      final timestamp = now.add(duration);
-      final scheduled = _scheduled.putIfAbsent(timestamp, () => []);
-      callback();
-      scheduled.add(action);
-    });
-    _immediate.add(action);
+  Subscription scheduleRelative(Duration duration, Callback callback) =>
+      scheduleAbsolute(now.add(duration), callback);
+
+  @override
+  Subscription schedulePeriodic(Duration duration, Callback callback) =>
+      _scheduleAt(now.add(duration), SchedulerAction((action) {
+        callback();
+        _scheduleAt(now.add(duration), action);
+      }));
+
+  SchedulerAction _scheduleAt(DateTime dateTime, SchedulerAction action) {
+    final actions = _scheduled.putIfAbsent(dateTime, () => []);
+    actions.add(action);
     return action;
   }
 
   void run() {
     final current = now;
+    final pending = List.of(_immediate, growable: true);
     while (_scheduled.isNotEmpty && _scheduled.firstKey().isBefore(current)) {
-      _immediate.addAll(_scheduled.remove(_scheduled.firstKey()));
-    }
-    for (final action in _immediate) {
-      action.run();
+      pending.addAll(_scheduled.remove(_scheduled.firstKey()));
     }
     _immediate.clear();
+    for (final action in pending) {
+      action.run();
+    }
   }
 }

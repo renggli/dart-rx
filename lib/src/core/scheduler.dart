@@ -20,8 +20,11 @@ abstract class Scheduler {
   /// Schedules a `callback` to while returns value is `true`.
   Subscription scheduleIteration(IterationCallback callback);
 
+  /// Schedules a `callback` to be executed at the specified `dateTime`.
+  Subscription scheduleAbsolute(DateTime dateTime, Callback callback);
+
   /// Schedules a `callback` to be executed after the specified `duration`.
-  Subscription scheduleTimeout(Duration duration, Callback callback);
+  Subscription scheduleRelative(Duration duration, Callback callback);
 
   /// Schedules a `callback` to be executed periodically every `duration`.
   Subscription schedulePeriodic(Duration duration, Callback callback);

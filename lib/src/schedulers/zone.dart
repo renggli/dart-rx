@@ -2,6 +2,7 @@ library rx.schedulers.zone;
 
 import 'dart:async' show Zone;
 
+import 'package:meta/meta.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/action.dart';
@@ -11,13 +12,16 @@ import 'package:rx/src/subscriptions/timer.dart';
 class ZoneScheduler extends Scheduler {
   const ZoneScheduler();
 
+  @protected
+  Zone get zone => Zone.current;
+
   @override
   DateTime get now => DateTime.now();
 
   @override
   Subscription schedule(Callback callback) {
     final action = SchedulerAction(callback);
-    Zone.current.scheduleMicrotask(action.run);
+    zone.scheduleMicrotask(action.run);
     return action;
   }
 
@@ -30,7 +34,7 @@ class ZoneScheduler extends Scheduler {
 
   void _scheduleIteration(
       Subscription subscription, IterationCallback callback) {
-    Zone.current.scheduleMicrotask(
+    zone.scheduleMicrotask(
         () => _scheduleIterationExecute(subscription, callback));
   }
 
@@ -47,11 +51,15 @@ class ZoneScheduler extends Scheduler {
   }
 
   @override
-  Subscription scheduleTimeout(Duration duration, Callback callback) =>
-      TimerSubscription(Zone.current.createTimer(duration, callback));
+  Subscription scheduleAbsolute(DateTime dateTime, Callback callback) =>
+      scheduleRelative(dateTime.difference(now), callback);
+
+  @override
+  Subscription scheduleRelative(Duration duration, Callback callback) =>
+      TimerSubscription(zone.createTimer(duration, callback));
 
   @override
   Subscription schedulePeriodic(Duration duration, Callback callback) =>
       TimerSubscription(
-          Zone.current.createPeriodicTimer(duration, (timer) => callback()));
+          zone.createPeriodicTimer(duration, (timer) => callback()));
 }
