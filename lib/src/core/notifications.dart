@@ -22,7 +22,7 @@ class NextNotification<T> implements Notification<T> {
   int get hashCode => value.hashCode;
 
   @override
-  String toString() => 'next($value)';
+  String toString() => 'NextNotification{value: $value}';
 }
 
 class ErrorNotification<T> implements Notification<T> {
@@ -45,7 +45,7 @@ class ErrorNotification<T> implements Notification<T> {
 
   @override
   String toString() =>
-      'error($error${stackTrace == null ? ')' : ', $stackTrace)'}';
+      'ErrorNotification{error: $error, stackTrace: $stackTrace}';
 }
 
 class CompleteNotification<T> implements Notification<T> {
@@ -58,8 +58,8 @@ class CompleteNotification<T> implements Notification<T> {
   bool operator ==(Object other) => other is CompleteNotification;
 
   @override
-  int get hashCode => 42;
+  int get hashCode => 749088;
 
   @override
-  String toString() => 'complete()';
+  String toString() => 'CompleteNotification{}';
 }
