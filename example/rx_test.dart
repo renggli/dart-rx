@@ -12,14 +12,44 @@ Observer<T> printObserver<T>(String name) => AnonymousObserver(
     );
 
 void main() {
-  final observable = Observable((subscriber) {
-    for (var i = 0; i < 5; i++) {
+  // create
+  final create$ = create((subscriber) {
+    for (var i = 0; i < 3; i++) {
       subscriber.next(i);
     }
     subscriber.complete();
   });
-  observable.subscribe(printObserver('1to5'));
+  create$.subscribe(printObserver('create\$'));
 
+  // empty
+  final empty$ = empty();
+  empty$.subscribe(printObserver('empty\$'));
+
+  // future
+  final future$ = fromFuture(Future.value(42));
+  future$.subscribe(printObserver('future\$'));
+
+  // just
+  final just$ = just(42);
+  just$.subscribe(printObserver('just\$'));
+
+  // iterable
+  final iterable$ = fromIterable([1, 2, 3]);
+  iterable$.subscribe(printObserver('iterable\$'));
+
+  // never
+  final never$ = never();
+  never$.subscribe(printObserver('never\$'));
+
+  // stream
+  final stream$ = fromStream(Stream.fromIterable([1, 2, 3]));
+  stream$.subscribe(printObserver('stream\$'));
+
+  // throw
+  final throw$ = throwError(Exception('Hello World'));
+  throw$.subscribe(printObserver('throw\$'));
+
+  // Other:
   final transformed = fromIterable(IntegerRange(0, 100))
       .lift(filter((value) => value.isEven))
       .lift(map((value) => '${value * value}'))
