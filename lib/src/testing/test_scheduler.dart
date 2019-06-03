@@ -25,7 +25,7 @@ class TestScheduler extends AsyncScheduler {
 
   DateTime currentTime;
 
-  Duration frameLength;
+  Duration get tickDuration => const Duration(milliseconds: 1);
 
   @override
   DateTime get now => currentTime;
@@ -39,17 +39,19 @@ class TestScheduler extends AsyncScheduler {
     return completionIndex;
   }
 
+  /// Creates a "cold" [Observable] whose subscription starts when the test
+  /// begins.
   Observable<T> createColdObservable<T>(String marbles,
       {Map<String, T> values, Object error}) {
-    if (marbles.contains(subscribeMarker)) {
-      throw ArgumentError.value(
-          marbles, 'Unexpected subscription marker "$subscribeMarker".');
-    }
-    if (marbles.contains(unsubscribeMarker)) {
-      throw ArgumentError.value(
-          marbles, 'Unexpected unsubscription marker "$unsubscribeMarker".');
-    }
     final messages = parseEvents<T>(marbles, values: values, error: error);
+    if (messages.whereType<SubscribeEvent>().isNotEmpty) {
+      throw ArgumentError.value(marbles, 'marbles',
+          'Cold observable cannot have subscription marker.');
+    }
+    if (messages.whereType<UnsubscribeEvent>().isNotEmpty) {
+      throw ArgumentError.value(marbles, 'marbles',
+          'Cold observable cannot have unsubscription marker.');
+    }
     final observable = ColdObservable<T>(this, messages);
     coldObservables.add(observable);
     return observable;
@@ -57,11 +59,11 @@ class TestScheduler extends AsyncScheduler {
 
   Observable<T> createHotObservable<T>(String marbles,
       {Map<String, T> values, Object error}) {
-    if (marbles.contains(unsubscribeMarker)) {
-      throw ArgumentError.value(
-          marbles, 'Unexpected unsubscription marker "$unsubscribeMarker".');
-    }
     final messages = parseEvents<T>(marbles, values: values, error: error);
+    if (messages.whereType<UnsubscribeEvent>().isNotEmpty) {
+      throw ArgumentError.value(marbles, 'marbles',
+          'Hot observable cannot have unsubscription marker.');
+    }
     final observable = HotObservable<T>(this, messages);
     hotObservables.add(observable);
     return observable;

@@ -13,7 +13,7 @@ void main() {
       ]);
     });
     test('series of values with custom mapping', () {
-      final result = TestScheduler.parseEvents<int>('-------a---b',
+      final result = TestScheduler.parseEvents('-------a---b',
           values: {'a': 1, 'b': 2});
       expect(result, [
         ValueEvent(7, 1),

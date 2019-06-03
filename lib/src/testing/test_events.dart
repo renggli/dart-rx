@@ -1,9 +1,13 @@
 library rx.testing.test_message;
 
+import 'package:rx/src/core/observer.dart';
+
 abstract class TestEvent<T> {
   final int index;
 
   TestEvent(this.index);
+
+  void observe(Observer<T> observer) {}
 
   @override
   bool operator ==(Object other) =>
@@ -47,6 +51,9 @@ class ValueEvent<T> extends TestEvent<T> {
   ValueEvent(int index, this.value) : super(index);
 
   @override
+  void observe(Observer<T> observer) => observer.next(value);
+
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       super == other && other is ValueEvent && value == other.value;
@@ -64,6 +71,9 @@ class ErrorEvent<T> extends TestEvent<T> {
   ErrorEvent(int index, this.error) : super(index);
 
   @override
+  void observe(Observer<T> observer) => observer.error(error);
+
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       super == other && other is ErrorEvent && error == other.error;
@@ -77,6 +87,9 @@ class ErrorEvent<T> extends TestEvent<T> {
 
 class CompleteEvent<T> extends TestEvent<T> {
   CompleteEvent(int index) : super(index);
+
+  @override
+  void observe(Observer<T> observer) => observer.complete();
 
   @override
   bool operator ==(Object other) =>
