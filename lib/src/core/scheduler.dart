@@ -9,6 +9,7 @@ typedef Callback = void Function();
 typedef IterationCallback = bool Function();
 
 abstract class Scheduler {
+  /// Default constructor of the scheduler.
   const Scheduler();
 
   /// Returns the current time.
@@ -28,4 +29,5 @@ abstract class Scheduler {
 
   /// Schedules a `callback` to be executed periodically every `duration`.
   Subscription schedulePeriodic(Duration duration, Callback callback);
+
 }

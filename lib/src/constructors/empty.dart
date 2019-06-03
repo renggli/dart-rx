@@ -1,14 +1,14 @@
 library rx.constructors.empty;
 
+import 'package:rx/schedulers.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/schedulers/immediate.dart';
 
 /// An [Observable] that emits no items and immediately completes.
-Observable<T> empty<T>({Scheduler scheduler = const ImmediateScheduler()}) =>
-    _EmptyObservable<T>(scheduler);
+Observable<T> empty<T>({Scheduler scheduler}) =>
+    _EmptyObservable<T>(scheduler ?? const ImmediateScheduler());
 
 class _EmptyObservable<T> with Observable<T> {
   final Scheduler scheduler;

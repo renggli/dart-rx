@@ -4,12 +4,12 @@ import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/schedulers/zone.dart';
+import 'package:rx/src/schedulers/settings.dart';
 
 /// An [Observable] that emits the items of an [Iterable].
 Observable<T> fromIterable<T>(Iterable<T> iterable,
-        {Scheduler scheduler = const ZoneScheduler()}) =>
-    _IterableObservable<T>(iterable, scheduler);
+        {Scheduler scheduler}) =>
+    _IterableObservable<T>(iterable, scheduler ?? defaultScheduler);
 
 class _IterableObservable<T> with Observable<T> {
   final Iterable<T> iterable;

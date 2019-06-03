@@ -8,8 +8,8 @@ import 'package:rx/src/schedulers/immediate.dart';
 
 /// An [Observable] with a single element.
 Observable<T> just<T>(T value,
-        {Scheduler scheduler = const ImmediateScheduler()}) =>
-    _JustObservable<T>(value, scheduler);
+        {Scheduler scheduler}) =>
+    _JustObservable<T>(value, scheduler ?? const ImmediateScheduler());
 
 class _JustObservable<T> with Observable<T> {
   final T value;

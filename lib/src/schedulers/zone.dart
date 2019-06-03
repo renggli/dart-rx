@@ -9,11 +9,11 @@ import 'package:rx/src/schedulers/action.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 import 'package:rx/src/subscriptions/timer.dart';
 
-class ZoneScheduler extends Scheduler {
+abstract class ZoneScheduler extends Scheduler {
   const ZoneScheduler();
 
   @protected
-  Zone get zone => Zone.current;
+  Zone get zone;
 
   @override
   DateTime get now => DateTime.now();
@@ -32,14 +32,14 @@ class ZoneScheduler extends Scheduler {
     return subscription;
   }
 
-  void _scheduleIteration(
-      Subscription subscription, IterationCallback callback) {
-    zone.scheduleMicrotask(
-        () => _scheduleIterationExecute(subscription, callback));
+  void _scheduleIteration(Subscription subscription,
+      IterationCallback callback) {
+    zone.scheduleMicrotask(() =>
+        _scheduleIterationExecute(subscription, callback));
   }
 
-  void _scheduleIterationExecute(
-      Subscription subscription, IterationCallback callback) {
+  void _scheduleIterationExecute(Subscription subscription,
+      IterationCallback callback) {
     if (subscription.isClosed) {
       return;
     }
@@ -63,3 +63,18 @@ class ZoneScheduler extends Scheduler {
       TimerSubscription(
           zone.createPeriodicTimer(duration, (timer) => callback()));
 }
+
+class RootZoneScheduler extends ZoneScheduler {
+  const RootZoneScheduler();
+
+  @override
+  Zone get zone => Zone.root;
+}
+
+class CurrentZoneScheduler extends ZoneScheduler {
+  const CurrentZoneScheduler();
+
+  @override
+  Zone get zone => Zone.current;
+}
+
