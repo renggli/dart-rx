@@ -8,18 +8,18 @@ import 'package:rx/src/core/subscription.dart';
 
 /// Emits `false` if the input observable emits any values, or emits `true` if
 /// the input observable completes without emitting any values.
-Operator<T, bool> isEmpty<T>() => _IsEmptyOperator();
+Operator<T, bool> isEmpty<T>() => _IsEmptyOperator<T>();
 
-class _IsEmptyOperator<T> implements Operator<T, T> {
+class _IsEmptyOperator<T> implements Operator<T, bool> {
   _IsEmptyOperator();
 
   @override
-  Subscription call(Observable<T> source, Observer<T> destination) =>
+  Subscription call(Observable<T> source, Observer<bool> destination) =>
       source.subscribe(_IsEmptySubscriber(destination));
 }
 
 class _IsEmptySubscriber<T> extends Subscriber<T> {
-  _IsEmptySubscriber(Observer<T> destination) : super(destination);
+  _IsEmptySubscriber(Observer<bool> destination) : super(destination);
 
   @override
   void onNext(T value) {
