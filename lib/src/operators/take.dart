@@ -6,8 +6,8 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscription.dart';
 
-/// Emits only the first [count] values emitted by the source.
-Operator<T, T> take<T>({int count = 1}) => _TakeOperator<T>(count);
+/// Emits the first [count] values before completing.
+Operator<T, T> take<T>([int count = 1]) => _TakeOperator<T>(count);
 
 class _TakeOperator<T> implements Operator<T, T> {
   final int count;
@@ -26,9 +26,9 @@ class _TakeSubscriber<T> extends Subscriber<T> {
 
   @override
   void onNext(T value) {
-    if (0 < count) {
-      destination.next(value);
-      count--;
+    destination.next(value);
+    if (--count <= 0) {
+      complete();
     }
   }
 }

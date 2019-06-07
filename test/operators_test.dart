@@ -207,7 +207,154 @@ void main() {
     });
   });
   group('materialize', () {});
-  group('take', () {});
+  group('skip', () {
+    test('no value and completion', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(skip(2));
+      expect(actual, scheduler.isObservable('--|'));
+    });
+    test('no value and error', () {
+      final input = scheduler.cold('--#');
+      final actual = input.lift(skip(2));
+      expect(actual, scheduler.isObservable('--#'));
+    });
+    test('one value and completion', () {
+      final input = scheduler.cold('--a--|');
+      final actual = input.lift(skip(2));
+      expect(actual, scheduler.isObservable('-----|'));
+    });
+    test('one value and error', () {
+      final input = scheduler.cold('--a--#');
+      final actual = input.lift(skip(2));
+      expect(actual, scheduler.isObservable('-----#'));
+    });
+    test('two values and completion', () {
+      final input = scheduler.cold('--a---b----|');
+      final actual = input.lift(skip(2));
+      expect(actual, scheduler.isObservable('-----------|'));
+    });
+    test('two values and error', () {
+      final input = scheduler.cold('--a---b----#');
+      final actual = input.lift(skip(2));
+      expect(actual, scheduler.isObservable('-----------#'));
+    });
+    test('multiple values completion', () {
+      final input = scheduler.cold('-a--b---c-d-e-|');
+      final actual = input.lift(skip(2));
+      expect(actual, scheduler.isObservable('--------c-d-e-|'));
+    });
+    test('multiple values and error', () {
+      final input = scheduler.cold('-a--b---c-d-e-#');
+      final actual = input.lift(skip(2));
+      expect(actual, scheduler.isObservable('--------c-d-e-#'));
+    });
+  });
+  group('skipWhile', () {
+    test('no value and completion', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(skipWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('--|'));
+    });
+    test('no value and error', () {
+      final input = scheduler.cold('--#');
+      final actual = input.lift(skipWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('--#'));
+    });
+    test('one value and completion', () {
+      final input = scheduler.cold('--a--|');
+      final actual = input.lift(skipWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('-----|'));
+    });
+    test('one value and error', () {
+      final input = scheduler.cold('--a--#');
+      final actual = input.lift(skipWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('-----#'));
+    });
+    test('two values and completion', () {
+      final input = scheduler.cold('--a---b----|');
+      final actual = input.lift(skipWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('-----------|'));
+    });
+    test('two values and error', () {
+      final input = scheduler.cold('--a---b----#');
+      final actual = input.lift(skipWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('-----------#'));
+    });
+    test('multiple values completion', () {
+      final input = scheduler.cold('-a--b---c-b-a-|');
+      final actual = input.lift(skipWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('--------c-b-a-|'));
+    });
+    test('multiple values and error', () {
+      final input = scheduler.cold('-a--b---c-b-a-#');
+      final actual = input.lift(skipWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('--------c-b-a-#'));
+    });
+  });
+  group('take', () {
+    test('no value and completion', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(take(2));
+      expect(actual, scheduler.isObservable('--|'));
+    });
+    test('no value and error', () {
+      final input = scheduler.cold('--#');
+      final actual = input.lift(take(2));
+      expect(actual, scheduler.isObservable('--#'));
+    });
+    test('one value and completion', () {
+      final input = scheduler.cold('--a--|');
+      final actual = input.lift(take(2));
+      expect(actual, scheduler.isObservable('--a--|'));
+    });
+    test('one value and error', () {
+      final input = scheduler.cold('--a--#');
+      final actual = input.lift(take(2));
+      expect(actual, scheduler.isObservable('--a--#'));
+    });
+    test('multiple values completion', () {
+      final input = scheduler.cold('-a--b---c----|');
+      final actual = input.lift(take(2));
+      expect(actual, scheduler.isObservable('-a--(b|)'));
+    });
+    test('multiple values and error', () {
+      final input = scheduler.cold('-a--b---c----#');
+      final actual = input.lift(take(2));
+      expect(actual, scheduler.isObservable('-a--(b|)'));
+    });
+  });
+  group('takeWhile', () {
+    test('no value and completion', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(takeWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('--|'));
+    });
+    test('no value and error', () {
+      final input = scheduler.cold('--#');
+      final actual = input.lift(takeWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('--#'));
+    });
+    test('one value and completion', () {
+      final input = scheduler.cold('--a--|');
+      final actual = input.lift(takeWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('--a--|'));
+    });
+    test('one value and error', () {
+      final input = scheduler.cold('--a--#');
+      final actual = input.lift(takeWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('--a--#'));
+    });
+    test('multiple values completion', () {
+      final input = scheduler.cold('-a--b---c----|');
+      final actual = input.lift(takeWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('-a--b---|'));
+    });
+    test('multiple values and error', () {
+      final input = scheduler.cold('-a--b---c----#');
+      final actual = input.lift(takeWhile((value) => 'ab'.contains(value)));
+      expect(actual, scheduler.isObservable('-a--b---|'));
+    });
+  });
   group('toList', () {
     test('empty and completion', () {
       final input = scheduler.cold<String>('--|');
