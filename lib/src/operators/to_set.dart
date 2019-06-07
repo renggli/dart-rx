@@ -10,25 +10,24 @@ typedef SetConstructor<T> = Set<T> Function();
 
 Set<T> defaultSetConstructor<T>() => <T>{};
 
-/// Returns an [Iterable] from an observable sequence.
-Operator<T, Set<T>> toSet<T>(
-        [SetConstructor<T> setConstructor = defaultSetConstructor]) =>
-    _ToSetOperator(setConstructor);
+/// Returns a [Set] from an observable sequence.
+Operator<T, Set<T>> toSet<T>([SetConstructor<T> setConstructor]) =>
+    _ToSetOperator(setConstructor ?? defaultSetConstructor);
 
-class _ToSetOperator<T> implements Operator<T, T> {
+class _ToSetOperator<T> implements Operator<T, Set<T>> {
   final SetConstructor<T> setConstructor;
 
   _ToSetOperator(this.setConstructor);
 
   @override
-  Subscription call(Observable<T> source, Observer<T> destination) =>
+  Subscription call(Observable<T> source, Observer<Set<T>> destination) =>
       source.subscribe(_ToSetSubscriber(destination, setConstructor()));
 }
 
 class _ToSetSubscriber<T> extends Subscriber<T> {
   final Set<T> set;
 
-  _ToSetSubscriber(Observer<T> destination, this.set) : super(destination);
+  _ToSetSubscriber(Observer<Set<T>> destination, this.set) : super(destination);
 
   @override
   void onNext(T value) => set.add(value);

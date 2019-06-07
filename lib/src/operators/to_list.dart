@@ -10,25 +10,25 @@ typedef ListConstructor<T> = List<T> Function();
 
 List<T> defaultListConstructor<T>() => <T>[];
 
-/// Returns an [Iterable] from an observable sequence.
-Operator<T, List<T>> toList<T>(
-        [ListConstructor<T> listConstructor = defaultListConstructor]) =>
-    _ToListOperator(listConstructor);
+/// Returns a [List] from an observable sequence.
+Operator<T, List<T>> toList<T>([ListConstructor<T> listConstructor]) =>
+    _ToListOperator(listConstructor ?? defaultListConstructor);
 
-class _ToListOperator<T> implements Operator<T, T> {
+class _ToListOperator<T> implements Operator<T, List<T>> {
   final ListConstructor<T> listConstructor;
 
   _ToListOperator(this.listConstructor);
 
   @override
-  Subscription call(Observable<T> source, Observer<T> destination) =>
+  Subscription call(Observable<T> source, Observer<List<T>> destination) =>
       source.subscribe(_ToListSubscriber(destination, listConstructor()));
 }
 
 class _ToListSubscriber<T> extends Subscriber<T> {
   final List<T> list;
 
-  _ToListSubscriber(Observer<T> destination, this.list) : super(destination);
+  _ToListSubscriber(Observer<List<T>> destination, this.list)
+      : super(destination);
 
   @override
   void onNext(T value) => list.add(value);
