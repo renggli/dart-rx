@@ -38,6 +38,6 @@ class _LastOrDefaultSubscriber<T> extends Subscriber<T> {
   @override
   void onComplete() {
     destination.next(seenValue ? lastValue : defaultValue);
-    super.onComplete();
+    destination.complete();
   }
 }

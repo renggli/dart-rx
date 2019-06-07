@@ -31,7 +31,7 @@ class _TakeWhileSubscriber<T> extends Subscriber<T> {
   @override
   void onNext(T value) {
     if (conditionFunction(value)) {
-      super.onNext(value);
+      destination.next(value);
     } else {
       complete();
     }

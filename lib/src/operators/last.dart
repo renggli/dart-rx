@@ -33,9 +33,9 @@ class _LastSubscriber<T> extends Subscriber<T> {
   void onComplete() {
     if (seenValue) {
       destination.next(lastValue);
-      super.onComplete();
+      destination.complete();
     } else {
-      super.onError('Sequence contains no elements');
+      destination.error('Sequence contains no elements');
     }
   }
 }

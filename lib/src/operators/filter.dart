@@ -32,7 +32,7 @@ class _FilterSubscriber<T> extends Subscriber<T> {
   @override
   void onNext(T value) {
     if (filterFunction(value)) {
-      super.onNext(value);
+      destination.next(value);
     }
   }
 }
