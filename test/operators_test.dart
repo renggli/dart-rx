@@ -12,6 +12,29 @@ void main() {
   scheduler.install();
 
   group('catchError', () {});
+  group('count', () {
+    test('no value and completion', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(count());
+      expect(actual, scheduler.isObservable('--(x|)', values: {'x': 0}));
+    });
+    test('no value and error', () {
+      final input = scheduler.cold('--#');
+      final actual = input.lift(count());
+      expect(actual, scheduler.isObservable<int>('--#'));
+    });
+    test('multiple values and completion', () {
+      final input = scheduler.cold('--a--b--c--|');
+      final actual = input.lift(count());
+      expect(
+          actual, scheduler.isObservable('-----------(x|)', values: {'x': 3}));
+    });
+    test('multiple values and error', () {
+      final input = scheduler.cold('--a--b--c--#');
+      final actual = input.lift(count());
+      expect(actual, scheduler.isObservable<int>('-----------#'));
+    });
+  });
   group('dematerialize', () {
     final values = <String, Notification<String>>{
       'a': NextNotification('a'),
