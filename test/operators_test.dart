@@ -158,7 +158,7 @@ void main() {
   });
   group('map', () {
     test('single value and completion', () {
-      final input = scheduler.cold('--a--|');
+      final input = scheduler.cold<String>('--a--|');
       final actual = input.lift(map((value) => '$value!'));
       expect(actual, scheduler.isObservable('--a--|', values: {'a': 'a!'}));
     });
@@ -359,80 +359,82 @@ void main() {
     test('empty and completion', () {
       final input = scheduler.cold<String>('--|');
       final actual = input.lift(toList());
-      expect(actual, scheduler.isObservable('--(x|)', values: {'x': []}));
+      expect(actual,
+          scheduler.isObservable<List<String>>('--(x|)', values: {'x': []}));
     });
     test('empty and error', () {
       final input = scheduler.cold<String>('--#');
       final actual = input.lift(toList());
-      expect(actual, scheduler.isObservable('--#'));
+      expect(actual, scheduler.isObservable<List<String>>('--#'));
     });
     test('single value and completion', () {
       final input = scheduler.cold<String>('--a--|');
       final actual = input.lift(toList());
       expect(
           actual,
-          scheduler.isObservable('-----(x|)', values: {
+          scheduler.isObservable<List<String>>('-----(x|)', values: {
             'x': ['a']
           }));
     });
     test('single value and error', () {
       final input = scheduler.cold<String>('--a--#');
       final actual = input.lift(toList());
-      expect(actual, scheduler.isObservable('--x--#'));
+      expect(actual, scheduler.isObservable<List<String>>('-----#'));
     });
     test('multiple values and completion', () {
       final input = scheduler.cold<String>('--a--b--c--|');
       final actual = input.lift(toList());
       expect(
           actual,
-          scheduler.isObservable('-----------(x|)', values: {
+          scheduler.isObservable<List<String>>('-----------(x|)', values: {
             'x': ['a', 'b', 'c']
           }));
     });
     test('multiple values and error', () {
       final input = scheduler.cold<String>('--a--b--c--#');
       final actual = input.lift(toList());
-      expect(actual, scheduler.isObservable('-----------#'));
+      expect(actual, scheduler.isObservable<List<String>>('-----------#'));
     });
   });
   group('toSet', () {
     test('empty and completion', () {
       final input = scheduler.cold<String>('--|');
       final actual = input.lift(toSet());
-      expect(actual, scheduler.isObservable('--(x|)', values: {'x': {}}));
+      expect(actual,
+          scheduler.isObservable<Set<String>>('--(x|)', values: {'x': {}}));
     });
     test('empty and error', () {
       final input = scheduler.cold<String>('--#');
       final actual = input.lift(toSet());
-      expect(actual, scheduler.isObservable('--#'));
+      expect(actual, scheduler.isObservable<Set<String>>('--#'));
     });
     test('single value and completion', () {
       final input = scheduler.cold<String>('--a--|');
       final actual = input.lift(toSet());
       expect(
           actual,
-          scheduler.isObservable('-----(x|)', values: {
+          scheduler.isObservable<Set<String>>('-----(x|)', values: {
             'x': {'a'}
           }));
     });
     test('single value and error', () {
       final input = scheduler.cold<String>('--a--#');
       final actual = input.lift(toSet());
-      expect(actual, scheduler.isObservable('--x--#'));
+      expect(actual, scheduler.isObservable<Set<String>>('-----#'));
     });
     test('multiple values and completion', () {
       final input = scheduler.cold<String>('--a--b--c--|');
       final actual = input.lift(toSet());
       expect(
           actual,
-          scheduler.isObservable('-----------(x|)', values: {
+          scheduler.isObservable<Set<String>>('-----------(x|)', values: {
             'x': {'a', 'b', 'c'}
           }));
     });
     test('multiple values and error', () {
       final input = scheduler.cold<String>('--a--b--c--#');
       final actual = input.lift(toSet());
-      expect(actual, scheduler.isObservable('-----------#'));
+      expect(actual, scheduler.isObservable<Set<String>>('-----------#'));
     });
   });
 }

@@ -1,6 +1,9 @@
 library rx.testing.test_message;
 
+import 'package:collection/collection.dart';
 import 'package:rx/src/core/observer.dart';
+
+const equality = DeepCollectionEquality();
 
 abstract class TestEvent<T> {
   final int index;
@@ -56,10 +59,12 @@ class ValueEvent<T> extends TestEvent<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      super == other && other is ValueEvent && value == other.value;
+      super == other &&
+          other is ValueEvent &&
+          equality.equals(value, other.value);
 
   @override
-  int get hashCode => super.hashCode ^ value.hashCode;
+  int get hashCode => super.hashCode ^ equality.hash(value);
 
   @override
   String toString() => 'ValueEvent{index: $index, value: $value}';
@@ -79,11 +84,10 @@ class ErrorEvent<T> extends TestEvent<T> {
       identical(this, other) ||
       super == other &&
           other is ErrorEvent &&
-          error == other.error &&
-          stackTrace == other.stackTrace;
+          equality.equals(error, other.error);
 
   @override
-  int get hashCode => super.hashCode ^ error.hashCode;
+  int get hashCode => super.hashCode ^ equality.hash(error);
 
   @override
   String toString() => 'ErrorEvent{index: $index, error: $error}';

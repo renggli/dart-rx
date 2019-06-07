@@ -36,6 +36,6 @@ class _ToListSubscriber<T> extends Subscriber<T> {
   @override
   void onComplete() {
     destination.next(list);
-    super.onComplete();
+    destination.complete();
   }
 }

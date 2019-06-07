@@ -35,6 +35,6 @@ class _ToSetSubscriber<T> extends Subscriber<T> {
   @override
   void onComplete() {
     destination.next(set);
-    super.onComplete();
+    destination.complete();
   }
 }
