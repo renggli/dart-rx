@@ -67,16 +67,20 @@ class ValueEvent<T> extends TestEvent<T> {
 
 class ErrorEvent<T> extends TestEvent<T> {
   final Object error;
+  final StackTrace stackTrace;
 
-  ErrorEvent(int index, this.error) : super(index);
+  ErrorEvent(int index, this.error, [this.stackTrace]) : super(index);
 
   @override
-  void observe(Observer<T> observer) => observer.error(error);
+  void observe(Observer<T> observer) => observer.error(error, stackTrace);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      super == other && other is ErrorEvent && error == other.error;
+      super == other &&
+          other is ErrorEvent &&
+          error == other.error &&
+          stackTrace == other.stackTrace;
 
   @override
   int get hashCode => super.hashCode ^ error.hashCode;

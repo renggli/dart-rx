@@ -3,9 +3,13 @@ library rx.testing.test_scheduler;
 import 'package:rx/core.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/schedulers/async.dart';
-import 'package:rx/src/testing/cold_observable.dart';
-import 'package:rx/src/testing/hot_observable.dart';
-import 'package:rx/src/testing/test_events.dart';
+import 'package:rx/src/schedulers/settings.dart';
+import 'package:test/test.dart';
+
+import 'cold_observable.dart';
+import 'hot_observable.dart';
+import 'observable_matcher.dart';
+import 'test_events.dart';
 
 const advanceMarker = '-';
 const completeMarker = '|';
@@ -16,59 +20,92 @@ const subscribeMarker = '^';
 const unsubscribeMarker = '!';
 
 class TestScheduler extends AsyncScheduler {
-  final List<TestAction> actions = [];
+  DateTime _currentTime;
 
   final List<Observable> coldObservables = [];
   final List<Observable> hotObservables = [];
 
   TestScheduler();
 
-  DateTime currentTime;
-
-  Duration get tickDuration => const Duration(milliseconds: 1);
-
+  /// Returns the current time.
   @override
-  DateTime get now => currentTime;
+  DateTime get now => _currentTime;
 
-  int createTime(String marbles) {
-    final completionIndex = marbles.indexOf(completeMarker);
-    if (completionIndex < 0) {
-      throw ArgumentError.value(
-          marbles, 'Missing completion marker "$completeMarker".');
+  /// Returns the stepping time in this test scenario.
+  Duration get stepDuration => const Duration(milliseconds: 1);
+
+  /// Installs a test scheduler.
+  void install() {
+    var subscription = Subscription.closed();
+    setUp(() {
+      _currentTime = DateTime.now();
+      subscription = replaceDefaultScheduler(this);
+    });
+    tearDown(() {
+      advanceAll();
+      coldObservables.clear();
+      hotObservables.clear();
+      subscription.unsubscribe();
+    });
+  }
+
+  /// Advances the time to `dateTime`. If omitted advance to the timestamp of
+  /// the next scheduled action. If no scheduled action is present, keep the
+  /// current timestamp and only flush pending immediate actions.
+  void advance([DateTime dateTime]) {
+    _currentTime = dateTime ?? scheduled.firstKey() ?? _currentTime;
+    flush();
+  }
+
+  /// Advances the time as far as possible and execute all existing and new
+  /// pending actions on the way.
+  void advanceAll() {
+    while (immediate.isNotEmpty || scheduled.isNotEmpty) {
+      _currentTime = scheduled.firstKey() ?? _currentTime;
+      flush();
     }
-    return completionIndex;
+  }
+
+  /// Creates a matcher for an observable.
+  Matcher isObservable<T>(String marbles,
+      {Map<String, T> values = const {}, Object error = 'Error'}) {
+    final messages = parseEvents<T>(marbles, values: values, error: error);
+    return ObservableMatcher<T>(wrapMatcher(messages));
   }
 
   /// Creates a "cold" [Observable] whose subscription starts when the test
   /// begins.
-  Observable<T> createColdObservable<T>(String marbles,
-      {Map<String, T> values, Object error}) {
-    final messages = parseEvents<T>(marbles, values: values, error: error);
-    if (messages.whereType<SubscribeEvent>().isNotEmpty) {
+  Observable<T> cold<T>(String marbles,
+      {Map<String, T> values = const {}, Object error = 'Error'}) {
+    final events = parseEvents<T>(marbles, values: values, error: error);
+    if (events.whereType<SubscribeEvent>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
           'Cold observable cannot have subscription marker.');
     }
-    if (messages.whereType<UnsubscribeEvent>().isNotEmpty) {
+    if (events.whereType<UnsubscribeEvent>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
           'Cold observable cannot have unsubscription marker.');
     }
-    final observable = ColdObservable<T>(this, messages);
+    final observable = ColdObservable<T>(this, events);
     coldObservables.add(observable);
     return observable;
   }
 
-  Observable<T> createHotObservable<T>(String marbles,
-      {Map<String, T> values, Object error}) {
-    final messages = parseEvents<T>(marbles, values: values, error: error);
-    if (messages.whereType<UnsubscribeEvent>().isNotEmpty) {
+  /// Creates a "hot" [Observable] whose subscription starts before the test
+  /// begins.
+  Observable<T> hot<T>(String marbles,
+      {Map<String, T> values = const {}, Object error = 'Error'}) {
+    final events = parseEvents<T>(marbles, values: values, error: error);
+    if (events.whereType<UnsubscribeEvent>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
           'Hot observable cannot have unsubscription marker.');
     }
-    final observable = HotObservable<T>(this, messages);
+    final observable = HotObservable<T>(this, events);
     hotObservables.add(observable);
     return observable;
   }
 
+  /// Parses a marble string to a list of test events.
   static List<TestEvent<T>> parseEvents<T>(String marbles,
       {Map<String, T> values = const {}, Object error = 'Error'}) {
     final messages = <TestEvent<T>>[];

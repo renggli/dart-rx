@@ -7,8 +7,7 @@ import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/settings.dart';
 
 /// An [Observable] that emits the items of an [Iterable].
-Observable<T> fromIterable<T>(Iterable<T> iterable,
-        {Scheduler scheduler}) =>
+Observable<T> fromIterable<T>(Iterable<T> iterable, {Scheduler scheduler}) =>
     _IterableObservable<T>(iterable, scheduler ?? defaultScheduler);
 
 class _IterableObservable<T> with Observable<T> {

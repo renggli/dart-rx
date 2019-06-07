@@ -14,6 +14,13 @@ abstract class Observer<T> {
   }) =>
       AnonymousObserver(next, error, complete);
 
+  factory Observer.next(NextFunction<T> next) => Observer(next: next);
+
+  factory Observer.error(ErrorFunction error) => Observer(error: error);
+
+  factory Observer.complete(CompleteFunction complete) =>
+      Observer(complete: complete);
+
   void next(T value);
 
   void error(Object error, [StackTrace stackTrace]);

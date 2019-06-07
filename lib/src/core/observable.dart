@@ -8,16 +8,13 @@ import 'subscription.dart';
 typedef SubscribeFunction<T> = void Function(Subscriber<T> subscriber);
 
 abstract class Observable<T> {
-  factory Observable(SubscribeFunction<T> subscribeFunction) =>
-      SubscribeObservable(subscribeFunction);
-
   Observable<S> lift<S>(Operator<T, S> operator) =>
       OperatorObservable(this, operator);
 
   Subscription subscribe(Observer<T> observer);
 }
 
-class SubscribeObservable<T> with Observable<T> {
+class SubscribeObservable<T> extends Observable<T> {
   final SubscribeFunction<T> subscribeFunction;
 
   SubscribeObservable(this.subscribeFunction);
@@ -31,7 +28,7 @@ class SubscribeObservable<T> with Observable<T> {
   }
 }
 
-class OperatorObservable<T, S> with Observable<S> {
+class OperatorObservable<T, S> extends Observable<S> {
   final Observable<T> source;
   final Operator<T, S> operator;
 

@@ -1,28 +1,23 @@
 library rx.testing.cold_observable;
 
-import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/testing/subscription_log.dart';
-import 'package:rx/src/testing/test_events.dart';
-import 'package:rx/src/testing/test_scheduler.dart';
 
-class ColdObservable<T> with Observable<T>, SubscriptionLog {
-  final TestScheduler scheduler;
-  final List<TestEvent<T>> events;
+import 'test_events.dart';
+import 'test_observable.dart';
+import 'test_scheduler.dart';
 
-  ColdObservable(this.scheduler, this.events);
+class ColdObservable<T> extends TestObservable<T> {
+  ColdObservable(TestScheduler scheduler, List<TestEvent<T>> events)
+      : super(scheduler, events);
 
   @override
   Subscription subscribe(Observer<T> observer) {
-    final current = scheduler.now;
-    final subscriber = Subscriber<T>(observer);
+    final subscriber = createSubscriber(observer);
     for (final event in events) {
-      final timestamp = current.add(scheduler.tickDuration * event.index);
+      final timestamp = scheduler.now.add(scheduler.stepDuration * event.index);
       scheduler.scheduleAbsolute(timestamp, () => event.observe(subscriber));
     }
-    subscriber.add(logSubscribed());
     return subscriber;
   }
 }

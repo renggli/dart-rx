@@ -32,14 +32,14 @@ abstract class ZoneScheduler extends Scheduler {
     return subscription;
   }
 
-  void _scheduleIteration(Subscription subscription,
-      IterationCallback callback) {
-    zone.scheduleMicrotask(() =>
-        _scheduleIterationExecute(subscription, callback));
+  void _scheduleIteration(
+      Subscription subscription, IterationCallback callback) {
+    zone.scheduleMicrotask(
+        () => _scheduleIterationExecute(subscription, callback));
   }
 
-  void _scheduleIterationExecute(Subscription subscription,
-      IterationCallback callback) {
+  void _scheduleIterationExecute(
+      Subscription subscription, IterationCallback callback) {
     if (subscription.isClosed) {
       return;
     }
@@ -77,4 +77,3 @@ class CurrentZoneScheduler extends ZoneScheduler {
   @override
   Zone get zone => Zone.current;
 }
-

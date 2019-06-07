@@ -1,33 +1,37 @@
 library rx.testing.hot_observable;
 
+import 'package:meta/meta.dart';
 import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/testing/subscription_log.dart';
-import 'package:rx/src/testing/test_events.dart';
-import 'package:rx/src/testing/test_scheduler.dart';
 
-class HotObservable<T> extends Subject<T> with SubscriptionLog {
-  final TestScheduler scheduler;
-  final List<TestEvent<T>> events;
-  final SubscribeEvent<T> subscribeEvent;
+import 'test_events.dart';
+import 'test_observable.dart';
+import 'test_scheduler.dart';
 
-  HotObservable(this.scheduler, this.events)
-      : subscribeEvent = events
-            .whereType<SubscribeEvent>()
-            .firstWhere((element) => true, orElse: () => null);
+class HotObservable<T> extends TestObservable<T> {
+  @protected
+  final Subject<T> subject = Subject<T>();
+
+  HotObservable(TestScheduler scheduler, List<TestEvent<T>> events)
+      : super(scheduler, events);
+
+  void initialize() {
+    final subscriptionIndex = events
+        .whereType<SubscribeEvent>()
+        .map((event) => event.index)
+        .firstWhere((index) => true, orElse: () => 0);
+    for (final event in events) {
+      final timestamp = scheduler.now
+          .add(scheduler.stepDuration * (event.index - subscriptionIndex));
+      scheduler.scheduleAbsolute(timestamp, () => event.observe(subject));
+    }
+  }
 
   @override
   Subscription subscribe(Observer<T> observer) {
-    final subscriber = Subscriber<T>(observer);
-    final offset = subscribeEvent == null ? 0 : subscribeEvent.index;
-    for (final event in events) {
-      final timestamp =
-          scheduler.now.add(scheduler.tickDuration * (event.index - offset));
-      scheduler.scheduleAbsolute(timestamp, () => event.observe(subscriber));
-    }
-    subscriber.add(logSubscribed());
-    subscriber.add(super.subscribe(observer));
+    final subscriber = createSubscriber(observer);
+    subject.subscribe(subscriber);
     return subscriber;
   }
 }

@@ -59,13 +59,13 @@ void main() {
   transformed.subscribe(printObserver('Two'));
 
   final obs = timer(
-      delay: Duration(seconds: 2),
-      period: Duration(milliseconds: 500));
+      delay: const Duration(seconds: 2),
+      period: const Duration(milliseconds: 500));
   final subs1 = obs.subscribe(printObserver('1'));
   final subs2 = obs.subscribe(printObserver('2'));
 
-  timer(delay: Duration(seconds: 3))
+  timer(delay: const Duration(seconds: 3))
       .subscribe(Observer(complete: () => subs1.unsubscribe()));
-  timer(delay: Duration(seconds: 5))
+  timer(delay: const Duration(seconds: 5))
       .subscribe(Observer(complete: () => subs2.unsubscribe()));
 }

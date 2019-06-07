@@ -29,5 +29,4 @@ abstract class Scheduler {
 
   /// Schedules a `callback` to be executed periodically every `duration`.
   Subscription schedulePeriodic(Duration duration, Callback callback);
-
 }
