@@ -22,5 +22,10 @@ class _DematerializeSubscriber<T> extends Subscriber<Notification<T>> {
   _DematerializeSubscriber(Observer<T> destination) : super(destination);
 
   @override
-  void onNext(Notification<T> value) => value.observe(destination);
+  void onNext(Notification<T> value) {
+    value.observe(destination);
+    if (value is CompleteNotification || value is ErrorNotification) {
+      unsubscribe();
+    }
+  }
 }

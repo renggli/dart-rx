@@ -1,5 +1,6 @@
 library rx.test.operators_test;
 
+import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart' hide isEmpty;
@@ -11,7 +12,51 @@ void main() {
   scheduler.install();
 
   group('catchError', () {});
-  group('dematerialize', () {});
+  group('dematerialize', () {
+    final values = <String, Notification<String>>{
+      'a': NextNotification('a'),
+      'b': NextNotification('b'),
+      'c': CompleteNotification(),
+      'e': ErrorNotification('Error'),
+    };
+    test('empty sequence', () {
+      final input = scheduler.cold('-|', values: values);
+      final actual = input.lift(dematerialize());
+      expect(actual, scheduler.isObservable<String>('-|'));
+    });
+    test('error sequence', () {
+      final input = scheduler.cold('-a-#', values: values);
+      final actual = input.lift(dematerialize());
+      expect(actual, scheduler.isObservable<String>('-a-#'));
+    });
+    test('values and completion', () {
+      final input = scheduler.cold('-a--b---c-|', values: values);
+      final actual = input.lift(dematerialize());
+      expect(actual, scheduler.isObservable<String>('-a--b---|'));
+    });
+    test('values and error', () {
+      final input = scheduler.cold('-a--b---e-|', values: values);
+      final actual = input.lift(dematerialize());
+      expect(actual, scheduler.isObservable<String>('-a--b---#'));
+    });
+  });
+  group('distinct', () {
+    test('all unique values', () {
+      final input = scheduler.cold('-a-b-c-|');
+      final actual = input.lift(distinct());
+      expect(actual, scheduler.isObservable('-a-b-c-|'));
+    });
+    test('continuous repeats', () {
+      final input = scheduler.cold('-a-bb-ccc-|');
+      final actual = input.lift(distinct());
+      expect(actual, scheduler.isObservable('-a-b--c---|'));
+    });
+    test('overlapping repeats', () {
+      final input = scheduler.cold('-a-ab-abc-#');
+      final actual = input.lift(distinct());
+      expect(actual, scheduler.isObservable('-a--b---c-#'));
+    });
+  });
   group('filter', () {
     test('first value filterd', () {
       final input = scheduler.cold('--a--b--|');
@@ -206,7 +251,34 @@ void main() {
       expect(actual, scheduler.isObservable<String>('--x--x--x--#'));
     });
   });
-  group('materialize', () {});
+  group('materialize', () {
+    final values = <String, Notification<String>>{
+      'a': NextNotification('a'),
+      'b': NextNotification('b'),
+      'c': CompleteNotification(),
+      'e': ErrorNotification('Error'),
+    };
+    test('empty sequence', () {
+      final input = scheduler.cold<String>('-|');
+      final actual = input.lift(materialize());
+      expect(actual, scheduler.isObservable('-(c|)', values: values));
+    });
+    test('error sequence', () {
+      final input = scheduler.cold<String>('-a-#');
+      final actual = input.lift(materialize());
+      expect(actual, scheduler.isObservable('-a-(e|)', values: values));
+    });
+    test('values and completion', () {
+      final input = scheduler.cold<String>('-a--b---|');
+      final actual = input.lift(materialize());
+      expect(actual, scheduler.isObservable('-a--b---(c|)', values: values));
+    });
+    test('values and error', () {
+      final input = scheduler.cold<String>('-a--b---#-|');
+      final actual = input.lift(materialize());
+      expect(actual, scheduler.isObservable('-a--b---(e|)', values: values));
+    });
+  });
   group('skip', () {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
