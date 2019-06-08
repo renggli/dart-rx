@@ -1,5 +1,6 @@
 library rx.core.subject;
 
+import 'package:meta/meta.dart';
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/subscription.dart';
@@ -70,15 +71,32 @@ class Subject<T>
   Subscription subscribe(Observer<T> observer) {
     UnsubscribedError.checkOpen(this);
     if (_hasError) {
-      observer.error(_error, _stackTrace);
-      return Subscription.closed();
+      return subscribeToError(observer, _error, _stackTrace);
     } else if (_hasStopped) {
-      observer.complete();
-      return Subscription.closed();
+      return subscribeToComplete(observer);
     } else {
-      _observers.add(observer);
-      return Subscription.create(() => _observers.remove(observer));
+      return subscribeToActive(observer, _observers);
     }
+  }
+
+  @protected
+  Subscription subscribeToActive(
+      Observer observer, List<Observer<T>> observers) {
+    observers.add(observer);
+    return Subscription.create(() => observers.remove(observer));
+  }
+
+  @protected
+  Subscription subscribeToError(
+      Observer observer, Object error, StackTrace stackTrace) {
+    observer.error(error, stackTrace);
+    return Subscription.closed();
+  }
+
+  @protected
+  Subscription subscribeToComplete(Observer observer) {
+    observer.complete();
+    return Subscription.closed();
   }
 
   @override
