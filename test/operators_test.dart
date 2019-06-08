@@ -548,6 +548,63 @@ void main() {
       expect(actual, scheduler.isObservable('-a--b---|'));
     });
   });
+  group('tap', () {
+    test('only completion', () {
+      var completed = false;
+      final input = scheduler.cold('--|');
+      final actual = input.lift(tap(Observer.complete(() => completed = true)));
+      expect(actual, scheduler.isObservable('--|'));
+      expect(completed, isTrue);
+    });
+    test('only error', () {
+      Object erred;
+      final input = scheduler.cold('--#');
+      final actual =
+          input.lift(tap(Observer.error((error, [stack]) => erred = error)));
+      expect(actual, scheduler.isObservable('--#'));
+      expect(erred, 'Error');
+    });
+    test('mirrors all values', () {
+      final values = [];
+      final input = scheduler.cold('-a--b---c-|');
+      final actual = input.lift(tap(Observer.next(values.add)));
+      expect(actual, scheduler.isObservable('-a--b---c-|'));
+      expect(values, ['a', 'b', 'c']);
+    });
+    test('values and then error', () {
+      final values = [];
+      final input = scheduler.cold('-ab--c(de)-#');
+      final actual = input.lift(tap(Observer.next(values.add)));
+      expect(actual, scheduler.isObservable('-ab--c(de)-#'));
+      expect(values, ['a', 'b', 'c', 'd', 'e']);
+    });
+    test('error during next', () {
+      final customError = Exception('My Error');
+      final input = scheduler.cold('-a-b-c-|');
+      final actual = input.lift(tap(Observer.next((value) {
+        if (value == 'c') {
+          throw customError;
+        }
+      })));
+      expect(actual, scheduler.isObservable('-a-b-#', error: customError));
+    });
+    test('error during error', () {
+      final customError = Exception('My Error');
+      final input = scheduler.cold('-a-b-c-#');
+      final actual = input.lift(tap(Observer.error((error, [stack]) {
+        expect(error, 'Error');
+        throw customError;
+      })));
+      expect(actual, scheduler.isObservable('-a-b-c-#', error: customError));
+    });
+    test('error during complete', () {
+      final customError = Exception('My Error');
+      final input = scheduler.cold('-a-b-c-|');
+      final actual =
+          input.lift(tap(Observer.complete(() => throw customError)));
+      expect(actual, scheduler.isObservable('-a-b-c-#', error: customError));
+    });
+  });
   group('toList', () {
     test('empty and completion', () {
       final input = scheduler.cold<String>('--|');

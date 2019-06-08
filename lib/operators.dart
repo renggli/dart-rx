@@ -20,5 +20,6 @@ export 'src/operators/skip_while.dart';
 export 'src/operators/take.dart';
 export 'src/operators/take_last.dart';
 export 'src/operators/take_while.dart';
+export 'src/operators/tap.dart';
 export 'src/operators/to_list.dart';
 export 'src/operators/to_set.dart';
