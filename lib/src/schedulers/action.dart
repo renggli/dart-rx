@@ -2,30 +2,14 @@ library rx.schedulers.action;
 
 import 'package:rx/src/subscriptions/stateful.dart';
 
-typedef SchedulerCallback = void Function();
-
-typedef SchedulerCallbackWith = void Function(SchedulerAction);
-
 abstract class SchedulerAction extends StatefulSubscription {
-  factory SchedulerAction(Function callback) {
-    if (callback is SchedulerCallback) {
-      return SchedulerCallbackAction(callback);
-    } else if (callback is SchedulerCallbackWith) {
-      return SchedulerCallbackWithAction(callback);
-    } else {
-      throw ArgumentError.value(callback);
-    }
-  }
-
-  SchedulerAction._();
-
   void run();
 }
 
-class SchedulerCallbackAction extends SchedulerAction {
-  final SchedulerCallback _callback;
+class SchedulerActionCallback extends SchedulerAction {
+  final void Function() _callback;
 
-  SchedulerCallbackAction(this._callback) : super._();
+  SchedulerActionCallback(this._callback);
 
   @override
   void run() {
@@ -36,10 +20,10 @@ class SchedulerCallbackAction extends SchedulerAction {
   }
 }
 
-class SchedulerCallbackWithAction extends SchedulerAction {
-  final SchedulerCallbackWith _callback;
+class SchedulerActionCallbackWith extends SchedulerAction {
+  final void Function(SchedulerAction action) _callback;
 
-  SchedulerCallbackWithAction(this._callback) : super._();
+  SchedulerActionCallbackWith(this._callback);
 
   @override
   void run() {

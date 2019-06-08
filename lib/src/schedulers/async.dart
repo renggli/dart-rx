@@ -24,16 +24,18 @@ class AsyncScheduler extends Scheduler {
 
   @override
   Subscription schedule(Callback callback) {
-    final action = SchedulerAction(callback);
+    final action = SchedulerActionCallback(callback);
     immediate.add(action);
     return action;
   }
 
   @override
   Subscription scheduleIteration(IterationCallback callback) {
-    final action = SchedulerAction((action) {
+    final action = SchedulerActionCallbackWith((action) {
       if (callback()) {
         immediate.add(action);
+      } else {
+        action.unsubscribe();
       }
     });
     immediate.add(action);
@@ -42,7 +44,7 @@ class AsyncScheduler extends Scheduler {
 
   @override
   Subscription scheduleAbsolute(DateTime dateTime, Callback callback) =>
-      _scheduleAt(dateTime, SchedulerAction(callback));
+      _scheduleAt(dateTime, SchedulerActionCallback(callback));
 
   @override
   Subscription scheduleRelative(Duration duration, Callback callback) =>
@@ -50,7 +52,7 @@ class AsyncScheduler extends Scheduler {
 
   @override
   Subscription schedulePeriodic(Duration duration, Callback callback) =>
-      _scheduleAt(now.add(duration), SchedulerAction((action) {
+      _scheduleAt(now.add(duration), SchedulerActionCallbackWith((action) {
         // TODO(renggli): Re-schedule without drift.
         callback();
         _scheduleAt(now.add(duration), action);

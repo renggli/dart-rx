@@ -20,7 +20,7 @@ abstract class ZoneScheduler extends Scheduler {
 
   @override
   Subscription schedule(Callback callback) {
-    final action = SchedulerAction(callback);
+    final action = SchedulerActionCallback(callback);
     zone.scheduleMicrotask(action.run);
     return action;
   }
