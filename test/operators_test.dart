@@ -302,6 +302,72 @@ void main() {
       expect(actual, scheduler.isObservable('-a--b---(e|)', values: values));
     });
   });
+  group('scan', () {
+    group('reduce', () {
+      test('values and completion', () {
+        final input = scheduler.cold<String>('-a--b---c-|');
+        final actual =
+            input.lift(reduce((previous, value) => '$previous$value'));
+        expect(
+            actual,
+            scheduler.isObservable('-x--y---z-|', values: {
+              'x': 'a',
+              'y': 'ab',
+              'z': 'abc',
+            }));
+      });
+      test('values and error', () {
+        final input = scheduler.cold<String>('-a--b---c-#');
+        final actual =
+            input.lift(reduce((previous, value) => '$previous$value'));
+        expect(
+            actual,
+            scheduler.isObservable('-x--y---z-#', values: {
+              'x': 'a',
+              'y': 'ab',
+              'z': 'abc',
+            }));
+      });
+    });
+    group('fold', () {
+      test('values and completion', () {
+        final input = scheduler.cold<String>('-a--b---c-|');
+        final actual =
+            input.lift(fold('x', (previous, value) => '$previous$value'));
+        expect(
+            actual,
+            scheduler.isObservable('-x--y---z-|', values: {
+              'x': 'xa',
+              'y': 'xab',
+              'z': 'xabc',
+            }));
+      });
+      test('values and error', () {
+        final input = scheduler.cold<String>('-a--b---c-#');
+        final actual =
+            input.lift(fold('x', (previous, value) => '$previous$value'));
+        expect(
+            actual,
+            scheduler.isObservable('-x--y---z-#', values: {
+              'x': 'xa',
+              'y': 'xab',
+              'z': 'xabc',
+            }));
+      });
+      test('type transformation', () {
+        final input = scheduler.cold<String>('-a--b---c-|');
+        final actual = input.lift(fold<String, List<String>>(
+            [], (previous, value) => [...previous, value]));
+        expect(
+            actual,
+            scheduler.isObservable('-x--y---z-|', values: {
+              'x': ['a'],
+              'y': ['a', 'b'],
+              'z': ['a', 'b', 'c'],
+            }));
+      });
+    });
+  });
   group('skip', () {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
