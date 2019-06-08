@@ -13,7 +13,7 @@ void main() {
   group('create', () {});
   group('defer', () {});
   group('empty', () {
-    test('completes immediately', () {
+    test('immediately completes', () {
       final actual = empty();
       expect(actual, scheduler.isObservable('|'));
     });
@@ -139,10 +139,75 @@ void main() {
       expect(actual, scheduler.isObservable('--f-|'));
     });
   });
-  group('iterable', () {});
-  group('just', () {});
-  group('never', () {});
+  group('iterable', () {
+    test('completes on empty collection', () {
+      final actual = fromIterable(<String>[]);
+      expect(actual, scheduler.isObservable<String>('|'));
+    });
+    test('emits all the values', () {
+      final actual = fromIterable(['a', 'b', 'c']);
+      expect(actual, scheduler.isObservable<String>('(abc|)'));
+    });
+  });
+  group('just', () {
+    test('immediately emits value', () {
+      final actual = just('a');
+      expect(actual, scheduler.isObservable<String>('(a|)'));
+    });
+    test('immediately emits null', () {
+      final actual = just<String>(null);
+      expect(
+          actual, scheduler.isObservable<String>('(a|)', values: {'a': null}));
+    });
+    test('synchronous by default', () {
+      final actual = just('a');
+      String seenValue;
+      actual.subscribe(Observer.next((value) => seenValue = value));
+      expect(seenValue, 'a');
+    });
+    test('asynchronous with custom scheduler', () {
+      final actual = just('a', scheduler: scheduler);
+      String seenValue;
+      actual.subscribe(Observer.next((value) => seenValue = value));
+      expect(seenValue, isNull);
+      scheduler.flush();
+      expect(seenValue, 'a');
+    });
+  });
+  group('never', () {
+    test('immediately closed', () {
+      final actual = never();
+      final subscription = actual.subscribe(Observer(
+        next: (value) => fail('No value expected'),
+        error: (error, [stack]) => fail('No error expected'),
+        complete: () => fail('No completion expected'),
+      ));
+      expect(subscription.isClosed, isTrue);
+    });
+  });
   group('stream', () {});
-  group('throwError', () {});
+  group('throwError', () {
+    test('immediately throws', () {
+      final error = Exception('My Error');
+      final actual = throwError(error);
+      expect(actual, scheduler.isObservable('#', error: error));
+    });
+    test('synchronous by default', () {
+      final error = Exception('My Error');
+      final actual = throwError(error);
+      Exception seenError;
+      actual.subscribe(Observer.error((error, [stack]) => seenError = error));
+      expect(seenError, error);
+    });
+    test('asynchronous with custom scheduler', () {
+      final error = Exception('My Error');
+      final actual = throwError(error, scheduler: scheduler);
+      Exception seenError;
+      actual.subscribe(Observer.error((error, [stack]) => seenError = error));
+      expect(seenError, isNull);
+      scheduler.flush();
+      expect(seenError, error);
+    });
+  });
   group('timer', () {});
 }
