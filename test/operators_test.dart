@@ -484,6 +484,38 @@ void main() {
       expect(actual, scheduler.isObservable('-a--(b|)'));
     });
   });
+  group('takeLast', () {
+    test('no value and completion', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(takeLast(2));
+      expect(actual, scheduler.isObservable('--|'));
+    });
+    test('no value and error', () {
+      final input = scheduler.cold('--#');
+      final actual = input.lift(takeLast(2));
+      expect(actual, scheduler.isObservable('--#'));
+    });
+    test('one value and completion', () {
+      final input = scheduler.cold('--a--|');
+      final actual = input.lift(takeLast(2));
+      expect(actual, scheduler.isObservable('-----(a|)'));
+    });
+    test('one value and error', () {
+      final input = scheduler.cold('--a--#');
+      final actual = input.lift(takeLast(2));
+      expect(actual, scheduler.isObservable('-----#'));
+    });
+    test('multiple values completion', () {
+      final input = scheduler.cold('-a--b---c----|');
+      final actual = input.lift(takeLast(2));
+      expect(actual, scheduler.isObservable('-------------(bc|)'));
+    });
+    test('multiple values and error', () {
+      final input = scheduler.cold('-a--b---c----#');
+      final actual = input.lift(takeLast(2));
+      expect(actual, scheduler.isObservable('-------------#'));
+    });
+  });
   group('takeWhile', () {
     test('no value and completion', () {
       final input = scheduler.cold('--|');

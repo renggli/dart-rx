@@ -18,6 +18,7 @@ export 'src/operators/scan.dart';
 export 'src/operators/skip.dart';
 export 'src/operators/skip_while.dart';
 export 'src/operators/take.dart';
+export 'src/operators/take_last.dart';
 export 'src/operators/take_while.dart';
 export 'src/operators/to_list.dart';
 export 'src/operators/to_set.dart';
