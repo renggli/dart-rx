@@ -32,6 +32,5 @@ class _IsEmptySubscriber<T> extends Subscriber<T> {
   void onComplete() {
     destination.next(true);
     destination.complete();
-    unsubscribe();
   }
 }

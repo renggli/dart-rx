@@ -38,6 +38,5 @@ class _FirstOrDefaultSubscriber<T> extends Subscriber<T> {
   void onComplete() {
     destination.next(defaultValue);
     destination.complete();
-    unsubscribe();
   }
 }

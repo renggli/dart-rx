@@ -33,7 +33,8 @@ class _TakeWhileSubscriber<T> extends Subscriber<T> {
     if (conditionFunction(value)) {
       destination.next(value);
     } else {
-      complete();
+      destination.complete();
+      unsubscribe();
     }
   }
 }
