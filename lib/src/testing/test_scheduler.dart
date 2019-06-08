@@ -150,7 +150,9 @@ class TestScheduler extends AsyncScheduler {
           messages.add(ErrorEvent<T>(index, error));
           break;
         default:
-          messages.add(ValueEvent<T>(index, values[marbles[i]] ?? marbles[i]));
+          final marble = marbles[i];
+          final value = values.containsKey(marble) ? values[marble] : marble;
+          messages.add(ValueEvent<T>(index, value));
           break;
       }
       if (!withinGroup) {
