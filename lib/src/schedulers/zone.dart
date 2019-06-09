@@ -44,7 +44,7 @@ abstract class ZoneScheduler extends Scheduler {
       return;
     }
     if (callback()) {
-      _scheduleIterationExecute(subscription, callback);
+      _scheduleIteration(subscription, callback);
     } else {
       subscription.unsubscribe();
     }

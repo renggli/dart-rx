@@ -4,7 +4,9 @@ import 'package:meta/meta.dart';
 import 'package:rx/core.dart';
 import 'package:rx/src/subscriptions/composite.dart';
 
-class Subscriber<T> extends CompositeSubscription implements Observer<T> {
+class Subscriber<T> extends CompositeSubscription
+    with Observer<T>
+    implements Observer<T> {
   @protected
   final Observer destination;
 

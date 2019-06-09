@@ -5,10 +5,10 @@ import 'package:rx/constructors.dart';
 import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 
-Observer<T> printObserver<T>(String name) => AnonymousObserver(
-      (value) => print('$name.next($value)'),
-      (error, [stackTrace]) => print('$name.error($error)'),
-      () => print('$name.complete()'),
+Observer<T> printObserver<T>(String name) => Observer(
+      next: (value) => print('$name.next($value)'),
+      error: (error, [stackTrace]) => print('$name.error($error)'),
+      complete: () => print('$name.complete()'),
     );
 
 void main() {
@@ -35,7 +35,10 @@ void main() {
 
   // iterable
   final iterable$ = fromIterable([1, 2, 3]);
-  iterable$.subscribe(printObserver('iterable\$'));
+  iterable$
+      .lift(tap(Observer.next(print)))
+      .lift(first())
+      .subscribe(printObserver('iterable\$'));
 
   // never
   final never$ = never();

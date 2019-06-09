@@ -211,8 +211,8 @@ void main() {
   });
   group('timer', () {
     final values = Map.fromIterables(
-      List.generate(9, (i) => '$i'),
-      List.generate(9, (i) => i),
+      List.generate(10, (i) => '$i'),
+      List.generate(10, (i) => i),
     );
     test('no delay', () {
       final actual = timer();

@@ -21,8 +21,7 @@ class SubscribeObservable<T> extends Observable<T> {
 
   @override
   Subscription subscribe(Observer<T> observer) {
-    final subscriber = Subscriber<T>(
-        AnonymousObserver<T>(observer.next, observer.error, observer.complete));
+    final subscriber = Subscriber<T>(observer);
     subscribeFunction(subscriber);
     return subscriber;
   }

@@ -15,7 +15,7 @@ import 'observer.dart';
 /// [Subject], and you can call `next` to feed values as well as `error` and
 /// `complete`.
 class Subject<T>
-    with Observable<T>
+    with Observable<T>, Observer<T>
     implements Observable<T>, Observer<T>, Subscription {
   final List<Observer<T>> _observers = [];
   bool _isClosed = false;

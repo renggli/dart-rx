@@ -10,8 +10,6 @@ import 'package:rx/src/core/subscription.dart';
 Operator<T, T> first<T>() => _FirstOperator();
 
 class _FirstOperator<T> implements Operator<T, T> {
-  _FirstOperator();
-
   @override
   Subscription call(Observable<T> source, Observer<T> destination) =>
       source.subscribe(_FirstSubscriber(destination));

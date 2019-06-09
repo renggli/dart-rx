@@ -1,64 +1,43 @@
 library rx.core.observer;
 
 import 'package:rx/core.dart';
+import 'package:rx/src/core/subscription.dart';
+import 'package:rx/src/observers/base.dart';
 
-void _nextFunctionDefault(Object value) {}
-void _errorFunctionDefault(Object error, [StackTrace stackTrace]) {}
-void _completeFunctionDefault() {}
+void _nextNoop(Object value) {}
+void _errorNoop(Object error, [StackTrace stackTrace]) {}
+void _completeNoop() {}
 
-abstract class Observer<T> {
+abstract class Observer<T> implements Subscription {
+  /// An observer with custom handlers.
   factory Observer({
-    NextFunction<T> next = _nextFunctionDefault,
-    ErrorFunction error = _errorFunctionDefault,
-    CompleteFunction complete = _completeFunctionDefault,
+    NextCallback<T> next = _nextNoop,
+    ErrorCallback error = _errorNoop,
+    CompleteCallback complete = _completeNoop,
   }) =>
-      AnonymousObserver(next, error, complete);
+      BaseObserver(next, error, complete);
 
-  factory Observer.next(NextFunction<T> next) => Observer(next: next);
+  /// An observer that is only interested in values.
+  factory Observer.next(NextCallback<T> next) =>
+      BaseObserver(next, _errorNoop, _completeNoop);
 
-  factory Observer.error(ErrorFunction error) => Observer(error: error);
+  /// An observer that is only interested in failure.
+  factory Observer.error(ErrorCallback error) =>
+      BaseObserver(_nextNoop, error, _completeNoop);
 
-  factory Observer.complete(CompleteFunction complete) =>
-      Observer(complete: complete);
+  /// An observer that is only interested in success.
+  factory Observer.complete(CompleteCallback complete) =>
+      BaseObserver(_nextNoop, _errorNoop, complete);
 
+  /// Pass a value to the observer.
   void next(T value);
 
+  /// Pass an error to the observer.
   void error(Object error, [StackTrace stackTrace]);
 
+  /// Pass completion to the observer.
   void complete();
-}
 
-class AnonymousObserver<T> implements Observer<T> {
-  final NextFunction<T> _nextFunction;
-  final ErrorFunction _errorFunction;
-  final CompleteFunction _completeFunction;
-
-  AnonymousObserver(
-      [this._nextFunction, this._errorFunction, this._completeFunction]);
-
-  @override
-  void next(T value) => _nextFunction(value);
-
-  @override
-  void error(Object error, [StackTrace stackTrace]) =>
-      _errorFunction(error, stackTrace);
-
-  @override
-  void complete() => _completeFunction();
-}
-
-class DelegateObserver<T> implements Observer<T> {
-  final Observer<T> _delegate;
-
-  DelegateObserver(this._delegate);
-
-  @override
-  void next(T value) => _delegate.next(value);
-
-  @override
-  void error(Object error, [StackTrace stackTrace]) =>
-      _delegate.error(error, stackTrace);
-
-  @override
-  void complete() => _delegate.complete();
+  /// Hides the identity of the observer.
+  Observer<T> toObserver() => BaseObserver(next, error, complete);
 }
