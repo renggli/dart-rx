@@ -10,6 +10,7 @@ class Subscriber<T> extends CompositeSubscription implements Observer<T> {
 
   Subscriber(this.destination);
 
+  /// Receives the next value.
   @override
   void next(T value) {
     if (isClosed) {
@@ -18,33 +19,54 @@ class Subscriber<T> extends CompositeSubscription implements Observer<T> {
     onNext(value);
   }
 
+  /// Handles the next value.
   @protected
-  void onNext(T value) => destination.next(value);
+  void onNext(T value) => doNext(value);
 
+  /// Passes the next value to the destination.
+  @protected
+  void doNext(Object value) => destination.next(value);
+
+  /// Receives the error.
   @override
   void error(Object error, [StackTrace stackTrace]) {
     if (isClosed) {
       return;
     }
     onError(error, stackTrace);
+  }
+
+  /// Handles the error.
+  @protected
+  void onError(Object error, [StackTrace stackTrace]) =>
+      doError(error, stackTrace);
+
+  /// Passes the error to the destination.
+  @protected
+  void doError(Object error, [StackTrace stackTrace]) {
+    destination.error(error, stackTrace);
     unsubscribe();
   }
 
-  @protected
-  void onError(Object error, [StackTrace stackTrace]) =>
-      destination.error(error, stackTrace);
-
+  /// Receives the completion.
   @override
   void complete() {
     if (isClosed) {
       return;
     }
     onComplete();
-    unsubscribe();
   }
 
+  /// Handles the completion.
   @protected
-  void onComplete() => destination.complete();
+  void onComplete() => doComplete();
+
+  /// Passes the completion to the destination.
+  @protected
+  void doComplete() {
+    destination.complete();
+    unsubscribe();
+  }
 }
 
 //class InnerSubscriber<T, R> extends Subscriber<R> {

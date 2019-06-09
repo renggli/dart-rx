@@ -53,9 +53,10 @@ class AsyncScheduler extends Scheduler {
   @override
   Subscription schedulePeriodic(Duration duration, Callback callback) =>
       _scheduleAt(now.add(duration), SchedulerActionCallbackWith((action) {
-        // TODO(renggli): Re-schedule without drift.
         callback();
-        _scheduleAt(now.add(duration), action);
+        if (!action.isClosed) {
+          _scheduleAt(now.add(duration), action);
+        }
       }));
 
   SchedulerAction _scheduleAt(DateTime dateTime, SchedulerAction action) {

@@ -29,14 +29,13 @@ class _FirstOrDefaultSubscriber<T> extends Subscriber<T> {
 
   @override
   void onNext(T value) {
-    destination.next(value);
-    destination.complete();
-    unsubscribe();
+    doNext(value);
+    doComplete();
   }
 
   @override
   void onComplete() {
-    destination.next(defaultValue);
-    destination.complete();
+    doNext(defaultValue);
+    doComplete();
   }
 }

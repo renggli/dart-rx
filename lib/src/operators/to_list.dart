@@ -35,7 +35,7 @@ class _ToListSubscriber<T> extends Subscriber<T> {
 
   @override
   void onComplete() {
-    destination.next(list);
-    destination.complete();
+    doNext(list);
+    doComplete();
   }
 }

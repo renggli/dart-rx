@@ -23,19 +23,17 @@ class _MaterializeSubscriber<T> extends Subscriber<T> {
       : super(destination);
 
   @override
-  void onNext(T value) {
-    destination.next(NextNotification<T>(value));
-  }
+  void onNext(T value) => doNext(NextNotification<T>(value));
 
   @override
   void onError(Object error, [StackTrace stackTrace]) {
-    destination.next(ErrorNotification<T>(error, stackTrace));
-    destination.complete();
+    doNext(ErrorNotification<T>(error, stackTrace));
+    doComplete();
   }
 
   @override
   void onComplete() {
-    destination.next(CompleteNotification<T>());
-    destination.complete();
+    doNext(CompleteNotification<T>());
+    doComplete();
   }
 }

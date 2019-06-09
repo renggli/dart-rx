@@ -42,7 +42,7 @@ class _DistinctSubscriber<T> extends Subscriber<T> {
   @override
   void onNext(T value) {
     if (values.add(value)) {
-      destination.next(value);
+      doNext(value);
     }
   }
 }

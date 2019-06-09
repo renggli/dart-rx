@@ -13,7 +13,7 @@ class SequentialSubscription extends StatefulSubscription {
   Subscription get current => _current;
 
   set current(Subscription subscription) {
-    if (isClosed) {
+    if (super.isClosed) {
       if (subscription != null) {
         subscription.unsubscribe();
       }
@@ -27,15 +27,12 @@ class SequentialSubscription extends StatefulSubscription {
   }
 
   @override
+  bool get isClosed =>
+      super.isClosed || (_current != null && _current.isClosed);
+
+  @override
   void unsubscribe() {
-    if (isClosed) {
-      return;
-    }
-    final previous = _current;
+    current = null;
     super.unsubscribe();
-    _current = null;
-    if (previous != null) {
-      previous.unsubscribe();
-    }
   }
 }

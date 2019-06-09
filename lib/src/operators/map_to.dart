@@ -26,5 +26,5 @@ class _MapToSubscriber<T, S> extends Subscriber<T> {
   _MapToSubscriber(Observer<S> destination, this.constant) : super(destination);
 
   @override
-  void onNext(T value) => destination.next(constant);
+  void onNext(T value) => doNext(constant);
 }

@@ -34,10 +34,10 @@ class _SkipWhileSubscriber<T> extends Subscriber<T> {
     if (skipping) {
       if (!conditionFunction(value)) {
         skipping = false;
-        destination.next(value);
+        doNext(value);
       }
     } else {
-      destination.next(value);
+      doNext(value);
     }
   }
 }

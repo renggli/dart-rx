@@ -29,7 +29,7 @@ class _CountSubscriber<T> extends Subscriber<T> {
 
   @override
   void onComplete() {
-    destination.next(count);
-    destination.complete();
+    doNext(count);
+    doComplete();
   }
 }

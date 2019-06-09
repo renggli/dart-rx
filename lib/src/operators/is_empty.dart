@@ -23,14 +23,13 @@ class _IsEmptySubscriber<T> extends Subscriber<T> {
 
   @override
   void onNext(T value) {
-    destination.next(false);
-    destination.complete();
-    unsubscribe();
+    doNext(false);
+    doComplete();
   }
 
   @override
   void onComplete() {
-    destination.next(true);
-    destination.complete();
+    doNext(true);
+    doComplete();
   }
 }

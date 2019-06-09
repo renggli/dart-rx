@@ -225,7 +225,7 @@ void main() {
 //    test('periodic', () {
 //      final actual = timer(period: scheduler.stepDuration * 2).lift(take(5));
 //      expect(
-//          actual, scheduler.isObservable('0--1--2--3--4--(5|)', values: values));
+//      actual, scheduler.isObservable('0--1--2--3--4--(5|)', values: values));
 //    });
 //    test('delay & periodic', () {
 //      final actual = timer(

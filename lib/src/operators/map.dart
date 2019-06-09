@@ -30,5 +30,5 @@ class _MapSubscriber<T, S> extends Subscriber<T> {
       : super(destination);
 
   @override
-  void onNext(T value) => destination.next(mapFunction(value));
+  void onNext(T value) => doNext(mapFunction(value));
 }

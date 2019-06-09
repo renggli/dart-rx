@@ -31,10 +31,9 @@ class _TakeWhileSubscriber<T> extends Subscriber<T> {
   @override
   void onNext(T value) {
     if (conditionFunction(value)) {
-      destination.next(value);
+      doNext(value);
     } else {
-      destination.complete();
-      unsubscribe();
+      doComplete();
     }
   }
 }

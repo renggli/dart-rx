@@ -29,11 +29,10 @@ class _TapSubscriber<T> extends Subscriber<T> {
     try {
       observer.next(value);
     } catch (error, stackTrace) {
-      destination.error(error, stackTrace);
-      unsubscribe();
+      doError(error, stackTrace);
       return;
     }
-    destination.next(value);
+    doNext(value);
   }
 
   @override
@@ -41,10 +40,10 @@ class _TapSubscriber<T> extends Subscriber<T> {
     try {
       observer.error(error, stackTrace);
     } catch (error, stackTrace) {
-      destination.error(error, stackTrace);
+      doError(error, stackTrace);
       return;
     }
-    destination.error(error, stackTrace);
+    doError(error, stackTrace);
   }
 
   @override
@@ -52,9 +51,9 @@ class _TapSubscriber<T> extends Subscriber<T> {
     try {
       observer.complete();
     } catch (error, stackTrace) {
-      destination.error(error, stackTrace);
+      doError(error, stackTrace);
       return;
     }
-    destination.complete();
+    doComplete();
   }
 }

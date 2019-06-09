@@ -22,13 +22,12 @@ class _FirstSubscriber<T> extends Subscriber<T> {
 
   @override
   void onNext(T value) {
-    destination.next(value);
-    destination.complete();
-    unsubscribe();
+    doNext(value);
+    doComplete();
   }
 
   @override
   void onComplete() {
-    destination.error('Sequence contains no elements');
+    doError('Sequence contains no elements');
   }
 }

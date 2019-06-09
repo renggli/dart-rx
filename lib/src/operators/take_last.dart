@@ -40,7 +40,7 @@ class _TakeLastSubscriber<T> extends Subscriber<T> {
 
   @override
   void onComplete() {
-    buffer.forEach(destination.next);
-    destination.complete();
+    buffer.forEach(doNext);
+    doComplete();
   }
 }

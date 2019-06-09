@@ -47,6 +47,6 @@ class _ScanSubscriber<T, S> extends Subscriber<T> {
       seedValue = value as S;
       hasSeed = true;
     }
-    destination.next(seedValue);
+    doNext(seedValue);
   }
 }

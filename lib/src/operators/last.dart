@@ -32,10 +32,10 @@ class _LastSubscriber<T> extends Subscriber<T> {
   @override
   void onComplete() {
     if (seenValue) {
-      destination.next(lastValue);
-      destination.complete();
+      doNext(lastValue);
+      doComplete();
     } else {
-      destination.error('Sequence contains no elements');
+      doError('Sequence contains no elements');
     }
   }
 }

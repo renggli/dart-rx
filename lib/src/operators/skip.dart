@@ -29,7 +29,7 @@ class _SkipSubscriber<T> extends Subscriber<T> {
     if (count > 0) {
       count--;
     } else {
-      destination.next(value);
+      doNext(value);
     }
   }
 }

@@ -26,9 +26,9 @@ class _TakeSubscriber<T> extends Subscriber<T> {
 
   @override
   void onNext(T value) {
-    destination.next(value);
+    doNext(value);
     if (--count <= 0) {
-      complete();
+      doComplete();
     }
   }
 }
