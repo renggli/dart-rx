@@ -209,5 +209,31 @@ void main() {
       expect(seenError, error);
     });
   });
-  group('timer', () {});
+  group('timer', () {
+    final values = Map.fromIterables(
+      List.generate(9, (i) => '$i'),
+      List.generate(9, (i) => i),
+    );
+    test('no delay', () {
+      final actual = timer();
+      expect(actual, scheduler.isObservable('(0|)', values: values));
+    });
+    test('delay', () {
+      final actual = timer(delay: scheduler.stepDuration * 5);
+      expect(actual, scheduler.isObservable('-----(0|)', values: values));
+    });
+//    test('periodic', () {
+//      final actual = timer(period: scheduler.stepDuration * 2).lift(take(5));
+//      expect(
+//          actual, scheduler.isObservable('0--1--2--3--4--(5|)', values: values));
+//    });
+//    test('delay & periodic', () {
+//      final actual = timer(
+//              delay: scheduler.stepDuration * 5,
+//              period: scheduler.stepDuration * 2)
+//          .lift(take(5));
+//      expect(actual,
+//          scheduler.isObservable('-----0--1--2--3--4--(5|)', values: values));
+//    });
+  });
 }

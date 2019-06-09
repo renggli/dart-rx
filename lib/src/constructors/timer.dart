@@ -7,7 +7,7 @@ import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/settings.dart';
 import 'package:rx/src/subscriptions/sequential.dart';
 
-/// An [Observable] that starts emitting after `delay` and emits ever
+/// An [Observable] that starts emitting after `delay` and that emits an ever
 /// increasing numbers after each `period` thereafter.
 Observable<int> timer(
         {Duration delay = Duration.zero,
@@ -29,6 +29,7 @@ class _TimerObservable with Observable<int> {
       observer.next(0);
       if (period == null) {
         observer.complete();
+        subscription.unsubscribe();
       } else {
         var value = 0;
         subscription.current =
