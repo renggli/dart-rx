@@ -97,7 +97,24 @@ void main() {
       expect(actual, scheduler.isObservable('--a-----#'));
     });
   });
-  group('finalize', () {});
+  group('finalize', () {
+    test('calls finalizer on completion', () {
+      final input = scheduler.cold('-a--b-|');
+      var seen = false;
+      final actual = input.lift(finalize(() => seen = true));
+      expect(seen, isFalse);
+      expect(actual, scheduler.isObservable('-a--b-|'));
+      expect(seen, isTrue);
+    });
+    test('calls finalizer on error', () {
+      final input = scheduler.cold('-a--b-#');
+      var seen = false;
+      final actual = input.lift(finalize(() => seen = true));
+      expect(seen, isFalse);
+      expect(actual, scheduler.isObservable('-a--b-#'));
+      expect(seen, isTrue);
+    });
+  });
   group('first', () {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
