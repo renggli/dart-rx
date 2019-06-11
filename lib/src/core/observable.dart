@@ -5,7 +5,7 @@ import 'operator.dart';
 import 'subscriber.dart';
 import 'subscription.dart';
 
-typedef SubscribeFunction<T> = void Function(Subscriber<T> subscriber);
+typedef SubscribeFunction<T> = dynamic Function(Subscriber<T> subscriber);
 
 abstract class Observable<T> {
   Observable<S> lift<S>(Operator<T, S> operator) =>
@@ -22,7 +22,8 @@ class SubscribeObservable<T> extends Observable<T> {
   @override
   Subscription subscribe(Observer<T> observer) {
     final subscriber = Subscriber<T>(observer);
-    subscribeFunction(subscriber);
+    final subscription = Subscription.of(subscribeFunction(subscriber));
+    subscriber.add(subscription);
     return subscriber;
   }
 }
@@ -34,6 +35,9 @@ class OperatorObservable<T, S> extends Observable<S> {
   OperatorObservable(this.source, this.operator);
 
   @override
-  Subscription subscribe(Observer<S> observer) =>
-      operator.call(source, observer);
+  Subscription subscribe(Observer<S> observer) {
+    final subscriber = Subscriber<S>(observer);
+    subscriber.add(operator.call(source, subscriber));
+    return subscriber;
+  }
 }

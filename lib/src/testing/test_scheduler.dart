@@ -36,7 +36,7 @@ class TestScheduler extends AsyncScheduler {
 
   /// Installs a test scheduler.
   void install() {
-    var subscription = Subscription.closed();
+    var subscription = Subscription.empty();
     setUp(() {
       _currentTime = DateTime.now();
       subscription = replaceDefaultScheduler(this);

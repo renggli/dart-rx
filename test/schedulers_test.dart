@@ -32,13 +32,13 @@ void main() {
       expect(subscription.isClosed, isTrue);
     });
   });
-  group('closed', () {
+  group('empty', () {
     test('initial', () {
-      final subscription = Subscription.closed();
+      final subscription = Subscription.empty();
       expect(subscription.isClosed, isTrue);
     });
     test('unsubscribe', () {
-      final subscription = Subscription.closed();
+      final subscription = Subscription.empty();
       subscription.unsubscribe();
       expect(subscription.isClosed, isTrue);
     });
@@ -57,13 +57,21 @@ void main() {
       expect(subscription.isClosed, isFalse);
       expect(child.isClosed, isFalse);
     });
+    test('add empty', () {
+      final subscription = CompositeSubscription();
+      final child = Subscription.empty();
+      subscription.add(child);
+      expect(subscription.subscriptions, isEmpty);
+      expect(subscription.isClosed, isFalse);
+      expect(child.isClosed, isTrue);
+    });
     test('add closed', () {
       final subscription = CompositeSubscription();
       final child = StatefulSubscription();
-      subscription.unsubscribe();
+      child.unsubscribe();
       subscription.add(child);
       expect(subscription.subscriptions, isEmpty);
-      expect(subscription.isClosed, isTrue);
+      expect(subscription.isClosed, isFalse);
       expect(child.isClosed, isTrue);
     });
     test('remove', () {

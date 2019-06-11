@@ -1,9 +1,9 @@
-library rx.subscriptions.closed;
+library rx.subscriptions.emtpy;
 
 import 'package:rx/src/core/subscription.dart';
 
-class ClosedSubscription extends Subscription {
-  const ClosedSubscription();
+class EmptySubscription extends Subscription {
+  const EmptySubscription();
 
   @override
   bool get isClosed => true;

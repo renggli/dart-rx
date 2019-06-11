@@ -90,13 +90,13 @@ class Subject<T>
   Subscription subscribeToError(
       Observer observer, Object error, StackTrace stackTrace) {
     observer.error(error, stackTrace);
-    return Subscription.closed();
+    return Subscription.empty();
   }
 
   @protected
   Subscription subscribeToComplete(Observer observer) {
     observer.complete();
-    return Subscription.closed();
+    return Subscription.empty();
   }
 
   @override

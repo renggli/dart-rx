@@ -14,6 +14,9 @@ class CompositeSubscription extends StatefulSubscription {
   List<Subscription> get subscriptions => [..._subscriptions];
 
   void add(Subscription subscription) {
+    if (subscription.isClosed) {
+      return;
+    }
     if (isClosed) {
       subscription.unsubscribe();
       return;

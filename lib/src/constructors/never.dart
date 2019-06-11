@@ -11,5 +11,5 @@ class _NeverObservable<T> with Observable<T> {
   const _NeverObservable();
 
   @override
-  Subscription subscribe(Observer<void> observer) => Subscription.closed();
+  Subscription subscribe(Observer<void> observer) => Subscription.empty();
 }

@@ -39,7 +39,7 @@ class AsyncSubject<T> extends Subject<T> {
     if (_hasCompleted && _hasValue) {
       observer.next(_value);
       observer.complete();
-      return Subscription.closed();
+      return Subscription.empty();
     }
     return super.subscribe(observer);
   }

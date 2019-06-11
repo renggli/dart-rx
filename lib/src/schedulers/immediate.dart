@@ -13,13 +13,13 @@ class ImmediateScheduler extends Scheduler {
   @override
   Subscription schedule(Callback callback) {
     callback();
-    return Subscription.closed();
+    return Subscription.empty();
   }
 
   @override
   Subscription scheduleIteration(IterationCallback callback) {
     for (; callback();) {}
-    return Subscription.closed();
+    return Subscription.empty();
   }
 
   @override
@@ -30,7 +30,7 @@ class ImmediateScheduler extends Scheduler {
   Subscription scheduleRelative(Duration duration, Callback callback) {
     sleep(duration);
     callback();
-    return Subscription.closed();
+    return Subscription.empty();
   }
 
   @override
