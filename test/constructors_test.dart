@@ -10,7 +10,37 @@ void main() {
   final scheduler = TestScheduler();
   scheduler.install();
 
-  group('concat', () {});
+  group('concat', () {
+    test('elements from 3 different sources', () {
+      final actual = concat([
+        scheduler.cold('-a-b-c-|'),
+        scheduler.cold('-0-1-|'),
+        scheduler.cold('-w-x-y-z-|'),
+      ]);
+      expect(actual, scheduler.isObservable('-a-b-c--0-1--w-x-y-z-|'));
+    });
+    test('elements from 3 same sources', () {
+      final source = scheduler.cold('--i-j-|');
+      final actual = concat([source, source, source]);
+      expect(actual, scheduler.isObservable('--i-j---i-j---i-j-|'));
+    });
+    test('no elements from empty sources', () {
+      final actual = concat([
+        scheduler.cold('--|'),
+        scheduler.cold('---|'),
+        scheduler.cold('-|'),
+      ]);
+      expect(actual, scheduler.isObservable('------|'));
+    });
+    test('no elements after error', () {
+      final actual = concat([
+        scheduler.cold('-a-|'),
+        scheduler.cold('-#'),
+        scheduler.cold('-b-|'),
+      ]);
+      expect(actual, scheduler.isObservable('-a--#'));
+    });
+  });
   group('create', () {});
   group('defer', () {});
   group('empty', () {
@@ -94,13 +124,6 @@ void main() {
       ]);
       expect(actual, scheduler.isObservable<List<String>>('-----|'));
     });
-    test('does not complete when one of the sources never completes', () {
-      final actual = forkJoin<String>([
-        scheduler.cold('--------------'),
-        scheduler.cold('-a---b--c--|'),
-      ]);
-      expect(actual, scheduler.isObservable<List<String>>('-'));
-    }, skip: 'infrastructure is broken');
     test('completes when one never completes, but another is emptuy', () {
       final actual = forkJoin<String>([
         scheduler.cold('--------------'),
