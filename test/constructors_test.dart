@@ -175,6 +175,40 @@ void main() {
       expect(seenValue, 'a');
     });
   });
+  group('merge', () {
+    test('merges two interleaving sequences', () {
+      final actual = merge([
+        scheduler.cold<String>('--a-----b-----c----|'),
+        scheduler.cold<String>('-----x-----y-----z---|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('--a--x--b--y--c--z---|'));
+    });
+    test('merges two overlapping sequences', () {
+      final actual = merge([
+        scheduler.cold<String>('--a--b--c--|'),
+        scheduler.cold<String>('--x--y--z--|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('--(ax)--(by)--(cz)--|'));
+    });
+    test('merges throwing sequence', () {
+      final actual = merge([
+        scheduler.cold<String>('--a--#'),
+        scheduler.cold<String>('--x-----y--|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('--(ax)--#'));
+    });
+    test('merges many sequences', () {
+      final actual = merge([
+        scheduler.cold<String>('a--|'),
+        scheduler.cold<String>('-b--|'),
+        scheduler.cold<String>('--c--|'),
+        scheduler.cold<String>('---d--|'),
+        scheduler.cold<String>('----e--|'),
+        scheduler.cold<String>('-----f--|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('abcdef--|'));
+    });
+  });
   group('never', () {
     test('immediately closed', () {
       final actual = never();
