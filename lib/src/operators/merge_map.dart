@@ -13,9 +13,9 @@ typedef ProjectFunction<T, R> = Observable<R> Function(T value);
 
 /// Applies a given project function to each value emitted by the source
 /// Observable, and emits the resulting values as an Observable.
-Operator<T, R> mergeMap<T, R>(
-        {ProjectFunction<T, R> project, int concurrent = maxInt}) =>
-    _MergeMapOperator(project ?? (value) => value as Observable<R>, concurrent);
+Operator<T, R> mergeMap<T, R>(ProjectFunction<T, R> project,
+        {int concurrent = maxInteger}) =>
+    _MergeMapOperator(project, concurrent);
 
 class _MergeMapOperator<T, R> implements Operator<T, R> {
   final ProjectFunction<T, R> project;

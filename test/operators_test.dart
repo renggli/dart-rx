@@ -1,5 +1,6 @@
 library rx.test.operators_test;
 
+import 'package:rx/constructors.dart';
 import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/testing.dart';
@@ -329,6 +330,53 @@ void main() {
       final input = scheduler.cold<String>('-a--b---#-|');
       final actual = input.lift(materialize());
       expect(actual, scheduler.isObservable('-a--b---(e|)', values: values));
+    });
+  });
+  group('mergeMap', () {
+
+
+
+
+  });
+  group('mergeMapTo', () {
+    test('inner emits a single value', () {
+      final inner = just('x');
+      final actual =
+          scheduler.cold<String>('-a--a---a-|').lift(mergeMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-x--x---x-|'));
+    });
+    test('inner emits two values', () {
+      final inner = scheduler.cold<String>('x-y-|');
+      final actual =
+          scheduler.cold<String>('-a--a---a-|').lift(mergeMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-x-yx-y-x-y-|'));
+    });
+    test('inner started concurrently', () {
+      final inner = scheduler.cold<String>('x-y-|');
+      final actual = scheduler.cold<String>('-(ab)--|').lift(mergeMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-(xx)-(yy)-|'));
+    });
+    test('inner started overlappingly', () {
+      final inner = scheduler.cold<String>('x-y-|');
+      final actual = scheduler.cold<String>('-ab-|').lift(mergeMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-xxyy-|'));
+    });
+    test('inner throws', () {
+      final inner = scheduler.cold<String>('x---#');
+      final actual = scheduler.cold<String>('-a-b-|').lift(mergeMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-x-x-#'));
+    });
+    test('outer throws', () {
+      final inner = scheduler.cold<String>('x-y-z-|');
+      final actual = scheduler.cold<String>('-a--#').lift(mergeMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-x-y#'));
+    });
+    test('limit concurrent', () {
+      final inner = scheduler.cold<String>('xyz|');
+      final actual = scheduler
+          .cold<String>('a---b---|')
+          .lift(mergeMapTo(inner, concurrent: 1));
+      expect(actual, scheduler.isObservable<String>('xyz-xyz-|'));
     });
   });
   group('scan', () {
