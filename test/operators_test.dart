@@ -333,10 +333,39 @@ void main() {
     });
   });
   group('mergeMap', () {
-
-
-
-
+    test('inner with dynamic outputs', () {
+      final actual = scheduler.cold<String>('-a--b---c---a--|', values: {
+        'a': 'x-|',
+        'b': 'yy-|',
+        'c': 'zzz-|',
+      }).lift(mergeMap((inner) => scheduler.cold<String>(inner)));
+      expect(actual, scheduler.isObservable<String>('-x--yy--zzz-x--|'));
+    });
+    test('inner with error', () {
+      final actual = scheduler.cold<String>('-a--b---c---a--|', values: {
+        'a': 'x-|',
+        'b': 'yy-|',
+        'c': 'zz#',
+      }).lift(mergeMap((inner) => scheduler.cold<String>(inner)));
+      expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
+    });
+    test('outer with error', () {
+      final actual = scheduler.cold<String>('-a--b---c-#', values: {
+        'a': 'x-|',
+        'b': 'yy-|',
+        'c': 'zz#',
+      }).lift(mergeMap((inner) => scheduler.cold<String>(inner)));
+      expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
+    });
+    test('limit concurrent', () {
+      final actual = scheduler.cold<String>('abc|', values: {
+        'a': 'x---|',
+        'b': 'y---|',
+        'c': 'z---|',
+      }).lift(
+          mergeMap((inner) => scheduler.cold<String>(inner), concurrent: 2));
+      expect(actual, scheduler.isObservable<String>('xy--z---|'));
+    });
   });
   group('mergeMapTo', () {
     test('inner emits a single value', () {
