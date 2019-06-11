@@ -60,7 +60,7 @@ class TestScheduler extends AsyncScheduler {
   /// Advances the time as far as possible and execute all existing and new
   /// pending actions on the way.
   void advanceAll() {
-    while (immediate.isNotEmpty || scheduled.isNotEmpty) {
+    while (scheduled.isNotEmpty) {
       _currentTime = scheduled.firstKey() ?? _currentTime;
       flush();
     }
