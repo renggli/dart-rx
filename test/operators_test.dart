@@ -162,6 +162,18 @@ void main() {
       expect(actual, scheduler.isObservable('--(a|)'));
     });
   });
+  group('ignoreElements', () {
+    test('multiple values and completion', () {
+      final input = scheduler.cold('--a--b--c--|');
+      final actual = input.lift(ignoreElements());
+      expect(actual, scheduler.isObservable('-----------|'));
+    });
+    test('multiple values and error', () {
+      final input = scheduler.cold('--a--b--c--#');
+      final actual = input.lift(ignoreElements());
+      expect(actual, scheduler.isObservable('-----------#'));
+    });
+  });
   group('isEmpty', () {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
