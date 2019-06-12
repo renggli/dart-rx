@@ -1,15 +1,30 @@
 library rx.operators.first;
 
+import 'package:rx/errors.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
-/// Returns the first element of an observable sequence.
-Operator<T, T> first<T>() =>
-    (subscriber, source) => source.subscribe(_FirstSubscriber(subscriber));
+typedef FirstCallback<T> = T Function();
+
+/// Returns the first element of an observable sequence, or emits an
+/// [EmptyError] otherwise.
+Operator<T, T> first<T>() => firstOrElse(() => throw EmptyError());
+
+/// Returns the first element of an observable sequence, or the provided
+/// default value otherwise.
+Operator<T, T> firstOrDefault<T>([T value]) => firstOrElse(() => value);
+
+/// Returns the first element of an observable sequence, or evaluates the
+/// provided callback otherwise.
+Operator<T, T> firstOrElse<T>(FirstCallback<T> callback) =>
+    (subscriber, source) =>
+        source.subscribe(_FirstSubscriber(subscriber, callback));
 
 class _FirstSubscriber<T> extends Subscriber<T> {
-  _FirstSubscriber(Observer<T> destination) : super(destination);
+  final FirstCallback<T> callback;
+
+  _FirstSubscriber(Observer<T> destination, this.callback) : super(destination);
 
   @override
   void onNext(T value) {
@@ -19,6 +34,10 @@ class _FirstSubscriber<T> extends Subscriber<T> {
 
   @override
   void onComplete() {
-    doError('Sequence contains no elements');
+    try {
+      onNext(callback());
+    } catch (error, stackTrace) {
+      doError(error, stackTrace);
+    }
   }
 }

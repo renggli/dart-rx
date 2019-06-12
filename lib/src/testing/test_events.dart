@@ -3,7 +3,25 @@ library rx.testing.test_message;
 import 'package:collection/collection.dart';
 import 'package:rx/src/core/observer.dart';
 
-const equality = DeepCollectionEquality();
+const equality = MultiEquality([
+  ExceptionEquality<Exception>(),
+  ExceptionEquality<Error>(),
+  DeepCollectionEquality(),
+]);
+
+class ExceptionEquality<T> implements Equality<T> {
+  const ExceptionEquality();
+
+  @override
+  bool equals(T e1, T e2) =>
+      e1.runtimeType == e2.runtimeType && e1.toString() == e2.toString();
+
+  @override
+  int hash(T e) => e.runtimeType.hashCode ^ e.toString().hashCode;
+
+  @override
+  bool isValidKey(Object object) => object is T;
+}
 
 abstract class TestEvent<T> {
   final int index;

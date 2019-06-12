@@ -2,6 +2,7 @@ library rx.test.operators_test;
 
 import 'package:rx/constructors.dart';
 import 'package:rx/core.dart';
+import 'package:rx/errors.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart' hide isEmpty;
@@ -120,10 +121,7 @@ void main() {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
       final actual = input.lift(first());
-      expect(
-          actual,
-          scheduler.isObservable('--#',
-              error: 'Sequence contains no elements'));
+      expect(actual, scheduler.isObservable('--#', error: EmptyError()));
     });
     test('no value and error', () {
       final input = scheduler.cold('--#');
@@ -160,6 +158,33 @@ void main() {
     test('multiple values and error', () {
       final input = scheduler.cold('--a--b--c--#');
       final actual = input.lift(firstOrDefault('x'));
+      expect(actual, scheduler.isObservable('--(a|)'));
+    });
+  });
+  group('firstOrElse', () {
+    test('no value and completion', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(firstOrElse(() => 'x'));
+      expect(actual, scheduler.isObservable('--(x|)'));
+    });
+    test('no value and completion error', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(firstOrElse(() => throw ArgumentError()));
+      expect(actual, scheduler.isObservable('--#', error: ArgumentError()));
+    });
+    test('no value and error', () {
+      final input = scheduler.cold('--#');
+      final actual = input.lift(firstOrElse(() => fail('Not called')));
+      expect(actual, scheduler.isObservable('--#'));
+    });
+    test('multiple values and completion', () {
+      final input = scheduler.cold('--a--b--c--|');
+      final actual = input.lift(firstOrElse(() => fail('Not called')));
+      expect(actual, scheduler.isObservable('--(a|)'));
+    });
+    test('multiple values and error', () {
+      final input = scheduler.cold('--a--b--c--#');
+      final actual = input.lift(firstOrElse(() => fail('Not called')));
       expect(actual, scheduler.isObservable('--(a|)'));
     });
   });
@@ -211,10 +236,7 @@ void main() {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
       final actual = input.lift(last());
-      expect(
-          actual,
-          scheduler.isObservable('--#',
-              error: 'Sequence contains no elements'));
+      expect(actual, scheduler.isObservable('--#', error: EmptyError()));
     });
     test('no value and error', () {
       final input = scheduler.cold('--#');
@@ -251,6 +273,33 @@ void main() {
     test('multiple values and error', () {
       final input = scheduler.cold('--a--b--c--#');
       final actual = input.lift(lastOrDefault('x'));
+      expect(actual, scheduler.isObservable('-----------#'));
+    });
+  });
+  group('lastOrElse', () {
+    test('no value and completion', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(lastOrElse(() => 'x'));
+      expect(actual, scheduler.isObservable('--(x|)'));
+    });
+    test('no value and completion error', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(lastOrElse(() => throw ArgumentError()));
+      expect(actual, scheduler.isObservable('--#', error: ArgumentError()));
+    });
+    test('no value and error', () {
+      final input = scheduler.cold('--#');
+      final actual = input.lift(lastOrElse(() => fail('Not called')));
+      expect(actual, scheduler.isObservable('--#'));
+    });
+    test('multiple values and completion', () {
+      final input = scheduler.cold('--a--b--c--|');
+      final actual = input.lift(lastOrElse(() => fail('Not called')));
+      expect(actual, scheduler.isObservable('-----------(c|)'));
+    });
+    test('multiple values and error', () {
+      final input = scheduler.cold('--a--b--c--#');
+      final actual = input.lift(lastOrElse(() => fail('Not called')));
       expect(actual, scheduler.isObservable('-----------#'));
     });
   });
