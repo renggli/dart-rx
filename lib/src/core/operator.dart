@@ -4,6 +4,5 @@ import 'observable.dart';
 import 'observer.dart';
 import 'subscription.dart';
 
-abstract class Operator<T, S> {
-  Subscription call(Observable<T> source, Observer<S> destination);
-}
+typedef Operator<T, R> = Subscription Function(
+    Observable<T> source, Observer<R> destination);
