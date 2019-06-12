@@ -1,6 +1,7 @@
 library rx.subscriptions.composite;
 
 import 'package:rx/core.dart';
+import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 
@@ -46,8 +47,6 @@ class CompositeSubscription extends StatefulSubscription {
         errors.add(error);
       }
     }
-    if (errors.isNotEmpty) {
-      throw errors.first;
-    }
+    UnsubscriptionError.checkList(errors);
   }
 }

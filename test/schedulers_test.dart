@@ -1,5 +1,6 @@
 library rx.test.schedulers_test;
 
+import 'package:rx/src/core/errors.dart';
 import 'package:rx/subscriptions.dart';
 import 'package:test/test.dart';
 
@@ -106,7 +107,8 @@ void main() {
       final child2 = StatefulSubscription();
       subscription.add(child1);
       subscription.add(child2);
-      expect(() => subscription.unsubscribe(), throwsException);
+      expect(() => subscription.unsubscribe(),
+          throwsA(isA<UnsubscriptionError>()));
       expect(subscription.subscriptions, isEmpty);
       expect(subscription.isClosed, isTrue);
       expect(child1.isClosed, isTrue);

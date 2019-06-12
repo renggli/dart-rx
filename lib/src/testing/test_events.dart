@@ -4,20 +4,19 @@ import 'package:collection/collection.dart';
 import 'package:rx/src/core/observer.dart';
 
 const equality = MultiEquality([
-  ExceptionEquality<Exception>(),
-  ExceptionEquality<Error>(),
+  TypeEquality<Exception>(),
+  TypeEquality<Error>(),
   DeepCollectionEquality(),
 ]);
 
-class ExceptionEquality<T> implements Equality<T> {
-  const ExceptionEquality();
+class TypeEquality<T> implements Equality<T> {
+  const TypeEquality();
 
   @override
-  bool equals(T e1, T e2) =>
-      e1.runtimeType == e2.runtimeType && e1.toString() == e2.toString();
+  bool equals(T e1, T e2) => e1.runtimeType == e2.runtimeType;
 
   @override
-  int hash(T e) => e.runtimeType.hashCode ^ e.toString().hashCode;
+  int hash(T e) => e.runtimeType.hashCode;
 
   @override
   bool isValidKey(Object object) => object is T;

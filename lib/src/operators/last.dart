@@ -1,6 +1,6 @@
 library rx.operators.last;
 
-import 'package:rx/errors.dart';
+import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
