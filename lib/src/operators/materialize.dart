@@ -5,8 +5,8 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
-Operator<T, Notification<T>> materialize<T>() => (source, destination) =>
-    source.subscribe(_MaterializeSubscriber<T>(destination));
+Operator<T, Notification<T>> materialize<T>() => (subscriber, source) =>
+    source.subscribe(_MaterializeSubscriber<T>(subscriber));
 
 class _MaterializeSubscriber<T> extends Subscriber<T> {
   _MaterializeSubscriber(Observer<Notification<T>> destination)

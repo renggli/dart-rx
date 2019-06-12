@@ -8,8 +8,8 @@ typedef SetConstructor<T> = Set<T> Function();
 
 /// Returns a [Set] from an observable sequence.
 Operator<T, Set<T>> toSet<T>([SetConstructor<T> setConstructor]) =>
-    (source, destination) => source.subscribe(_ToSetSubscriber(
-        destination, setConstructor != null ? setConstructor : <T>{}));
+    (subscriber, source) => source.subscribe(_ToSetSubscriber(
+        subscriber, setConstructor != null ? setConstructor : <T>{}));
 
 class _ToSetSubscriber<T> extends Subscriber<T> {
   final Set<T> set;

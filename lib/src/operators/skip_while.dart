@@ -8,8 +8,8 @@ typedef SkipWhileConditionFunction<T> = bool Function(T value);
 
 /// Skips over the values while the [conditionFunction] is `true`.
 Operator<T, T> skipWhile<T>(SkipWhileConditionFunction conditionFunction) =>
-    (source, destination) =>
-        source.subscribe(_SkipWhileSubscriber(destination, conditionFunction));
+    (subscriber, source) =>
+        source.subscribe(_SkipWhileSubscriber(subscriber, conditionFunction));
 
 class _SkipWhileSubscriber<T> extends Subscriber<T> {
   final SkipWhileConditionFunction conditionFunction;

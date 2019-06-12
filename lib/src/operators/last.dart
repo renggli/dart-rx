@@ -6,7 +6,7 @@ import 'package:rx/src/core/subscriber.dart';
 
 /// Returns the last element of an observable sequence.
 Operator<T, T> last<T>() =>
-    (source, destination) => source.subscribe(_LastSubscriber(destination));
+    (subscriber, source) => source.subscribe(_LastSubscriber(subscriber));
 
 class _LastSubscriber<T> extends Subscriber<T> {
   T lastValue;

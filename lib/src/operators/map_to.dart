@@ -6,8 +6,8 @@ import 'package:rx/src/core/operator.dart';
 
 /// Emits the given constant value on the output Observable every time the
 /// source Observable emits a value.
-Operator<T, S> mapTo<T, S>(S constant) => (source, destination) =>
-    source.subscribe(_MapToSubscriber(destination, constant));
+Operator<T, S> mapTo<T, S>(S constant) => (subscriber, source) =>
+    source.subscribe(_MapToSubscriber(subscriber, constant));
 
 class _MapToSubscriber<T, S> extends Subscriber<T> {
   final S constant;

@@ -8,14 +8,14 @@ typedef CombineFunction<T, S> = S Function(S accumulator, T value);
 
 /// Combines a sequence of values by repeatedly applying [combine].
 Operator<T, T> reduce<T>(CombineFunction<T, T> combine) =>
-    (source, destination) =>
-        source.subscribe(_ScanSubscriber(destination, combine, false, null));
+    (subscriber, source) =>
+        source.subscribe(_ScanSubscriber(subscriber, combine, false, null));
 
 /// Combines a sequence of values by repeatedly applying [combine], starting
 /// with the provided [initialValue].
 Operator<T, S> fold<T, S>(S initialValue, CombineFunction<T, S> combine) =>
-    (source, destination) => source
-        .subscribe(_ScanSubscriber(destination, combine, true, initialValue));
+    (subscriber, source) => source
+        .subscribe(_ScanSubscriber(subscriber, combine, true, initialValue));
 
 class _ScanSubscriber<T, S> extends Subscriber<T> {
   final CombineFunction<T, S> scanFunction;

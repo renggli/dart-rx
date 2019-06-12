@@ -5,8 +5,8 @@ import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
 /// Perform a side effect for every emission on the source.
-Operator<T, T> tap<T>(Observer<T> observer) => (source, destination) =>
-    source.subscribe(_TapSubscriber(destination, observer));
+Operator<T, T> tap<T>(Observer<T> observer) => (subscriber, source) =>
+    source.subscribe(_TapSubscriber(subscriber, observer));
 
 class _TapSubscriber<T> extends Subscriber<T> {
   final Observer<T> observer;

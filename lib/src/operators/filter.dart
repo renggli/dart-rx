@@ -9,8 +9,8 @@ typedef FilterFunction<T> = bool Function(T value);
 /// Filter items emitted by the source Observable by only emitting those that
 /// satisfy a specified predicate.
 Operator<T, T> filter<T>(FilterFunction filterFunction) =>
-    (source, destination) =>
-        source.subscribe(_FilterSubscriber(destination, filterFunction));
+    (subscriber, source) =>
+        source.subscribe(_FilterSubscriber(subscriber, filterFunction));
 
 class _FilterSubscriber<T> extends Subscriber<T> {
   final FilterFunction<T> filterFunction;

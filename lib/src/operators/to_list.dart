@@ -8,8 +8,8 @@ typedef ListConstructor<T> = List<T> Function();
 
 /// Returns a [List] from an observable sequence.
 Operator<T, List<T>> toList<T>([ListConstructor<T> listConstructor]) =>
-    (source, destination) => source.subscribe(_ToListSubscriber(
-        destination, listConstructor != null ? listConstructor : <T>[]));
+    (subscriber, source) => source.subscribe(_ToListSubscriber(
+        subscriber, listConstructor != null ? listConstructor : <T>[]));
 
 class _ToListSubscriber<T> extends Subscriber<T> {
   final List<T> list;

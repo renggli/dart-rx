@@ -41,7 +41,7 @@ class OperatorObservable<T, S> extends Observable<S> {
   @override
   Subscription subscribe(Observer<S> observer) {
     final subscriber = Subscriber<S>(observer);
-    subscriber.add(operator.call(source, subscriber));
+    subscriber.add(operator(subscriber, source));
     return subscriber;
   }
 }

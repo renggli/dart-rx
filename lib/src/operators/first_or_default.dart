@@ -6,8 +6,8 @@ import 'package:rx/src/core/subscriber.dart';
 
 /// Returns the first element of an observable sequence, or a default value if
 /// the sequence is empty.
-Operator<T, T> firstOrDefault<T>([T defaultValue]) => (source, destination) =>
-    source.subscribe(_FirstOrDefaultSubscriber(destination, defaultValue));
+Operator<T, T> firstOrDefault<T>([T defaultValue]) => (subscriber, source) =>
+    source.subscribe(_FirstOrDefaultSubscriber(subscriber, defaultValue));
 
 class _FirstOrDefaultSubscriber<T> extends Subscriber<T> {
   final T defaultValue;

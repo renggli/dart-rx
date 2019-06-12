@@ -9,8 +9,8 @@ typedef MapFunction<T, S> = S Function(T value);
 /// Applies a given project function to each value emitted by the source
 /// Observable, and emits the resulting values as an Observable.
 Operator<T, S> map<T, S>(MapFunction<T, S> mapFunction) =>
-    (source, destination) =>
-        source.subscribe(_MapSubscriber(destination, mapFunction));
+    (subscriber, source) =>
+        source.subscribe(_MapSubscriber(subscriber, mapFunction));
 
 class _MapSubscriber<T, S> extends Subscriber<T> {
   final MapFunction<T, S> mapFunction;

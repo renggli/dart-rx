@@ -8,8 +8,8 @@ typedef TakeWhileConditionFunction<T> = bool Function(T value);
 
 /// Emits values while the [conditionFunction] returns `true`.
 Operator<T, T> takeWhile<T>(TakeWhileConditionFunction conditionFunction) =>
-    (source, destination) =>
-        source.subscribe(_TakeWhileSubscriber(destination, conditionFunction));
+    (subscriber, source) =>
+        source.subscribe(_TakeWhileSubscriber(subscriber, conditionFunction));
 
 class _TakeWhileSubscriber<T> extends Subscriber<T> {
   final TakeWhileConditionFunction conditionFunction;

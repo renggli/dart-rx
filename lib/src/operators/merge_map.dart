@@ -15,8 +15,8 @@ typedef ProjectFunction<T, R> = Observable<R> Function(T value);
 /// Observable, and emits the resulting values as an Observable.
 Operator<T, R> mergeMap<T, R>(ProjectFunction<T, R> project,
         {int concurrent = maxInteger}) =>
-    (source, destination) =>
-        source.subscribe(_MergeMapSubscriber(destination, project, concurrent));
+    (subscriber, source) =>
+        source.subscribe(_MergeMapSubscriber(subscriber, project, concurrent));
 
 class _MergeMapSubscriber<T, R> extends Subscriber<T> {
   final ProjectFunction<T, R> project;

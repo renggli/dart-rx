@@ -6,7 +6,7 @@ import 'package:rx/src/core/subscriber.dart';
 
 /// Returns the first element of an observable sequence.
 Operator<T, T> first<T>() =>
-    (source, destination) => source.subscribe(_FirstSubscriber(destination));
+    (subscriber, source) => source.subscribe(_FirstSubscriber(subscriber));
 
 class _FirstSubscriber<T> extends Subscriber<T> {
   _FirstSubscriber(Observer<T> destination) : super(destination);

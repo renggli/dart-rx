@@ -13,8 +13,8 @@ typedef DistinctHashCodeFunction<T> = int Function(T value);
 Operator<T, T> distinct<T>(
         {DistinctEqualsFunction<T> equals,
         DistinctHashCodeFunction<T> hashCode}) =>
-    (source, destination) =>
-        source.subscribe(_DistinctSubscriber(destination, equals, hashCode));
+    (subscriber, source) =>
+        source.subscribe(_DistinctSubscriber(subscriber, equals, hashCode));
 
 class _DistinctSubscriber<T> extends Subscriber<T> {
   final Set<T> values;

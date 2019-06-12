@@ -6,7 +6,7 @@ import 'package:rx/src/core/subscriber.dart';
 
 /// Counts the number of emissions and emits that number on completion.
 Operator<T, int> count<T>() =>
-    (source, destination) => source.subscribe(_CountSubscriber(destination));
+    (subscriber, source) => source.subscribe(_CountSubscriber(subscriber));
 
 class _CountSubscriber<T> extends Subscriber<T> {
   int count = 0;
