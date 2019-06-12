@@ -7,11 +7,11 @@ import 'package:rx/src/subscriptions/stateful.dart';
 import 'stateful.dart';
 
 class CompositeSubscription extends StatefulSubscription {
-  List<Subscription> _subscriptions = [];
+  final Set<Subscription> _subscriptions = {};
 
   CompositeSubscription();
 
-  List<Subscription> get subscriptions => [..._subscriptions];
+  Set<Subscription> get subscriptions => {..._subscriptions};
 
   void add(Subscription subscription) {
     if (subscription.isClosed) {
@@ -35,9 +35,9 @@ class CompositeSubscription extends StatefulSubscription {
     if (isClosed) {
       return;
     }
-    final subscriptions = _subscriptions;
+    final subscriptions = _subscriptions.toList();
     super.unsubscribe();
-    _subscriptions = [];
+    _subscriptions.clear();
     final errors = [];
     for (final subscription in subscriptions) {
       try {

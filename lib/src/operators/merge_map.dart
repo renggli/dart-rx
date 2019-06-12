@@ -50,11 +50,13 @@ class _MergeMapSubscriber<T, R> extends Subscriber<T> {
         return;
       }
       active++;
-      add(observable.subscribe(Observer(
+      Subscription subscription;
+      subscription = observable.subscribe(Observer(
         next: doNext,
         error: doError,
-        complete: innerComplete,
-      )));
+        complete: () => innerComplete(subscription),
+      ));
+      add(subscription);
     } else {
       buffer.addLast(value);
     }
@@ -69,8 +71,8 @@ class _MergeMapSubscriber<T, R> extends Subscriber<T> {
     //unsubscribe();
   }
 
-  void innerComplete() {
-    // TODO(renggli): remove from subscriptions
+  void innerComplete(Subscription subscription) {
+    remove(subscription);
     active--;
     if (buffer.isNotEmpty) {
       onNext(buffer.removeFirst());
