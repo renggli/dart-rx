@@ -150,7 +150,7 @@ void main() {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
       final actual = input.lift(first());
-      expect(actual, scheduler.isObservable('--#', error: EmptyError()));
+      expect(actual, scheduler.isObservable('--#', error: TooFewError()));
     });
     test('no value and error', () {
       final input = scheduler.cold('--#');
@@ -265,7 +265,7 @@ void main() {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
       final actual = input.lift(last());
-      expect(actual, scheduler.isObservable('--#', error: EmptyError()));
+      expect(actual, scheduler.isObservable('--#', error: TooFewError()));
     });
     test('no value and error', () {
       final input = scheduler.cold('--#');
@@ -550,6 +550,62 @@ void main() {
               'z': ['a', 'b', 'c'],
             }));
       });
+    });
+  });
+  group('single', () {
+    test('no elements', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(single());
+      expect(actual, scheduler.isObservable('--#', error: TooFewError()));
+    });
+    test('one element', () {
+      final input = scheduler.cold('--a--|');
+      final actual = input.lift(single());
+      expect(actual, scheduler.isObservable('-----(a|)'));
+    });
+    test('two elements', () {
+      final input = scheduler.cold('--a--b--|');
+      final actual = input.lift(single());
+      expect(actual, scheduler.isObservable('-----#', error: TooManyError()));
+    });
+  });
+  group('singleOrDefault', () {
+    test('no elements', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(singleOrDefault(tooFew: 'f', tooMany: 'm'));
+      expect(actual, scheduler.isObservable('--(f|)'));
+    });
+    test('one element', () {
+      final input = scheduler.cold('--a--|');
+      final actual = input.lift(singleOrDefault(tooFew: 'f', tooMany: 'm'));
+      expect(actual, scheduler.isObservable('-----(a|)'));
+    });
+    test('two elements', () {
+      final input = scheduler.cold('--a--b--|');
+      final actual = input.lift(singleOrDefault(tooFew: 'f', tooMany: 'm'));
+      expect(actual, scheduler.isObservable('-----(m|)'));
+    });
+  });
+  group('singleOrElse', () {
+    final tooFew = StateError('Few');
+    final tooMany = StateError('Many');
+    test('no elements', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(singleOrElse(
+          tooFew: () => throw tooFew, tooMany: () => throw tooMany));
+      expect(actual, scheduler.isObservable('--#', error: tooFew));
+    });
+    test('one element', () {
+      final input = scheduler.cold('--a--|');
+      final actual = input.lift(singleOrElse(
+          tooFew: () => throw tooFew, tooMany: () => throw tooMany));
+      expect(actual, scheduler.isObservable('-----(a|)'));
+    });
+    test('two elements', () {
+      final input = scheduler.cold('--a--b--|');
+      final actual = input.lift(singleOrElse(
+          tooFew: () => throw tooFew, tooMany: () => throw tooMany));
+      expect(actual, scheduler.isObservable('-----#', error: tooMany));
     });
   });
   group('skip', () {

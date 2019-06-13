@@ -8,8 +8,8 @@ import 'package:rx/src/core/subscriber.dart';
 typedef FirstCallback<T> = T Function();
 
 /// Returns the first element of an observable sequence, or emits an
-/// [EmptyError] otherwise.
-Operator<T, T> first<T>() => firstOrElse(() => throw EmptyError());
+/// [TooFewError] otherwise.
+Operator<T, T> first<T>() => firstOrElse(() => throw TooFewError());
 
 /// Returns the first element of an observable sequence, or the provided
 /// default value otherwise.

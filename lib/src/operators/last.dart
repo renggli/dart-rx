@@ -7,9 +7,9 @@ import 'package:rx/src/core/subscriber.dart';
 
 typedef LastCallback<T> = T Function();
 
-/// Returns the last element of an observable sequence, or emits an [EmptyError]
+/// Returns the last element of an observable sequence, or emits an [TooFewError]
 /// otherwise.
-Operator<T, T> last<T>() => lastOrElse(() => throw EmptyError());
+Operator<T, T> last<T>() => lastOrElse(() => throw TooFewError());
 
 /// Returns the last element of an observable sequence, or the provided default
 /// value otherwise.

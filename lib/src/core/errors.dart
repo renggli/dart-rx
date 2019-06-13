@@ -3,14 +3,24 @@ library rx.core.errors;
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/subscription.dart';
 
-/// An error thrown when an [Observable] was queried but has no elements.
-class EmptyError extends Error {
+/// An error thrown when an [Observable] was queried with too few elements.
+class TooFewError extends Error {
   final String message;
 
-  EmptyError([this.message = 'No elements in sequence.']);
+  TooFewError([this.message = 'Too few elements in sequence.']);
 
   @override
   String toString() => 'EmptyError: $message';
+}
+
+/// An error throw when an [Observable] was queried with too many elements.
+class TooManyError extends Error {
+  final String message;
+
+  TooManyError([this.message = 'Too many elements in sequence.']);
+
+  @override
+  String toString() => 'TooManyError: $message';
 }
 
 /// An error thrown when due time elapses.

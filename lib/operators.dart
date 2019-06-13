@@ -16,6 +16,7 @@ export 'src/operators/materialize.dart';
 export 'src/operators/merge_map.dart';
 export 'src/operators/merge_map_to.dart';
 export 'src/operators/scan.dart';
+export 'src/operators/single.dart';
 export 'src/operators/skip.dart';
 export 'src/operators/skip_while.dart';
 export 'src/operators/take.dart';
