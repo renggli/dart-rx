@@ -200,6 +200,43 @@ void main() {
       expect(actual, scheduler.isObservable<List<String>>('-------#'));
     });
   });
+  group('from', () {
+    test('empty', () {
+      final actual = from<String>(null);
+      expect(actual, scheduler.isObservable<String>('|'));
+    });
+    test('observable', () {
+      final actual = from<String>(just('x'));
+      expect(actual, scheduler.isObservable<String>('(x|)'));
+    });
+    test('fromIterable', () {
+      final actual = from<String>(['a', 'b', 'c']);
+      expect(actual, scheduler.isObservable<String>('(abc|)'));
+    });
+    test('fromFuture', () {
+      final actual = from<String>(Future.value('a'));
+      actual.subscribe(Observer(
+        next: (value) => expect(value, 'a'),
+        error: (error, [stack]) => fail('No error expected'),
+      ));
+    });
+    test('fromStream', () {
+      final actual = from<String>(Stream.fromIterable(['a', 'b', 'c']));
+      final observed = <String>[];
+      actual.subscribe(Observer<String>(
+        next: (value) => observed.add(value),
+        error: (error, [stack]) => fail('No error expected'),
+        complete: () => expect(observed, ['a', 'b', 'c']),
+      ));
+    });
+    test('just', () {
+      final actual = from<int>(42);
+      expect(actual, scheduler.isObservable<int>('(x|)', values: {'x': 42}));
+    });
+    test('invalid', () {
+      expect(() => from<int>('a'), throwsArgumentError);
+    });
+  });
   group('future', () {});
   group('iff', () {
     test('true branch', () {

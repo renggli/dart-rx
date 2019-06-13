@@ -10,16 +10,18 @@ import 'package:rx/src/core/observable.dart';
 /// An [Observable] inferred from the `object`s input type.
 Observable<T> from<T>(Object object) {
   if (object == null) {
-    return empty();
-  } else if (object is Observable) {
+    return empty<T>();
+  } else if (object is Observable<T>) {
     return object;
-  } else if (object is Iterable) {
-    return fromIterable(object);
-  } else if (object is Future) {
-    return fromFuture(object);
-  } else if (object is Stream) {
-    return fromStream(object);
+  } else if (object is Iterable<T>) {
+    return fromIterable<T>(object);
+  } else if (object is Future<T>) {
+    return fromFuture<T>(object);
+  } else if (object is Stream<T>) {
+    return fromStream<T>(object);
+  } else if (object is T) {
+    return just<T>(object);
   } else {
-    return just(object);
+    throw ArgumentError.value(object, 'object');
   }
 }
