@@ -5,6 +5,7 @@ export 'src/constructors/create.dart';
 export 'src/constructors/defer.dart';
 export 'src/constructors/empty.dart';
 export 'src/constructors/fork_join.dart';
+export 'src/constructors/from.dart';
 export 'src/constructors/future.dart';
 export 'src/constructors/iff.dart';
 export 'src/constructors/iterable.dart';
