@@ -7,19 +7,19 @@ import 'package:rx/src/constructors/just.dart';
 import 'package:rx/src/constructors/stream.dart';
 import 'package:rx/src/core/observable.dart';
 
-/// An [Observable] inferred from the input [object].
-Observable<T> from<T>(Object value) {
-  if (value == null) {
+/// An [Observable] inferred from the `object`s input type.
+Observable<T> from<T>(Object object) {
+  if (object == null) {
     return empty();
-  } else if (value is Observable) {
-    return value;
-  } else if (value is Iterable) {
-    return fromIterable(value);
-  } else if (value is Future) {
-    return fromFuture(value);
-  } else if (value is Stream) {
-    return fromStream(value);
+  } else if (object is Observable) {
+    return object;
+  } else if (object is Iterable) {
+    return fromIterable(object);
+  } else if (object is Future) {
+    return fromFuture(object);
+  } else if (object is Stream) {
+    return fromStream(object);
   } else {
-    return just(value);
+    return just(object);
   }
 }

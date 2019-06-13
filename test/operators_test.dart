@@ -12,7 +12,37 @@ void main() {
   final scheduler = TestScheduler();
   scheduler.install();
 
-  group('catchError', () {});
+  group('catchError', () {
+    test('silent', () {
+      final input = scheduler.cold('--a--b--c--|');
+      final actual = input.lift(catchError(
+          (error, [stackTrace]) => fail('Not supposed to be called')));
+      expect(actual, scheduler.isObservable('--a--b--c--|'));
+    });
+    test('completes', () {
+      final input = scheduler.cold('--a--b--c--#', error: 'A');
+      final actual =
+          input.lift(catchError((error, [stackTrace]) => expect(error, 'A')));
+      expect(actual, scheduler.isObservable('--a--b--c--|'));
+    });
+    test('throws different exception', () {
+      final input = scheduler.cold('--a--b--c--#', error: 'A');
+      final actual = input.lift(catchError((error, [stackTrace]) => throw 'B'));
+      expect(actual, scheduler.isObservable('--a--b--c--#', error: 'B'));
+    });
+    test('produces alternate observable', () {
+      final input = scheduler.cold('--a--b--c--#', error: 'A');
+      final actual = input.lift(
+          catchError((error, [stackTrace]) => scheduler.cold('1--2--3--|')));
+      expect(actual, scheduler.isObservable('--a--b--c--1--2--3--|'));
+    });
+    test('produces alternate observable that throws', () {
+      final input = scheduler.cold('--a--b--c--#', error: 'A');
+      final actual = input.lift(catchError(
+          (error, [stackTrace]) => scheduler.cold('1--#', error: 'B')));
+      expect(actual, scheduler.isObservable('--a--b--c--1--#', error: 'B'));
+    });
+  });
   group('count', () {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
