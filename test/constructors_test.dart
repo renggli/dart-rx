@@ -41,8 +41,64 @@ void main() {
       expect(actual, scheduler.isObservable('-a--#'));
     });
   });
-  group('create', () {});
-  group('defer', () {});
+  group('create', () {
+    test('complete sequence of values', () {
+      final actual = create((subscriber) {
+        subscriber.next('a');
+        subscriber.next('b');
+        subscriber.complete();
+      });
+      expect(actual, scheduler.isObservable('(ab|)'));
+    });
+    test('error sequence of values', () {
+      final actual = create((subscriber) {
+        subscriber.next('a');
+        subscriber.next('b');
+        subscriber.error('Error');
+      });
+      expect(actual, scheduler.isObservable('(ab#)'));
+    });
+    test('throws an error while creating values', () {
+      final actual = create((subscriber) {
+        subscriber.next('a');
+        subscriber.next('b');
+        throw 'Error';
+      });
+      expect(actual, scheduler.isObservable('(ab#)'));
+    });
+  });
+  group('defer', () {
+    test('complete value', () {
+      var seen = false;
+      final actual = defer(() {
+        seen = true;
+        return just('a');
+      });
+      expect(seen, isFalse);
+      expect(actual, scheduler.isObservable<String>('(a|)'));
+      expect(seen, isTrue);
+    });
+    test('throws error', () {
+      var seen = false;
+      final actual = defer<String>(() {
+        seen = true;
+        throw 'Error';
+      });
+      expect(seen, isFalse);
+      expect(actual, scheduler.isObservable<String>('#'));
+      expect(seen, isTrue);
+    });
+    test('does not return', () {
+      var seen = false;
+      final actual = defer<String>(() {
+        seen = true;
+        return null;
+      });
+      expect(seen, isFalse);
+      expect(actual, scheduler.isObservable<String>('|'));
+      expect(seen, isTrue);
+    });
+  });
   group('empty', () {
     test('immediately completes', () {
       final actual = empty();

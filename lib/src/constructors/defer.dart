@@ -10,10 +10,7 @@ typedef ObservableFactory<T> = Observable<T> Function();
 /// [Observable] on each subscribe.
 Observable<T> defer<T>(ObservableFactory<T> observableFactory) =>
     create<T>((subscriber) {
-      try {
-        final observable = observableFactory() ?? empty();
-        subscriber.add(observable.subscribe(subscriber));
-      } catch (error, stackTrace) {
-        subscriber.error(error, stackTrace);
-      }
+      final observable = observableFactory() ?? empty<T>();
+      subscriber.add(observable.subscribe(subscriber));
+      return subscriber;
     });
