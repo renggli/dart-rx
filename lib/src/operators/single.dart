@@ -5,6 +5,7 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
+/// Callback throwing an error, or returning an alternate value.
 typedef SingleCallback<T> = T Function();
 
 /// Returns the single element of an observable sequence, or emits [TooFewError]

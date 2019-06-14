@@ -8,7 +8,8 @@ import 'package:rx/src/constructors/stream.dart';
 import 'package:rx/src/core/observable.dart';
 
 /// An [Observable] inferred from the `object`s input type.
-Observable<T> from<T>(Object object) {
+Observable<T> from<T>(
+    /** void|Observable<T>|Iterable<T>|Future<T>|Stream<T>|T */ Object object) {
   if (object == null) {
     return empty<T>();
   } else if (object is Observable<T>) {

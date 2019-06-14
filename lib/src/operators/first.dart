@@ -5,6 +5,7 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
+/// Callback throwing an error, or returning an alternate value.
 typedef FirstCallback<T> = T Function();
 
 /// Returns the first element of an observable sequence, or emits an
@@ -35,7 +36,8 @@ class _FirstSubscriber<T> extends Subscriber<T> {
   @override
   void onComplete() {
     try {
-      onNext(callback());
+      doNext(callback());
+      doComplete();
     } catch (error, stackTrace) {
       doError(error, stackTrace);
     }

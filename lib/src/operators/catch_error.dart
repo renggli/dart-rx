@@ -23,13 +23,11 @@ class _CatchErrorSubscriber<T> extends Subscriber<T> {
 
   @override
   void onError(Object error, [StackTrace stackTrace]) {
-    Observable<T> observable;
     try {
-      observable = from<T>(handler(error, stackTrace));
+      final observable = from<T>(handler(error, stackTrace));
+      add(observable.subscribe(destination));
     } catch (error, stackTrace) {
       doError(error, stackTrace);
-      return;
     }
-    add(observable.subscribe(destination));
   }
 }

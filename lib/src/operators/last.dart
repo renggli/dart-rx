@@ -5,10 +5,11 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
+/// Callback throwing an error, or returning an alternate value.
 typedef LastCallback<T> = T Function();
 
-/// Returns the last element of an observable sequence, or emits an [TooFewError]
-/// otherwise.
+/// Returns the last element of an observable sequence, or emits an
+/// [TooFewError] otherwise.
 Operator<T, T> last<T>() => lastOrElse(() => throw TooFewError());
 
 /// Returns the last element of an observable sequence, or the provided default
@@ -37,15 +38,16 @@ class _LastSubscriber<T> extends Subscriber<T> {
 
   @override
   void onComplete() {
-    if (!seenValue) {
+    if (seenValue) {
+      doNext(lastValue);
+      doComplete();
+    } else {
       try {
-        onNext(callback());
+        doNext(callback());
+        doComplete();
       } catch (error, stackTrace) {
         doError(error, stackTrace);
-        return;
       }
     }
-    doNext(lastValue);
-    doComplete();
   }
 }
