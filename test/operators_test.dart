@@ -66,6 +66,28 @@ void main() {
       expect(actual, scheduler.isObservable<int>('-----------#'));
     });
   });
+  group('default_if_empty', () {
+    test('no value and completion', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(defaultIfEmpty('x'));
+      expect(actual, scheduler.isObservable('--(x|)'));
+    });
+    test('no value and error', () {
+      final input = scheduler.cold('--#');
+      final actual = input.lift(defaultIfEmpty('x'));
+      expect(actual, scheduler.isObservable('--#'));
+    });
+    test('multiple values and completion', () {
+      final input = scheduler.cold('--a--b--c--|');
+      final actual = input.lift(defaultIfEmpty('x'));
+      expect(actual, scheduler.isObservable('--a--b--c--|'));
+    });
+    test('multiple values and error', () {
+      final input = scheduler.cold('--a--b--c--#');
+      final actual = input.lift(defaultIfEmpty('x'));
+      expect(actual, scheduler.isObservable('--a--b--c--#'));
+    });
+  });
   group('dematerialize', () {
     final values = <String, Notification<String>>{
       'a': NextNotification('a'),

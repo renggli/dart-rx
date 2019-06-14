@@ -2,6 +2,7 @@ library rx.operators;
 
 export 'src/operators/catch_error.dart';
 export 'src/operators/count.dart';
+export 'src/operators/default_if_empty.dart';
 export 'src/operators/dematerialize.dart';
 export 'src/operators/distinct.dart';
 export 'src/operators/filter.dart';
