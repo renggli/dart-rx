@@ -142,6 +142,33 @@ void main() {
       expect(actual, scheduler.isObservable<int>('-----------#'));
     });
   });
+  group('debounce', () {
+    test('together', () {
+      final input = scheduler.cold<String>('-ab----|');
+      final actual = input.lift(debounce(delay: scheduler.stepDuration * 2));
+      expect(actual, scheduler.isObservable<String>('----b--|'));
+    });
+    test('separate', () {
+      final input = scheduler.cold<String>('-a-b---|');
+      final actual = input.lift(debounce(delay: scheduler.stepDuration * 2));
+      expect(actual, scheduler.isObservable<String>('-----b-|'));
+    });
+    test('split', () {
+      final input = scheduler.cold<String>('-a--b--|');
+      final actual = input.lift(debounce(delay: scheduler.stepDuration * 2));
+      expect(actual, scheduler.isObservable<String>('---a--b|'));
+    });
+    test('end early', () {
+      final input = scheduler.cold<String>('-a|');
+      final actual = input.lift(debounce(delay: scheduler.stepDuration * 2));
+      expect(actual, scheduler.isObservable<String>('--(a|)'));
+    });
+    test('throws error', () {
+      final input = scheduler.cold<String>('-a#');
+      final actual = input.lift(debounce(delay: scheduler.stepDuration * 2));
+      expect(actual, scheduler.isObservable<String>('--#'));
+    });
+  });
   group('default_if_empty', () {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
