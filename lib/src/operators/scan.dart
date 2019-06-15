@@ -1,5 +1,6 @@
 library rx.operators.scan;
 
+import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
@@ -29,7 +30,13 @@ class _ScanSubscriber<T, S> extends Subscriber<T> {
   @override
   void onNext(T value) {
     if (hasSeed) {
-      seedValue = scanFunction(seedValue, value);
+      final computation =
+          Notification.run(() => scanFunction(seedValue, value));
+      if (computation is ErrorNotification) {
+        doError(computation.error, computation.stackTrace);
+      } else {
+        seedValue = computation.value;
+      }
     } else {
       seedValue = value as S;
       hasSeed = true;

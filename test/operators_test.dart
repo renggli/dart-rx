@@ -600,6 +600,12 @@ void main() {
               'z': 'abc',
             }));
       });
+      test('error in computation', () {
+        final input = scheduler.cold<String>('-a-b-c-|');
+        final actual =
+            input.lift(reduce<String>((previous, value) => throw 'Error'));
+        expect(actual, scheduler.isObservable<String>('-a-#'));
+      });
     });
     group('fold', () {
       test('values and completion', () {
@@ -637,6 +643,12 @@ void main() {
               'y': ['a', 'b'],
               'z': ['a', 'b', 'c'],
             }));
+      });
+      test('error in computation', () {
+        final input = scheduler.cold<String>('-a-b-c-|');
+        final actual =
+            input.lift(fold('x', (previous, value) => throw 'Error'));
+        expect(actual, scheduler.isObservable<String>('-#'));
       });
     });
   });
