@@ -5,6 +5,7 @@ export 'src/operators/count.dart';
 export 'src/operators/default_if_empty.dart';
 export 'src/operators/dematerialize.dart';
 export 'src/operators/distinct.dart';
+export 'src/operators/distinct_until_changed.dart';
 export 'src/operators/filter.dart';
 export 'src/operators/finalize.dart';
 export 'src/operators/first.dart';

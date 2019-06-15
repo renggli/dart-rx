@@ -90,10 +90,10 @@ void main() {
   });
   group('dematerialize', () {
     final values = <String, Notification<String>>{
-      'a': NextNotification('a'),
-      'b': NextNotification('b'),
-      'c': CompleteNotification(),
-      'e': ErrorNotification('Error'),
+      'a': const NextNotification('a'),
+      'b': const NextNotification('b'),
+      'c': const CompleteNotification(),
+      'e': const ErrorNotification('Error'),
     };
     test('empty sequence', () {
       final input = scheduler.cold('-|', values: values);
@@ -131,6 +131,62 @@ void main() {
       final input = scheduler.cold('-a-ab-abc-#');
       final actual = input.lift(distinct());
       expect(actual, scheduler.isObservable('-a--b---c-#'));
+    });
+  });
+  group('distinctUntilChanged', () {
+    test('all unique values', () {
+      final input = scheduler.cold('-a-b-c-|');
+      final actual = input.lift(distinctUntilChanged());
+      expect(actual, scheduler.isObservable('-a-b-c-|'));
+    });
+    test('continuous repeats', () {
+      final input = scheduler.cold('-a-bb-ccc-|');
+      final actual = input.lift(distinctUntilChanged());
+      expect(actual, scheduler.isObservable('-a-b--c---|'));
+    });
+    test('long repeats', () {
+      final input = scheduler.cold('-(aaaaaaaaa)-(bbbbbbbbbbb)-|');
+      final actual = input.lift(distinctUntilChanged());
+      expect(actual, scheduler.isObservable('-a-b-|'));
+    });
+    test('overlapping repeats', () {
+      final input = scheduler.cold('-a-b-a-b-|');
+      final actual = input.lift(distinctUntilChanged());
+      expect(actual, scheduler.isObservable('-a-b-a-b-|'));
+    });
+    test('coustom key', () {
+      final input = scheduler.cold('-a-b-a-b-|');
+      final actual = input.lift(distinctUntilChanged());
+      expect(actual, scheduler.isObservable('-a-b-a-b-|'));
+    });
+    test('complete with error', () {
+      final input = scheduler.cold('-a-bb-ccc-#');
+      final actual = input.lift(distinctUntilChanged());
+      expect(actual, scheduler.isObservable('-a-b--c---#'));
+    });
+    test('custom comparison', () {
+      final input = scheduler.cold<String>('-(aAaA)-(BbBb)-|');
+      final actual = input.lift(distinctUntilChanged<String, String>(
+          equals: (a, b) => a.toLowerCase() == b.toLowerCase()));
+      expect(actual, scheduler.isObservable<String>('-a-B-|'));
+    });
+    test('custom comparison throws', () {
+      final input = scheduler.cold<String>('-aa-|');
+      final actual = input.lift(distinctUntilChanged<String, String>(
+          equals: (a, b) => throw 'Error'));
+      expect(actual, scheduler.isObservable<String>('-a#'));
+    });
+    test('custom key', () {
+      final input = scheduler.cold<String>('-(aAaA)-(BbBb)-|');
+      final actual = input.lift(
+          distinctUntilChanged<String, String>(key: (a) => a.toLowerCase()));
+      expect(actual, scheduler.isObservable<String>('-a-B-|'));
+    });
+    test('custom key throws', () {
+      final input = scheduler.cold<String>('-aa-|');
+      final actual = input.lift(
+          distinctUntilChanged<String, String>(key: (a) => throw 'Error'));
+      expect(actual, scheduler.isObservable<String>('-#'));
     });
   });
   group('filter', () {
@@ -406,10 +462,10 @@ void main() {
   });
   group('materialize', () {
     final values = <String, Notification<String>>{
-      'a': NextNotification('a'),
-      'b': NextNotification('b'),
-      'c': CompleteNotification(),
-      'e': ErrorNotification('Error'),
+      'a': const NextNotification('a'),
+      'b': const NextNotification('b'),
+      'c': const CompleteNotification(),
+      'e': const ErrorNotification('Error'),
     };
     test('empty sequence', () {
       final input = scheduler.cold<String>('-|');
