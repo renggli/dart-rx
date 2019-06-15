@@ -1,5 +1,6 @@
 library rx.operators;
 
+export 'src/operators/buffer.dart';
 export 'src/operators/catch_error.dart';
 export 'src/operators/count.dart';
 export 'src/operators/default_if_empty.dart';

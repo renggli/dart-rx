@@ -12,6 +12,82 @@ void main() {
   final scheduler = TestScheduler();
   scheduler.install();
 
+  group('buffer', () {
+    test('no constraints', () {
+      final input = scheduler.cold<String>('-a-b-c-|');
+      final actual = input.lift(buffer());
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('-------(x|)', values: {
+            'x': ['a', 'b', 'c']
+          }));
+    });
+    test('max length', () {
+      final input = scheduler.cold<String>('-a-b-c-d-e-|');
+      final actual = input.lift(buffer(maxLength: 2));
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('---x---y---(z|)', values: {
+            'x': ['a', 'b'],
+            'y': ['c', 'd'],
+            'z': ['e'],
+          }));
+    });
+    test('max age', () {
+      final input = scheduler.cold<String>('-a-b--cdefg|');
+      final actual = input.lift(buffer(maxAge: scheduler.stepDuration * 4));
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('------x----(y|)', values: {
+            'x': ['a', 'b', 'c'],
+            'y': ['d', 'e', 'f', 'g'],
+          }));
+    });
+    test('max length and age', () {
+      final input = scheduler.cold<String>('-a-b--cdefg|');
+      final actual =
+          input.lift(buffer(maxLength: 3, maxAge: scheduler.stepDuration * 4));
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('------x--y-(z|)', values: {
+            'x': ['a', 'b', 'c'],
+            'y': ['d', 'e', 'f'],
+            'z': ['g'],
+          }));
+    });
+    test('trigger is shorter', () {
+      final input = scheduler.cold<String>('abcdefgh|');
+      final actual = input.lift(buffer(trigger: scheduler.cold('--*--|')));
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('--x-----(y|)', values: {
+            'x': ['a', 'b'],
+            'y': ['c', 'd', 'e', 'f', 'g', 'h'],
+          }));
+    });
+    test('trigger is longer', () {
+      final input = scheduler.cold<String>('abcdefgh|');
+      final actual =
+          input.lift(buffer(trigger: scheduler.cold('--*--*--*--*--|')));
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('--x--y--(z|)', values: {
+            'x': ['a', 'b'],
+            'y': ['c', 'd', 'e'],
+            'z': ['f', 'g', 'h'],
+          }));
+    });
+    test('error in source', () {
+      final input = scheduler.cold<String>('-a-#');
+      final actual = input.lift(buffer());
+      expect(actual, scheduler.isObservable<List<String>>('---#'));
+    });
+    test('error in trigger', () {
+      final input = scheduler.cold<String>('-a-b-|');
+      final actual = input.lift(buffer(trigger: scheduler.cold('--#')));
+      expect(actual, scheduler.isObservable<List<String>>('--#'));
+    });
+  });
   group('catchError', () {
     test('silent', () {
       final input = scheduler.cold('--a--b--c--|');
