@@ -1,6 +1,7 @@
 library rx.operators.last;
 
 import 'package:rx/src/core/errors.dart';
+import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
@@ -42,11 +43,12 @@ class _LastSubscriber<T> extends Subscriber<T> {
       doNext(lastValue);
       doComplete();
     } else {
-      try {
-        doNext(callback());
+      final resultEvent = Event.map0(callback);
+      if (resultEvent is ErrorEvent) {
+        doError(resultEvent.error, resultEvent.stackTrace);
+      } else {
+        doNext(resultEvent.value);
         doComplete();
-      } catch (error, stackTrace) {
-        doError(error, stackTrace);
       }
     }
   }

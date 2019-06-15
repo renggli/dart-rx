@@ -3,6 +3,7 @@ library rx.operators.merge_map;
 import 'dart:collection';
 
 import 'package:rx/src/core/constants.dart';
+import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
@@ -18,6 +19,13 @@ Operator<T, R> mergeMap<T, R>(ProjectFunction<T, R> project,
     (subscriber, source) =>
         source.subscribe(_MergeMapSubscriber(subscriber, project, concurrent));
 
+/// Projects each source value to the same [Observable] which is merged multiple
+/// times in the output [Observable].
+Operator<T, R> mergeMapTo<T, R>(Observable<R> observable,
+        {int concurrent = maxInteger}) =>
+    (subscriber, source) => source.subscribe(
+        _MergeMapSubscriber(subscriber, (_) => observable, concurrent));
+
 class _MergeMapSubscriber<T, R> extends Subscriber<T> {
   final ProjectFunction<T, R> project;
   final num concurrent;
@@ -32,21 +40,19 @@ class _MergeMapSubscriber<T, R> extends Subscriber<T> {
   @override
   void onNext(T value) {
     if (active < concurrent) {
-      Observable<R> observable;
-      try {
-        observable = project(value);
-      } catch (error, stackTrace) {
-        doError(error, stackTrace);
-        return;
+      final projectEvent = Event.map1(project, value);
+      if (projectEvent is ErrorEvent) {
+        doError(projectEvent.error, projectEvent.stackTrace);
+      } else {
+        active++;
+        Subscription subscription;
+        subscription = projectEvent.value.subscribe(Observer(
+          next: doNext,
+          error: doError,
+          complete: () => innerComplete(subscription),
+        ));
+        add(subscription);
       }
-      active++;
-      Subscription subscription;
-      subscription = observable.subscribe(Observer(
-        next: doNext,
-        error: doError,
-        complete: () => innerComplete(subscription),
-      ));
-      add(subscription);
     } else {
       buffer.addLast(value);
     }

@@ -208,6 +208,17 @@ void main() {
       final actual = input.lift(distinct());
       expect(actual, scheduler.isObservable('-a--b---c-#'));
     });
+    test('error in equals', () {
+      final input = scheduler.cold<String>('-a-b-c-|');
+      final actual = input
+          .lift(distinct(equals: (a, b) => throw 'Error', hashCode: (a) => 0));
+      expect(actual, scheduler.isObservable<String>('-a-#'));
+    });
+    test('error in hash', () {
+      final input = scheduler.cold<String>('-a-b-c-|');
+      final actual = input.lift(distinct(hashCode: (a) => throw 'Error'));
+      expect(actual, scheduler.isObservable<String>('-#'));
+    });
   });
   group('distinctUntilChanged', () {
     test('all unique values', () {

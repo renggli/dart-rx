@@ -1,6 +1,7 @@
 library rx.operators.first;
 
 import 'package:rx/src/core/errors.dart';
+import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
@@ -35,11 +36,12 @@ class _FirstSubscriber<T> extends Subscriber<T> {
 
   @override
   void onComplete() {
-    try {
-      doNext(callback());
+    final resultEvent = Event.map0(callback);
+    if (resultEvent is ErrorEvent) {
+      doError(resultEvent.error, resultEvent.stackTrace);
+    } else {
+      doNext(resultEvent.value);
       doComplete();
-    } catch (error, stackTrace) {
-      doError(error, stackTrace);
     }
   }
 }

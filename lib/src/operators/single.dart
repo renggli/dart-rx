@@ -1,6 +1,7 @@
 library rx.operators.single;
 
 import 'package:rx/src/core/errors.dart';
+import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
@@ -64,11 +65,12 @@ class _SingleSubscriber<T> extends Subscriber<T> {
   }
 
   void doCallback(SingleCallback<T> callback) {
-    try {
-      doNext(callback());
+    final callbackEvent = Event.map0(callback);
+    if (callbackEvent is ErrorEvent) {
+      doError(callbackEvent.error, callbackEvent.stackTrace);
+    } else {
+      doNext(callbackEvent.value);
       doComplete();
-    } catch (error, stackTrace) {
-      doError(error, stackTrace);
     }
   }
 }

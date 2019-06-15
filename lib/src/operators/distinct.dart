@@ -2,6 +2,7 @@ library rx.operators.distinct;
 
 import 'dart:collection';
 
+import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
@@ -28,7 +29,10 @@ class _DistinctSubscriber<T> extends Subscriber<T> {
 
   @override
   void onNext(T value) {
-    if (values.add(value)) {
+    final addEvent = Event.map1(values.add, value);
+    if (addEvent is ErrorEvent) {
+      doError(addEvent.error, addEvent.stackTrace);
+    } else if (addEvent.value) {
       doNext(value);
     }
   }
