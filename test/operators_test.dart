@@ -191,6 +191,23 @@ void main() {
       expect(actual, scheduler.isObservable('--a--b--c--#'));
     });
   });
+  group('delay', () {
+    test('moderate delay', () {
+      final input = scheduler.cold('-a-b--c---d----|');
+      final actual = input.lift(delay(delay: scheduler.stepDuration * 2));
+      expect(actual, scheduler.isObservable('---a-b--c---d----|'));
+    });
+    test('massive delay', () {
+      final input = scheduler.cold('-a-b--c---d----|');
+      final actual = input.lift(delay(delay: scheduler.stepDuration * 8));
+      expect(actual, scheduler.isObservable('---------a-b--c---d----|'));
+    });
+    test('errors immediately', () {
+      final input = scheduler.cold('-a-b--c---#');
+      final actual = input.lift(delay(delay: scheduler.stepDuration * 4));
+      expect(actual, scheduler.isObservable('-----a-b--#'));
+    });
+  });
   group('dematerialize', () {
     final values = <String, Event<String>>{
       'a': const NextEvent('a'),
