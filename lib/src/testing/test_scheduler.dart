@@ -130,29 +130,33 @@ class TestScheduler extends AsyncScheduler {
           withinGroup = false;
           break;
         case subscribeMarker:
-          if (messages.whereType<SubscribeEvent>().isNotEmpty) {
+          if (messages
+              .where((element) => element.event is SubscribeEvent)
+              .isNotEmpty) {
             throw ArgumentError.value(
                 marbles, 'marbles', 'Repeated subscription.');
           }
-          messages.add(SubscribeEvent<T>(index));
+          messages.add(TestEvent(index, SubscribeEvent()));
           break;
         case unsubscribeMarker:
-          if (messages.whereType<UnsubscribeEvent>().isNotEmpty) {
+          if (messages
+              .where((element) => element.event is UnsubscribeEvent)
+              .isNotEmpty) {
             throw ArgumentError.value(
                 marbles, 'marbles', 'Repeated unsubscription.');
           }
-          messages.add(UnsubscribeEvent<T>(index));
+          messages.add(TestEvent(index, UnsubscribeEvent()));
           break;
         case completeMarker:
-          messages.add(CompleteEvent<T>(index));
+          messages.add(TestEvent(index, CompleteEvent()));
           break;
         case errorMarker:
-          messages.add(ErrorEvent<T>(index, error));
+          messages.add(TestEvent(index, ErrorEvent(error)));
           break;
         default:
           final marble = marbles[i];
           final value = values.containsKey(marble) ? values[marble] : marble;
-          messages.add(ValueEvent<T>(index, value));
+          messages.add(TestEvent(index, NextEvent(value)));
           break;
       }
       if (!withinGroup) {

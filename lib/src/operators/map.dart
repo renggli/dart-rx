@@ -1,31 +1,30 @@
 library rx.operators.map;
 
-import 'package:rx/src/core/notifications.dart';
+import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
-typedef MapFunction<T, S> = S Function(T value);
+typedef MapTransform<T, S> = S Function(T value);
 
 /// Applies a given project function to each value emitted by the source
 /// Observable, and emits the resulting values as an Observable.
-Operator<T, S> map<T, S>(MapFunction<T, S> mapFunction) =>
+Operator<T, S> map<T, S>(MapTransform<T, S> transform) =>
     (subscriber, source) =>
-        source.subscribe(_MapSubscriber(subscriber, mapFunction));
+        source.subscribe(_MapSubscriber(subscriber, transform));
 
 class _MapSubscriber<T, S> extends Subscriber<T> {
-  final MapFunction<T, S> mapFunction;
+  final MapTransform<T, S> transform;
 
-  _MapSubscriber(Observer<S> destination, this.mapFunction)
-      : super(destination);
+  _MapSubscriber(Observer<S> destination, this.transform) : super(destination);
 
   @override
   void onNext(T value) {
-    final notification = Notification.map(value, mapFunction);
-    if (notification is ErrorNotification) {
-      doError(notification.error, notification.stackTrace);
+    final transformEvent = Event.map1(transform, value);
+    if (transformEvent is ErrorEvent) {
+      doError(transformEvent.error, transformEvent.stackTrace);
     } else {
-      doNext(notification.value);
+      doNext(transformEvent.value);
     }
   }
 }

@@ -89,11 +89,11 @@ void main() {
     });
   });
   group('dematerialize', () {
-    final values = <String, Notification<String>>{
-      'a': const NextNotification('a'),
-      'b': const NextNotification('b'),
-      'c': const CompleteNotification(),
-      'e': const ErrorNotification('Error'),
+    final values = <String, Event<String>>{
+      'a': const NextEvent('a'),
+      'b': const NextEvent('b'),
+      'c': const CompleteEvent(),
+      'e': const ErrorEvent('Error'),
     };
     test('empty sequence', () {
       final input = scheduler.cold('-|', values: values);
@@ -167,13 +167,13 @@ void main() {
     test('custom comparison', () {
       final input = scheduler.cold<String>('-(aAaA)-(BbBb)-|');
       final actual = input.lift(distinctUntilChanged<String, String>(
-          equals: (a, b) => a.toLowerCase() == b.toLowerCase()));
+          compare: (a, b) => a.toLowerCase() == b.toLowerCase()));
       expect(actual, scheduler.isObservable<String>('-a-B-|'));
     });
     test('custom comparison throws', () {
       final input = scheduler.cold<String>('-aa-|');
       final actual = input.lift(distinctUntilChanged<String, String>(
-          equals: (a, b) => throw 'Error'));
+          compare: (a, b) => throw 'Error'));
       expect(actual, scheduler.isObservable<String>('-a#'));
     });
     test('custom key', () {
@@ -471,11 +471,11 @@ void main() {
     });
   });
   group('materialize', () {
-    final values = <String, Notification<String>>{
-      'a': const NextNotification('a'),
-      'b': const NextNotification('b'),
-      'c': const CompleteNotification(),
-      'e': const ErrorNotification('Error'),
+    final values = <String, Event<String>>{
+      'a': const NextEvent('a'),
+      'b': const NextEvent('b'),
+      'c': const CompleteEvent(),
+      'e': const ErrorEvent('Error'),
     };
     test('empty sequence', () {
       final input = scheduler.cold<String>('-|');

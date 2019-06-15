@@ -4,22 +4,25 @@ import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 
-typedef TakeWhileConditionFunction<T> = bool Function(T value);
+typedef TakeWhilePredicate<T> = bool Function(T value);
 
-/// Emits values while the [conditionFunction] returns `true`.
-Operator<T, T> takeWhile<T>(TakeWhileConditionFunction conditionFunction) =>
+/// Emits values while the [predicate] returns `true`.
+Operator<T, T> takeWhile<T>(TakeWhilePredicate predicate) =>
     (subscriber, source) =>
-        source.subscribe(_TakeWhileSubscriber(subscriber, conditionFunction));
+        source.subscribe(_TakeWhileSubscriber(subscriber, predicate));
 
 class _TakeWhileSubscriber<T> extends Subscriber<T> {
-  final TakeWhileConditionFunction conditionFunction;
+  final TakeWhilePredicate predicate;
 
-  _TakeWhileSubscriber(Observer<T> destination, this.conditionFunction)
+  _TakeWhileSubscriber(Observer<T> destination, this.predicate)
       : super(destination);
 
   @override
   void onNext(T value) {
-    if (conditionFunction(value)) {
+    final predicateEvent = Event.map1(predicate, value);
+    if (predicateEvent is ErrorEvent) {
+      doError(predicateEvent.error, predicateEvent.stackTrace);
+    } else if (predicateEvent.value) {
       doNext(value);
     } else {
       doComplete();

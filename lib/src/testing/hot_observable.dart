@@ -18,8 +18,8 @@ class HotObservable<T> extends TestObservable<T> {
 
   void initialize() {
     final subscriptionIndex = events
-        .whereType<SubscribeEvent>()
-        .map((event) => event.index)
+        .where((element) => element.event is SubscribeEvent)
+        .map((element) => element.index)
         .firstWhere((index) => true, orElse: () => 0);
     for (final event in events) {
       final timestamp = scheduler.now

@@ -2,6 +2,7 @@ library rx.testing.observable_matcher;
 
 import 'package:matcher/matcher.dart';
 import 'package:rx/core.dart';
+import 'package:rx/operators.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/schedulers/settings.dart';
 import 'package:test/test.dart';
@@ -35,12 +36,10 @@ class ObservableMatcher<T> extends Matcher {
     final Observable<T> observable = item;
 
     final actual = <TestEvent<T>>[];
-    final subscription = observable.subscribe(Observer<T>(
-      next: (value) => actual.add(ValueEvent<T>(getIndex(), value)),
-      error: (error, [stackTrace]) =>
-          actual.add(ErrorEvent<T>(getIndex(), error, stackTrace)),
-      complete: () => actual.add(CompleteEvent<T>(getIndex())),
-    ));
+    final subscription = observable
+        .lift(materialize())
+        .lift(map((event) => TestEvent(getIndex(), event)))
+        .subscribe(Observer.next(actual.add));
 
     while (!subscription.isClosed) {
       scheduler.advance();

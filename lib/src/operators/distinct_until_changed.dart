@@ -1,6 +1,6 @@
 library rx.operators.distinct_until_changed;
 
-import 'package:rx/src/core/notifications.dart';
+import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
@@ -13,45 +13,43 @@ typedef DistinctUntilChangedEqualsFunction<T, K> = bool Function(
 /// from the previous item.
 Operator<T, T> distinctUntilChanged<T, K>(
         {DistinctUntilChangedKeySelectorFunction<T, K> key,
-        DistinctUntilChangedEqualsFunction<T, K> equals}) =>
+        DistinctUntilChangedEqualsFunction<T, K> compare}) =>
     (subscriber, source) => source.subscribe(_DistinctUntilChangedSubscriber(
           subscriber,
           key ?? (value) => value as K,
-          equals ?? (a, b) => a == b,
+          compare ?? (a, b) => a == b,
         ));
 
 class _DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
   final DistinctUntilChangedKeySelectorFunction<T, K> key;
-  final DistinctUntilChangedEqualsFunction<T, K> equals;
+  final DistinctUntilChangedEqualsFunction<T, K> compare;
 
   bool seenKey = false;
   K lastKey;
 
   _DistinctUntilChangedSubscriber(
-      Observer<T> destination, this.key, this.equals)
+      Observer<T> destination, this.key, this.compare)
       : super(destination);
 
   @override
   void onNext(T value) {
-    final keyNotification = Notification.run(() => key(value));
-    if (keyNotification is ErrorNotification) {
-      doError(keyNotification.error, keyNotification.stackTrace);
+    final keyEvent = Event.map1(key, value);
+    if (keyEvent is ErrorEvent) {
+      doError(keyEvent.error, keyEvent.stackTrace);
       return;
     }
     if (seenKey) {
-      final comparisonNotification =
-          Notification.run(() => equals(lastKey, keyNotification.value));
-      if (comparisonNotification is ErrorNotification) {
-        doError(
-            comparisonNotification.error, comparisonNotification.stackTrace);
+      final compareEvent = Event.map2(compare, lastKey, keyEvent.value);
+      if (compareEvent is ErrorEvent) {
+        doError(compareEvent.error, compareEvent.stackTrace);
         return;
-      } else if (comparisonNotification.value) {
+      } else if (compareEvent.value) {
         return;
       } else {
-        lastKey = keyNotification.value;
+        lastKey = keyEvent.value;
       }
     } else {
-      lastKey = keyNotification.value;
+      lastKey = keyEvent.value;
       seenKey = true;
     }
     doNext(value);
