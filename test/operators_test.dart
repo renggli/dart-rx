@@ -791,7 +791,7 @@ void main() {
       final actual = input.lift(skipWhile((value) => 'ab'.contains(value)));
       expect(actual, scheduler.isObservable('--------c-b-a-#'));
     });
-    test('condition throws error', () {
+    test('predicate throws error', () {
       final input = scheduler.cold<String>('-a-|');
       final actual = input.lift(skipWhile((value) => throw 'Error'));
       expect(actual, scheduler.isObservable<String>('-#'));
@@ -891,6 +891,11 @@ void main() {
       final input = scheduler.cold('-a--b---c----#');
       final actual = input.lift(takeWhile((value) => 'ab'.contains(value)));
       expect(actual, scheduler.isObservable('-a--b---|'));
+    });
+    test('predicate throws error', () {
+      final input = scheduler.cold<String>('-a-|');
+      final actual = input.lift(takeWhile((value) => throw 'Error'));
+      expect(actual, scheduler.isObservable<String>('-#'));
     });
   });
   group('tap', () {
