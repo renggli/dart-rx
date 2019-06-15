@@ -205,6 +205,11 @@ void main() {
       final actual = input.lift(filter((value) => value != 'b'));
       expect(actual, scheduler.isObservable('--a-----#'));
     });
+    test('filter throws an error', () {
+      final input = scheduler.cold('--a--b--#');
+      final actual = input.lift(filter((value) => throw 'Error'));
+      expect(actual, scheduler.isObservable('--#'));
+    });
   });
   group('finalize', () {
     test('calls finalizer on completion', () {
@@ -436,6 +441,11 @@ void main() {
           actual,
           scheduler.isObservable('--a--b--c--#',
               values: {'a': 'a!', 'b': 'b!', 'c': 'c!'}));
+    });
+    test('mapper throws error', () {
+      final input = scheduler.cold<String>('--a--b--c--|');
+      final actual = input.lift(map<String, String>((value) => throw 'Error'));
+      expect(actual, scheduler.isObservable<String>('--#'));
     });
   });
   group('mapTo', () {

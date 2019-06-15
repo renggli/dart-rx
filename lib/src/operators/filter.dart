@@ -1,5 +1,7 @@
 library rx.operators.filter;
 
+import 'package:rx/core.dart';
+import 'package:rx/src/core/notifications.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
@@ -20,7 +22,10 @@ class _FilterSubscriber<T> extends Subscriber<T> {
 
   @override
   void onNext(T value) {
-    if (filterFunction(value)) {
+    final notification = Notification.map(value, filterFunction);
+    if (notification is ErrorNotification) {
+      doError(notification.error, notification.stackTrace);
+    } else if (notification.value) {
       doNext(value);
     }
   }

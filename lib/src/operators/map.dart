@@ -1,5 +1,6 @@
 library rx.operators.map;
 
+import 'package:rx/src/core/notifications.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
@@ -19,5 +20,12 @@ class _MapSubscriber<T, S> extends Subscriber<T> {
       : super(destination);
 
   @override
-  void onNext(T value) => doNext(mapFunction(value));
+  void onNext(T value) {
+    final notification = Notification.map(value, mapFunction);
+    if (notification is ErrorNotification) {
+      doError(notification.error, notification.stackTrace);
+    } else {
+      doNext(notification.value);
+    }
+  }
 }

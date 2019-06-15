@@ -11,11 +11,19 @@ abstract class Notification<T> {
 
   factory Notification.complete() => CompleteNotification<T>();
 
-  factory Notification.run(T Function() callback) {
+  static Notification<R> map<T, R>(T value, R Function(T value) callback) {
     try {
-      return NextNotification<T>(callback());
+      return NextNotification<R>(callback(value));
     } catch (error, stackTrace) {
-      return ErrorNotification<T>(error, stackTrace);
+      return ErrorNotification<R>(error, stackTrace);
+    }
+  }
+
+  static Notification<R> run<R>(R Function() callback) {
+    try {
+      return NextNotification<R>(callback());
+    } catch (error, stackTrace) {
+      return ErrorNotification<R>(error, stackTrace);
     }
   }
 
