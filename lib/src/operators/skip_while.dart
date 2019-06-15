@@ -4,24 +4,28 @@ import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 
-typedef SkipWhileConditionFunction<T> = bool Function(T value);
+/// Function implementing condition of the [skipWhile] operator.
+typedef SkipWhileCondition<T> = bool Function(T value);
 
-/// Skips over the values while the [conditionFunction] is `true`.
-Operator<T, T> skipWhile<T>(SkipWhileConditionFunction conditionFunction) =>
+/// Skips over the values while the [condition] is `true`.
+Operator<T, T> skipWhile<T>(SkipWhileCondition condition) =>
     (subscriber, source) =>
-        source.subscribe(_SkipWhileSubscriber(subscriber, conditionFunction));
+        source.subscribe(_SkipWhileSubscriber(subscriber, condition));
 
 class _SkipWhileSubscriber<T> extends Subscriber<T> {
-  final SkipWhileConditionFunction conditionFunction;
+  final SkipWhileCondition condition;
   bool skipping = true;
 
-  _SkipWhileSubscriber(Observer<T> destination, this.conditionFunction)
+  _SkipWhileSubscriber(Observer<T> destination, this.condition)
       : super(destination);
 
   @override
   void onNext(T value) {
     if (skipping) {
-      if (!conditionFunction(value)) {
+      final notification = Notification.map(value, condition);
+      if (notification is ErrorNotification) {
+        doError(notification.error, notification.stackTrace);
+      } else if (!notification.value) {
         skipping = false;
         doNext(value);
       }

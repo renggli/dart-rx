@@ -791,6 +791,11 @@ void main() {
       final actual = input.lift(skipWhile((value) => 'ab'.contains(value)));
       expect(actual, scheduler.isObservable('--------c-b-a-#'));
     });
+    test('condition throws error', () {
+      final input = scheduler.cold<String>('-a-|');
+      final actual = input.lift(skipWhile((value) => throw 'Error'));
+      expect(actual, scheduler.isObservable<String>('-#'));
+    });
   });
   group('take', () {
     test('no value and completion', () {
