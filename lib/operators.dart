@@ -22,6 +22,7 @@ export 'src/operators/scan.dart';
 export 'src/operators/single.dart';
 export 'src/operators/skip.dart';
 export 'src/operators/skip_while.dart';
+export 'src/operators/switch_map.dart';
 export 'src/operators/take.dart';
 export 'src/operators/take_last.dart';
 export 'src/operators/take_while.dart';

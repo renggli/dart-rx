@@ -4,35 +4,26 @@ import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 
 class SequentialSubscription extends StatefulSubscription {
-  Subscription _current;
+  Subscription _current = Subscription.empty();
 
-  SequentialSubscription([Subscription current]) {
-    this.current = current;
-  }
+  SequentialSubscription();
 
   Subscription get current => _current;
 
   set current(Subscription subscription) {
-    if (super.isClosed) {
-      if (subscription != null) {
-        subscription.unsubscribe();
-      }
+    ArgumentError.checkNotNull(subscription, 'subscription');
+    if (isClosed) {
+      subscription.unsubscribe();
       return;
     }
     final previous = _current;
     _current = subscription;
-    if (previous != null) {
-      previous.unsubscribe();
-    }
+    previous.unsubscribe();
   }
 
   @override
-  bool get isClosed =>
-      super.isClosed || (_current != null && _current.isClosed);
-
-  @override
   void unsubscribe() {
-    current = null;
     super.unsubscribe();
+    current.unsubscribe();
   }
 }

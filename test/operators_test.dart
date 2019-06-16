@@ -928,6 +928,71 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-#'));
     });
   });
+  group('switchMap', () {
+    final observables = {
+      '1': scheduler.cold<String>('x|'),
+      '2': scheduler.cold<String>('xy|'),
+      '3': scheduler.cold<String>('xyz|'),
+      '4': scheduler.cold<String>('xyz#'),
+    };
+    test('outer longer', () {
+      final input = scheduler.cold('-1---2---3---|', values: observables);
+      final actual = input.lift(switchMap((observable) => observable));
+      expect(actual, scheduler.isObservable<String>('-x---xy--xyz-|'));
+    });
+    test('inner longer', () {
+      final input = scheduler.cold('-1---2---3|', values: observables);
+      final actual = input.lift(switchMap((observable) => observable));
+      expect(actual, scheduler.isObservable<String>('-x---xy--xyz|'));
+    });
+    test('outer error', () {
+      final input = scheduler.cold('-3#', values: observables);
+      final actual = input.lift(switchMap((observable) => observable));
+      expect(actual, scheduler.isObservable<String>('-x#'));
+    });
+    test('inner error', () {
+      final input = scheduler.cold('-4--4---4---|', values: observables);
+      final actual = input.lift(switchMap((observable) => observable));
+      expect(actual, scheduler.isObservable<String>('-xyzxyz#'));
+    });
+    test('project error', () {
+      final input = scheduler.cold('-123-|');
+      final actual = input.lift(switchMap((observable) => throw 'Error'));
+      expect(actual, scheduler.isObservable('-#'));
+    });
+    test('overlapping', () {
+      final input = scheduler.cold('-3--3-33--|', values: observables);
+      final actual = input.lift(switchMap((observable) => observable));
+      expect(actual, scheduler.isObservable<String>('-xyzxyxxyz|'));
+    });
+  });
+  group('switchMapTo', () {
+    test('outer longer', () {
+      final input = scheduler.cold('-a---a---a---|');
+      final actual = input.lift(switchMapTo(scheduler.cold<String>('xyz|')));
+      expect(actual, scheduler.isObservable<String>('-xyz-xyz-xyz-|'));
+    });
+    test('inner longer', () {
+      final input = scheduler.cold('-a---a---a|');
+      final actual = input.lift(switchMapTo(scheduler.cold<String>('xyz|')));
+      expect(actual, scheduler.isObservable<String>('-xyz-xyz-xyz|'));
+    });
+    test('outer error', () {
+      final input = scheduler.cold('-a#');
+      final actual = input.lift(switchMapTo(scheduler.cold<String>('xyz|')));
+      expect(actual, scheduler.isObservable<String>('-x#'));
+    });
+    test('inner error', () {
+      final input = scheduler.cold('-a--a---a---|');
+      final actual = input.lift(switchMapTo(scheduler.cold<String>('xyz#')));
+      expect(actual, scheduler.isObservable<String>('-xyzxyz#'));
+    });
+    test('overlapping', () {
+      final input = scheduler.cold('-a--a-aa--|');
+      final actual = input.lift(switchMapTo(scheduler.cold<String>('xyz|')));
+      expect(actual, scheduler.isObservable<String>('-xyzxyxxyz|'));
+    });
+  });
   group('take', () {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
