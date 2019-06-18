@@ -10,6 +10,74 @@ void main() {
   final scheduler = TestScheduler();
   scheduler.install();
 
+  group('combine latest', () {
+    test('empty sequence', () {
+      final actual = combineLatest<String>([]);
+      expect(actual, scheduler.isObservable<List<String>>('|'));
+    });
+    test('basic sequence', () {
+      final actual = combineLatest<String>([
+        scheduler.cold('-a---e|'),
+        scheduler.cold('--b-d-|'),
+        scheduler.cold('---c--|'),
+      ]);
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('---xyz|', values: {
+            'x': ['a', 'b', 'c'],
+            'y': ['a', 'd', 'c'],
+            'z': ['e', 'd', 'c'],
+          }));
+    });
+    test('different length', () {
+      final actual = combineLatest<String>([
+        scheduler.cold('-a---e|'),
+        scheduler.cold('--b-d|'),
+        scheduler.cold('---c|'),
+      ]);
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('---xyz|', values: {
+            'x': ['a', 'b', 'c'],
+            'y': ['a', 'd', 'c'],
+            'z': ['e', 'd', 'c'],
+          }));
+    });
+    test('repeated values', () {
+      final actual = combineLatest<String>([
+        scheduler.cold('-ab-----|'),
+        scheduler.cold('---cd---|'),
+        scheduler.cold('-----ef-|'),
+      ]);
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('-----xy-|', values: {
+            'x': ['b', 'd', 'e'],
+            'y': ['b', 'd', 'f'],
+          }));
+    });
+    test('early error', () {
+      final actual = combineLatest<String>([
+        scheduler.cold('-a---e|'),
+        scheduler.cold('--#'),
+        scheduler.cold('---c--|'),
+      ]);
+      expect(actual, scheduler.isObservable<List<String>>('--#'));
+    });
+    test('late error', () {
+      final actual = combineLatest<String>([
+        scheduler.cold('-a---#'),
+        scheduler.cold('--b-d-|'),
+        scheduler.cold('---c--|'),
+      ]);
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('---xy#', values: {
+            'x': ['a', 'b', 'c'],
+            'y': ['a', 'd', 'c'],
+          }));
+    });
+  });
   group('concat', () {
     test('elements from 3 different sources', () {
       final actual = concat([

@@ -1,5 +1,6 @@
 library rx.constructors;
 
+export 'src/constructors/combine_latest.dart';
 export 'src/constructors/concat.dart';
 export 'src/constructors/create.dart';
 export 'src/constructors/defer.dart';
