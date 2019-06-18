@@ -638,6 +638,12 @@ void main() {
       }).lift(mergeMap((inner) => scheduler.cold<String>(inner)));
       expect(actual, scheduler.isObservable<String>('-x--yy--zzz-x--|'));
     });
+    test('projection throws', () {
+      final actual = scheduler
+          .cold<String>('-a-|')
+          .lift(mergeMap<String, String>((inner) => throw 'Error'));
+      expect(actual, scheduler.isObservable<String>('-#'));
+    });
     test('inner with error', () {
       final actual = scheduler.cold<String>('-a--b---c---a--|', values: {
         'a': 'x-|',
