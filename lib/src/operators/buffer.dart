@@ -5,6 +5,8 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
+import 'package:rx/src/observers/inner.dart';
 import 'package:rx/src/schedulers/settings.dart';
 
 /// Gathers items emitted by the source and bundles these items when the buffer
@@ -19,7 +21,8 @@ Operator<T, List<T>> buffer<T>({
     (subscriber, source) => source.subscribe(_BufferSubscriber(
         subscriber, scheduler ?? defaultScheduler, trigger, maxLength, maxAge));
 
-class _BufferSubscriber<T> extends Subscriber<T> {
+class _BufferSubscriber<T> extends Subscriber<T>
+    implements InnerEvents<T, void> {
   final Scheduler scheduler;
   final int maxLength;
   final Duration maxAge;
@@ -32,10 +35,7 @@ class _BufferSubscriber<T> extends Subscriber<T> {
       : super(destination) {
     reset();
     if (trigger != null) {
-      add(trigger.subscribe(Observer(
-        next: (value) => flush(),
-        error: (error, [stackTrace]) => doError(error, stackTrace),
-      )));
+      add(InnerObserver(trigger, this));
     }
   }
 
@@ -53,6 +53,17 @@ class _BufferSubscriber<T> extends Subscriber<T> {
     flush();
     doComplete();
   }
+
+  @override
+  void notifyNext(Subscription subscription, void state, T value) => flush();
+
+  @override
+  void notifyError(Subscription subscription, void state, Object error,
+          [StackTrace stackTrace]) =>
+      doError(error, stackTrace);
+
+  @override
+  void notifyComplete(Subscription subscription, void state) {}
 
   void reset() {
     buffer = [];

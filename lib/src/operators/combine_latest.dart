@@ -4,13 +4,16 @@ import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
+import 'package:rx/src/observers/inner.dart';
 
 /// Combines multiple Observables to create an Observable whose values are
 /// calculated from the latest values of each of its input Observables.
 Operator<Observable<T>, List<T>> combineLatest<T>() => (subscriber, source) =>
     source.subscribe(_CombineLatestSubscriber(subscriber));
 
-class _CombineLatestSubscriber<T> extends Subscriber<Observable<T>> {
+class _CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
+    implements InnerEvents<T, int> {
   final List<Observable<T>> observables = [];
   final List<bool> hasValues = [];
   final List<T> values = [];
@@ -35,16 +38,13 @@ class _CombineLatestSubscriber<T> extends Subscriber<Observable<T>> {
       active = observables.length;
       pending = observables.length;
       for (var i = 0; i < observables.length; i++) {
-        add(observables[i].subscribe(Observer(
-          next: (value) => notifyNext(i, value),
-          error: (error, [stackTrace]) => notifyError(i, error, stackTrace),
-          complete: () => notifyComplete(i),
-        )));
+        add(InnerObserver(observables[i], this, i));
       }
     }
   }
 
-  void notifyNext(int index, T value) {
+  @override
+  void notifyNext(Subscription subscription, int index, T value) {
     values[index] = value;
     if (!hasValues[index]) {
       pending--;
@@ -55,11 +55,14 @@ class _CombineLatestSubscriber<T> extends Subscriber<Observable<T>> {
     }
   }
 
-  void notifyError(int index, Object error, StackTrace stackTrace) {
+  @override
+  void notifyError(Subscription subscription, int index, Object error,
+      [StackTrace stackTrace]) {
     doError(error, stackTrace);
   }
 
-  void notifyComplete(int index) {
+  @override
+  void notifyComplete(Subscription subscription, int index) {
     active--;
     if (active == 0) {
       doComplete();

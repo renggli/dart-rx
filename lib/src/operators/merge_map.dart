@@ -9,6 +9,7 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
+import 'package:rx/src/observers/inner.dart';
 
 typedef ProjectFunction<T, R> = Observable<R> Function(T value);
 
@@ -26,7 +27,8 @@ Operator<T, R> mergeMapTo<T, R>(Observable<R> observable,
     (subscriber, source) => source.subscribe(
         _MergeMapSubscriber(subscriber, (_) => observable, concurrent));
 
-class _MergeMapSubscriber<T, R> extends Subscriber<T> {
+class _MergeMapSubscriber<T, R> extends Subscriber<T>
+    implements InnerEvents<R, int> {
   final ProjectFunction<T, R> project;
   final num concurrent;
 
@@ -44,14 +46,7 @@ class _MergeMapSubscriber<T, R> extends Subscriber<T> {
       if (projectEvent is ErrorEvent) {
         doError(projectEvent.error, projectEvent.stackTrace);
       } else {
-        active++;
-        Subscription subscription;
-        subscription = projectEvent.value.subscribe(Observer(
-          next: doNext,
-          error: doError,
-          complete: () => innerComplete(subscription),
-        ));
-        add(subscription);
+        add(InnerObserver(projectEvent.value, this, active++));
       }
     } else {
       buffer.addLast(value);
@@ -67,7 +62,17 @@ class _MergeMapSubscriber<T, R> extends Subscriber<T> {
     //unsubscribe();
   }
 
-  void innerComplete(Subscription subscription) {
+  @override
+  void notifyNext(Subscription subscription, int state, R value) =>
+      doNext(value);
+
+  @override
+  void notifyError(Subscription subscription, int state, Object error,
+          [StackTrace stackTrace]) =>
+      doError(error, stackTrace);
+
+  @override
+  void notifyComplete(Subscription subscription, int state) {
     remove(subscription);
     active--;
     if (buffer.isNotEmpty) {
