@@ -705,6 +705,31 @@ void main() {
       expect(actual, scheduler.isObservable<String>('xyz-xyz-|'));
     });
   });
+  group('sample', () {
+    test('samples on value trigger', () {
+      final actual = scheduler
+          .cold<String>('-a-b-c---d-|')
+          .lift(sample(scheduler.cold('--x---x-x-x--|')));
+      expect(actual, scheduler.isObservable<String>('--a---c---d|'));
+    });
+    test('samples on completion of trigger', () {
+      final actual = scheduler
+          .cold<String>('-a-b-c---d-|')
+          .lift(sample(scheduler.cold('--x---x-x-|')));
+      expect(actual, scheduler.isObservable<String>('--a---c---d|'));
+    });
+    test('input throws', () {
+      final actual =
+          scheduler.cold<String>('-#').lift(sample(scheduler.cold('-x-|')));
+      expect(actual, scheduler.isObservable<String>('-#'));
+    });
+    test('trigger throws', () {
+      final actual = scheduler
+          .cold<String>('-a-b-c---d-|')
+          .lift(sample(scheduler.cold('--#')));
+      expect(actual, scheduler.isObservable<String>('--#'));
+    });
+  });
   group('scan', () {
     group('reduce', () {
       test('values and completion', () {
