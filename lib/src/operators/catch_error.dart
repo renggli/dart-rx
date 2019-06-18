@@ -6,6 +6,8 @@ import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
+import 'package:rx/src/observers/inner.dart';
 
 typedef CatchHandler<T> = Function(Object error, [StackTrace stackTrace]);
 
@@ -14,7 +16,8 @@ typedef CatchHandler<T> = Function(Object error, [StackTrace stackTrace]);
 Operator<T, T> catchError<T>(CatchHandler<T> handler) => (subscriber, source) =>
     source.subscribe(_CatchErrorSubscriber(subscriber, source, handler));
 
-class _CatchErrorSubscriber<T> extends Subscriber<T> {
+class _CatchErrorSubscriber<T> extends Subscriber<T>
+    implements InnerEvents<T, void> {
   final Observable<T> source;
   final CatchHandler<T> handler;
 
@@ -28,7 +31,19 @@ class _CatchErrorSubscriber<T> extends Subscriber<T> {
       doError(handlerEvent.error, handlerEvent.stackTrace);
     } else {
       final observable = from<T>(handlerEvent.value);
-      add(observable.subscribe(destination));
+      add(InnerObserver(observable, this));
     }
   }
+
+  @override
+  void notifyNext(Subscription subscription, void state, T value) =>
+      doNext(value);
+
+  @override
+  void notifyError(Subscription subscription, void state, Object error,
+          [StackTrace stackTrace]) =>
+      doError(error, stackTrace);
+
+  @override
+  void notifyComplete(Subscription subscription, void state) => doComplete();
 }

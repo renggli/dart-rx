@@ -6,6 +6,7 @@ import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/observers/inner.dart';
 import 'package:rx/src/subscriptions/sequential.dart';
 
 typedef SwitchMapProject<T, R> = Observable<R> Function(T value);
@@ -23,7 +24,8 @@ Operator<T, R> switchMapTo<T, R>(Observable<R> observable) =>
     (subscriber, source) =>
         source.subscribe(_SwitchMapSubscriber(subscriber, (_) => observable));
 
-class _SwitchMapSubscriber<T, R> extends Subscriber<T> {
+class _SwitchMapSubscriber<T, R> extends Subscriber<T>
+    implements InnerEvents<R, void> {
   final SwitchMapProject<T, R> project;
   final SequentialSubscription subscription = SequentialSubscription();
 
@@ -40,16 +42,7 @@ class _SwitchMapSubscriber<T, R> extends Subscriber<T> {
     if (projectEvent is ErrorEvent) {
       doError(projectEvent.error, projectEvent.stackTrace);
     } else {
-      subscription.current = projectEvent.value.subscribe(Observer(
-        next: doNext,
-        error: doError,
-        complete: () {
-          subscription.current = Subscription.empty();
-          if (hasCompleted) {
-            doComplete();
-          }
-        },
-      ));
+      subscription.current = InnerObserver(projectEvent.value, this);
     }
   }
 
@@ -57,6 +50,23 @@ class _SwitchMapSubscriber<T, R> extends Subscriber<T> {
   void onComplete() {
     hasCompleted = true;
     if (subscription.current.isClosed) {
+      doComplete();
+    }
+  }
+
+  @override
+  void notifyNext(Subscription subscription, void state, R value) =>
+      doNext(value);
+
+  @override
+  void notifyError(Subscription subscription, void state, Object error,
+          [StackTrace stackTrace]) =>
+      doError(error, stackTrace);
+
+  @override
+  void notifyComplete(Subscription subscription, void state) {
+    this.subscription.current = Subscription.empty();
+    if (hasCompleted) {
       doComplete();
     }
   }

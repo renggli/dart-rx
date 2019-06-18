@@ -16,14 +16,14 @@ class InnerObserver<T, S> with Observer<T> implements Observer<T> {
   }
 
   @override
-  void next(T value) => _outer.notifyNext(_subscription, _state, value);
+  void next(T value) => _outer.notifyNext(this, _state, value);
 
   @override
   void error(Object error, [StackTrace stackTrace]) =>
-      _outer.notifyError(_subscription, _state, error, stackTrace);
+      _outer.notifyError(this, _state, error, stackTrace);
 
   @override
-  void complete() => _outer.notifyComplete(_subscription, _state);
+  void complete() => _outer.notifyComplete(this, _state);
 
   @override
   bool get isClosed => _subscription.isClosed;
