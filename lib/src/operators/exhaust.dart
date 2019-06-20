@@ -1,6 +1,7 @@
 library rx.operators.exhaust;
 
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
@@ -8,34 +9,32 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
 
-typedef ExhaustProjectFunction<T, R> = Observable<R> Function(T value);
-
-/// Converts a higher-order [Observable] into a first-order Observable by
-/// dropping inner [Observable]s while the previous inner Observable has not
-/// yet completed.
-Operator<Observable<T>, T> exhaust<T>({int concurrent = 1}) =>
+/// Emits and completes higher-order [Observable]. Subscribes to at most
+/// `concurrent` sources, drops observables exceeding this threshold.
+Operator<Observable<T>, T> exhaustAll<T>({int concurrent = 1}) =>
     (subscriber, source) => source.subscribe(
-        _ExhaustSubscriber(subscriber, (observable) => observable, concurrent));
+        _ExhaustSubscriber(subscriber, identityFunction, concurrent));
 
-/// Converts a higher-order [Observable] into a first-order Observable by
-/// dropping inner [Observable]s while the previous inner Observable has not
-/// yet completed.
-Operator<T, R> exhaustMap<T, R>(ExhaustProjectFunction<T, R> project,
+/// Emits and completes values from a higher-order [Observable] retrieved by
+/// projecting the values of the source to higher-order [Observable]s.
+/// Subscribes to at most `concurrent` sources, drops observables exceeding
+/// this threshold.
+Operator<T, R> exhaustMap<T, R>(MapFunction<T, Observable<R>> project,
         {int concurrent = 1}) =>
     (subscriber, source) =>
         source.subscribe(_ExhaustSubscriber(subscriber, project, concurrent));
 
-/// Converts a higher-order [Observable] into the same first-order Observable
-/// by dropping inner [Observable]s while the previous inner Observable has not
-/// yet completed.
+/// Emits and completes values from a single higher-order [Observable].
+/// Subscribes to at most `concurrent` sources, drops observables exceeding
+/// this threshold.
 Operator<T, R> exhaustMapTo<T, R>(Observable<R> observable,
         {int concurrent = 1}) =>
-    (subscriber, source) => source.subscribe(
-        _ExhaustSubscriber(subscriber, (_) => observable, concurrent));
+    (subscriber, source) => source.subscribe(_ExhaustSubscriber(
+        subscriber, constantFunction1(observable), concurrent));
 
 class _ExhaustSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  final ExhaustProjectFunction<T, R> project;
+  final MapFunction<T, Observable<R>> project;
   final int concurrent;
 
   bool hasCompleted = false;

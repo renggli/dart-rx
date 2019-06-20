@@ -1,9 +1,10 @@
-library rx.operators.merge_map;
+library rx.operators.merge;
 
 import 'dart:collection';
 
 import 'package:rx/src/core/constants.dart';
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
@@ -11,25 +12,30 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
 
-typedef MapProjectFunction<T, R> = Observable<R> Function(T value);
+/// Emits all merged values from a higher-order [Observable]. Subscribes to
+/// at most `concurrent` sources.
+Operator<Observable<R>, R> mergeAll<R>({int concurrent = maxInteger}) =>
+    (subscriber, source) => source
+        .subscribe(_MergeSubscriber(subscriber, identityFunction, concurrent));
 
-/// Applies a given project function to each value emitted by the source
-/// Observable, and emits the resulting values as an Observable.
-Operator<T, R> mergeMap<T, R>(MapProjectFunction<T, R> project,
+/// Emits all merged values from a higher-order [Observable] retrieved by
+/// projecting the values of the source to higher-order [Observable]s.
+/// Subscribes to at most `concurrent` sources.
+Operator<T, R> mergeMap<T, R>(MapFunction<T, Observable<R>> project,
         {int concurrent = maxInteger}) =>
     (subscriber, source) =>
         source.subscribe(_MergeSubscriber(subscriber, project, concurrent));
 
-/// Projects each source value to the same [Observable] which is merged multiple
-/// times in the output [Observable].
+/// Emits all merged values from a single higher-order `observable. Subscribes
+/// to at most `concurrent` sources.
 Operator<T, R> mergeMapTo<T, R>(Observable<R> observable,
         {int concurrent = maxInteger}) =>
-    (subscriber, source) => source
-        .subscribe(_MergeSubscriber(subscriber, (_) => observable, concurrent));
+    (subscriber, source) => source.subscribe(_MergeSubscriber(
+        subscriber, constantFunction1(observable), concurrent));
 
 class _MergeSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, int> {
-  final MapProjectFunction<T, R> project;
+  final MapFunction<T, Observable<R>> project;
   final num concurrent;
 
   Queue<T> buffer = Queue();
@@ -59,7 +65,6 @@ class _MergeSubscriber<T, R> extends Subscriber<T>
     if (active == 0 && buffer.isEmpty) {
       doComplete();
     }
-    //unsubscribe();
   }
 
   @override

@@ -1,7 +1,7 @@
 library rx.constructors.merge;
 
 import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/operators/merge_map.dart';
+import 'package:rx/src/operators/merge.dart';
 
 import 'iterable.dart';
 
