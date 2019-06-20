@@ -1,5 +1,6 @@
 library rx.core.subscription;
 
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/subscriptions/anonymous.dart';
 import 'package:rx/src/subscriptions/empty.dart';
 
@@ -12,7 +13,7 @@ abstract class Subscription {
       return Subscription.empty();
     } else if (tearDownLogic is Subscription) {
       return tearDownLogic;
-    } else if (tearDownLogic is UnsubscribeAction) {
+    } else if (tearDownLogic is CompleteCallback) {
       return Subscription.create(tearDownLogic);
     } else {
       throw ArgumentError.value('tearDownLogic', tearDownLogic);
@@ -21,7 +22,7 @@ abstract class Subscription {
 
   /// Creates a [Subscription] that invokes the specified action when
   /// unsubscribed.
-  factory Subscription.create(UnsubscribeAction unsubscribeAction) =>
+  factory Subscription.create(CompleteCallback unsubscribeAction) =>
       AnonymousSubscription(unsubscribeAction);
 
   /// Creates a [Subscription] that is already closed.

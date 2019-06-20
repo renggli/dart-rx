@@ -3,6 +3,7 @@ library rx.schedulers.zone;
 import 'dart:async' show Zone;
 
 import 'package:meta/meta.dart';
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/action.dart';
@@ -26,20 +27,19 @@ abstract class ZoneScheduler extends Scheduler {
   }
 
   @override
-  Subscription scheduleIteration(IterationCallback callback) {
+  Subscription scheduleIteration(Predicate0 callback) {
     final subscription = StatefulSubscription();
     _scheduleIteration(subscription, callback);
     return subscription;
   }
 
-  void _scheduleIteration(
-      Subscription subscription, IterationCallback callback) {
+  void _scheduleIteration(Subscription subscription, Predicate0 callback) {
     zone.scheduleMicrotask(
         () => _scheduleIterationExecute(subscription, callback));
   }
 
   void _scheduleIterationExecute(
-      Subscription subscription, IterationCallback callback) {
+      Subscription subscription, Predicate0 callback) {
     if (subscription.isClosed) {
       return;
     }

@@ -1,5 +1,6 @@
 library rx.schedulers.action;
 
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 
 abstract class SchedulerAction extends StatefulSubscription {
@@ -7,7 +8,7 @@ abstract class SchedulerAction extends StatefulSubscription {
 }
 
 class SchedulerActionCallback extends SchedulerAction {
-  final void Function() _callback;
+  final Map0<void> _callback;
 
   SchedulerActionCallback(this._callback);
 
@@ -21,7 +22,7 @@ class SchedulerActionCallback extends SchedulerAction {
 }
 
 class SchedulerActionCallbackWith extends SchedulerAction {
-  final void Function(SchedulerAction action) _callback;
+  final Map1<SchedulerAction, void> _callback;
 
   SchedulerActionCallbackWith(this._callback);
 

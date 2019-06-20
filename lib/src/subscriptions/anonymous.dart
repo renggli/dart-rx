@@ -1,11 +1,10 @@
 library rx.subscriptions.anonymous;
 
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 
-typedef UnsubscribeAction = void Function();
-
 class AnonymousSubscription extends StatefulSubscription {
-  final UnsubscribeAction _unsubscribeAction;
+  final CompleteCallback _unsubscribeAction;
 
   AnonymousSubscription(this._unsubscribeAction);
 

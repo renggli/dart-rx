@@ -1,6 +1,7 @@
 library rx.core.events;
 
 import 'package:more/hash.dart';
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observer.dart';
 
 abstract class Event<T> {
@@ -15,7 +16,7 @@ abstract class Event<T> {
   factory Event.complete() => CompleteEvent<T>();
 
   /// Maps the evaluation of the 0-argument callback to an event.
-  static Event<R> map0<R>(R Function() callback) {
+  static Event<R> map0<R>(Map0<R> callback) {
     try {
       return NextEvent<R>(callback());
     } catch (error, stackTrace) {
@@ -24,7 +25,7 @@ abstract class Event<T> {
   }
 
   /// Maps the evaluation of the 1-argument callback to an event.
-  static Event<R> map1<R, A>(R Function(A value) callback, A value1) {
+  static Event<R> map1<R, T1>(Map1<T1, R> callback, T1 value1) {
     try {
       return NextEvent<R>(callback(value1));
     } catch (error, stackTrace) {
@@ -33,8 +34,8 @@ abstract class Event<T> {
   }
 
   /// Maps the evaluation of the 2-argument callback to an event.
-  static Event<R> map2<R, A, B>(
-      R Function(A value1, B value2) callback, A value1, B value2) {
+  static Event<R> map2<R, T1, T2>(
+      Map2<T1, T2, R> callback, T1 value1, T2 value2) {
     try {
       return NextEvent<R>(callback(value1, value2));
     } catch (error, stackTrace) {

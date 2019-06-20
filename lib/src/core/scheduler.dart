@@ -1,12 +1,11 @@
 library rx.core.scheduler;
 
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/subscriptions.dart';
 
 import 'subscription.dart';
 
 typedef Callback = void Function();
-
-typedef IterationCallback = bool Function();
 
 abstract class Scheduler {
   /// Default constructor of the scheduler.
@@ -19,7 +18,7 @@ abstract class Scheduler {
   Subscription schedule(Callback callback);
 
   /// Schedules a `callback` to while returns value is `true`.
-  Subscription scheduleIteration(IterationCallback callback);
+  Subscription scheduleIteration(Predicate0 callback);
 
   /// Schedules a `callback` to be executed at the specified `dateTime`.
   Subscription scheduleAbsolute(DateTime dateTime, Callback callback);

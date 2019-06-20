@@ -3,6 +3,7 @@ library rx.schedulers.async;
 import 'dart:collection';
 
 import 'package:meta/meta.dart';
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/action.dart';
@@ -23,7 +24,7 @@ class AsyncScheduler extends Scheduler {
       _scheduleAt(now, SchedulerActionCallback(callback));
 
   @override
-  Subscription scheduleIteration(IterationCallback callback) {
+  Subscription scheduleIteration(Predicate0 callback) {
     final action = SchedulerActionCallbackWith((action) {
       if (callback()) {
         _scheduleAt(now, action);

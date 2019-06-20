@@ -17,7 +17,7 @@ class ImmediateScheduler extends Scheduler {
   }
 
   @override
-  Subscription scheduleIteration(IterationCallback callback) {
+  Subscription scheduleIteration(Predicate0 callback) {
     for (; callback();) {}
     return Subscription.empty();
   }
