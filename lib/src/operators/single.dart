@@ -11,8 +11,8 @@ import 'package:rx/src/core/subscriber.dart';
 /// if there was no element, or emits [TooManyError] if there was more than 1
 /// element.
 Operator<T, T> single<T>() => singleOrElse(
-      tooFew: () => throw TooFewError(),
-      tooMany: () => throw TooManyError(),
+      tooFew: throwFunction0(TooFewError()),
+      tooMany: throwFunction0(TooManyError()),
     );
 
 /// Returns the single element of an observable sequence, or emits `tooFew`

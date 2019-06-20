@@ -1,5 +1,6 @@
 library rx.operators.last;
 
+import 'package:rx/core.dart';
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/functions.dart';
@@ -9,11 +10,12 @@ import 'package:rx/src/core/subscriber.dart';
 
 /// Returns the last element of an observable sequence, or emits an
 /// [TooFewError] otherwise.
-Operator<T, T> last<T>() => lastOrElse(() => throw TooFewError());
+Operator<T, T> last<T>() => lastOrElse(throwFunction0(TooFewError()));
 
 /// Returns the last element of an observable sequence, or the provided default
 /// value otherwise.
-Operator<T, T> lastOrDefault<T>([T value]) => lastOrElse(() => value);
+Operator<T, T> lastOrDefault<T>([T value]) =>
+    lastOrElse(constantFunction0(value));
 
 /// Returns the last element of an observable sequence, or evaluates the
 /// provided callback otherwise.

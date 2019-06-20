@@ -28,3 +28,8 @@ T identityFunction<T>(T argument) => argument;
 /// The constant functions.
 T Function() constantFunction0<T>(T value) => () => value;
 T Function(T1) constantFunction1<T, T1>(T value) => (t1) => value;
+
+/// The throwing functions.
+T Function() throwFunction0<T>(Object throwable) => () => throw throwable;
+T Function(T1) throwFunction1<T, T1>(Object throwable) =>
+    (t1) => throw throwable;

@@ -9,7 +9,7 @@ import 'package:rx/src/core/subscriber.dart';
 
 /// Returns the first element of an observable sequence, or emits an
 /// [TooFewError] otherwise.
-Operator<T, T> first<T>() => firstOrElse(() => throw TooFewError());
+Operator<T, T> first<T>() => firstOrElse(throwFunction0(TooFewError()));
 
 /// Returns the first element of an observable sequence, or the provided
 /// default value otherwise.
