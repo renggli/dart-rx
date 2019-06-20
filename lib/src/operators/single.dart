@@ -2,12 +2,10 @@ library rx.operators.single;
 
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
-
-/// Callback throwing an error, or returning an alternate value.
-typedef SingleCallback<T> = T Function();
 
 /// Returns the single element of an observable sequence, or emits [TooFewError]
 /// if there was no element, or emits [TooManyError] if there was more than 1
@@ -21,21 +19,20 @@ Operator<T, T> single<T>() => singleOrElse(
 /// if there was no element, or emits `tooMany` if there was more than 1
 /// element.
 Operator<T, T> singleOrDefault<T>({T tooFew, T tooMany}) => singleOrElse(
-      tooFew: () => tooFew,
-      tooMany: () => tooMany,
+      tooFew: constantFunction0(tooFew),
+      tooMany: constantFunction0(tooMany),
     );
 
 /// Returns the single element of an observable sequence, or evaluates the
 /// `tooFew` callback if there was no element, or evaluates the `tooMany`
 /// callback if there was more than 1 element.
-Operator<T, T> singleOrElse<T>(
-        {SingleCallback<T> tooFew, SingleCallback<T> tooMany}) =>
+Operator<T, T> singleOrElse<T>({Map0<T> tooFew, Map0<T> tooMany}) =>
     (subscriber, source) =>
         source.subscribe(_SingleSubscriber(subscriber, tooFew, tooMany));
 
 class _SingleSubscriber<T> extends Subscriber<T> {
-  final SingleCallback<T> tooFewCallback;
-  final SingleCallback<T> tooManyCallback;
+  final Map0<T> tooFewCallback;
+  final Map0<T> tooManyCallback;
 
   T singleValue;
   bool seenValue = false;
@@ -64,7 +61,7 @@ class _SingleSubscriber<T> extends Subscriber<T> {
     }
   }
 
-  void doCallback(SingleCallback<T> callback) {
+  void doCallback(Map0<T> callback) {
     final callbackEvent = Event.map0(callback);
     if (callbackEvent is ErrorEvent) {
       doError(callbackEvent.error, callbackEvent.stackTrace);

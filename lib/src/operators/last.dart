@@ -2,12 +2,10 @@ library rx.operators.last;
 
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
-
-/// Callback throwing an error, or returning an alternate value.
-typedef LastCallback<T> = T Function();
 
 /// Returns the last element of an observable sequence, or emits an
 /// [TooFewError] otherwise.
@@ -19,12 +17,11 @@ Operator<T, T> lastOrDefault<T>([T value]) => lastOrElse(() => value);
 
 /// Returns the last element of an observable sequence, or evaluates the
 /// provided callback otherwise.
-Operator<T, T> lastOrElse<T>(LastCallback<T> callback) =>
-    (subscriber, source) =>
-        source.subscribe(_LastSubscriber(subscriber, callback));
+Operator<T, T> lastOrElse<T>(Map0<T> callback) => (subscriber, source) =>
+    source.subscribe(_LastSubscriber(subscriber, callback));
 
 class _LastSubscriber<T> extends Subscriber<T> {
-  final LastCallback<T> callback;
+  final Map0<T> callback;
 
   T lastValue;
   bool seenValue = false;

@@ -6,15 +6,13 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
-typedef FilterPredicate<T> = bool Function(T value);
-
 /// Filter items emitted by the source Observable by only emitting those that
 /// satisfy a specified predicate.
-Operator<T, T> filter<T>(FilterPredicate predicate) => (subscriber, source) =>
+Operator<T, T> filter<T>(Predicate1<T> predicate) => (subscriber, source) =>
     source.subscribe(_FilterSubscriber(subscriber, predicate));
 
 class _FilterSubscriber<T> extends Subscriber<T> {
-  final FilterPredicate<T> predicate;
+  final Predicate1<T> predicate;
 
   _FilterSubscriber(Observer<T> destination, this.predicate)
       : super(destination);

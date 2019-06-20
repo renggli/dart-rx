@@ -8,7 +8,7 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/schedulers/settings.dart';
 
 /// Delays the emission of items from the source Observable by a given timeout.
-Operator<T, T> delay<T>({Duration delay, Scheduler scheduler}) =>
+Operator<T, T> delay<T>(Duration delay, {Scheduler scheduler}) =>
     (subscriber, source) => source.subscribe(
         _DelaySubscriber(subscriber, scheduler ?? defaultScheduler, delay));
 

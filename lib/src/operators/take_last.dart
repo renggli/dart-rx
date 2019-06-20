@@ -5,8 +5,6 @@ import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 
-typedef TakeLastConditionFunction<T> = bool Function(T value);
-
 /// Emits the last [count] values emitted by the source.
 Operator<T, T> takeLast<T>([int count = 1]) => (subscriber, source) =>
     source.subscribe(_TakeLastSubscriber(subscriber, count));

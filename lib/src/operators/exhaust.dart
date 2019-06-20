@@ -19,7 +19,7 @@ Operator<Observable<T>, T> exhaustAll<T>({int concurrent = 1}) =>
 /// projecting the values of the source to higher-order [Observable]s.
 /// Subscribes to at most `concurrent` sources, drops observables exceeding
 /// this threshold.
-Operator<T, R> exhaustMap<T, R>(MapFunction<T, Observable<R>> project,
+Operator<T, R> exhaustMap<T, R>(Map1<T, Observable<R>> project,
         {int concurrent = 1}) =>
     (subscriber, source) =>
         source.subscribe(_ExhaustSubscriber(subscriber, project, concurrent));
@@ -34,7 +34,7 @@ Operator<T, R> exhaustMapTo<T, R>(Observable<R> observable,
 
 class _ExhaustSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  final MapFunction<T, Observable<R>> project;
+  final Map1<T, Observable<R>> project;
   final int concurrent;
 
   bool hasCompleted = false;

@@ -194,17 +194,17 @@ void main() {
   group('delay', () {
     test('moderate delay', () {
       final input = scheduler.cold('-a-b--c---d----|');
-      final actual = input.lift(delay(delay: scheduler.stepDuration * 2));
+      final actual = input.lift(delay(scheduler.stepDuration * 2));
       expect(actual, scheduler.isObservable('---a-b--c---d----|'));
     });
     test('massive delay', () {
       final input = scheduler.cold('-a-b--c---d----|');
-      final actual = input.lift(delay(delay: scheduler.stepDuration * 8));
+      final actual = input.lift(delay(scheduler.stepDuration * 8));
       expect(actual, scheduler.isObservable('---------a-b--c---d----|'));
     });
     test('errors immediately', () {
       final input = scheduler.cold('-a-b--c---#');
-      final actual = input.lift(delay(delay: scheduler.stepDuration * 4));
+      final actual = input.lift(delay(scheduler.stepDuration * 4));
       expect(actual, scheduler.isObservable('-----a-b--#'));
     });
   });
@@ -358,7 +358,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-x#'));
     });
     test('overlapping', () {
-      final actual = scheduler.cold<String>(        '-a-b---ba-|', values: {
+      final actual = scheduler.cold<String>('-a-b---ba-|', values: {
         'a': '1-2-3|',
         'b': '45|',
       }).lift(exhaustMap((inner) => scheduler.cold<String>(inner)));

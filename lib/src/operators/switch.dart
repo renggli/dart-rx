@@ -15,7 +15,7 @@ Operator<Observable<R>, R> switchAll<R>() => (subscriber, source) =>
 
 /// Emits values from the most recent higher-order [Observable] retrieved by
 /// projecting the values of the source to higher-order [Observable]s.
-Operator<T, R> switchMap<T, R>(MapFunction<T, Observable<R>> project) =>
+Operator<T, R> switchMap<T, R>(Map1<T, Observable<R>> project) =>
     (subscriber, source) =>
         source.subscribe(_SwitchSubscriber(subscriber, project));
 
@@ -26,7 +26,7 @@ Operator<T, R> switchMapTo<T, R>(Observable<R> observable) =>
 
 class _SwitchSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  final MapFunction<T, Observable<R>> project;
+  final Map1<T, Observable<R>> project;
   final SequentialSubscription subscription = SequentialSubscription();
 
   bool hasCompleted = false;

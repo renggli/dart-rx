@@ -1,13 +1,12 @@
 library rx.operators.to_set;
 
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
-typedef SetConstructor<T> = Set<T> Function();
-
 /// Returns a [Set] from an observable sequence.
-Operator<T, Set<T>> toSet<T>([SetConstructor<T> setConstructor]) =>
+Operator<T, Set<T>> toSet<T>([Map0<Set<T>> setConstructor]) =>
     (subscriber, source) => source.subscribe(_ToSetSubscriber(
         subscriber, setConstructor != null ? setConstructor : <T>{}));
 

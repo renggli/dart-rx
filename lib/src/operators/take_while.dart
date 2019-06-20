@@ -4,15 +4,12 @@ import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 
-typedef TakeWhilePredicate<T> = bool Function(T value);
-
 /// Emits values while the [predicate] returns `true`.
-Operator<T, T> takeWhile<T>(TakeWhilePredicate predicate) =>
-    (subscriber, source) =>
-        source.subscribe(_TakeWhileSubscriber(subscriber, predicate));
+Operator<T, T> takeWhile<T>(Predicate1<T> predicate) => (subscriber, source) =>
+    source.subscribe(_TakeWhileSubscriber(subscriber, predicate));
 
 class _TakeWhileSubscriber<T> extends Subscriber<T> {
-  final TakeWhilePredicate predicate;
+  final Predicate1<T> predicate;
 
   _TakeWhileSubscriber(Observer<T> destination, this.predicate)
       : super(destination);
