@@ -9,29 +9,29 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/observers/inner.dart';
 import 'package:rx/src/subscriptions/sequential.dart';
 
-typedef SwitchMapProject<T, R> = Observable<R> Function(T value);
+typedef SwitchProjectFunction<T, R> = Observable<R> Function(T value);
 
 /// Projects each source value to an [Observable] which is merged in the output
 /// [Observable], emitting values only from the most recently projected
 /// [Observable].
-Operator<T, R> switchMap<T, R>(SwitchMapProject<T, R> project) =>
+Operator<T, R> switchMap<T, R>(SwitchProjectFunction<T, R> project) =>
     (subscriber, source) =>
-        source.subscribe(_SwitchMapSubscriber(subscriber, project));
+        source.subscribe(_SwitchSubscriber(subscriber, project));
 
 /// Projects each source value to the same [Observable] which is flattened
 /// multiple times with `switchMap` in the output [Observable].
 Operator<T, R> switchMapTo<T, R>(Observable<R> observable) =>
     (subscriber, source) =>
-        source.subscribe(_SwitchMapSubscriber(subscriber, (_) => observable));
+        source.subscribe(_SwitchSubscriber(subscriber, (_) => observable));
 
-class _SwitchMapSubscriber<T, R> extends Subscriber<T>
+class _SwitchSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  final SwitchMapProject<T, R> project;
+  final SwitchProjectFunction<T, R> project;
   final SequentialSubscription subscription = SequentialSubscription();
 
   bool hasCompleted = false;
 
-  _SwitchMapSubscriber(Observer<R> destination, this.project)
+  _SwitchSubscriber(Observer<R> destination, this.project)
       : super(destination) {
     add(subscription);
   }

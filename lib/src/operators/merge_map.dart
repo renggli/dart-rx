@@ -11,32 +11,32 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
 
-typedef ProjectFunction<T, R> = Observable<R> Function(T value);
+typedef MapProjectFunction<T, R> = Observable<R> Function(T value);
 
 /// Applies a given project function to each value emitted by the source
 /// Observable, and emits the resulting values as an Observable.
-Operator<T, R> mergeMap<T, R>(ProjectFunction<T, R> project,
+Operator<T, R> mergeMap<T, R>(MapProjectFunction<T, R> project,
         {int concurrent = maxInteger}) =>
     (subscriber, source) =>
-        source.subscribe(_MergeMapSubscriber(subscriber, project, concurrent));
+        source.subscribe(_MergeSubscriber(subscriber, project, concurrent));
 
 /// Projects each source value to the same [Observable] which is merged multiple
 /// times in the output [Observable].
 Operator<T, R> mergeMapTo<T, R>(Observable<R> observable,
         {int concurrent = maxInteger}) =>
-    (subscriber, source) => source.subscribe(
-        _MergeMapSubscriber(subscriber, (_) => observable, concurrent));
+    (subscriber, source) => source
+        .subscribe(_MergeSubscriber(subscriber, (_) => observable, concurrent));
 
-class _MergeMapSubscriber<T, R> extends Subscriber<T>
+class _MergeSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, int> {
-  final ProjectFunction<T, R> project;
+  final MapProjectFunction<T, R> project;
   final num concurrent;
 
   Queue<T> buffer = Queue();
   bool hasCompleted = false;
   int active = 0;
 
-  _MergeMapSubscriber(Observer<R> destination, this.project, this.concurrent)
+  _MergeSubscriber(Observer<R> destination, this.project, this.concurrent)
       : super(destination);
 
   @override
