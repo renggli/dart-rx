@@ -320,6 +320,60 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-#'));
     });
   });
+  group('exhaustMap', () {
+    test('inner is shorter', () {
+      final actual = scheduler.cold<String>('-a--b--c--|', values: {
+        'a': 'x|',
+        'b': 'y|',
+        'c': 'z|',
+      }).lift(exhaustMap((inner) => scheduler.cold<String>(inner)));
+      expect(actual, scheduler.isObservable<String>('-x--y--z--|'));
+    });
+    test('outer is shorter', () {
+      final actual = scheduler.cold<String>('-a--b--c|', values: {
+        'a': 'x-|',
+        'b': 'y-|',
+        'c': 'z-|',
+      }).lift(exhaustMap((inner) => scheduler.cold<String>(inner)));
+      expect(actual, scheduler.isObservable<String>('-x--y--z-|'));
+    });
+    test('projection throws', () {
+      final actual = scheduler
+          .cold<String>('-a-b-|')
+          .lift(exhaustMap<String, String>((inner) => throw 'Error'));
+      expect(actual, scheduler.isObservable<String>('-#'));
+    });
+    test('inner throws', () {
+      final actual = scheduler.cold<String>('-a--b--|', values: {
+        'a': 'x#',
+        'b': 'y-|'
+      }).lift(exhaustMap((inner) => scheduler.cold<String>(inner)));
+      expect(actual, scheduler.isObservable<String>('-x#'));
+    });
+    test('outer throws', () {
+      final actual = scheduler.cold<String>('-a#-b--|', values: {
+        'a': 'x-|',
+        'b': 'y-|',
+      }).lift(exhaustMap((inner) => scheduler.cold<String>(inner)));
+      expect(actual, scheduler.isObservable<String>('-x#'));
+    });
+    test('overlapping', () {
+      final actual = scheduler.cold<String>(        '-a-b---ba-|', values: {
+        'a': '1-2-3|',
+        'b': '45|',
+      }).lift(exhaustMap((inner) => scheduler.cold<String>(inner)));
+      expect(actual, scheduler.isObservable<String>('-1-2-3-45-|'));
+    });
+    test('limit concurrent', () {
+      final actual = scheduler.cold<String>('abc|', values: {
+        'a': 'x---|',
+        'b': 'y---|',
+        'c': 'z---|',
+      }).lift(
+          exhaustMap((inner) => scheduler.cold<String>(inner), concurrent: 2));
+      expect(actual, scheduler.isObservable<String>('xy---|'));
+    });
+  });
   group('filter', () {
     test('first value filterd', () {
       final input = scheduler.cold('--a--b--|');
