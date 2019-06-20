@@ -2,15 +2,13 @@ library rx.constructors.defer;
 
 import 'package:rx/src/constructors/create.dart';
 import 'package:rx/src/constructors/empty.dart';
+import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observable.dart';
-
-typedef ObservableFactory<T> = Observable<T> Function();
 
 /// An [Observable] that uses the `observableFactory` to create a new
 /// [Observable] on each subscribe.
-Observable<T> defer<T>(ObservableFactory<T> observableFactory) =>
-    create<T>((subscriber) {
-      final observable = observableFactory() ?? empty<T>();
+Observable<T> defer<T>(Map0<Observable<T>> callback) => create<T>((subscriber) {
+      final observable = callback() ?? empty<T>();
       subscriber.add(observable.subscribe(subscriber));
       return subscriber;
     });
