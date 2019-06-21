@@ -9,6 +9,11 @@ typedef ErrorCallback = void Function(Object error, [StackTrace stackTrace]);
 /// Callback type used to complete a sequence of values with a success.
 typedef CompleteCallback = void Function();
 
+/// Function type for plain callbacks.
+typedef Callback0 = void Function();
+typedef Callback1<T1> = void Function(T1 t1);
+typedef Callback2<T1, T2> = void Function(T1 t1, T2 t2);
+
 /// Function type to map from a value of type `T` to a value of type `R`.
 typedef Map0<R> = R Function();
 typedef Map1<T1, R> = R Function(T1 t1);

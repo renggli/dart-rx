@@ -20,7 +20,7 @@ abstract class ZoneScheduler extends Scheduler {
   DateTime get now => DateTime.now();
 
   @override
-  Subscription schedule(Callback callback) {
+  Subscription schedule(Callback0 callback) {
     final action = SchedulerActionCallback(callback);
     zone.scheduleMicrotask(action.run);
     return action;
@@ -51,15 +51,15 @@ abstract class ZoneScheduler extends Scheduler {
   }
 
   @override
-  Subscription scheduleAbsolute(DateTime dateTime, Callback callback) =>
+  Subscription scheduleAbsolute(DateTime dateTime, Callback0 callback) =>
       scheduleRelative(dateTime.difference(now), callback);
 
   @override
-  Subscription scheduleRelative(Duration duration, Callback callback) =>
+  Subscription scheduleRelative(Duration duration, Callback0 callback) =>
       TimerSubscription(zone.createTimer(duration, callback));
 
   @override
-  Subscription schedulePeriodic(Duration duration, Callback callback) =>
+  Subscription schedulePeriodic(Duration duration, Callback0 callback) =>
       TimerSubscription(
           zone.createPeriodicTimer(duration, (timer) => callback()));
 }

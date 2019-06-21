@@ -20,7 +20,7 @@ class AsyncScheduler extends Scheduler {
   DateTime get now => DateTime.now();
 
   @override
-  Subscription schedule(Callback callback) =>
+  Subscription schedule(Callback0 callback) =>
       _scheduleAt(now, SchedulerActionCallback(callback));
 
   @override
@@ -37,15 +37,15 @@ class AsyncScheduler extends Scheduler {
   }
 
   @override
-  Subscription scheduleAbsolute(DateTime dateTime, Callback callback) =>
+  Subscription scheduleAbsolute(DateTime dateTime, Callback0 callback) =>
       _scheduleAt(dateTime, SchedulerActionCallback(callback));
 
   @override
-  Subscription scheduleRelative(Duration duration, Callback callback) =>
+  Subscription scheduleRelative(Duration duration, Callback0 callback) =>
       scheduleAbsolute(now.add(duration), callback);
 
   @override
-  Subscription schedulePeriodic(Duration duration, Callback callback) =>
+  Subscription schedulePeriodic(Duration duration, Callback0 callback) =>
       _scheduleAt(now.add(duration), SchedulerActionCallbackWith((action) {
         callback();
         if (!action.isClosed) {

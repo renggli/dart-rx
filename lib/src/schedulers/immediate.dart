@@ -11,7 +11,7 @@ class ImmediateScheduler extends Scheduler {
   DateTime get now => DateTime.now();
 
   @override
-  Subscription schedule(Callback callback) {
+  Subscription schedule(Callback0 callback) {
     callback();
     return Subscription.empty();
   }
@@ -23,18 +23,18 @@ class ImmediateScheduler extends Scheduler {
   }
 
   @override
-  Subscription scheduleAbsolute(DateTime dateTime, Callback callback) =>
+  Subscription scheduleAbsolute(DateTime dateTime, Callback0 callback) =>
       scheduleRelative(now.difference(dateTime), callback);
 
   @override
-  Subscription scheduleRelative(Duration duration, Callback callback) {
+  Subscription scheduleRelative(Duration duration, Callback0 callback) {
     sleep(duration);
     callback();
     return Subscription.empty();
   }
 
   @override
-  Subscription schedulePeriodic(Duration duration, Callback callback) {
+  Subscription schedulePeriodic(Duration duration, Callback0 callback) {
     for (;;) {
       sleep(duration);
       callback();
