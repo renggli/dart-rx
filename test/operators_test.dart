@@ -3,6 +3,7 @@ library rx.test.operators_test;
 import 'package:rx/constructors.dart';
 import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
+import 'package:rx/schedulers.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart' hide isEmpty;
 
@@ -763,6 +764,32 @@ void main() {
           .cold<String>('a---b---|')
           .lift(mergeMapTo(inner, concurrent: 1));
       expect(actual, scheduler.isObservable<String>('xyz-xyz-|'));
+    });
+  });
+  group('observeOn', () {
+    test('plain sequence', () {
+      final actual = scheduler
+          .cold<String>('-a-b-c-|')
+          .lift(observeOn(ImmediateScheduler()));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
+    });
+    test('sequence with delay', () {
+      final actual = scheduler
+          .cold<String>('-a-b-c-|')
+          .lift(observeOn(scheduler, delay: scheduler.stepDuration));
+      expect(actual, scheduler.isObservable<String>('--a-b-c-|'));
+    });
+    test('error sequence', () {
+      final actual = scheduler
+          .cold<String>('-a-b-c-#')
+          .lift(observeOn(ImmediateScheduler()));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
+    });
+    test('error with delay', () {
+      final actual = scheduler
+          .cold<String>('-a-b-c-#')
+          .lift(observeOn(scheduler, delay: scheduler.stepDuration));
+      expect(actual, scheduler.isObservable<String>('--a-b-c-#'));
     });
   });
   group('sample', () {
