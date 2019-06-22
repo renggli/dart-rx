@@ -1,4 +1,4 @@
-library rx.testing.test_message;
+library rx.testing.test_events;
 
 import 'package:collection/collection.dart';
 import 'package:more/hash.dart';

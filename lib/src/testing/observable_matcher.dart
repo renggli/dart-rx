@@ -5,6 +5,7 @@ import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/schedulers/settings.dart';
+import 'package:rx/src/testing/test_event_sequence.dart';
 import 'package:test/test.dart';
 import 'package:test_api/test_api.dart';
 
@@ -12,9 +13,11 @@ import 'test_events.dart';
 import 'test_scheduler.dart';
 
 class ObservableMatcher<T> extends Matcher {
-  final Matcher _expected;
+  final TestEventSequence<T> _sequence;
+  final Matcher _eventMatcher;
 
-  ObservableMatcher(this._expected);
+  ObservableMatcher(this._sequence)
+      : _eventMatcher = wrapMatcher(_sequence.events);
 
   @override
   bool matches(Object item, Map matchState) {
@@ -45,12 +48,12 @@ class ObservableMatcher<T> extends Matcher {
       scheduler.advance();
     }
 
-    return _expected.matches(actual, matchState);
+    return _eventMatcher.matches(actual, matchState);
   }
 
   @override
   Description describe(Description description) =>
-      description.add('emits ').addDescriptionOf(_expected);
+      description.add('emits ').addDescriptionOf(_sequence);
 
   @override
   Description describeMismatch(Object item, Description mismatchDescription,
@@ -58,8 +61,7 @@ class ObservableMatcher<T> extends Matcher {
     if (matchState[this] is String) {
       return StringDescription(matchState[this]);
     } else {
-      return _expected.describeMismatch(
-          item, mismatchDescription, matchState, verbose);
+      return StringDescription('does not emit ').addDescriptionOf(_sequence);
     }
   }
 }

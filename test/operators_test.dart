@@ -766,6 +766,29 @@ void main() {
       expect(actual, scheduler.isObservable<String>('xyz-xyz-|'));
     });
   });
+  group('multicast', () {
+    group('publishBehacior', () {
+
+    });
+    group('publishLast', () {
+      test('basic sequence', () {
+        final source = Subject<String>();
+        final actual = source.lift(publishLast());
+        expect(actual, scheduler.isObservable<String>(''));
+        source.next('a');
+        expect(actual, scheduler.isObservable<String>('a'));
+        expect(actual, scheduler.isObservable<String>('a'));
+        source.next('b');
+        expect(actual, scheduler.isObservable<String>('b'));
+        source.complete();
+        expect(actual, scheduler.isObservable<String>('|'));
+      }, skip: true);
+    });
+    group('publishReplay', () {
+
+    });
+
+  });
   group('observeOn', () {
     test('plain sequence', () {
       final actual = scheduler
