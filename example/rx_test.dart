@@ -51,14 +51,14 @@ void main() {
       .lift(map((value) => '${value * value}'))
       .lift(filter((value) => value.length < 3));
 
-  transformed.subscribe(printObserver('One'));
-  transformed.subscribe(printObserver('Two'));
+  transformed.subscribe(printObserver('one'));
+  transformed.subscribe(printObserver('two'));
 
   final obs = timer(
       delay: const Duration(seconds: 2),
       period: const Duration(milliseconds: 500));
-  final subs1 = obs.subscribe(printObserver('1'));
-  final subs2 = obs.subscribe(printObserver('2'));
+  final subs1 = obs.subscribe(printObserver('first'));
+  final subs2 = obs.subscribe(printObserver('second'));
 
   timer(delay: const Duration(seconds: 3))
       .subscribe(Observer(complete: () => subs1.unsubscribe()));
