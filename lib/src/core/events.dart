@@ -57,18 +57,6 @@ abstract class Event<T> {
 
   /// Performs this event on the [observer].
   void observe(Observer<T> observer);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Event<T> &&
-          runtimeType == other.runtimeType &&
-          value == other.value &&
-          error == other.error &&
-          stackTrace == other.stackTrace);
-
-  @override
-  int get hashCode => hash4(runtimeType, value, error, stackTrace);
 }
 
 class NextEvent<T> extends Event<T> {
@@ -79,6 +67,13 @@ class NextEvent<T> extends Event<T> {
 
   @override
   void observe(Observer<T> observer) => observer.next(value);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is NextEvent && value == other.value);
+
+  @override
+  int get hashCode => value.hashCode;
 
   @override
   String toString() => 'NextEvent{value: $value}';
@@ -97,6 +92,16 @@ class ErrorEvent<T> extends Event<T> {
   void observe(Observer<T> observer) => observer.error(error, stackTrace);
 
   @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ErrorEvent &&
+          error == other.error &&
+          stackTrace == other.stackTrace);
+
+  @override
+  int get hashCode => hash2(error, stackTrace);
+
+  @override
   String toString() => 'ErrorEvent{error: $error, stackTrace: $stackTrace}';
 }
 
@@ -105,6 +110,13 @@ class CompleteEvent<T> extends Event<T> {
 
   @override
   void observe(Observer<T> observer) => observer.complete();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is CompleteEvent;
+
+  @override
+  int get hashCode => 34822;
 
   @override
   String toString() => 'CompleteEvent{}';

@@ -141,5 +141,5 @@ class TestEventSequence<T> {
   }
 
   @override
-  String toString() => 'TestEventSequence{${toMarbles()}';
+  String toString() => 'TestEventSequence{${toMarbles()}}';
 }
