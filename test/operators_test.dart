@@ -170,7 +170,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('--#'));
     });
   });
-  group('default_if_empty', () {
+  group('defaultIfEmpty', () {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
       final actual = input.lift(defaultIfEmpty('x'));
