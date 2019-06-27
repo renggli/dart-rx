@@ -1,5 +1,6 @@
 library rx.testing.test_scheduler;
 
+import 'package:more/iterable.dart';
 import 'package:rx/core.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/schedulers/async.dart';
@@ -27,11 +28,11 @@ class TestScheduler extends AsyncScheduler {
   /// Returns the stepping time in this test scenario.
   Duration get stepDuration => const Duration(milliseconds: 1);
 
-  /// Installs a test scheduler.
+  /// Installs a test scheduler during test runs.
   void install() {
     var subscription = Subscription.empty();
     setUp(() {
-      _currentTime = DateTime.now();
+      _currentTime = truncateToPeriod(DateTime.now(), period: Period.daily);
       subscription = replaceDefaultScheduler(this);
     });
     tearDown(() {

@@ -10,7 +10,7 @@ void main() {
     void expectParse<T>(String marbles, List<TestEvent<T>> events,
         {Map<String, T> values = const {},
         Object error = 'Error',
-        bool toMarbles: true}) {
+        bool toMarbles = true}) {
       final result = TestEventSequence<T>.fromString(marbles,
           values: values, error: error);
       expect(result.events, events);
