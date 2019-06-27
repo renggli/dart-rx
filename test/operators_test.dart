@@ -767,9 +767,7 @@ void main() {
     });
   });
   group('multicast', () {
-    group('publishBehacior', () {
-
-    });
+    group('publishBehacior', () {});
     group('publishLast', () {
       test('basic sequence', () {
         final source = Subject<String>();
@@ -784,10 +782,7 @@ void main() {
         expect(actual, scheduler.isObservable<String>('|'));
       }, skip: true);
     });
-    group('publishReplay', () {
-
-    });
-
+    group('publishReplay', () {});
   });
   group('observeOn', () {
     test('plain sequence', () {
