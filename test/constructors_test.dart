@@ -453,4 +453,68 @@ void main() {
       expect(actual, scheduler.isObservable('---0-1-2-3-(4|)', values: values));
     });
   });
+  group('zip', () {
+    test('empty sequence', () {
+      final actual = zip<String>([]);
+      expect(actual, scheduler.isObservable<List<String>>('|'));
+    });
+    test('basic sequence', () {
+      final actual = zip<String>([
+        scheduler.cold('-a---e|'),
+        scheduler.cold('--b-d-|'),
+        scheduler.cold('---c--|'),
+      ]);
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('---x--|', values: {
+            'x': ['a', 'b', 'c'],
+          }));
+    });
+    test('different length', () {
+      final actual = zip<String>([
+        scheduler.cold('-a---e-|'),
+        scheduler.cold('--b-d-|'),
+        scheduler.cold('---c-|'),
+      ]);
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('---x-|', values: {
+            'x': ['a', 'b', 'c'],
+          }));
+    });
+    test('repeated values', () {
+      final actual = zip<String>([
+        scheduler.cold('-ab-----|'),
+        scheduler.cold('---cd---|'),
+        scheduler.cold('-----ef-|'),
+      ]);
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('-----xy-|', values: {
+            'x': ['a', 'c', 'e'],
+            'y': ['b', 'd', 'f'],
+          }));
+    });
+    test('early error', () {
+      final actual = zip<String>([
+        scheduler.cold('-a---e|'),
+        scheduler.cold('--#'),
+        scheduler.cold('---c--|'),
+      ]);
+      expect(actual, scheduler.isObservable<List<String>>('--#'));
+    });
+    test('late error', () {
+      final actual = zip<String>([
+        scheduler.cold('-a---#'),
+        scheduler.cold('--b-d-|'),
+        scheduler.cold('---c--|'),
+      ]);
+      expect(
+          actual,
+          scheduler.isObservable<List<String>>('---x-#', values: {
+            'x': ['a', 'b', 'c'],
+            'y': ['a', 'd', 'c'],
+          }));
+    });
+  });
 }

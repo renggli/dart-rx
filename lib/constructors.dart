@@ -16,3 +16,4 @@ export 'src/constructors/never.dart';
 export 'src/constructors/stream.dart';
 export 'src/constructors/throw_error.dart';
 export 'src/constructors/timer.dart';
+export 'src/constructors/zip.dart';
