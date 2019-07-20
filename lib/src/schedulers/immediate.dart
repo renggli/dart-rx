@@ -1,7 +1,5 @@
 library rx.schedulers.immediate;
 
-import 'dart:io';
-
 import 'package:rx/core.dart';
 
 class ImmediateScheduler extends Scheduler {
@@ -28,7 +26,7 @@ class ImmediateScheduler extends Scheduler {
 
   @override
   Subscription scheduleRelative(Duration duration, Callback0 callback) {
-    sleep(duration);
+    _sleep(duration);
     callback();
     return Subscription.empty();
   }
@@ -36,8 +34,13 @@ class ImmediateScheduler extends Scheduler {
   @override
   Subscription schedulePeriodic(Duration duration, Callback0 callback) {
     for (;;) {
-      sleep(duration);
+      _sleep(duration);
       callback();
     }
+  }
+
+  void _sleep(Duration duration) {
+    final target = now.add(duration);
+    while (target.isBefore(now)) {}
   }
 }
