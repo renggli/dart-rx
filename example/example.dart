@@ -1,4 +1,4 @@
-library rx.test.core;
+library rx.example.example;
 
 import 'package:more/collection.dart';
 import 'package:rx/constructors.dart';
