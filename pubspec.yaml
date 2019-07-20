@@ -3,7 +3,7 @@ version: 0.0.1
 
 author: Lukas Renggli <renggli@gmail.com>
 homepage: https://github.com/renggli/dart-rx
-description: Reactive Extensions Library for Dart
+description: Reactive Extensions Library for Dart providing an API for asynchronous programming with observable streams.
 
 environment:
   sdk: '>=2.4.0 <3.0.0'
