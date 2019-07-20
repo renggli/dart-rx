@@ -16,7 +16,7 @@ abstract class Observable<T> {
     Operator<T, T1> operator1,
     Operator<T1, T2> operator2,
   ) =>
-      lift(operator1).lift(operator2);
+      lift<T1>(operator1).lift<T2>(operator2);
 
   /// Pipe three [Operator], identical to multiple [Observable.lift] calls.
   Observable<T3> pipe3<T1, T2, T3>(
@@ -24,7 +24,7 @@ abstract class Observable<T> {
     Operator<T1, T2> operator2,
     Operator<T2, T3> operator3,
   ) =>
-      lift(operator1).lift(operator2).lift(operator3);
+      lift<T1>(operator1).lift<T2>(operator2).lift<T3>(operator3);
 
   /// Pipe four [Operator], identical to multiple [Observable.lift] calls.
   Observable<T4> pipe4<T1, T2, T3, T4>(
@@ -33,7 +33,10 @@ abstract class Observable<T> {
     Operator<T2, T3> operator3,
     Operator<T3, T4> operator4,
   ) =>
-      lift(operator1).lift(operator2).lift(operator3).lift(operator4);
+      lift<T1>(operator1)
+          .lift<T2>(operator2)
+          .lift<T3>(operator3)
+          .lift<T4>(operator4);
 
   /// Pipe five [Operator], identical to multiple [Observable.lift] calls.
   Observable<T5> pipe5<T1, T2, T3, T4, T5>(
@@ -42,11 +45,11 @@ abstract class Observable<T> {
           Operator<T2, T3> operator3,
           Operator<T3, T4> operator4,
           Operator<T4, T5> operator5) =>
-      lift(operator1)
-          .lift(operator2)
-          .lift(operator3)
-          .lift(operator4)
-          .lift(operator5);
+      lift<T1>(operator1)
+          .lift<T2>(operator2)
+          .lift<T3>(operator3)
+          .lift<T4>(operator4)
+          .lift<T5>(operator5);
 
   /// Pipe six [Operator], identical to multiple [Observable.lift] calls.
   Observable<T6> pipe6<T1, T2, T3, T4, T5, T6>(
@@ -56,12 +59,12 @@ abstract class Observable<T> {
           Operator<T3, T4> operator4,
           Operator<T4, T5> operator5,
           Operator<T5, T6> operator6) =>
-      lift(operator1)
-          .lift(operator2)
-          .lift(operator3)
-          .lift(operator4)
-          .lift(operator5)
-          .lift(operator6);
+      lift<T1>(operator1)
+          .lift<T2>(operator2)
+          .lift<T3>(operator3)
+          .lift<T4>(operator4)
+          .lift<T5>(operator5)
+          .lift<T6>(operator6);
 
   /// Pipe seven [Operator], identical to multiple [Observable.lift] calls.
   Observable<T7> pipe7<T1, T2, T3, T4, T5, T6, T7>(
@@ -72,13 +75,13 @@ abstract class Observable<T> {
           Operator<T4, T5> operator5,
           Operator<T5, T6> operator6,
           Operator<T6, T7> operator7) =>
-      lift(operator1)
-          .lift(operator2)
-          .lift(operator3)
-          .lift(operator4)
-          .lift(operator5)
-          .lift(operator6)
-          .lift(operator7);
+      lift<T1>(operator1)
+          .lift<T2>(operator2)
+          .lift<T3>(operator3)
+          .lift<T4>(operator4)
+          .lift<T5>(operator5)
+          .lift<T6>(operator6)
+          .lift<T7>(operator7);
 
   /// Pipe eight [Operator], identical to multiple [Observable.lift] calls.
   Observable<T8> pipe8<T1, T2, T3, T4, T5, T6, T7, T8>(
@@ -90,14 +93,14 @@ abstract class Observable<T> {
           Operator<T5, T6> operator6,
           Operator<T6, T7> operator7,
           Operator<T7, T8> operator8) =>
-      lift(operator1)
-          .lift(operator2)
-          .lift(operator3)
-          .lift(operator4)
-          .lift(operator5)
-          .lift(operator6)
-          .lift(operator7)
-          .lift(operator8);
+      lift<T1>(operator1)
+          .lift<T2>(operator2)
+          .lift<T3>(operator3)
+          .lift<T4>(operator4)
+          .lift<T5>(operator5)
+          .lift<T6>(operator6)
+          .lift<T7>(operator7)
+          .lift<T8>(operator8);
 
   /// Pipe nine [Operator], identical to multiple [Observable.lift] calls.
   Observable<T9> pipe9<T1, T2, T3, T4, T5, T6, T7, T8, T9>(
@@ -110,15 +113,15 @@ abstract class Observable<T> {
           Operator<T6, T7> operator7,
           Operator<T7, T8> operator8,
           Operator<T8, T9> operator9) =>
-      lift(operator1)
-          .lift(operator2)
-          .lift(operator3)
-          .lift(operator4)
-          .lift(operator5)
-          .lift(operator6)
-          .lift(operator7)
-          .lift(operator8)
-          .lift(operator9);
+      lift<T1>(operator1)
+          .lift<T2>(operator2)
+          .lift<T3>(operator3)
+          .lift<T4>(operator4)
+          .lift<T5>(operator5)
+          .lift<T6>(operator6)
+          .lift<T7>(operator7)
+          .lift<T8>(operator8)
+          .lift<T9>(operator9);
 }
 
 class _OperatorObservable<T, R> extends Observable<R> {
