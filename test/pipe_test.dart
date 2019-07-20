@@ -12,6 +12,18 @@ void main() {
   tearDown(scheduler.tearDown);
 
   group('pipe', () {
+    test('pipe multiple types', () {
+      final input = scheduler.cold<String>('--a--b--c--|');
+      final actual = input.pipe3<double, int, String>(
+        map((v) => 3.9),
+        map((v) => v.floor()),
+        map((v) => '$v'),
+      );
+      expect(
+          actual,
+          scheduler.isObservable('--a--b--c--|',
+              values: {'a': '3', 'b': '3', 'c': '3'}));
+    });
     test('pipe 2', () {
       final input = scheduler.cold<String>('--a--b--c--|');
       final actual = input.pipe2<String, String>(
