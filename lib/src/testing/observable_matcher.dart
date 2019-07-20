@@ -16,7 +16,8 @@ class ObservableMatcher<T> {
 
   bool matches(Object item) {
     if (defaultScheduler is! TestScheduler) {
-      throw StateError('Expected $item to be evaluated with TestScheduler.');
+      throw _ObservableMatcherError('Expected $_expected, '
+          'but got $item outside of TestScheduler scope.');
     }
 
     final TestScheduler scheduler = defaultScheduler;
@@ -27,7 +28,8 @@ class ObservableMatcher<T> {
         scheduler.stepDuration.inMilliseconds;
 
     if (item is! Observable<T>) {
-      throw StateError('Expected $item to be an Observable.');
+      throw _ObservableMatcherError('Expected $_expected, '
+          'but got $item that is not of type Observable<$T>.');
     }
     final Observable<T> observable = item;
 
@@ -43,9 +45,18 @@ class ObservableMatcher<T> {
 
     final _actual = TestEventSequence<T>(events, values: _expected.values);
     if (_expected != _actual) {
-      throw StateError('Expected $_expected, but got $_actual.');
+      throw _ObservableMatcherError('Expected $_expected, '
+          'but got $_actual.');
     }
 
     return true;
   }
+}
+
+class _ObservableMatcherError extends Error {
+  final String message;
+  _ObservableMatcherError(this.message);
+
+  @override
+  String toString() => message;
 }

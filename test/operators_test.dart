@@ -20,7 +20,7 @@ void main() {
       final actual = input.lift(buffer());
       expect(
           actual,
-          scheduler.isObservable<List<String>>('-------(x|)', values: {
+          scheduler.isObservable('-------(x|)', values: {
             'x': ['a', 'b', 'c']
           }));
     });
@@ -29,7 +29,7 @@ void main() {
       final actual = input.lift(buffer(maxLength: 2));
       expect(
           actual,
-          scheduler.isObservable<List<String>>('---x---y---(z|)', values: {
+          scheduler.isObservable('---x---y---(z|)', values: {
             'x': ['a', 'b'],
             'y': ['c', 'd'],
             'z': ['e'],
@@ -40,7 +40,7 @@ void main() {
       final actual = input.lift(buffer(maxAge: scheduler.stepDuration * 4));
       expect(
           actual,
-          scheduler.isObservable<List<String>>('------x----(y|)', values: {
+          scheduler.isObservable('------x----(y|)', values: {
             'x': ['a', 'b', 'c'],
             'y': ['d', 'e', 'f', 'g'],
           }));
@@ -51,7 +51,7 @@ void main() {
           input.lift(buffer(maxLength: 3, maxAge: scheduler.stepDuration * 4));
       expect(
           actual,
-          scheduler.isObservable<List<String>>('------x--y-(z|)', values: {
+          scheduler.isObservable('------x--y-(z|)', values: {
             'x': ['a', 'b', 'c'],
             'y': ['d', 'e', 'f'],
             'z': ['g'],
@@ -62,7 +62,7 @@ void main() {
       final actual = input.lift(buffer(trigger: scheduler.cold('--*--|')));
       expect(
           actual,
-          scheduler.isObservable<List<String>>('--x-----(y|)', values: {
+          scheduler.isObservable('--x-----(y|)', values: {
             'x': ['a', 'b'],
             'y': ['c', 'd', 'e', 'f', 'g', 'h'],
           }));
@@ -73,7 +73,7 @@ void main() {
           input.lift(buffer(trigger: scheduler.cold('--*--*--*--*--|')));
       expect(
           actual,
-          scheduler.isObservable<List<String>>('--x--y--(z|)', values: {
+          scheduler.isObservable('--x--y--(z|)', values: {
             'x': ['a', 'b'],
             'y': ['c', 'd', 'e'],
             'z': ['f', 'g', 'h'],
@@ -324,7 +324,7 @@ void main() {
   });
   group('exhaustMap', () {
     test('inner is shorter', () {
-      final actual = scheduler.cold<String>('-a--b--c--|', values: {
+      final actual = scheduler.cold('-a--b--c--|', values: {
         'a': 'x|',
         'b': 'y|',
         'c': 'z|',
@@ -332,7 +332,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-x--y--z--|'));
     });
     test('outer is shorter', () {
-      final actual = scheduler.cold<String>('-a--b--c|', values: {
+      final actual = scheduler.cold('-a--b--c|', values: {
         'a': 'x-|',
         'b': 'y-|',
         'c': 'z-|',
@@ -346,28 +346,28 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-#'));
     });
     test('inner throws', () {
-      final actual = scheduler.cold<String>('-a--b--|', values: {
+      final actual = scheduler.cold('-a--b--|', values: {
         'a': 'x#',
         'b': 'y-|'
       }).lift(exhaustMap((inner) => scheduler.cold<String>(inner)));
       expect(actual, scheduler.isObservable<String>('-x#'));
     });
     test('outer throws', () {
-      final actual = scheduler.cold<String>('-a#-b--|', values: {
+      final actual = scheduler.cold('-a#-b--|', values: {
         'a': 'x-|',
         'b': 'y-|',
       }).lift(exhaustMap((inner) => scheduler.cold<String>(inner)));
       expect(actual, scheduler.isObservable<String>('-x#'));
     });
     test('overlapping', () {
-      final actual = scheduler.cold<String>('-a-b---ba-|', values: {
+      final actual = scheduler.cold('-a-b---ba-|', values: {
         'a': '1-2-3|',
         'b': '45|',
       }).lift(exhaustMap((inner) => scheduler.cold<String>(inner)));
       expect(actual, scheduler.isObservable<String>('-1-2-3-45-|'));
     });
     test('limit concurrent', () {
-      final actual = scheduler.cold<String>('abc|', values: {
+      final actual = scheduler.cold('abc|', values: {
         'a': 'x---|',
         'b': 'y---|',
         'c': 'z---|',
@@ -701,7 +701,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-#'));
     });
     test('inner with error', () {
-      final actual = scheduler.cold<String>('-a--b---c---a--|', values: {
+      final actual = scheduler.cold('-a--b---c---a--|', values: {
         'a': 'x-|',
         'b': 'yy-|',
         'c': 'zz#',
@@ -709,7 +709,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
     });
     test('outer with error', () {
-      final actual = scheduler.cold<String>('-a--b---c-#', values: {
+      final actual = scheduler.cold('-a--b---c-#', values: {
         'a': 'x-|',
         'b': 'yy-|',
         'c': 'zz#',
@@ -717,7 +717,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
     });
     test('limit concurrent', () {
-      final actual = scheduler.cold<String>('abc|', values: {
+      final actual = scheduler.cold('abc|', values: {
         'a': 'x---|',
         'b': 'y---|',
         'c': 'z---|',
@@ -1299,7 +1299,7 @@ void main() {
       final actual = input.lift(toList());
       expect(
           actual,
-          scheduler.isObservable<List<String>>('-----(x|)', values: {
+          scheduler.isObservable('-----(x|)', values: {
             'x': ['a']
           }));
     });
@@ -1313,7 +1313,7 @@ void main() {
       final actual = input.lift(toList());
       expect(
           actual,
-          scheduler.isObservable<List<String>>('-----------(x|)', values: {
+          scheduler.isObservable('-----------(x|)', values: {
             'x': ['a', 'b', 'c']
           }));
     });
@@ -1340,7 +1340,7 @@ void main() {
       final actual = input.lift(toSet());
       expect(
           actual,
-          scheduler.isObservable<Set<String>>('-----(x|)', values: {
+          scheduler.isObservable('-----(x|)', values: {
             'x': {'a'}
           }));
     });
@@ -1354,7 +1354,7 @@ void main() {
       final actual = input.lift(toSet());
       expect(
           actual,
-          scheduler.isObservable<Set<String>>('-----------(x|)', values: {
+          scheduler.isObservable('-----------(x|)', values: {
             'x': {'a', 'b', 'c'}
           }));
     });

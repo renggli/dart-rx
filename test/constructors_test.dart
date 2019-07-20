@@ -24,7 +24,7 @@ void main() {
       ]);
       expect(
           actual,
-          scheduler.isObservable<List<String>>('---xyz|', values: {
+          scheduler.isObservable('---xyz|', values: {
             'x': ['a', 'b', 'c'],
             'y': ['a', 'd', 'c'],
             'z': ['e', 'd', 'c'],
@@ -38,7 +38,7 @@ void main() {
       ]);
       expect(
           actual,
-          scheduler.isObservable<List<String>>('---xyz|', values: {
+          scheduler.isObservable('---xyz|', values: {
             'x': ['a', 'b', 'c'],
             'y': ['a', 'd', 'c'],
             'z': ['e', 'd', 'c'],
@@ -52,7 +52,7 @@ void main() {
       ]);
       expect(
           actual,
-          scheduler.isObservable<List<String>>('-----xy-|', values: {
+          scheduler.isObservable('-----xy-|', values: {
             'x': ['b', 'd', 'e'],
             'y': ['b', 'd', 'f'],
           }));
@@ -73,7 +73,7 @@ void main() {
       ]);
       expect(
           actual,
-          scheduler.isObservable<List<String>>('---xy#', values: {
+          scheduler.isObservable('---xy#', values: {
             'x': ['a', 'b', 'c'],
             'y': ['a', 'd', 'c'],
           }));
@@ -197,7 +197,7 @@ void main() {
       ]);
       expect(
           actual,
-          scheduler.isObservable<List<String>>('--------------(x|)', values: {
+          scheduler.isObservable('--------------(x|)', values: {
             'x': ['d', 'b', '3']
           }));
     });
@@ -219,8 +219,7 @@ void main() {
       ]);
       expect(
           actual,
-          scheduler
-              .isObservable<List<String>>('-------------------(x|)', values: {
+          scheduler.isObservable('-------------------(x|)', values: {
             'x': ['d']
           }));
     });
@@ -300,7 +299,7 @@ void main() {
     });
     test('just', () {
       final actual = from<int>(42);
-      expect(actual, scheduler.isObservable<int>('(x|)', values: {'x': 42}));
+      expect(actual, scheduler.isObservable('(x|)', values: {'x': 42}));
     });
     test('invalid', () {
       expect(() => from<int>('a'), throwsArgumentError);
@@ -467,7 +466,7 @@ void main() {
       ]);
       expect(
           actual,
-          scheduler.isObservable<List<String>>('---x--|', values: {
+          scheduler.isObservable('---x--|', values: {
             'x': ['a', 'b', 'c'],
           }));
     });
@@ -479,7 +478,7 @@ void main() {
       ]);
       expect(
           actual,
-          scheduler.isObservable<List<String>>('---x-|', values: {
+          scheduler.isObservable('---x-|', values: {
             'x': ['a', 'b', 'c'],
           }));
     });
@@ -491,7 +490,7 @@ void main() {
       ]);
       expect(
           actual,
-          scheduler.isObservable<List<String>>('-----xy-|', values: {
+          scheduler.isObservable('-----xy-|', values: {
             'x': ['a', 'c', 'e'],
             'y': ['b', 'd', 'f'],
           }));
@@ -512,7 +511,7 @@ void main() {
       ]);
       expect(
           actual,
-          scheduler.isObservable<List<String>>('---x-#', values: {
+          scheduler.isObservable('---x-#', values: {
             'x': ['a', 'b', 'c'],
             'y': ['a', 'd', 'c'],
           }));

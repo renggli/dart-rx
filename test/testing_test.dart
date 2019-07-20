@@ -82,10 +82,8 @@ void main() {
       ]);
     });
     test('invalid subscription and unsubscription', () {
-      expect(() => TestEventSequence.fromString('^^'),
-          throwsArgumentError);
-      expect(() => TestEventSequence.fromString('!!'),
-          throwsArgumentError);
+      expect(() => TestEventSequence.fromString('^^'), throwsArgumentError);
+      expect(() => TestEventSequence.fromString('!!'), throwsArgumentError);
     });
     test('grouped values', () {
       expectParse('---(abc)', [
@@ -95,12 +93,9 @@ void main() {
       ]);
     });
     test('invalid grouping', () {
-      expect(() => TestEventSequence.fromString('(('),
-          throwsArgumentError);
-      expect(() => TestEventSequence.fromString('(a'),
-          throwsArgumentError);
-      expect(() => TestEventSequence.fromString(')a'),
-          throwsArgumentError);
+      expect(() => TestEventSequence.fromString('(('), throwsArgumentError);
+      expect(() => TestEventSequence.fromString('(a'), throwsArgumentError);
+      expect(() => TestEventSequence.fromString(')a'), throwsArgumentError);
     });
     test('ignores whitespaces when parsing', () {
       expectParse(
