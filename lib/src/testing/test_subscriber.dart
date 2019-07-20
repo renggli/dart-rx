@@ -8,7 +8,8 @@ import 'test_scheduler.dart';
 class TestSubscriber<T> extends Subscriber<T> {
   final TestScheduler scheduler;
 
-  DateTime _subscriptionTimestamp, _unsubscriptionTimestamp;
+  final DateTime _subscriptionTimestamp;
+  DateTime _unsubscriptionTimestamp;
 
   TestSubscriber(this.scheduler, Observer<T> destination)
       : _subscriptionTimestamp = scheduler.now,
