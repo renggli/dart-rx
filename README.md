@@ -1,22 +1,22 @@
-A library for Dart developers.
+RxDart
+======
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+[![Pub Package](https://img.shields.io/pub/v/data.svg)](https://pub.dartlang.org/packages/rx)
+[![Build Status](https://travis-ci.org/renggli/dart-data.svg)](https://travis-ci.org/renggli/dart-rx)
+[![Coverage Status](https://coveralls.io/repos/renggli/dart-data/badge.svg)](https://coveralls.io/r/renggli/dart-rx)
+[![GitHub Issues](https://img.shields.io/github/issues/renggli/dart-data.svg)](https://github.com/renggli/dart-rx/issues)
+[![GitHub Forks](https://img.shields.io/github/forks/renggli/dart-data.svg)](https://github.com/renggli/dart-rx/network)
+[![GitHub Stars](https://img.shields.io/github/stars/renggli/dart-data.svg)](https://github.com/renggli/dart-rx/stargazers)
+[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/renggli/dart-rx/master/LICENSE)
 
-## Usage
+Reactive Extensions Library for Dart providing an API for asynchronous programming with observable streams.
 
-A simple usage example:
+RxDart created in the style of [ReactiveX](http://reactivex.io/), and does not depend on Dart Streams. At this point it is quite experimental, and might miss features or have serious bugs.
 
-```dart
-import 'package:RxDart/RxDart.dart';
+This library is open source and well tested. Development happens on [GitHub](http://github.com/renggli/dart-data). Feel free to report issues or create a pull-request there. General questions are best asked on [StackOverflow](http://stackoverflow.com/questions/tagged/data+dart).
 
-main() {
-  var awesome = new Awesome();
-}
-```
+The package is hosted on [dart packages](https://pub.dartlang.org/packages/rx). Up-to-date [class documentation](https://pub.dartlang.org/documentation/rx/latest/) is created with every release.
 
-## Features and bugs
+### License
 
-Please file feature requests and bugs at the [issue tracker][tracker].
-
-[tracker]: http://example.com/issues/replaceme
+The MIT License, see [LICENSE](https://github.com/renggli/dart-rx/raw/master/LICENSE).
