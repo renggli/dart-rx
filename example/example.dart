@@ -13,42 +13,42 @@ Observer<T> printObserver<T>(String name) => Observer(
 
 void main() {
   // create
-  final create$ = create((subscriber) {
+  final createObservable = create((subscriber) {
     for (var i = 0; i < 3; i++) {
       subscriber.next(i);
     }
     subscriber.complete();
   });
-  create$.subscribe(printObserver('create\$'));
+  createObservable.subscribe(printObserver('createObservable'));
 
   // empty
-  final empty$ = empty();
-  empty$.subscribe(printObserver('empty\$'));
+  final emptyObservable = empty();
+  emptyObservable.subscribe(printObserver('emptyObservable'));
 
   // future
-  final future$ = fromFuture(Future.value(42));
-  future$.subscribe(printObserver('future\$'));
+  final futureObservable = fromFuture(Future.value(42));
+  futureObservable.subscribe(printObserver('futureObservable'));
 
   // just
-  final just$ = just(42);
-  just$.subscribe(printObserver('just\$'));
+  final justObservable = just(42);
+  justObservable.subscribe(printObserver('justObservable'));
 
   // never
-  final never$ = never();
-  never$.subscribe(printObserver('never\$'));
+  final neverObservable = never();
+  neverObservable.subscribe(printObserver('neverObservable'));
 
   // stream
-  final stream$ = fromStream(Stream.fromIterable([1, 2, 3]));
-  stream$.subscribe(printObserver('stream\$'));
+  final streamObservable = fromStream(Stream.fromIterable([1, 2, 3]));
+  streamObservable.subscribe(printObserver('streamObservable'));
 
   // throw
-  final throw$ = throwError(Exception('Hello World'));
-  throw$.subscribe(printObserver('throw\$'));
+  final throwObservable = throwError(Exception('Hello World'));
+  throwObservable.subscribe(printObserver('throwObservable'));
 
   // Other:
   final transformed = fromIterable(IntegerRange(0, 100))
       .lift(filter((value) => value.isEven))
-      .lift(map((value) => '${value * value}'))
+      .lift(map((value) => 'Observable{value * value}'))
       .lift(filter((value) => value.length < 3));
 
   transformed.subscribe(printObserver('one'));
