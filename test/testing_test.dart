@@ -43,7 +43,7 @@ void main() {
       expect(result.toMarbles(), '-a-b-a');
     });
     test('inferred string character mapping', () {
-      final result = TestEventSequence<String>([
+      final result = TestEventSequence([
         TestEvent(1, NextEvent('x')),
         TestEvent(3, NextEvent('yy')),
         TestEvent(5, NextEvent('x')),

@@ -6,7 +6,6 @@ import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/schedulers/async.dart';
 import 'package:rx/src/schedulers/settings.dart';
 import 'package:rx/src/testing/test_event_sequence.dart';
-import 'package:test/test.dart';
 
 import 'cold_observable.dart';
 import 'hot_observable.dart';
@@ -15,6 +14,7 @@ import 'test_events.dart';
 
 class TestScheduler extends AsyncScheduler {
   DateTime _currentTime;
+  Subscription _subscription = Subscription.empty();
 
   final List<Observable> coldObservables = [];
   final List<Observable> hotObservables = [];
@@ -28,19 +28,25 @@ class TestScheduler extends AsyncScheduler {
   /// Returns the stepping time in this test scenario.
   Duration get stepDuration => const Duration(milliseconds: 1);
 
-  /// Installs a test scheduler during test runs.
-  void install() {
-    var subscription = Subscription.empty();
-    setUp(() {
-      _currentTime = truncateToPeriod(DateTime.now(), period: Period.daily);
-      subscription = replaceDefaultScheduler(this);
-    });
-    tearDown(() {
-      advanceAll();
-      coldObservables.clear();
-      hotObservables.clear();
-      subscription.unsubscribe();
-    });
+  /// Installs the test scheduler, typically done in `setUp` method of test.
+  void setUp() {
+    if (!_subscription.isClosed) {
+      throw StateError('$this is already set-up.');
+    }
+    _currentTime = truncateToPeriod(DateTime.now(), period: Period.daily);
+    _subscription = replaceDefaultScheduler(this);
+  }
+
+  /// Uninstall the test scheduler, typically done in `tearDown` method of test.
+  void tearDown() {
+    if (_subscription.isClosed) {
+      throw StateError('$this is already tear-down.');
+    }
+    advanceAll();
+    coldObservables.clear();
+    hotObservables.clear();
+    _subscription.unsubscribe();
+    _subscription = Subscription.empty();
   }
 
   /// Advances the time to `dateTime`. If omitted advance to the timestamp of
@@ -61,10 +67,13 @@ class TestScheduler extends AsyncScheduler {
   }
 
   /// Creates a matcher for an observable.
-  Matcher isObservable<T>(String marbles,
-          {Map<String, T> values = const {}, Object error = 'Error'}) =>
-      ObservableMatcher<T>(
-          TestEventSequence.fromString(marbles, values: values, error: error));
+  bool Function(Object observable) isObservable<T>(String marbles,
+      {Map<String, T> values = const {}, Object error = 'Error'}) {
+    final expected =
+        TestEventSequence.fromString(marbles, values: values, error: error);
+    final matcher = ObservableMatcher<T>(expected);
+    return (actual) => matcher.matches(actual);
+  }
 
   /// Creates a "cold" [Observable] whose subscription starts when the test
   /// begins.

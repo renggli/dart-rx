@@ -8,7 +8,8 @@ import 'package:test/test.dart';
 
 void main() {
   final scheduler = TestScheduler();
-  scheduler.install();
+  setUp(scheduler.setUp);
+  tearDown(scheduler.tearDown);
 
   group('combine latest', () {
     test('empty sequence', () {

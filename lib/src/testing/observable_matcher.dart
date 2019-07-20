@@ -1,30 +1,24 @@
 library rx.testing.observable_matcher;
 
-import 'package:matcher/matcher.dart';
 import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/schedulers/settings.dart';
 import 'package:rx/src/testing/test_event_sequence.dart';
-import 'package:test/test.dart';
-import 'package:test_api/test_api.dart';
 
 import 'test_events.dart';
 import 'test_scheduler.dart';
 
-class ObservableMatcher<T> extends Matcher {
-  final TestEventSequence<T> _sequence;
-  final Matcher _eventMatcher;
+class ObservableMatcher<T> {
+  final TestEventSequence<T> _expected;
 
-  ObservableMatcher(this._sequence)
-      : _eventMatcher = wrapMatcher(_sequence.events);
+  ObservableMatcher(this._expected);
 
-  @override
-  bool matches(Object item, Map matchState) {
+  bool matches(Object item) {
     if (defaultScheduler is! TestScheduler) {
-      matchState[this] = 'was invoked without a TestScheduler';
-      return false;
+      throw StateError('Expected $item to be evaluated with TestScheduler.');
     }
+
     final TestScheduler scheduler = defaultScheduler;
     final current = scheduler.now;
 
@@ -33,35 +27,25 @@ class ObservableMatcher<T> extends Matcher {
         scheduler.stepDuration.inMilliseconds;
 
     if (item is! Observable<T>) {
-      matchState[this] = 'was not an Observable';
-      return false;
+      throw StateError('Expected $item to be an Observable.');
     }
     final Observable<T> observable = item;
 
-    final actual = <TestEvent<T>>[];
+    final events = <TestEvent<T>>[];
     final subscription = observable
         .lift(materialize())
         .lift(map((event) => TestEvent(getIndex(), event)))
-        .subscribe(Observer.next(actual.add));
+        .subscribe(Observer.next(events.add));
 
     while (!subscription.isClosed) {
       scheduler.advance();
     }
 
-    return _eventMatcher.matches(actual, matchState);
-  }
-
-  @override
-  Description describe(Description description) =>
-      description.add('emits ').addDescriptionOf(_sequence);
-
-  @override
-  Description describeMismatch(Object item, Description mismatchDescription,
-      Map matchState, bool verbose) {
-    if (matchState[this] is String) {
-      return StringDescription(matchState[this]);
-    } else {
-      return StringDescription('does not emit ').addDescriptionOf(_sequence);
+    final _actual = TestEventSequence<T>(events, values: _expected.values);
+    if (_expected != _actual) {
+      throw StateError('Expected $_expected, but got $_actual.');
     }
+
+    return true;
   }
 }

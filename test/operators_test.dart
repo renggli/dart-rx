@@ -11,7 +11,8 @@ const Map<String, bool> boolMap = {'t': true, 'f': false};
 
 void main() {
   final scheduler = TestScheduler();
-  scheduler.install();
+  setUp(scheduler.setUp);
+  tearDown(scheduler.tearDown);
 
   group('buffer', () {
     test('no constraints', () {

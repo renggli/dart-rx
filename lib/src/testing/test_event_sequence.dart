@@ -2,6 +2,7 @@ library rx.testing.test_event_sequence;
 
 import 'package:collection/collection.dart';
 import 'package:more/collection.dart';
+import 'package:more/hash.dart';
 import 'package:rx/src/core/events.dart';
 import 'package:rx/src/testing/test_events.dart';
 
@@ -22,11 +23,11 @@ class TestEventSequence<T> {
   final List<TestEvent<T>> events;
 
   /// Optional mapping from marble tokens to objects.
-  final BiMap<String, Object> values;
+  final BiMap<String, T> values;
 
-  // Constructs a sequence of test messages.
-  TestEventSequence(this.events, [Map<String, Object> values = const {}])
-      : values = BiMap.of(values);
+  /// Constructor of a list of events to an event sequence.
+  TestEventSequence(this.events, {Map<String, T> values = const {}})
+      : values = BiMap.from(values);
 
   /// Converts a string of marbles to an event sequence.
   factory TestEventSequence.fromString(String marbles,
@@ -89,7 +90,7 @@ class TestEventSequence<T> {
     if (withinGroup) {
       throw ArgumentError.value(marbles, 'marbles', 'Invalid grouping.');
     }
-    return TestEventSequence(sequence, values);
+    return TestEventSequence(sequence, values: values);
   }
 
   /// Converts back the event sequence to a marble string.
@@ -139,6 +140,25 @@ class TestEventSequence<T> {
     }
     return buffer.toString();
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is TestEventSequence<T> && events.length == other.events.length) {
+      for (var i = 0; i < events.length; i++) {
+        if (events[i] != other.events[i]) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => hash(events);
 
   @override
   String toString() => 'TestEventSequence{${toMarbles()}}';
