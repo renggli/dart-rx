@@ -48,19 +48,18 @@ class UnsubscribedError extends Error {
 class UnsubscriptionError extends Error {
   static void checkList(List errors) {
     if (errors.isNotEmpty) {
-      throw UnsubscriptionError(errors
-          .expand(
-              (error) => error is UnsubscriptionError ? error._errors : [error])
-          .toList(growable: false));
+      throw UnsubscriptionError(errors);
     }
   }
 
-  final List _errors;
+  final List errors;
 
-  UnsubscriptionError(this._errors);
-
-  List get errors => _errors;
+  UnsubscriptionError(List<Object> errors)
+      : errors = errors
+            .expand((error) =>
+                error is UnsubscriptionError ? error.errors : [error])
+            .toList(growable: false);
 
   @override
-  String toString() => 'UnsubscriptionError: $_errors';
+  String toString() => 'UnsubscriptionError: $errors';
 }

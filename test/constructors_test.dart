@@ -7,6 +7,8 @@ import 'package:rx/schedulers.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
 
+import 'matchers.dart';
+
 void main() {
   final scheduler = TestScheduler();
   setUp(scheduler.setUp);
@@ -499,7 +501,7 @@ void main() {
   group('toFuture', () {
     test('empty observable', () {
       final actual = toFuture(empty());
-      expect(actual, throwsA(const TypeMatcher<TooFewError>()));
+      expect(actual, throwsTooFewError);
     });
     test('single value', () {
       final actual = toFuture(just(42));
@@ -512,7 +514,7 @@ void main() {
     });
     test('immediate error', () {
       final actual = toFuture(throwError(TooManyError()));
-      expect(actual, throwsA(const TypeMatcher<TooManyError>()));
+      expect(actual, throwsTooManyError);
     });
   });
   group('toStream', () {

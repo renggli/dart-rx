@@ -15,17 +15,19 @@ class CompositeSubscription extends StatefulSubscription {
   Set<Subscription> get subscriptions => {..._subscriptions};
 
   void add(Subscription subscription) {
-    if (subscription.isClosed) {
-      return;
-    }
+    ArgumentError.checkNotNull(subscription, 'subscription');
     if (isClosed) {
       subscription.unsubscribe();
+      return;
+    }
+    if (subscription.isClosed) {
       return;
     }
     _subscriptions.add(subscription);
   }
 
   void remove(Subscription subscription) {
+    ArgumentError.checkNotNull(subscription, 'subscription');
     if (_subscriptions.remove(subscription)) {
       subscription.unsubscribe();
     }

@@ -1,8 +1,9 @@
 library rx.test.schedulers_test;
 
-import 'package:rx/src/core/errors.dart';
 import 'package:rx/subscriptions.dart';
 import 'package:test/test.dart';
+
+import 'matchers.dart';
 
 void main() {
   group('anonymous', () {
@@ -29,7 +30,7 @@ void main() {
     });
     test('unsubscribe with error', () {
       final subscription = Subscription.create(() => throw Exception());
-      expect(() => subscription.unsubscribe(), throwsException);
+      expect(() => subscription.unsubscribe(), throwsUnsubscriptionError);
       expect(subscription.isClosed, isTrue);
     });
   });
@@ -107,8 +108,7 @@ void main() {
       final child2 = StatefulSubscription();
       subscription.add(child1);
       subscription.add(child2);
-      expect(() => subscription.unsubscribe(),
-          throwsA(isA<UnsubscriptionError>()));
+      expect(() => subscription.unsubscribe(), throwsUnsubscriptionError);
       expect(subscription.subscriptions, isEmpty);
       expect(subscription.isClosed, isTrue);
       expect(child1.isClosed, isTrue);

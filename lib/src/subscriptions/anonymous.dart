@@ -1,5 +1,6 @@
 library rx.subscriptions.anonymous;
 
+import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 
@@ -14,6 +15,10 @@ class AnonymousSubscription extends StatefulSubscription {
       return;
     }
     super.unsubscribe();
-    _unsubscribeAction();
+    try {
+      _unsubscribeAction();
+    } catch (exception) {
+      throw UnsubscriptionError([exception]);
+    }
   }
 }
