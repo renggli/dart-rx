@@ -2,12 +2,14 @@ library rx.constructors.future;
 
 import 'dart:async';
 
+import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/subscription.dart';
+import 'package:rx/src/subscriptions/composite.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 
-/// An [Observable] that emits on completion of a [Future].
+/// An [Observable] that listens to the completion of a [Future].
 Observable<T> fromFuture<T>(Future<T> future) => _FutureObservable<T>(future);
 
 class _FutureObservable<T> with Observable<T> {
@@ -41,4 +43,23 @@ class _FutureObservable<T> with Observable<T> {
     }
     observer.error(error, stackTrace);
   }
+}
+
+/// A [Future] that completes with the first value of an [Observable].
+Future<T> toFuture<T>(Observable<T> observable) {
+  final subscriptions = CompositeSubscription();
+  final completer = Completer<T>();
+  final observer = Observer<T>(next: (value) {
+    completer.complete(value);
+    subscriptions.unsubscribe();
+  }, error: (error, [stackTrace]) {
+    completer.completeError(error, stackTrace);
+    subscriptions.unsubscribe();
+  }, complete: () {
+    completer.completeError(TooFewError());
+    subscriptions.unsubscribe();
+  });
+  subscriptions.add(observer);
+  subscriptions.add(observable.subscribe(observer));
+  return completer.future;
 }

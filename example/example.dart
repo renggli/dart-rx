@@ -1,8 +1,8 @@
 library rx.example.example;
 
 import 'package:more/collection.dart';
-import 'package:rx/rx.dart' as rx;
 import 'package:rx/operators.dart' as ops;
+import 'package:rx/rx.dart' as rx;
 
 rx.Observer<T> printObserver<T>(String name) => rx.Observer(
       next: (value) => print('$name.next($value)'),
@@ -25,8 +25,11 @@ void main() {
   empty.subscribe(printObserver('empty'));
 
   // future
-  final future = rx.fromFuture(Future.value(42));
-  future.subscribe(printObserver('future'));
+  final fromFuture = rx.fromFuture(Future.value(42));
+  fromFuture.subscribe(printObserver('fromFuture'));
+
+  final toFuture = rx.toFuture(rx.fromIterable([1, 2, 3]));
+  toFuture.then((value) => print('toFuture.then($value)'));
 
   // just
   final just = rx.just(42);
@@ -37,8 +40,11 @@ void main() {
   never.subscribe(printObserver('never'));
 
   // stream
-  final stream = rx.fromStream(Stream.fromIterable([1, 2, 3]));
-  stream.subscribe(printObserver('stream'));
+  final fromStream = rx.fromStream(Stream.fromIterable([1, 2, 3]));
+  fromStream.subscribe(printObserver('fromStream'));
+
+  final toStream = rx.toStream(rx.fromIterable([1, 2, 3]));
+  toStream.listen((value) => print('toStream.value($value)'));
 
   // throw
   final throwError = rx.throwError(Exception('Hello World'));
