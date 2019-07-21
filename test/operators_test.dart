@@ -322,6 +322,56 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-#'));
     });
   });
+  group('exhaustAll', () {
+    test('inner is shorter', () {
+      final actual = scheduler.cold('-a--b--c--|', values: {
+        'a': scheduler.cold<String>('x|'),
+        'b': scheduler.cold<String>('y|'),
+        'c': scheduler.cold<String>('z|'),
+      }).lift(exhaustAll());
+      expect(actual, scheduler.isObservable<String>('-x--y--z--|'));
+    });
+    test('outer is shorter', () {
+      final actual = scheduler.cold('-a--b--c|', values: {
+        'a': scheduler.cold<String>('x-|'),
+        'b': scheduler.cold<String>('y-|'),
+        'c': scheduler.cold<String>('z-|'),
+      }).lift(exhaustAll());
+      expect(actual, scheduler.isObservable<String>('-x--y--z-|'));
+    });
+    test('inner throws', () {
+      final actual = scheduler.cold('-a--b--|', values: {
+        'a': scheduler.cold<String>('x#'),
+        'b': scheduler.cold<String>('y-|'),
+      }).lift(exhaustAll());
+      expect(actual, scheduler.isObservable<String>('-x#'));
+    });
+    test('outer throws', () {
+      final actual = scheduler.cold('-a#-b--|', values: {
+        'a': scheduler.cold<String>('x-|'),
+        'b': scheduler.cold<String>('y-|'),
+      }).lift(exhaustAll());
+      expect(actual, scheduler.isObservable<String>('-x#'));
+    });
+    test('overlapping', () {
+      final actual = scheduler.cold('-a-b---ba-|', values: {
+        'a': scheduler.cold<String>('1-2-3|'),
+        'b': scheduler.cold<String>('45|'),
+      }).lift(exhaustAll());
+      expect(actual, scheduler.isObservable<String>('-1-2-3-45-|'));
+    });
+    test('limit concurrent', () {
+      final actual = scheduler.cold('abc|', values: {
+        'a': scheduler.cold<String>('x---|'),
+        'b': scheduler.cold<String>('y---|'),
+        'c': scheduler.cold<String>('z---|'),
+      }).lift(exhaustAll(concurrent: 2));
+      expect(actual, scheduler.isObservable<String>('xy---|'));
+    });
+    test('invalid concurrent', () {
+      expect(() => exhaustAll(concurrent: 0), throwsArgumentError);
+    });
+  });
   group('exhaustMap', () {
     test('inner is shorter', () {
       final actual = scheduler.cold('-a--b--c--|', values: {
@@ -374,6 +424,49 @@ void main() {
       }).lift(
           exhaustMap((inner) => scheduler.cold<String>(inner), concurrent: 2));
       expect(actual, scheduler.isObservable<String>('xy---|'));
+    });
+    test('invalid concurrent', () {
+      expect(
+          () => exhaustMap((inner) => scheduler.cold<String>(inner),
+              concurrent: 0),
+          throwsArgumentError);
+    });
+  });
+  group('exhaustMapTo', () {
+    test('inner is shorter', () {
+      final inner = scheduler.cold<String>('x|');
+      final actual = scheduler.cold('-a--b--c--|').lift(exhaustMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-x--x--x--|'));
+    });
+    test('outer is shorter', () {
+      final inner = scheduler.cold<String>('x-|');
+      final actual = scheduler.cold('-a--b--c|').lift(exhaustMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-x--x--x-|'));
+    });
+    test('inner throws', () {
+      final inner = scheduler.cold<String>('x#');
+      final actual = scheduler.cold('-a--b--|').lift(exhaustMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-x#'));
+    });
+    test('outer throws', () {
+      final inner = scheduler.cold<String>('x-|');
+      final actual = scheduler.cold('-a#-b--|').lift(exhaustMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-x#'));
+    });
+    test('overlapping', () {
+      final inner = scheduler.cold<String>('1-2-3|');
+      final actual = scheduler.cold('-a-b---ba-|').lift(exhaustMapTo(inner));
+      expect(actual, scheduler.isObservable<String>('-1-2-3-1-2-3|'));
+    });
+    test('limit concurrent', () {
+      final inner = scheduler.cold<String>('x---|');
+      final actual =
+          scheduler.cold('abc|').lift(exhaustMapTo(inner, concurrent: 2));
+      expect(actual, scheduler.isObservable<String>('xx---|'));
+    });
+    test('invalid concurrent', () {
+      expect(() => exhaustMapTo(scheduler.cold<String>(''), concurrent: 0),
+          throwsArgumentError);
     });
   });
   group('filter', () {
