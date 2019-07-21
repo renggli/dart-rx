@@ -338,7 +338,7 @@ void main() {
     test('completes immediately', () {
       final actual = fromStream(Stream.empty());
       final observed = <String>[];
-      actual.subscribe(Observer<String>(
+      actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
         error: (error, [stack]) => fail('No error expected'),
         complete: () => expect(observed, []),
@@ -347,7 +347,7 @@ void main() {
     test('completes with values', () {
       final actual = fromStream(Stream.fromIterable(['a', 'b', 'c']));
       final observed = <String>[];
-      actual.subscribe(Observer<String>(
+      actual.subscribe(Observer(
         next: (value) => observed.add(value),
         error: (error, [stack]) => fail('No error expected'),
         complete: () => expect(observed, ['a', 'b', 'c']),
@@ -355,11 +355,22 @@ void main() {
     });
     test('completes with error', () {
       final actual = fromStream(Stream.fromFuture(Future.error('Error')));
-      actual.subscribe(Observer<String>(
+      actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
         error: (error, [stack]) => expect(error, 'Error'),
         complete: () => fail('No completion expected'),
       ));
+    });
+    test('subscription', () {
+      final actual = fromStream(Stream.fromIterable([1, 2, 3]));
+      final subscription = actual.subscribe(Observer(
+        next: (value) => fail('No value expected'),
+        error: (error, [stack]) => expect(error, 'Error'),
+        complete: () => fail('No completion expected'),
+      ));
+      expect(subscription.isClosed, isFalse);
+      subscription.unsubscribe();
+      expect(subscription.isClosed, isTrue);
     });
   });
   group('iff', () {

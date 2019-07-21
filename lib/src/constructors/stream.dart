@@ -1,12 +1,11 @@
 library rx.constructors.stream;
 
-import 'dart:async' show Stream, StreamController;
+import 'dart:async' show Stream, StreamController, StreamSubscription;
 
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/base.dart';
-import 'package:rx/src/subscriptions/stream.dart';
 
 /// An [Observable] that listens to a [Stream].
 Observable<T> fromStream<T>(Stream<T> stream) => _StreamObservable<T>(stream);
@@ -20,7 +19,24 @@ class _StreamObservable<T> with Observable<T> {
   Subscription subscribe(Observer<T> observer) {
     final subscription = stream.listen(observer.next,
         onError: observer.error, onDone: observer.complete);
-    return StreamSubscription(subscription);
+    return _StreamSubscription(subscription);
+  }
+}
+
+class _StreamSubscription extends Subscription {
+  StreamSubscription _subscription;
+
+  _StreamSubscription(this._subscription);
+
+  @override
+  bool get isClosed => _subscription == null;
+
+  @override
+  void unsubscribe() {
+    if (_subscription != null) {
+      _subscription.cancel();
+      _subscription = null;
+    }
   }
 }
 

@@ -10,7 +10,7 @@ class TooFewError extends Error {
   TooFewError([this.message = 'Too few elements in sequence.']);
 
   @override
-  String toString() => 'TooFewError: $message';
+  String toString() => 'TooFewError{$message}';
 }
 
 /// An error throw when an [Observable] was queried with too many elements.
@@ -20,7 +20,7 @@ class TooManyError extends Error {
   TooManyError([this.message = 'Too many elements in sequence.']);
 
   @override
-  String toString() => 'TooManyError: $message';
+  String toString() => 'TooManyError{$message}';
 }
 
 /// An error thrown when due time elapses.
@@ -30,7 +30,7 @@ class TimeoutError extends Error {
   TimeoutError([this.message = 'Timeout has occurred.']);
 
   @override
-  String toString() => 'TimeoutError: $message';
+  String toString() => 'TimeoutError{$message}';
 }
 
 /// An error thrown when an operation has been performed on an
@@ -43,7 +43,7 @@ class UnsubscribedError extends Error {
   }
 
   @override
-  String toString() => 'UnsubscribedError';
+  String toString() => 'UnsubscribedError{}';
 }
 
 /// An error thrown when one or more errors have occurred during the
@@ -64,5 +64,5 @@ class UnsubscriptionError extends Error {
             .toList(growable: false);
 
   @override
-  String toString() => 'UnsubscriptionError: $errors';
+  String toString() => 'UnsubscriptionError{$errors}';
 }
