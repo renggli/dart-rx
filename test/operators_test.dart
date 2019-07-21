@@ -1503,6 +1503,21 @@ void main() {
       final actual = input.lift(toList());
       expect(actual, scheduler.isObservable<List<String>>('-----------#'));
     });
+    test('custom constructor', () {
+      var creation = 0;
+      final input = scheduler.cold<String>('abc|');
+      final actual = input.lift(toList(() {
+        creation++;
+        return <String>[];
+      }));
+      expect(creation, 0);
+      expect(
+          actual,
+          scheduler.isObservable('---(x|)', values: {
+            'x': ['a', 'b', 'c']
+          }));
+      expect(creation, 1);
+    });
   });
   group('toSet', () {
     test('empty and completion', () {
@@ -1543,6 +1558,21 @@ void main() {
       final input = scheduler.cold<String>('--a--b--c--#');
       final actual = input.lift(toSet());
       expect(actual, scheduler.isObservable<Set<String>>('-----------#'));
+    });
+    test('custom constructor', () {
+      var creation = 0;
+      final input = scheduler.cold<String>('abc|');
+      final actual = input.lift(toSet(() {
+        creation++;
+        return <String>{};
+      }));
+      expect(creation, 0);
+      expect(
+          actual,
+          scheduler.isObservable('---(x|)', values: {
+            'x': {'a', 'b', 'c'}
+          }));
+      expect(creation, 1);
     });
   });
 }
