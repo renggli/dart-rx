@@ -10,7 +10,7 @@ class TooFewError extends Error {
   TooFewError([this.message = 'Too few elements in sequence.']);
 
   @override
-  String toString() => 'EmptyError: $message';
+  String toString() => 'TooFewError: $message';
 }
 
 /// An error throw when an [Observable] was queried with too many elements.
@@ -41,6 +41,9 @@ class UnsubscribedError extends Error {
       throw UnsubscribedError();
     }
   }
+
+  @override
+  String toString() => 'UnsubscribedError';
 }
 
 /// An error thrown when one or more errors have occurred during the
