@@ -7,6 +7,29 @@ import 'package:test/test.dart';
 import 'matchers.dart';
 
 void main() {
+  group('of', () {
+    test('null', () {
+      final subscription = Subscription.of(null);
+      expect(subscription.isClosed, isTrue);
+    });
+    test('callback', () {
+      var unsubscribeCount = 0;
+      final subscription = Subscription.of(() => unsubscribeCount++);
+      expect(subscription.isClosed, isFalse);
+      expect(unsubscribeCount, 0);
+      subscription.unsubscribe();
+      expect(subscription.isClosed, isTrue);
+      expect(unsubscribeCount, 1);
+    });
+    test('subscription', () {
+      final stateful = Subscription.stateful();
+      final subscription = Subscription.of(stateful);
+      expect(subscription, same(stateful));
+    });
+    test('unsupported', () {
+      expect(() => Subscription.of('mistake'), throwsArgumentError);
+    });
+  });
   group('empty', () {
     test('creation', () {
       final subscription = Subscription.empty();
