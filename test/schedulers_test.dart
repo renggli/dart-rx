@@ -1,131 +1,71 @@
 library rx.test.schedulers_test;
 
-import 'package:rx/subscriptions.dart';
+import 'package:rx/core.dart';
+import 'package:rx/schedulers.dart';
 import 'package:test/test.dart';
 
-import 'matchers.dart';
-
 void main() {
-  group('anonymous', () {
-    test('initial', () {
-      var counter = 0;
-      final subscription = Subscription.create(() => counter++);
-      expect(subscription.isClosed, isFalse);
-      expect(counter, 0);
+  group('immediate', () {
+    const scheduler = ImmediateScheduler();
+    final epoch = DateTime.fromMillisecondsSinceEpoch(0);
+    test('now', () {
+      final actual = scheduler.now.millisecondsSinceEpoch;
+      final expected = DateTime.now().millisecondsSinceEpoch;
+      expect(actual, closeTo(expected, 2));
     });
-    test('unsubscribe', () {
-      var counter = 0;
-      final subscription = Subscription.create(() => counter++);
-      subscription.unsubscribe();
+    test('schedule', () {
+      var called = 0;
+      final subscription = scheduler.schedule(() => ++called);
+      expect(called, 1);
       expect(subscription.isClosed, isTrue);
-      expect(counter, 1);
     });
-    test('unsubscribe repeated', () {
-      var counter = 0;
-      final subscription = Subscription.create(() => counter++);
-      subscription.unsubscribe();
-      subscription.unsubscribe();
+    test('scheduleIteration', () {
+      var called = 0;
+      final subscription = scheduler.scheduleIteration(() => ++called < 10);
+      expect(called, 10);
       expect(subscription.isClosed, isTrue);
-      expect(counter, 1);
     });
-    test('unsubscribe with error', () {
-      final subscription = Subscription.create(() => throw Exception());
-      expect(() => subscription.unsubscribe(), throwsUnsubscriptionError);
+    test('scheduleAbsolute', () {
+      var actual = epoch;
+      final expected = scheduler.now.add(Duration(milliseconds: 10));
+      final subscription = scheduler.scheduleAbsolute(expected, () {
+        expect(actual, epoch);
+        actual = scheduler.now;
+      });
+      expect(actual.millisecondsSinceEpoch,
+          closeTo(expected.millisecondsSinceEpoch, 2));
       expect(subscription.isClosed, isTrue);
+    });
+    test('scheduleRelative', () {
+      var actual = epoch;
+      final duration = Duration(milliseconds: 10);
+      final expected = scheduler.now.add(duration);
+      final subscription = scheduler.scheduleRelative(duration, () {
+        expect(actual, epoch);
+        actual = scheduler.now;
+      });
+      expect(actual.millisecondsSinceEpoch,
+          closeTo(expected.millisecondsSinceEpoch, 2));
+      expect(subscription.isClosed, isTrue);
+    });
+    test('schedulePeriodic', () {
+      final timestamps = <int>[];
+      final subscriptions = <Subscription>[];
+      final start = scheduler.now.millisecondsSinceEpoch;
+      final subscription = scheduler
+          .schedulePeriodic(Duration(milliseconds: 10), (subscription) {
+        timestamps.add(scheduler.now.millisecondsSinceEpoch);
+        subscriptions.add(subscription);
+        if (timestamps.length == 5) {
+          subscription.unsubscribe();
+        }
+      });
+      expect(timestamps.length, 5);
+      expect(subscriptions.length, 5);
+      for (var i = 0, t = start + 10; i < 5; i++, t += 10) {
+        expect(timestamps[i], closeTo(t, 2 * (i + 1)));
+        expect(subscriptions[i], subscription);
+      }
     });
   });
-  group('empty', () {
-    test('initial', () {
-      final subscription = Subscription.empty();
-      expect(subscription.isClosed, isTrue);
-    });
-    test('unsubscribe', () {
-      final subscription = Subscription.empty();
-      subscription.unsubscribe();
-      expect(subscription.isClosed, isTrue);
-    });
-  });
-  group('composite', () {
-    test('initial', () {
-      final subscription = CompositeSubscription();
-      expect(subscription.subscriptions, isEmpty);
-      expect(subscription.isClosed, isFalse);
-    });
-    test('add', () {
-      final subscription = CompositeSubscription();
-      final child = StatefulSubscription();
-      subscription.add(child);
-      expect(subscription.subscriptions, [child]);
-      expect(subscription.isClosed, isFalse);
-      expect(child.isClosed, isFalse);
-    });
-    test('add empty', () {
-      final subscription = CompositeSubscription();
-      final child = Subscription.empty();
-      subscription.add(child);
-      expect(subscription.subscriptions, isEmpty);
-      expect(subscription.isClosed, isFalse);
-      expect(child.isClosed, isTrue);
-    });
-    test('add closed', () {
-      final subscription = CompositeSubscription();
-      final child = StatefulSubscription();
-      child.unsubscribe();
-      subscription.add(child);
-      expect(subscription.subscriptions, isEmpty);
-      expect(subscription.isClosed, isFalse);
-      expect(child.isClosed, isTrue);
-    });
-    test('remove', () {
-      final subscription = CompositeSubscription();
-      final child = StatefulSubscription();
-      subscription.add(child);
-      subscription.remove(child);
-      expect(subscription.subscriptions, isEmpty);
-      expect(subscription.isClosed, isFalse);
-      expect(child.isClosed, isTrue);
-    });
-    test('remove unknown', () {
-      final subscription = CompositeSubscription();
-      final child = StatefulSubscription();
-      subscription.remove(child);
-      expect(subscription.subscriptions, isEmpty);
-      expect(subscription.isClosed, isFalse);
-      expect(child.isClosed, isFalse);
-    });
-    test('unsubscribe', () {
-      final subscription = CompositeSubscription();
-      final child = StatefulSubscription();
-      subscription.add(child);
-      subscription.unsubscribe();
-      expect(subscription.subscriptions, isEmpty);
-      expect(subscription.isClosed, isTrue);
-      expect(child.isClosed, isTrue);
-    });
-    test('unsubscribe with error', () {
-      final subscription = CompositeSubscription();
-      final child1 = Subscription.create(() => throw Exception());
-      final child2 = StatefulSubscription();
-      subscription.add(child1);
-      subscription.add(child2);
-      expect(() => subscription.unsubscribe(), throwsUnsubscriptionError);
-      expect(subscription.subscriptions, isEmpty);
-      expect(subscription.isClosed, isTrue);
-      expect(child1.isClosed, isTrue);
-      expect(child2.isClosed, isTrue);
-    });
-  });
-  group('stateful', () {
-    test('initial', () {
-      final subscription = StatefulSubscription();
-      expect(subscription.isClosed, isFalse);
-    });
-    test('unsubscribe', () {
-      final subscription = StatefulSubscription();
-      subscription.unsubscribe();
-      expect(subscription.isClosed, isTrue);
-    });
-  });
-  group('stream', () {});
-  group('timer', () {});
 }

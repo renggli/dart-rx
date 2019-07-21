@@ -32,8 +32,8 @@ class _TimerObservable with Observable<int> {
         subscription.unsubscribe();
       } else {
         var value = 0;
-        subscription.current =
-            scheduler.schedulePeriodic(period, () => observer.next(++value));
+        subscription.current = scheduler.schedulePeriodic(
+            period, (subscription) => observer.next(++value));
       }
     });
     return subscription;

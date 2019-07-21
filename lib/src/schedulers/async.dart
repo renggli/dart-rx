@@ -46,9 +46,10 @@ class AsyncScheduler extends Scheduler {
       scheduleAbsolute(now.add(duration), callback);
 
   @override
-  Subscription schedulePeriodic(Duration duration, Callback0 callback) =>
+  Subscription schedulePeriodic(
+          Duration duration, Callback1<Subscription> callback) =>
       _scheduleAt(now.add(duration), SchedulerActionCallbackWith((action) {
-        callback();
+        callback(action);
         if (!action.isClosed) {
           _scheduleAt(now.add(duration), action);
         }

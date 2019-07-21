@@ -25,5 +25,6 @@ abstract class Scheduler {
   Subscription scheduleRelative(Duration duration, Callback0 callback);
 
   /// Schedules a `callback` to be executed periodically every `duration`.
-  Subscription schedulePeriodic(Duration duration, Callback0 callback);
+  Subscription schedulePeriodic(
+      Duration duration, Callback1<Subscription> callback);
 }

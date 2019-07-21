@@ -21,26 +21,30 @@ class ImmediateScheduler extends Scheduler {
   }
 
   @override
-  Subscription scheduleAbsolute(DateTime dateTime, Callback0 callback) =>
-      scheduleRelative(now.difference(dateTime), callback);
-
-  @override
-  Subscription scheduleRelative(Duration duration, Callback0 callback) {
-    _sleep(duration);
+  Subscription scheduleAbsolute(DateTime dateTime, Callback0 callback) {
+    _busyWaitUntil(dateTime);
     callback();
     return Subscription.empty();
   }
 
   @override
-  Subscription schedulePeriodic(Duration duration, Callback0 callback) {
-    for (;;) {
-      _sleep(duration);
-      callback();
-    }
+  Subscription scheduleRelative(Duration duration, Callback0 callback) =>
+      scheduleAbsolute(now.add(duration), callback);
+
+  @override
+  Subscription schedulePeriodic(
+      Duration duration, Callback1<Subscription> callback) {
+    final subscription = Subscription.stateful();
+    do {
+      _busyWaitUntil(now.add(duration));
+      callback(subscription);
+    } while (!subscription.isClosed);
+    return subscription;
   }
 
-  void _sleep(Duration duration) {
-    final target = now.add(duration);
-    while (target.isBefore(now)) {}
+  void _busyWaitUntil(DateTime dateTime) {
+    while (!dateTime.isBefore(now)) {
+      /* busy wait */
+    }
   }
 }
