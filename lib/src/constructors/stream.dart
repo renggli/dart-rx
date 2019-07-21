@@ -5,6 +5,7 @@ import 'dart:async' show Stream, StreamController;
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/subscription.dart';
+import 'package:rx/src/observers/base.dart';
 import 'package:rx/src/subscriptions/stream.dart';
 
 /// An [Observable] that listens to a [Stream].
@@ -27,10 +28,10 @@ class _StreamObservable<T> with Observable<T> {
 Stream<T> toStream<T>(Observable<T> observable) {
   var subscription = Subscription.empty();
   final controller = StreamController<T>();
-  final observer = Observer<T>(
-    next: (value) => controller.add(value),
-    error: (error, [stackTrace]) => controller.addError(error, stackTrace),
-    complete: () => controller.close(),
+  final observer = BaseObserver<T>(
+    (value) => controller.add(value),
+    (error, [stackTrace]) => controller.addError(error, stackTrace),
+    () => controller.close(),
   );
   controller.onListen = () {
     if (subscription.isClosed) {

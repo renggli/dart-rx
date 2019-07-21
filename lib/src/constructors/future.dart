@@ -6,6 +6,7 @@ import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/subscription.dart';
+import 'package:rx/src/observers/base.dart';
 import 'package:rx/src/subscriptions/composite.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 
@@ -49,16 +50,20 @@ class _FutureObservable<T> with Observable<T> {
 Future<T> toFuture<T>(Observable<T> observable) {
   final subscriptions = CompositeSubscription();
   final completer = Completer<T>();
-  final observer = Observer<T>(next: (value) {
-    completer.complete(value);
-    subscriptions.unsubscribe();
-  }, error: (error, [stackTrace]) {
-    completer.completeError(error, stackTrace);
-    subscriptions.unsubscribe();
-  }, complete: () {
-    completer.completeError(TooFewError());
-    subscriptions.unsubscribe();
-  });
+  final observer = BaseObserver<T>(
+    (value) {
+      completer.complete(value);
+      subscriptions.unsubscribe();
+    },
+    (error, [stackTrace]) {
+      completer.completeError(error, stackTrace);
+      subscriptions.unsubscribe();
+    },
+    () {
+      completer.completeError(TooFewError());
+      subscriptions.unsubscribe();
+    },
+  );
   subscriptions.add(observer);
   subscriptions.add(observable.subscribe(observer));
   return completer.future;
