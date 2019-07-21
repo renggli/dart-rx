@@ -4,7 +4,6 @@ import 'package:rx/core.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/base.dart';
 
-
 abstract class Observer<T> implements Subscription {
   /// An observer with custom handlers.
   factory Observer({

@@ -369,7 +369,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('xy---|'));
     });
     test('invalid concurrent', () {
-      expect(() => exhaustAll(concurrent: 0), throwsArgumentError);
+      expect(() => exhaustAll(concurrent: 0), throwsRangeError);
     });
   });
   group('exhaustMap', () {
@@ -429,7 +429,7 @@ void main() {
       expect(
           () => exhaustMap((inner) => scheduler.cold<String>(inner),
               concurrent: 0),
-          throwsArgumentError);
+          throwsRangeError);
     });
   });
   group('exhaustMapTo', () {
@@ -466,7 +466,7 @@ void main() {
     });
     test('invalid concurrent', () {
       expect(() => exhaustMapTo(scheduler.cold<String>(''), concurrent: 0),
-          throwsArgumentError);
+          throwsRangeError);
     });
   });
   group('filter', () {
@@ -778,6 +778,46 @@ void main() {
       expect(actual, scheduler.isObservable('-a--b---(e|)', values: values));
     });
   });
+  group('mergeAll', () {
+    test('inner with dynamic outputs', () {
+      final actual = scheduler.cold('-a--b---c---a--|', values: {
+        'a': scheduler.cold<String>('x-|'),
+        'b': scheduler.cold<String>('yy-|'),
+        'c': scheduler.cold<String>('zzz-|'),
+      }).lift(mergeAll());
+      expect(actual, scheduler.isObservable<String>('-x--yy--zzz-x--|'));
+    });
+    test('inner with error', () {
+      final actual = scheduler.cold('-a--b---c---a--|', values: {
+        'a': scheduler.cold<String>('x-|'),
+        'b': scheduler.cold<String>('yy-|'),
+        'c': scheduler.cold<String>('zz#'),
+      }).lift(mergeAll());
+      expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
+    });
+    test('outer with error', () {
+      final actual = scheduler.cold('-a--b---c-#', values: {
+        'a': scheduler.cold<String>('x-|'),
+        'b': scheduler.cold<String>('yy-|'),
+        'c': scheduler.cold<String>('zz#'),
+      }).lift(mergeAll());
+      expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
+    });
+    test('limit concurrent', () {
+      final actual = scheduler.cold('abc|', values: {
+        'a': scheduler.cold<String>('x---|'),
+        'b': scheduler.cold<String>('y---|'),
+        'c': scheduler.cold<String>('z---|'),
+      }).lift(mergeAll(concurrent: 2));
+      expect(actual, scheduler.isObservable<String>('xy--z---|'));
+    });
+    test('invalid concurrent', () {
+      expect(
+          () =>
+              mergeMap((inner) => scheduler.cold<String>(inner), concurrent: 0),
+          throwsRangeError);
+    });
+  });
   group('mergeMap', () {
     test('inner with dynamic outputs', () {
       final actual = scheduler.cold<String>('-a--b---c---a--|', values: {
@@ -817,6 +857,12 @@ void main() {
       }).lift(
           mergeMap((inner) => scheduler.cold<String>(inner), concurrent: 2));
       expect(actual, scheduler.isObservable<String>('xy--z---|'));
+    });
+    test('invalid concurrent', () {
+      expect(
+          () =>
+              mergeMap((inner) => scheduler.cold<String>(inner), concurrent: 0),
+          throwsRangeError);
     });
   });
   group('mergeMapTo', () {
@@ -858,6 +904,10 @@ void main() {
           .cold<String>('a---b---|')
           .lift(mergeMapTo(inner, concurrent: 1));
       expect(actual, scheduler.isObservable<String>('xyz-xyz-|'));
+    });
+    test('invalid concurrent', () {
+      expect(() => mergeMapTo(scheduler.cold(''), concurrent: 0),
+          throwsRangeError);
     });
   });
   group('multicast', () {
@@ -1152,7 +1202,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-#'));
     });
   });
-  group('switchMap', () {
+  group('switchAll', () {
     final observables = {
       '1': scheduler.cold<String>('x|'),
       '2': scheduler.cold<String>('xy|'),
@@ -1161,22 +1211,59 @@ void main() {
     };
     test('outer longer', () {
       final input = scheduler.cold('-1---2---3---|', values: observables);
-      final actual = input.lift(switchMap((observable) => observable));
+      final actual = input.lift(switchAll());
       expect(actual, scheduler.isObservable<String>('-x---xy--xyz-|'));
     });
     test('inner longer', () {
       final input = scheduler.cold('-1---2---3|', values: observables);
-      final actual = input.lift(switchMap((observable) => observable));
+      final actual = input.lift(switchAll());
       expect(actual, scheduler.isObservable<String>('-x---xy--xyz|'));
     });
     test('outer error', () {
       final input = scheduler.cold('-3#', values: observables);
-      final actual = input.lift(switchMap((observable) => observable));
+      final actual = input.lift(switchAll());
       expect(actual, scheduler.isObservable<String>('-x#'));
     });
     test('inner error', () {
       final input = scheduler.cold('-4--4---4---|', values: observables);
-      final actual = input.lift(switchMap((observable) => observable));
+      final actual = input.lift(switchAll());
+      expect(actual, scheduler.isObservable<String>('-xyzxyz#'));
+    });
+    test('overlapping', () {
+      final input = scheduler.cold('-3--3-33--|', values: observables);
+      final actual = input.lift(switchAll());
+      expect(actual, scheduler.isObservable<String>('-xyzxyxxyz|'));
+    });
+  });
+  group('switchMap', () {
+    final marbles = {
+      '1': 'x|',
+      '2': 'xy|',
+      '3': 'xyz|',
+      '4': 'xyz#',
+    };
+    test('outer longer', () {
+      final input = scheduler.cold('-1---2---3---|', values: marbles);
+      final actual =
+          input.lift(switchMap((marble) => scheduler.cold<String>(marble)));
+      expect(actual, scheduler.isObservable<String>('-x---xy--xyz-|'));
+    });
+    test('inner longer', () {
+      final input = scheduler.cold('-1---2---3|', values: marbles);
+      final actual =
+          input.lift(switchMap((marble) => scheduler.cold<String>(marble)));
+      expect(actual, scheduler.isObservable<String>('-x---xy--xyz|'));
+    });
+    test('outer error', () {
+      final input = scheduler.cold('-3#', values: marbles);
+      final actual =
+          input.lift(switchMap((marble) => scheduler.cold<String>(marble)));
+      expect(actual, scheduler.isObservable<String>('-x#'));
+    });
+    test('inner error', () {
+      final input = scheduler.cold('-4--4---4---|', values: marbles);
+      final actual =
+          input.lift(switchMap((marble) => scheduler.cold<String>(marble)));
       expect(actual, scheduler.isObservable<String>('-xyzxyz#'));
     });
     test('project error', () {
@@ -1185,8 +1272,9 @@ void main() {
       expect(actual, scheduler.isObservable('-#'));
     });
     test('overlapping', () {
-      final input = scheduler.cold('-3--3-33--|', values: observables);
-      final actual = input.lift(switchMap((observable) => observable));
+      final input = scheduler.cold('-3--3-33--|', values: marbles);
+      final actual =
+          input.lift(switchMap((marble) => scheduler.cold<String>(marble)));
       expect(actual, scheduler.isObservable<String>('-xyzxyxxyz|'));
     });
   });
