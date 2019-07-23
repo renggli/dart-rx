@@ -26,6 +26,9 @@ class SequentialSubscription extends StatefulSubscription {
 
   @override
   void unsubscribe() {
+    if (isClosed) {
+      return;
+    }
     super.unsubscribe();
     final previous = _current;
     _current = Subscription.empty();

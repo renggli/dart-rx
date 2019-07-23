@@ -8,7 +8,7 @@ abstract class SchedulerAction extends StatefulSubscription {
 }
 
 class SchedulerActionCallback extends SchedulerAction {
-  final Map0<void> _callback;
+  final Callback0 _callback;
 
   SchedulerActionCallback(this._callback);
 
@@ -22,7 +22,7 @@ class SchedulerActionCallback extends SchedulerAction {
 }
 
 class SchedulerActionCallbackWith extends SchedulerAction {
-  final Map1<SchedulerAction, void> _callback;
+  final Callback1<SchedulerAction> _callback;
 
   SchedulerActionCallbackWith(this._callback);
 
