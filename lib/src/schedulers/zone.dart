@@ -60,9 +60,11 @@ abstract class ZoneScheduler extends Scheduler {
 
   @override
   Subscription schedulePeriodic(
-          Duration duration, Callback1<Subscription> callback) =>
-      TimerSubscription(
-          zone.createPeriodicTimer(duration, (timer) => callback(null)));
+      Duration duration, Callback1<Subscription> callback) {
+    TimerSubscription subscription;
+    return subscription = TimerSubscription(
+        zone.createPeriodicTimer(duration, (timer) => callback(subscription)));
+  }
 }
 
 class RootZoneScheduler extends ZoneScheduler {

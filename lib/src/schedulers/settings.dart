@@ -20,7 +20,3 @@ Subscription replaceDefaultScheduler(Scheduler scheduler) {
   _defaultScheduler = scheduler;
   return Subscription.create(() => _defaultScheduler = originalScheduler);
 }
-
-/// Tests if the provided scheduler is the default one.
-bool isDefaultScheduler(Scheduler scheduler) =>
-    identical(defaultScheduler, scheduler);
