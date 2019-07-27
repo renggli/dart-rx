@@ -121,6 +121,52 @@ void main() {
       expect(actual, scheduler.isObservable('--a--b--c--1--#', error: 'B'));
     });
   });
+  group('concat', () {
+    group('beginWith', () {
+      test('single value', () {
+        final input = scheduler.cold<String>('abc|');
+        final actual = input.lift(beginWith('x'));
+        expect(actual, scheduler.isObservable<String>('(xa)bc|'));
+      });
+      test('multiple values', () {
+        final input = scheduler.cold<String>('abc|');
+        final actual = input.lift(beginWith(['x', 'y', 'z']));
+        expect(actual, scheduler.isObservable<String>('(xyza)bc|'));
+      });
+      test('observable', () {
+        final input = scheduler.cold<String>('abc|');
+        final actual = input.lift(beginWith(scheduler.cold<String>('xyz|')));
+        expect(actual, scheduler.isObservable<String>('xyzabc|'));
+      });
+      test('error', () {
+        final input = scheduler.cold<String>('abc|');
+        final actual = input.lift(beginWith(throwError<String>('Error')));
+        expect(actual, scheduler.isObservable<String>('#', error: 'Error'));
+      });
+    });
+    group('endWith', () {
+      test('single value', () {
+        final input = scheduler.cold<String>('abc|');
+        final actual = input.lift(endWith('x'));
+        expect(actual, scheduler.isObservable<String>('abc(x|)'));
+      });
+      test('multiple values', () {
+        final input = scheduler.cold<String>('abc|');
+        final actual = input.lift(endWith(['x', 'y', 'z']));
+        expect(actual, scheduler.isObservable<String>('abc(xyz|)'));
+      });
+      test('observable', () {
+        final input = scheduler.cold<String>('abc|');
+        final actual = input.lift(endWith(scheduler.cold<String>('xyz|')));
+        expect(actual, scheduler.isObservable<String>('abcxyz|'));
+      });
+      test('error', () {
+        final input = scheduler.cold<String>('abc|');
+        final actual = input.lift(endWith(throwError<String>('Error')));
+        expect(actual, scheduler.isObservable<String>('abc#', error: 'Error'));
+      });
+    });
+  });
   group('count', () {
     test('no value and completion', () {
       final input = scheduler.cold('--|');
