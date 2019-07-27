@@ -9,6 +9,13 @@ import 'package:test/test.dart' hide isEmpty;
 
 const Map<String, bool> boolMap = {'t': true, 'f': false};
 
+bool predicate(String value) {
+  if (value == 'x') {
+    throw 'Error';
+  }
+  return value.toUpperCase() == value;
+}
+
 void main() {
   final scheduler = TestScheduler();
   setUp(scheduler.setUp);
@@ -556,74 +563,167 @@ void main() {
     });
   });
   group('first', () {
-    test('no value and completion', () {
-      final input = scheduler.cold('--|');
-      final actual = input.lift(first());
-      expect(actual, scheduler.isObservable('--#', error: TooFewError()));
+    group('first', () {
+      test('no value and completion', () {
+        final input = scheduler.cold('--|');
+        final actual = input.lift(first());
+        expect(actual, scheduler.isObservable('--#', error: TooFewError()));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold('--#');
+        final actual = input.lift(first());
+        expect(actual, scheduler.isObservable('--#'));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold('--a--b--c--|');
+        final actual = input.lift(first());
+        expect(actual, scheduler.isObservable('--(a|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold('--a--b--c--#');
+        final actual = input.lift(first());
+        expect(actual, scheduler.isObservable('--(a|)'));
+      });
     });
-    test('no value and error', () {
-      final input = scheduler.cold('--#');
-      final actual = input.lift(first());
-      expect(actual, scheduler.isObservable('--#'));
+    group('firstOrDefault', () {
+      test('no value and completion', () {
+        final input = scheduler.cold('--|');
+        final actual = input.lift(firstOrDefault('x'));
+        expect(actual, scheduler.isObservable('--(x|)'));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold('--#');
+        final actual = input.lift(firstOrDefault('x'));
+        expect(actual, scheduler.isObservable('--#'));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold('--a--b--c--|');
+        final actual = input.lift(firstOrDefault('x'));
+        expect(actual, scheduler.isObservable('--(a|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold('--a--b--c--#');
+        final actual = input.lift(firstOrDefault('x'));
+        expect(actual, scheduler.isObservable('--(a|)'));
+      });
     });
-    test('multiple values and completion', () {
-      final input = scheduler.cold('--a--b--c--|');
-      final actual = input.lift(first());
-      expect(actual, scheduler.isObservable('--(a|)'));
+    group('firstOrElse', () {
+      test('no value and completion', () {
+        final input = scheduler.cold('--|');
+        final actual = input.lift(firstOrElse(() => 'x'));
+        expect(actual, scheduler.isObservable('--(x|)'));
+      });
+      test('no value and completion error', () {
+        final input = scheduler.cold('--|');
+        final actual = input.lift(firstOrElse(() => throw ArgumentError()));
+        expect(actual, scheduler.isObservable('--#', error: ArgumentError()));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold('--#');
+        final actual = input.lift(firstOrElse(() => fail('Not called')));
+        expect(actual, scheduler.isObservable('--#'));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold('--a--b--c--|');
+        final actual = input.lift(firstOrElse(() => fail('Not called')));
+        expect(actual, scheduler.isObservable('--(a|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold('--a--b--c--#');
+        final actual = input.lift(firstOrElse(() => fail('Not called')));
+        expect(actual, scheduler.isObservable('--(a|)'));
+      });
     });
-    test('multiple values and error', () {
-      final input = scheduler.cold('--a--b--c--#');
-      final actual = input.lift(first());
-      expect(actual, scheduler.isObservable('--(a|)'));
+    group('findFirst', () {
+      test('no value and completion', () {
+        final input = scheduler.cold<String>('--|');
+        final actual = input.lift(findFirst(predicate));
+        expect(actual,
+            scheduler.isObservable<String>('--#', error: TooFewError()));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold<String>('--#');
+        final actual = input.lift(findFirst(predicate));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold<String>('--a--B--c--|');
+        final actual = input.lift(findFirst(predicate));
+        expect(actual, scheduler.isObservable<String>('-----(B|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold<String>('--a--B--c--#');
+        final actual = input.lift(findFirst<String>(predicate));
+        expect(actual, scheduler.isObservable<String>('-----(B|)'));
+      });
+      test('multiple values and predicate error', () {
+        final input = scheduler.cold<String>('--x--B--c--|');
+        final actual = input.lift(findFirst<String>(predicate));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
     });
-  });
-  group('firstOrDefault', () {
-    test('no value and completion', () {
-      final input = scheduler.cold('--|');
-      final actual = input.lift(firstOrDefault('x'));
-      expect(actual, scheduler.isObservable('--(x|)'));
+    group('findFirstOrDefault', () {
+      test('no value and completion', () {
+        final input = scheduler.cold<String>('--|');
+        final actual = input.lift(findFirstOrDefault(predicate, 'y'));
+        expect(actual, scheduler.isObservable<String>('--(y|)'));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold<String>('--#');
+        final actual = input.lift(findFirstOrDefault(predicate, 'y'));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold<String>('--a--B--c--|');
+        final actual = input.lift(findFirstOrDefault(predicate, 'y'));
+        expect(actual, scheduler.isObservable<String>('-----(B|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold<String>('--a--B--c--#');
+        final actual = input.lift(findFirstOrDefault<String>(predicate, 'y'));
+        expect(actual, scheduler.isObservable<String>('-----(B|)'));
+      });
+      test('multiple values and predicate error', () {
+        final input = scheduler.cold<String>('--x--B--c--|');
+        final actual = input.lift(findFirstOrDefault<String>(predicate, 'y'));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
     });
-    test('no value and error', () {
-      final input = scheduler.cold('--#');
-      final actual = input.lift(firstOrDefault('x'));
-      expect(actual, scheduler.isObservable('--#'));
-    });
-    test('multiple values and completion', () {
-      final input = scheduler.cold('--a--b--c--|');
-      final actual = input.lift(firstOrDefault('x'));
-      expect(actual, scheduler.isObservable('--(a|)'));
-    });
-    test('multiple values and error', () {
-      final input = scheduler.cold('--a--b--c--#');
-      final actual = input.lift(firstOrDefault('x'));
-      expect(actual, scheduler.isObservable('--(a|)'));
-    });
-  });
-  group('firstOrElse', () {
-    test('no value and completion', () {
-      final input = scheduler.cold('--|');
-      final actual = input.lift(firstOrElse(() => 'x'));
-      expect(actual, scheduler.isObservable('--(x|)'));
-    });
-    test('no value and completion error', () {
-      final input = scheduler.cold('--|');
-      final actual = input.lift(firstOrElse(() => throw ArgumentError()));
-      expect(actual, scheduler.isObservable('--#', error: ArgumentError()));
-    });
-    test('no value and error', () {
-      final input = scheduler.cold('--#');
-      final actual = input.lift(firstOrElse(() => fail('Not called')));
-      expect(actual, scheduler.isObservable('--#'));
-    });
-    test('multiple values and completion', () {
-      final input = scheduler.cold('--a--b--c--|');
-      final actual = input.lift(firstOrElse(() => fail('Not called')));
-      expect(actual, scheduler.isObservable('--(a|)'));
-    });
-    test('multiple values and error', () {
-      final input = scheduler.cold('--a--b--c--#');
-      final actual = input.lift(firstOrElse(() => fail('Not called')));
-      expect(actual, scheduler.isObservable('--(a|)'));
+    group('findFirstOrElse', () {
+      test('no value and completion', () {
+        final input = scheduler.cold<String>('--|');
+        final actual = input.lift(findFirstOrElse(predicate, () => 'y'));
+        expect(actual, scheduler.isObservable<String>('--(y|)'));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold<String>('--#');
+        final actual = input.lift(findFirstOrElse(predicate, () => 'y'));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
+      test('no value and completion error', () {
+        final input = scheduler.cold<String>('--|');
+        final actual =
+            input.lift(findFirstOrElse(predicate, () => throw ArgumentError()));
+        expect(actual,
+            scheduler.isObservable<String>('--#', error: ArgumentError()));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold<String>('--a--B--c--|');
+        final actual = input.lift(findFirstOrElse(predicate, () => 'y'));
+        expect(actual, scheduler.isObservable<String>('-----(B|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold<String>('--a--B--c--#');
+        final actual =
+            input.lift(findFirstOrElse<String>(predicate, () => 'y'));
+        expect(actual, scheduler.isObservable<String>('-----(B|)'));
+      });
+      test('multiple values and predicate error', () {
+        final input = scheduler.cold<String>('--x--B--c--|');
+        final actual =
+            input.lift(findFirstOrElse<String>(predicate, () => 'y'));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
     });
   });
   group('ignoreElements', () {
@@ -671,74 +771,167 @@ void main() {
     });
   });
   group('last', () {
-    test('no value and completion', () {
-      final input = scheduler.cold('--|');
-      final actual = input.lift(last());
-      expect(actual, scheduler.isObservable('--#', error: TooFewError()));
+    group('last', () {
+      test('no value and completion', () {
+        final input = scheduler.cold('--|');
+        final actual = input.lift(last());
+        expect(actual, scheduler.isObservable('--#', error: TooFewError()));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold('--#');
+        final actual = input.lift(last());
+        expect(actual, scheduler.isObservable('--#'));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold('--a--b--c--|');
+        final actual = input.lift(last());
+        expect(actual, scheduler.isObservable('-----------(c|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold('--a--b--c--#');
+        final actual = input.lift(last());
+        expect(actual, scheduler.isObservable('-----------#'));
+      });
     });
-    test('no value and error', () {
-      final input = scheduler.cold('--#');
-      final actual = input.lift(last());
-      expect(actual, scheduler.isObservable('--#'));
+    group('lastOrDefault', () {
+      test('no value and completion', () {
+        final input = scheduler.cold('--|');
+        final actual = input.lift(lastOrDefault('x'));
+        expect(actual, scheduler.isObservable('--(x|)'));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold('--#');
+        final actual = input.lift(lastOrDefault('x'));
+        expect(actual, scheduler.isObservable('--#'));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold('--a--b--c--|');
+        final actual = input.lift(lastOrDefault('x'));
+        expect(actual, scheduler.isObservable('-----------(c|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold('--a--b--c--#');
+        final actual = input.lift(lastOrDefault('x'));
+        expect(actual, scheduler.isObservable('-----------#'));
+      });
     });
-    test('multiple values and completion', () {
-      final input = scheduler.cold('--a--b--c--|');
-      final actual = input.lift(last());
-      expect(actual, scheduler.isObservable('-----------(c|)'));
+    group('lastOrElse', () {
+      test('no value and completion', () {
+        final input = scheduler.cold('--|');
+        final actual = input.lift(lastOrElse(() => 'x'));
+        expect(actual, scheduler.isObservable('--(x|)'));
+      });
+      test('no value and completion error', () {
+        final input = scheduler.cold('--|');
+        final actual = input.lift(lastOrElse(() => throw ArgumentError()));
+        expect(actual, scheduler.isObservable('--#', error: ArgumentError()));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold('--#');
+        final actual = input.lift(lastOrElse(() => fail('Not called')));
+        expect(actual, scheduler.isObservable('--#'));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold('--a--b--c--|');
+        final actual = input.lift(lastOrElse(() => fail('Not called')));
+        expect(actual, scheduler.isObservable('-----------(c|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold('--a--b--c--#');
+        final actual = input.lift(lastOrElse(() => fail('Not called')));
+        expect(actual, scheduler.isObservable('-----------#'));
+      });
     });
-    test('multiple values and error', () {
-      final input = scheduler.cold('--a--b--c--#');
-      final actual = input.lift(last());
-      expect(actual, scheduler.isObservable('-----------#'));
+    group('findLast', () {
+      test('no value and completion', () {
+        final input = scheduler.cold<String>('--|');
+        final actual = input.lift(findLast(predicate));
+        expect(actual,
+            scheduler.isObservable<String>('--#', error: TooFewError()));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold<String>('--#');
+        final actual = input.lift(findLast(predicate));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold<String>('--a--B--c--|');
+        final actual = input.lift(findLast(predicate));
+        expect(actual, scheduler.isObservable<String>('-----------(B|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold<String>('--a--B--c--#');
+        final actual = input.lift(findLast<String>(predicate));
+        expect(actual, scheduler.isObservable<String>('-----------#'));
+      });
+      test('multiple values and predicate error', () {
+        final input = scheduler.cold<String>('--x--B--c--|');
+        final actual = input.lift(findLast<String>(predicate));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
     });
-  });
-  group('lastOrDefault', () {
-    test('no value and completion', () {
-      final input = scheduler.cold('--|');
-      final actual = input.lift(lastOrDefault('x'));
-      expect(actual, scheduler.isObservable('--(x|)'));
+    group('findLastOrDefault', () {
+      test('no value and completion', () {
+        final input = scheduler.cold<String>('--|');
+        final actual = input.lift(findLastOrDefault(predicate, 'y'));
+        expect(actual, scheduler.isObservable<String>('--(y|)'));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold<String>('--#');
+        final actual = input.lift(findLastOrDefault(predicate, 'y'));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold<String>('--a--B--c--|');
+        final actual = input.lift(findLastOrDefault(predicate, 'y'));
+        expect(actual, scheduler.isObservable<String>('-----------(B|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold<String>('--a--B--c--#');
+        final actual = input.lift(findLastOrDefault<String>(predicate, 'y'));
+        expect(actual, scheduler.isObservable<String>('-----------#'));
+      });
+      test('multiple values and predicate error', () {
+        final input = scheduler.cold<String>('--x--B--c--|');
+        final actual = input.lift(findLastOrDefault<String>(predicate, 'y'));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
     });
-    test('no value and error', () {
-      final input = scheduler.cold('--#');
-      final actual = input.lift(lastOrDefault('x'));
-      expect(actual, scheduler.isObservable('--#'));
-    });
-    test('multiple values and completion', () {
-      final input = scheduler.cold('--a--b--c--|');
-      final actual = input.lift(lastOrDefault('x'));
-      expect(actual, scheduler.isObservable('-----------(c|)'));
-    });
-    test('multiple values and error', () {
-      final input = scheduler.cold('--a--b--c--#');
-      final actual = input.lift(lastOrDefault('x'));
-      expect(actual, scheduler.isObservable('-----------#'));
-    });
-  });
-  group('lastOrElse', () {
-    test('no value and completion', () {
-      final input = scheduler.cold('--|');
-      final actual = input.lift(lastOrElse(() => 'x'));
-      expect(actual, scheduler.isObservable('--(x|)'));
-    });
-    test('no value and completion error', () {
-      final input = scheduler.cold('--|');
-      final actual = input.lift(lastOrElse(() => throw ArgumentError()));
-      expect(actual, scheduler.isObservable('--#', error: ArgumentError()));
-    });
-    test('no value and error', () {
-      final input = scheduler.cold('--#');
-      final actual = input.lift(lastOrElse(() => fail('Not called')));
-      expect(actual, scheduler.isObservable('--#'));
-    });
-    test('multiple values and completion', () {
-      final input = scheduler.cold('--a--b--c--|');
-      final actual = input.lift(lastOrElse(() => fail('Not called')));
-      expect(actual, scheduler.isObservable('-----------(c|)'));
-    });
-    test('multiple values and error', () {
-      final input = scheduler.cold('--a--b--c--#');
-      final actual = input.lift(lastOrElse(() => fail('Not called')));
-      expect(actual, scheduler.isObservable('-----------#'));
+    group('findLastOrElse', () {
+      test('no value and completion', () {
+        final input = scheduler.cold<String>('--|');
+        final actual = input.lift(findLastOrElse(predicate, () => 'y'));
+        expect(actual, scheduler.isObservable<String>('--(y|)'));
+      });
+      test('no value and error', () {
+        final input = scheduler.cold<String>('--#');
+        final actual = input.lift(findLastOrElse(predicate, () => 'y'));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
+      test('no value and completion error', () {
+        final input = scheduler.cold<String>('--|');
+        final actual =
+            input.lift(findLastOrElse(predicate, () => throw ArgumentError()));
+        expect(actual,
+            scheduler.isObservable<String>('--#', error: ArgumentError()));
+      });
+      test('multiple values and completion', () {
+        final input = scheduler.cold<String>('--a--B--c--|');
+        final actual = input.lift(findLastOrElse(predicate, () => 'y'));
+        expect(actual, scheduler.isObservable<String>('-----------(B|)'));
+      });
+      test('multiple values and error', () {
+        final input = scheduler.cold<String>('--a--B--c--#');
+        final actual =
+            input.lift(findLastOrElse<String>(predicate, () => 'y'));
+        expect(actual, scheduler.isObservable<String>('-----------#'));
+      });
+      test('multiple values and predicate error', () {
+        final input = scheduler.cold<String>('--x--B--c--|');
+        final actual =
+            input.lift(findLastOrElse<String>(predicate, () => 'y'));
+        expect(actual, scheduler.isObservable<String>('--#'));
+      });
     });
   });
   group('map', () {

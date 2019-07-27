@@ -1,4 +1,4 @@
-library rx.operators.find_first;
+library rx.operators.first;
 
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';

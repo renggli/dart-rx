@@ -1,4 +1,4 @@
-library rx.operators.find_last;
+library rx.operators.last;
 
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';
