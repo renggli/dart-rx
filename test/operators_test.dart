@@ -922,14 +922,12 @@ void main() {
       });
       test('multiple values and error', () {
         final input = scheduler.cold<String>('--a--B--c--#');
-        final actual =
-            input.lift(findLastOrElse<String>(predicate, () => 'y'));
+        final actual = input.lift(findLastOrElse<String>(predicate, () => 'y'));
         expect(actual, scheduler.isObservable<String>('-----------#'));
       });
       test('multiple values and predicate error', () {
         final input = scheduler.cold<String>('--x--B--c--|');
-        final actual =
-            input.lift(findLastOrElse<String>(predicate, () => 'y'));
+        final actual = input.lift(findLastOrElse<String>(predicate, () => 'y'));
         expect(actual, scheduler.isObservable<String>('--#'));
       });
     });
