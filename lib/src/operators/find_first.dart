@@ -13,7 +13,8 @@ Operator<T, T> first<T>() => firstOrElse(throwFunction0(TooFewError()));
 
 /// Return the first item of an observable sequence, or the provided
 /// default [value] otherwise.
-Operator<T, T> firstOrDefault<T>([T value]) => firstOrElse(constantFunction0(value));
+Operator<T, T> firstOrDefault<T>([T value]) =>
+    firstOrElse(constantFunction0(value));
 
 /// Return the first item of an observable sequence, or evaluate the
 /// provided [callback] otherwise.

@@ -13,8 +13,8 @@ Operator<T, S> map<T, S>(Map1<T, S> transform) => (subscriber, source) =>
 
 /// Emits the given constant value on the output Observable every time the
 /// source Observable emits a value.
-Operator<T, S> mapTo<T, S>(S constant) => (subscriber, source) =>
-    source.subscribe(_MapSubscriber(subscriber, (_) => constant));
+Operator<T, S> mapTo<T, S>(S value) => (subscriber, source) =>
+    source.subscribe(_MapSubscriber(subscriber, constantFunction1(value)));
 
 class _MapSubscriber<T, S> extends Subscriber<T> {
   final Map1<T, S> transform;
