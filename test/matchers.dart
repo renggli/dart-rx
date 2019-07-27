@@ -1,7 +1,7 @@
 library rx.test.matchers;
 
 import 'package:matcher/matcher.dart';
-import 'package:rx/core.dart';
+import 'package:rx/src/core/errors.dart';
 import 'package:test/test.dart';
 
 /// Matches the throwing of a [TooFewError].

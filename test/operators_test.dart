@@ -1463,6 +1463,48 @@ void main() {
       expect(actual, scheduler.isObservable('-a-b-c-#', error: customError));
     });
   });
+  group('timeout', () {
+    test('after immediate completion', () {
+      final input = scheduler.cold('--|');
+      final actual = input.lift(timeout(scheduler.stepDuration * 3));
+      expect(actual, scheduler.isObservable('--|'));
+    });
+    test('after immediate error', () {
+      final input = scheduler.cold('--#');
+      final actual = input.lift(timeout(scheduler.stepDuration * 3));
+      expect(actual, scheduler.isObservable('--#'));
+    });
+    test('after emission and completion', () {
+      final input = scheduler.cold('ab|');
+      final actual = input.lift(timeout(scheduler.stepDuration * 3));
+      expect(actual, scheduler.isObservable('ab|'));
+    });
+    test('after emission and error', () {
+      final input = scheduler.cold('ab#');
+      final actual = input.lift(timeout(scheduler.stepDuration * 3));
+      expect(actual, scheduler.isObservable('ab#'));
+    });
+    test('before immediate completion', () {
+      final input = scheduler.cold('----|');
+      final actual = input.lift(timeout(scheduler.stepDuration * 3));
+      expect(actual, scheduler.isObservable('---#', error: TimeoutError()));
+    });
+    test('before immediate error', () {
+      final input = scheduler.cold('----#');
+      final actual = input.lift(timeout(scheduler.stepDuration * 3));
+      expect(actual, scheduler.isObservable('---#', error: TimeoutError()));
+    });
+    test('before emission and completion', () {
+      final input = scheduler.cold('abcd|');
+      final actual = input.lift(timeout(scheduler.stepDuration * 3));
+      expect(actual, scheduler.isObservable('abc#', error: TimeoutError()));
+    });
+    test('before emission and error', () {
+      final input = scheduler.cold('abcd#');
+      final actual = input.lift(timeout(scheduler.stepDuration * 3));
+      expect(actual, scheduler.isObservable('abc#', error: TimeoutError()));
+    });
+  });
   group('toList', () {
     test('empty and completion', () {
       final input = scheduler.cold<String>('--|');
