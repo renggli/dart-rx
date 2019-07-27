@@ -1,8 +1,8 @@
 library rx.operators.multicast;
 
-import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subject.dart';
+import 'package:rx/src/shared/functions.dart';
 import 'package:rx/src/subjects/async_subject.dart';
 import 'package:rx/src/subjects/behavior_subject.dart';
 import 'package:rx/src/subjects/replay_subject.dart';

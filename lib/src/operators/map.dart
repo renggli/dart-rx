@@ -1,10 +1,10 @@
 library rx.operators.map;
 
 import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Applies a given project function to each value emitted by the source
 /// Observable, and emits the resulting values as an Observable.

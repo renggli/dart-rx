@@ -1,8 +1,10 @@
 library rx.operators.take_while;
 
-import 'package:rx/core.dart';
+import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
+import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Emits values while the [predicate] returns `true`.
 Operator<T, T> takeWhile<T>(Predicate1<T> predicate) => (subscriber, source) =>

@@ -2,10 +2,10 @@ library rx.operators.single;
 
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Returns the single element of an observable sequence, or emits [TooFewError]
 /// if there was no element, or emits [TooManyError] if there was more than 1

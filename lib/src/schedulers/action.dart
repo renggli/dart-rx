@@ -1,6 +1,6 @@
 library rx.schedulers.action;
 
-import 'package:rx/src/core/functions.dart';
+import 'package:rx/src/shared/functions.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 
 abstract class SchedulerAction extends StatefulSubscription {

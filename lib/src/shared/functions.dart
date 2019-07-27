@@ -1,4 +1,4 @@
-library rx.core.functions;
+library rx.shared.functions;
 
 /// Callback type used to pass a value.
 typedef NextCallback<T> = void Function(T value);

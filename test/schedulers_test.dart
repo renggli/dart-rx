@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:more/iterable.dart';
 import 'package:rx/schedulers.dart';
 import 'package:rx/src/schedulers/settings.dart';
-import 'package:rx/src/shared/settings.dart';
+import 'package:rx/src/shared/constants.dart';
 import 'package:test/test.dart';
 
 final DateTime epoch = DateTime.fromMillisecondsSinceEpoch(0);

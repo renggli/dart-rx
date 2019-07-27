@@ -1,7 +1,7 @@
 library rx.subscriptions.anonymous;
 
 import 'package:rx/src/core/errors.dart';
-import 'package:rx/src/core/functions.dart';
+import 'package:rx/src/shared/functions.dart';
 import 'package:rx/src/subscriptions/stateful.dart';
 
 class AnonymousSubscription extends StatefulSubscription {

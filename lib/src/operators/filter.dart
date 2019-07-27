@@ -1,10 +1,10 @@
 library rx.operators.filter;
 
-import 'package:rx/core.dart';
 import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Filter items emitted by the source Observable by only emitting those that
 /// satisfy a specified predicate.

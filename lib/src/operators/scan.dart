@@ -1,9 +1,10 @@
 library rx.operators.scan;
 
-import 'package:rx/core.dart';
+import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Combines a sequence of values by repeatedly applying [transform].
 Operator<T, T> reduce<T>(Map2<T, T, T> transform) => (subscriber, source) =>

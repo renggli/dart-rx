@@ -1,6 +1,6 @@
 library rx.core.subscription;
 
-import 'package:rx/src/core/functions.dart';
+import 'package:rx/src/shared/functions.dart';
 import 'package:rx/src/subscriptions/anonymous.dart';
 import 'package:rx/src/subscriptions/composite.dart';
 import 'package:rx/src/subscriptions/empty.dart';

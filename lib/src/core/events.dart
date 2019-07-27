@@ -1,8 +1,8 @@
 library rx.core.events;
 
 import 'package:more/hash.dart';
-import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/shared/functions.dart';
 
 abstract class Event<T> {
   /// Creates a next event.

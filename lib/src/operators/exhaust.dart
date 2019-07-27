@@ -1,13 +1,13 @@
 library rx.operators.exhaust;
 
 import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Emits and completes higher-order [Observable]. Subscribes to at most
 /// `concurrent` sources, drops observables exceeding this threshold.

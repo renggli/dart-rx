@@ -1,8 +1,10 @@
 library rx.operators.skip_while;
 
-import 'package:rx/core.dart';
+import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
+import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Skips over the values while the [predicate] is `true`.
 Operator<T, T> skipWhile<T>(Predicate1<T> predicate) => (subscriber, source) =>

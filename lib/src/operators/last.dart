@@ -3,10 +3,10 @@ library rx.operators.last;
 import 'package:rx/core.dart';
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/functions.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Returns the last element of an observable sequence, or emits an
 /// [TooFewError] otherwise.
