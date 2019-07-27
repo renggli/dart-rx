@@ -17,9 +17,6 @@ abstract class ZoneScheduler extends Scheduler {
   Zone get zone;
 
   @override
-  DateTime get now => DateTime.now();
-
-  @override
   Subscription schedule(Callback0 callback) {
     final action = SchedulerActionCallback(callback);
     zone.scheduleMicrotask(action.run);

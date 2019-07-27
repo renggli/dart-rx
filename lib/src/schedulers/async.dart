@@ -18,9 +18,6 @@ class AsyncScheduler extends Scheduler {
   AsyncScheduler();
 
   @override
-  DateTime get now => DateTime.now();
-
-  @override
   Subscription schedule(Callback0 callback) =>
       _scheduleAt(now, SchedulerActionCallback(callback));
 

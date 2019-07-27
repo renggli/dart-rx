@@ -10,7 +10,7 @@ abstract class Scheduler {
   const Scheduler();
 
   /// Returns the current time.
-  DateTime get now;
+  DateTime get now => DateTime.now();
 
   /// Schedules a `callback` to be executed.
   Subscription schedule(Callback0 callback);

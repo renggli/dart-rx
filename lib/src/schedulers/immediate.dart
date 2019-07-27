@@ -6,9 +6,6 @@ class ImmediateScheduler extends Scheduler {
   const ImmediateScheduler();
 
   @override
-  DateTime get now => DateTime.now();
-
-  @override
   Subscription schedule(Callback0 callback) {
     callback();
     return Subscription.empty();
