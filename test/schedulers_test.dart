@@ -3,20 +3,34 @@ library rx.test.schedulers_test;
 import 'dart:async';
 
 import 'package:more/iterable.dart';
-import 'package:rx/core.dart';
 import 'package:rx/schedulers.dart';
 import 'package:rx/src/schedulers/settings.dart';
+import 'package:rx/src/shared/settings.dart';
 import 'package:test/test.dart';
 
 final DateTime epoch = DateTime.fromMillisecondsSinceEpoch(0);
+final Duration offset = Duration(milliseconds: isJavaScript ? 200 : 100);
+final Duration accuracy = Duration(milliseconds: isJavaScript ? 50 : 25);
 
-Predicate1<DateTime> closeToDateTime(DateTime expected, Duration duration) =>
-    (actual) =>
-        actual is DateTime &&
-        expected.millisecondsSinceEpoch - duration.inMilliseconds <=
-            actual.millisecondsSinceEpoch &&
-        actual.millisecondsSinceEpoch <=
-            expected.millisecondsSinceEpoch + duration.inMilliseconds;
+void expectDateTime(DateTime actual, DateTime expected, Duration accuracy,
+    {String prefix = ''}) {
+  final duration = actual.difference(expected).abs();
+  final reason = '$prefix\n'
+      'Expected: $expected\n'
+      '  Actual: $actual\n'
+      'Expected: $accuracy\n'
+      '   Delta: $duration';
+  expect(duration.compareTo(accuracy) <= 0, isTrue, reason: reason);
+}
+
+void expectDateTimeList(
+    List<DateTime> actual, List<DateTime> expected, Duration accuracy) {
+  expect(actual.length, expected.length);
+  for (var i = 0; i < actual.length; i++) {
+    expectDateTime(actual[i], expected[i], accuracy * (i + 1),
+        prefix: 'Index $i\n');
+  }
+}
 
 void main() {
   group('settings', () {
@@ -38,12 +52,10 @@ void main() {
   });
   group('immediate', () {
     const scheduler = ImmediateScheduler();
-    const accuracy = Duration(milliseconds: 2);
-    const offset = Duration(milliseconds: 10);
     test('now', () {
       final actual = scheduler.now;
       final expected = DateTime.now();
-      expect(actual, closeToDateTime(expected, accuracy));
+      expectDateTime(actual, expected, accuracy);
     });
     test('schedule', () {
       var called = 0;
@@ -64,7 +76,7 @@ void main() {
         expect(actual, epoch);
         actual = scheduler.now;
       });
-      expect(actual, closeToDateTime(expected, accuracy));
+      expectDateTime(actual, expected, accuracy);
       expect(subscription.isClosed, isTrue);
     });
     test('scheduleRelative', () {
@@ -74,28 +86,22 @@ void main() {
         expect(actual, epoch);
         actual = scheduler.now;
       });
-      expect(actual, closeToDateTime(expected, accuracy));
+      expectDateTime(actual, expected, accuracy);
       expect(subscription.isClosed, isTrue);
     });
     test('schedulePeriodic', () {
-      final actual = <DateTime>[];
-      final expected =
-          iterate<DateTime>(scheduler.now, (prev) => prev.add(offset))
-              .skip(1)
-              .take(5);
+      final start = scheduler.now;
+      final actual = [start];
       final subscription = scheduler.schedulePeriodic(offset, (subscription) {
         actual.add(scheduler.now);
         if (actual.length == 5) {
           subscription.unsubscribe();
         }
       });
-      expect(
-          actual,
-          pairwiseCompare(
-              expected,
-              (actual, expected) => closeToDateTime(expected, accuracy)(actual),
-              'periodic timestamps'));
       expect(subscription.isClosed, isTrue);
+      final expected =
+          iterate<DateTime>(start, (prev) => prev.add(offset)).take(5).toList();
+      expectDateTimeList(expected, actual, accuracy);
     });
   });
   group('root zone', () => testZone(RootZoneScheduler()));
@@ -103,12 +109,10 @@ void main() {
 }
 
 void testZone(ZoneScheduler scheduler) {
-  const offset = Duration(milliseconds: 25);
-  const accuracy = Duration(milliseconds: 10);
   test('now', () {
     final actual = scheduler.now;
     final expected = DateTime.now();
-    expect(actual, closeToDateTime(expected, accuracy));
+    expectDateTime(actual, expected, accuracy);
   });
   test('schedule', () async {
     final expected = DateTime.now();
@@ -116,7 +120,8 @@ void testZone(ZoneScheduler scheduler) {
     final subscription = scheduler.schedule(() {
       completer.complete(scheduler.now);
     });
-    expect(await completer.future, closeToDateTime(expected, accuracy));
+    final actual = await completer.future;
+    expectDateTime(actual, expected, accuracy);
     expect(subscription.isClosed, isFalse);
   });
   test('scheduleIteration', () async {
@@ -133,7 +138,8 @@ void testZone(ZoneScheduler scheduler) {
       }
     });
     expect(subscription.isClosed, isFalse);
-    expect(await completer.future, closeToDateTime(expected, accuracy));
+    final actual = await completer.future;
+    expectDateTime(actual, expected, accuracy);
     expect(subscription.isClosed, isTrue);
     expect(called, 10);
   });
@@ -144,7 +150,7 @@ void testZone(ZoneScheduler scheduler) {
         expected, () => completer.complete(scheduler.now));
     expect(subscription.isClosed, isFalse);
     final actual = await completer.future;
-    expect(actual, closeToDateTime(expected, accuracy));
+    expectDateTime(actual, expected, accuracy);
   });
   test('scheduleRelative', () async {
     final completer = Completer<DateTime>();
@@ -153,30 +159,24 @@ void testZone(ZoneScheduler scheduler) {
         offset, () => completer.complete(scheduler.now));
     expect(subscription.isClosed, isFalse);
     final actual = await completer.future;
-    expect(actual, closeToDateTime(expected, accuracy));
+    expectDateTime(actual, expected, accuracy);
   });
   test('schedulePeriodic', () async {
-    final completer = Completer<List<DateTime>>();
-    final collector = <DateTime>[];
-    final expected =
-        iterate<DateTime>(scheduler.now, (prev) => prev.add(offset))
-            .skip(1)
-            .take(5);
+    final completer = Completer();
+    final start = scheduler.now;
+    final actual = [start];
     final subscription = scheduler.schedulePeriodic(offset, (subscription) {
-      collector.add(scheduler.now);
-      if (collector.length == 5) {
-        completer.complete(collector);
+      actual.add(scheduler.now);
+      if (actual.length == 5) {
+        completer.complete();
         subscription.unsubscribe();
       }
     });
     expect(subscription.isClosed, isFalse);
-    final actual = await completer.future;
-    expect(
-        actual,
-        pairwiseCompare(
-            expected,
-            (actual, expected) => closeToDateTime(expected, accuracy)(actual),
-            'periodic timestamps'));
+    await completer.future;
+    final expected =
+        iterate<DateTime>(start, (prev) => prev.add(offset)).take(5).toList();
+    expectDateTimeList(expected, actual, accuracy);
     expect(subscription.isClosed, isTrue);
   });
 }
