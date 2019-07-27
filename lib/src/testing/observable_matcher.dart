@@ -1,8 +1,9 @@
 library rx.testing.observable_matcher;
 
-import 'package:rx/core.dart';
-import 'package:rx/operators.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/operators/map.dart';
+import 'package:rx/src/operators/materialize.dart';
 import 'package:rx/src/schedulers/settings.dart';
 import 'package:rx/src/testing/test_event_sequence.dart';
 

@@ -1,9 +1,9 @@
 library rx.operators.take_last;
 
 import 'package:collection/collection.dart';
-import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
+import 'package:rx/src/core/subscriber.dart';
 
 /// Emits the last [count] values emitted by the source.
 Operator<T, T> takeLast<T>([int count = 1]) => (subscriber, source) =>

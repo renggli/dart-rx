@@ -1,8 +1,8 @@
 library rx.testing.test_scheduler;
 
 import 'package:more/iterable.dart';
-import 'package:rx/core.dart';
 import 'package:rx/src/core/observable.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/async.dart';
 import 'package:rx/src/schedulers/settings.dart';
 import 'package:rx/src/testing/test_event_sequence.dart';

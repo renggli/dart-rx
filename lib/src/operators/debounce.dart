@@ -4,8 +4,8 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/settings.dart';
-import 'package:rx/subscriptions.dart';
 
 /// Emits a value from the source Observable only after a particular time span
 /// has passed without another source emission.

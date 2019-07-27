@@ -1,10 +1,10 @@
 library rx.operators.zip;
 
-import 'package:rx/schedulers.dart';
 import 'package:rx/src/constructors/iterable.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/operators/zip.dart' as operators;
+import 'package:rx/src/schedulers/immediate.dart';
 
 /// Combines a list of [Observable] to an [Observable] whose values are
 /// calculated from the next value of each of its inputs.

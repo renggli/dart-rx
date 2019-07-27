@@ -1,6 +1,5 @@
 library rx.operators.delay;
 
-import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/scheduler.dart';

@@ -1,6 +1,5 @@
 library rx.operators.last;
 
-import 'package:rx/core.dart';
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';

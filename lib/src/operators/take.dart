@@ -1,8 +1,8 @@
 library rx.operators.take;
 
-import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
+import 'package:rx/src/core/subscriber.dart';
 
 /// Emits the first [count] values before completing.
 Operator<T, T> take<T>([int count = 1]) => (subscriber, source) =>

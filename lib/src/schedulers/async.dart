@@ -3,7 +3,6 @@ library rx.schedulers.async;
 import 'dart:collection';
 
 import 'package:meta/meta.dart';
-import 'package:rx/schedulers.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/action.dart';

@@ -1,8 +1,8 @@
 library rx.operators.skip;
 
-import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
+import 'package:rx/src/core/subscriber.dart';
 
 /// Skips over the first [count] values before starting to emit.
 Operator<T, T> skip<T>([int count = 1]) => (subscriber, source) =>

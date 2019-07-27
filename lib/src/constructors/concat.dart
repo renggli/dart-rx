@@ -1,5 +1,6 @@
 library rx.constructors.concat;
 
+import 'package:rx/src/constructors/iterable.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/operators/merge.dart';
 

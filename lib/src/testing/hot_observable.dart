@@ -1,8 +1,8 @@
 library rx.testing.hot_observable;
 
 import 'package:meta/meta.dart';
-import 'package:rx/core.dart';
 import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/core/subject.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/testing/test_event_sequence.dart';
 

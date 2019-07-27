@@ -1,6 +1,5 @@
 library rx.schedulers.immediate;
 
-import 'package:rx/schedulers.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
