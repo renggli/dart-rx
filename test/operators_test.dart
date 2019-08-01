@@ -1155,7 +1155,35 @@ void main() {
     });
   });
   group('multicast', () {
-    group('publishBehacior', () {});
+    group('publishBehavior', () {
+      test('incomplete sequence', () {
+        final source = scheduler.cold<String>('-a-b-c-');
+        final actual =
+            source.pipe(publishBehavior('x')) as ConnectableObservable;
+        expect(actual, scheduler.isObservable<String>('x'));
+        actual.connect();
+        expect(actual, scheduler.isObservable<String>('xa-b-c-'));
+        expect(actual, scheduler.isObservable<String>('c'));
+      });
+      test('completed sequence', () {
+        final source = scheduler.cold<String>('-a-b-c-|');
+        final actual =
+            source.pipe(publishBehavior('x')) as ConnectableObservable;
+        expect(actual, scheduler.isObservable<String>('x'));
+        actual.connect();
+        expect(actual, scheduler.isObservable<String>('xa-b-c-|'));
+        expect(actual, scheduler.isObservable<String>('(c|)'));
+      });
+      test('errored sequence', () {
+        final source = scheduler.cold<String>('-a-b-c-#');
+        final actual =
+            source.pipe(publishBehavior('x')) as ConnectableObservable;
+        expect(actual, scheduler.isObservable<String>('x'));
+        actual.connect();
+        expect(actual, scheduler.isObservable<String>('xa-b-c-#'));
+        expect(actual, scheduler.isObservable<String>('#'));
+      });
+    });
     group('publishLast', () {
       test('incomplete sequence', () {
         final source = scheduler.cold<String>('-a-b-c-');

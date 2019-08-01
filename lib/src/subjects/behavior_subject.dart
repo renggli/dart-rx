@@ -15,11 +15,14 @@ class BehaviorSubject<T> extends Subject<T> {
   void next(T value) => super.next(_value = value);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
-    final subscription = super.subscribe(observer);
-    if (!subscription.isClosed) {
-      observer.next(_value);
-    }
-    return subscription;
+  Subscription subscribeToActive(Observer observer) {
+    observer.next(_value);
+    return super.subscribeToActive(observer);
+  }
+
+  @override
+  Subscription subscribeToComplete(Observer observer) {
+    observer.next(_value);
+    return super.subscribeToComplete(observer);
   }
 }
