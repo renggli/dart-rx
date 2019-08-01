@@ -1,6 +1,7 @@
 library rx.example.example;
 
 import 'package:more/collection.dart';
+import 'package:rx/observables.dart';
 import 'package:rx/operators.dart' as ops;
 import 'package:rx/rx.dart' as rx;
 import 'package:rx/src/operators/multicast.dart';
@@ -63,6 +64,7 @@ void main() {
   // subject subscription
   final subject =
       rx.fromIterable(IntegerRange(0, 100, 25)).pipe(publishReplay());
+  (subject as ConnectableObservable).connect();
   subject.subscribe(printObserver('subject1'));
   subject.subscribe(printObserver('subject2'));
 
@@ -72,7 +74,6 @@ void main() {
       period: const Duration(milliseconds: 500));
   final subs1 = obs.subscribe(printObserver('first'));
   final subs2 = obs.subscribe(printObserver('second'));
-
   rx
       .timer(delay: const Duration(seconds: 3))
       .subscribe(rx.Observer(complete: () => subs1.unsubscribe()));
