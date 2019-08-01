@@ -6,8 +6,8 @@ import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subject.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
-import 'package:rx/src/subjects/async_subject.dart';
 import 'package:rx/src/subjects/behavior_subject.dart';
+import 'package:rx/src/subjects/last_subject.dart';
 import 'package:rx/src/subjects/replay_subject.dart';
 
 /// Returns an multicast observable that shares the underlying stream.
@@ -36,7 +36,7 @@ OperatorFunction<T, T> publishBehavior<T>(T value) =>
     multicast<T, T>(factory: () => BehaviorSubject<T>(value));
 
 OperatorFunction<T, T> publishLast<T>() =>
-    multicast<T, T>(factory: () => AsyncSubject<T>());
+    multicast<T, T>(factory: () => LastSubject<T>());
 
 OperatorFunction<T, T> publishReplay<T>({int bufferSize}) =>
     multicast<T, T>(factory: () => ReplaySubject<T>(bufferSize: bufferSize));

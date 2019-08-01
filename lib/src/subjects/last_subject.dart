@@ -1,4 +1,4 @@
-library rx.subjects.async;
+library rx.subjects.last;
 
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/subject.dart';
@@ -6,7 +6,7 @@ import 'package:rx/src/core/subscription.dart';
 
 /// A variant of Subject that only emits a value when it completes. It will emit
 /// its latest value to all its observers on completion.
-class AsyncSubject<T> extends Subject<T> {
+class LastSubject<T> extends Subject<T> {
   T _value;
   bool _hasValue = false;
   bool _hasCompleted = false;
@@ -31,6 +31,7 @@ class AsyncSubject<T> extends Subject<T> {
     _hasCompleted = true;
     if (_hasValue) {
       super.next(_value);
+      super.complete();
     }
   }
 

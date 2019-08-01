@@ -270,6 +270,7 @@ void main() {
       'b': const NextEvent('b'),
       'c': const CompleteEvent(),
       'e': const ErrorEvent('Error'),
+      'f': const TestEvent(0, NextEvent('a')),
     };
     test('empty sequence', () {
       final input = scheduler.cold('-|', values: values);
@@ -290,6 +291,14 @@ void main() {
       final input = scheduler.cold('-a--b---e-|', values: values);
       final actual = input.pipe(dematerialize());
       expect(actual, scheduler.isObservable<String>('-a--b---#'));
+    });
+    test('invalid event', () {
+      final input = scheduler.cold('-a--b---f-|', values: values);
+      final actual = input.pipe(dematerialize());
+      expect(
+          actual,
+          scheduler.isObservable<String>('-a--b---#',
+              error: UnexpectedEventError(values['f'])));
     });
   });
   group('distinct', () {
@@ -1147,7 +1156,32 @@ void main() {
   });
   group('multicast', () {
     group('publishBehacior', () {});
-    group('publishLast', () {});
+    group('publishLast', () {
+      test('incomplete sequence', () {
+        final source = scheduler.cold<String>('-a-b-c-');
+        final actual = source.pipe(publishLast()) as ConnectableObservable;
+        expect(actual, scheduler.isObservable<String>(''));
+        actual.connect();
+        expect(actual, scheduler.isObservable<String>(''));
+        expect(actual, scheduler.isObservable<String>(''));
+      });
+      test('completed sequence', () {
+        final source = scheduler.cold<String>('-a-b-c-|');
+        final actual = source.pipe(publishLast()) as ConnectableObservable;
+        expect(actual, scheduler.isObservable<String>(''));
+        actual.connect();
+        expect(actual, scheduler.isObservable<String>('-------(c|)'));
+        expect(actual, scheduler.isObservable<String>('(c|)'));
+      });
+      test('errored sequence', () {
+        final source = scheduler.cold<String>('-a-b-c-#');
+        final actual = source.pipe(publishLast()) as ConnectableObservable;
+        expect(actual, scheduler.isObservable<String>(''));
+        actual.connect();
+        expect(actual, scheduler.isObservable<String>('-------#'));
+        expect(actual, scheduler.isObservable<String>('#'));
+      });
+    });
     group('publishReplay', () {
       test('incomplete sequence', () {
         final source = scheduler.cold<String>('-a-b-c-');
