@@ -36,7 +36,9 @@ abstract class Subscription {
 
   /// Creates a [CompositeSubscription] that aggregates over multiple other
   /// subscriptions.
-  static CompositeSubscription composite() => CompositeSubscription();
+  static CompositeSubscription composite(
+          [Iterable<Subscription> subscriptions = const []]) =>
+      CompositeSubscription.of(subscriptions);
 
   /// Creates a [SequentialSubscription] that holds onto a single other
   /// subscription.

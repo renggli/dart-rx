@@ -93,6 +93,16 @@ void main() {
       expect(outer.subscriptions, isEmpty);
       expect(outer.isClosed, isFalse);
     });
+    test('initialization', () {
+      final inner = Subscription.stateful();
+      final outer = Subscription.composite([
+        inner,
+        Subscription.empty(),
+      ]);
+      expect(outer.subscriptions, [inner]);
+      expect(outer.isClosed, isFalse);
+      expect(inner.isClosed, isFalse);
+    });
     test('add', () {
       final outer = Subscription.composite();
       final inner = Subscription.stateful();

@@ -11,6 +11,10 @@ class CompositeSubscription extends StatefulSubscription {
 
   CompositeSubscription();
 
+  CompositeSubscription.of(Iterable<Subscription> subscriptions) {
+    subscriptions.forEach(add);
+  }
+
   Set<Subscription> get subscriptions => {..._subscriptions};
 
   void add(Subscription subscription) {
