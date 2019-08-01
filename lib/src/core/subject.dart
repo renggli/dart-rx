@@ -75,15 +75,14 @@ class Subject<T>
     } else if (_hasStopped) {
       return subscribeToComplete(observer);
     } else {
-      return subscribeToActive(observer, _observers);
+      return subscribeToActive(observer);
     }
   }
 
   @protected
-  Subscription subscribeToActive(
-      Observer observer, List<Observer<T>> observers) {
-    observers.add(observer);
-    return Subscription.create(() => observers.remove(observer));
+  Subscription subscribeToActive(Observer observer) {
+    _observers.add(observer);
+    return Subscription.create(() => _observers.remove(observer));
   }
 
   @protected

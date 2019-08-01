@@ -40,7 +40,7 @@ class ObservableMatcher<T> {
         .pipe(map((event) => TestEvent(getIndex(), event)))
         .subscribe(Observer.next(events.add));
 
-    while (!subscription.isClosed) {
+    while (scheduler.hasPending && !subscription.isClosed) {
       scheduler.advance();
     }
 

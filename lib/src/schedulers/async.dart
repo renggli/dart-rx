@@ -16,6 +16,8 @@ class AsyncScheduler extends Scheduler {
 
   AsyncScheduler();
 
+  bool get hasPending => scheduled.isNotEmpty;
+
   @override
   Subscription schedule(Callback0 callback) =>
       _scheduleAt(now, SchedulerActionCallback(callback));

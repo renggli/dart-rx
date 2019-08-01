@@ -25,11 +25,14 @@ class ReplaySubject<T> extends Subject<T> {
   }
 
   @override
-  Subscription subscribe(Observer<T> observer) {
-    final subscription = super.subscribe(observer);
-    if (!subscription.isClosed) {
-      _buffer.forEach(observer.next);
-    }
-    return subscription;
+  Subscription subscribeToActive(Observer observer) {
+    _buffer.forEach(observer.next);
+    return super.subscribeToActive(observer);
+  }
+
+  @override
+  Subscription subscribeToComplete(Observer observer) {
+    _buffer.forEach(observer.next);
+    return super.subscribeToComplete(observer);
   }
 }
