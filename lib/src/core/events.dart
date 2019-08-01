@@ -1,6 +1,5 @@
 library rx.core.events;
 
-import 'package:more/hash.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/shared/functions.dart';
 
@@ -93,13 +92,10 @@ class ErrorEvent<T> extends Event<T> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is ErrorEvent &&
-          error == other.error &&
-          stackTrace == other.stackTrace);
+      identical(this, other) || (other is ErrorEvent && error == other.error);
 
   @override
-  int get hashCode => hash2(error, stackTrace);
+  int get hashCode => error.hashCode;
 
   @override
   String toString() => 'ErrorEvent{error: $error, stackTrace: $stackTrace}';

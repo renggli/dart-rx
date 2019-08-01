@@ -9,12 +9,13 @@ import 'package:rx/src/shared/functions.dart';
 
 /// Return the last item of an observable sequence, or emits an
 /// [TooFewError] otherwise.
-OperatorFunction<T, T> last<T>() => lastOrElse(throwFunction0(TooFewError()));
+OperatorFunction<T, T> last<T>() =>
+    lastOrElse<T>(throwFunction0(TooFewError()));
 
 /// Return the last item of an observable sequence, or the provided
 /// default [value] otherwise.
 OperatorFunction<T, T> lastOrDefault<T>([T value]) =>
-    lastOrElse(constantFunction0(value));
+    lastOrElse<T>(constantFunction0(value));
 
 /// Return the last item of an observable sequence, or evaluate the
 /// provided [callback] otherwise.
@@ -24,13 +25,13 @@ OperatorFunction<T, T> lastOrElse<T>(Map0<T> callback) =>
 /// Return the last item an observable sequence matching the [predicate], or
 /// emits an [TooFewError] otherwise.
 OperatorFunction<T, T> findLast<T>(Predicate1<T> predicate) =>
-    findLastOrElse(predicate, throwFunction0(TooFewError()));
+    findLastOrElse<T>(predicate, throwFunction0(TooFewError()));
 
 /// Return the last item an observable sequence matching the [predicate], or
 /// the provided default [value] otherwise.
 OperatorFunction<T, T> findLastOrDefault<T>(Predicate1<T> predicate,
         [T value]) =>
-    findLastOrElse(predicate, constantFunction0(value));
+    findLastOrElse<T>(predicate, constantFunction0(value));
 
 /// Return the last item an observable sequence matching the [predicate], or
 /// evaluate the provided [callback] otherwise.

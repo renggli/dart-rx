@@ -13,17 +13,17 @@ OperatorFunction<T, T> reduce<T>(Map2<T, T, T> transform) =>
 
 /// Combines a sequence of values by repeatedly applying [transform], starting
 /// with the provided [initialValue].
-OperatorFunction<T, S> fold<T, S>(S initialValue, Map2<S, T, S> transform) =>
+OperatorFunction<T, R> fold<T, R>(R initialValue, Map2<R, T, R> transform) =>
     (source) => source.lift((source, subscriber) => source.subscribe(
-        _ScanSubscriber<T, S>(subscriber, transform, true, initialValue)));
+        _ScanSubscriber<T, R>(subscriber, transform, true, initialValue)));
 
-class _ScanSubscriber<T, S> extends Subscriber<T> {
-  final Map2<S, T, S> transform;
+class _ScanSubscriber<T, R> extends Subscriber<T> {
+  final Map2<R, T, R> transform;
   bool hasSeed;
-  S seedValue;
+  R seedValue;
 
   _ScanSubscriber(
-      Observer<S> destination, this.transform, this.hasSeed, this.seedValue)
+      Observer<R> destination, this.transform, this.hasSeed, this.seedValue)
       : super(destination);
 
   @override
@@ -36,7 +36,7 @@ class _ScanSubscriber<T, S> extends Subscriber<T> {
         seedValue = transformEvent.value;
       }
     } else {
-      seedValue = value as S;
+      seedValue = value as R;
       hasSeed = true;
     }
     doNext(seedValue);

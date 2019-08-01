@@ -5,6 +5,8 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
+/// Materialize events into a stream of [Event] objects: [NextEvent],
+/// [ErrorEvent] and [CompleteEvent].
 OperatorFunction<T, Event<T>> materialize<T>() =>
     (source) => source.lift((source, subscriber) =>
         source.subscribe(_MaterializeSubscriber<T>(subscriber)));

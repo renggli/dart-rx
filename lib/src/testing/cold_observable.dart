@@ -20,7 +20,4 @@ class ColdObservable<T> extends TestObservable<T> {
     }
     return subscriber;
   }
-
-  @override
-  String toString() => 'ColdObservable{${sequence.toMarbles()}';
 }

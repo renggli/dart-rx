@@ -15,7 +15,7 @@ import 'package:rx/src/shared/functions.dart';
 /// Emits all merged values from a higher-order [Observable]. Subscribes to
 /// at most `concurrent` sources.
 OperatorFunction<Observable<R>, R> mergeAll<R>({int concurrent = maxInteger}) =>
-    mergeMap(identityFunction, concurrent: concurrent);
+    mergeMap<Observable<R>, R>(identityFunction, concurrent: concurrent);
 
 /// Emits all merged values from a higher-order [Observable] retrieved by
 /// projecting the values of the source to higher-order [Observable]s.
@@ -29,9 +29,9 @@ OperatorFunction<T, R> mergeMap<T, R>(Map1<T, Observable<R>> project,
 
 /// Emits all merged values from a single higher-order `observable. Subscribes
 /// to at most `concurrent` sources.
-OperatorFunction<T, R> mergeMapTo<T, R>(Observable<R> observable,
+OperatorFunction<dynamic, R> mergeMapTo<R>(Observable<R> observable,
         {int concurrent = maxInteger}) =>
-    mergeMap(constantFunction1(observable), concurrent: concurrent);
+    mergeMap<dynamic, R>(constantFunction1(observable), concurrent: concurrent);
 
 class _MergeSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, int> {

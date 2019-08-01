@@ -3,6 +3,19 @@ library rx.core.errors;
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/subscription.dart';
 
+import 'events.dart';
+
+/// Unknown eve
+class UnexpectedEventError extends Error {
+  final Event event;
+  final String message;
+
+  UnexpectedEventError(this.event, [this.message = 'Unexpected event.']);
+
+  @override
+  String toString() => 'UnexpectedEventError{event: $event, message: $message}';
+}
+
 /// An error thrown when an [Observable] was queried with too few elements.
 class TooFewError extends Error {
   final String message;
@@ -10,7 +23,7 @@ class TooFewError extends Error {
   TooFewError([this.message = 'Too few elements in sequence.']);
 
   @override
-  String toString() => 'TooFewError{$message}';
+  String toString() => 'TooFewError{message: $message}';
 }
 
 /// An error throw when an [Observable] was queried with too many elements.
@@ -20,7 +33,7 @@ class TooManyError extends Error {
   TooManyError([this.message = 'Too many elements in sequence.']);
 
   @override
-  String toString() => 'TooManyError{$message}';
+  String toString() => 'TooManyError{message: $message}';
 }
 
 /// An error thrown when due time elapses.
@@ -30,7 +43,7 @@ class TimeoutError extends Error {
   TimeoutError([this.message = 'Timeout has occurred.']);
 
   @override
-  String toString() => 'TimeoutError{$message}';
+  String toString() => 'TimeoutError{message: $message}';
 }
 
 /// An error thrown when an operation has been performed on an
@@ -64,5 +77,5 @@ class UnsubscriptionError extends Error {
             .toList(growable: false);
 
   @override
-  String toString() => 'UnsubscriptionError{$errors}';
+  String toString() => 'UnsubscriptionError{errors: $errors}';
 }

@@ -9,12 +9,13 @@ import 'package:rx/src/shared/functions.dart';
 
 /// Return the first item of an observable sequence, or emits an
 /// [TooFewError] otherwise.
-OperatorFunction<T, T> first<T>() => firstOrElse(throwFunction0(TooFewError()));
+OperatorFunction<T, T> first<T>() =>
+    firstOrElse<T>(throwFunction0(TooFewError()));
 
 /// Return the first item of an observable sequence, or the provided
 /// default [value] otherwise.
 OperatorFunction<T, T> firstOrDefault<T>([T value]) =>
-    firstOrElse(constantFunction0(value));
+    firstOrElse<T>(constantFunction0(value));
 
 /// Return the first item of an observable sequence, or evaluate the
 /// provided [callback] otherwise.
@@ -24,13 +25,13 @@ OperatorFunction<T, T> firstOrElse<T>(Map0<T> callback) =>
 /// Return the first item an observable sequence matching the [predicate], or
 /// emits an [TooFewError] otherwise.
 OperatorFunction<T, T> findFirst<T>(Predicate1<T> predicate) =>
-    findFirstOrElse(predicate, throwFunction0(TooFewError()));
+    findFirstOrElse<T>(predicate, throwFunction0(TooFewError()));
 
 /// Return the first item an observable sequence matching the [predicate], or
 /// the provided default [value] otherwise.
 OperatorFunction<T, T> findFirstOrDefault<T>(Predicate1<T> predicate,
         [T value]) =>
-    findFirstOrElse(predicate, constantFunction0(value));
+    findFirstOrElse<T>(predicate, constantFunction0(value));
 
 /// Return the first item an observable sequence matching the [predicate], or
 /// evaluate the provided [callback] otherwise.

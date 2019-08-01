@@ -26,4 +26,7 @@ abstract class TestObservable<T> extends Observable<T> {
     subscribers.add(subscriber);
     return subscriber;
   }
+
+  @override
+  String toString() => '${super.toString()}{${sequence.toMarbles()}';
 }

@@ -21,8 +21,8 @@ OperatorFunction<T, R> switchMap<T, R>(Map1<T, Observable<R>> project) =>
         source.subscribe(_SwitchSubscriber<T, R>(subscriber, project)));
 
 /// Emits all values from the most recent higher-order `observable`.
-OperatorFunction<Object, R> switchMapTo<R>(Observable<R> observable) =>
-    switchMap<Object, R>(constantFunction1(observable));
+OperatorFunction<dynamic, R> switchMapTo<R>(Observable<R> observable) =>
+    switchMap<dynamic, R>(constantFunction1(observable));
 
 class _SwitchSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {

@@ -10,7 +10,7 @@ import 'package:rx/src/shared/functions.dart';
 /// Returns the single element of an observable sequence, or emits [TooFewError]
 /// if there was no element, or emits [TooManyError] if there was more than 1
 /// element.
-OperatorFunction<T, T> single<T>() => singleOrElse(
+OperatorFunction<T, T> single<T>() => singleOrElse<T>(
       tooFew: throwFunction0(TooFewError()),
       tooMany: throwFunction0(TooManyError()),
     );
@@ -19,7 +19,7 @@ OperatorFunction<T, T> single<T>() => singleOrElse(
 /// if there was no element, or emits `tooMany` if there was more than 1
 /// element.
 OperatorFunction<T, T> singleOrDefault<T>({T tooFew, T tooMany}) =>
-    singleOrElse(
+    singleOrElse<T>(
       tooFew: constantFunction0(tooFew),
       tooMany: constantFunction0(tooMany),
     );

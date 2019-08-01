@@ -12,7 +12,7 @@ import 'package:rx/src/shared/functions.dart';
 /// Emits and completes higher-order [Observable]. Subscribes to at most
 /// `concurrent` sources, drops observables exceeding this threshold.
 OperatorFunction<Observable<T>, T> exhaustAll<T>({int concurrent = 1}) =>
-    exhaustMap(identityFunction, concurrent: concurrent);
+    exhaustMap<Observable<T>, T>(identityFunction, concurrent: concurrent);
 
 /// Emits and completes values from a higher-order [Observable] retrieved by
 /// projecting the values of the source to higher-order [Observable]s.
@@ -28,9 +28,10 @@ OperatorFunction<T, R> exhaustMap<T, R>(Map1<T, Observable<R>> project,
 /// Emits and completes values from a single higher-order [Observable].
 /// Subscribes to at most `concurrent` sources, drops observables exceeding
 /// this threshold.
-OperatorFunction<T, R> exhaustMapTo<T, R>(Observable<R> observable,
+OperatorFunction<dynamic, R> exhaustMapTo<R>(Observable<R> observable,
         {int concurrent = 1}) =>
-    exhaustMap(constantFunction1(observable), concurrent: concurrent);
+    exhaustMap<dynamic, R>(constantFunction1(observable),
+        concurrent: concurrent);
 
 class _ExhaustSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {

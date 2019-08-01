@@ -80,7 +80,7 @@ class TestScheduler extends AsyncScheduler {
   Observable<T> cold<T>(String marbles,
       {Map<String, T> values = const {}, Object error = 'Error'}) {
     final sequence =
-        TestEventSequence.fromString(marbles, values: values, error: error);
+        TestEventSequence<T>.fromString(marbles, values: values, error: error);
     if (sequence.events.whereType<SubscribeEvent>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
           'Cold observable cannot have subscription marker.');

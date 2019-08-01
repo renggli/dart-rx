@@ -75,7 +75,7 @@ class TestEventSequence<T> {
           sequence.add(TestEvent(index, CompleteEvent()));
           break;
         case errorMarker:
-          sequence.add(TestEvent(index, ErrorEvent(error)));
+          sequence.add(TestEvent(index, ErrorEvent(error, StackTrace.current)));
           break;
         default:
           final marble = marbles[i];

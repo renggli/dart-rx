@@ -9,7 +9,8 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
 
-typedef CatchHandler<T> = Function(Object error, [StackTrace stackTrace]);
+typedef CatchHandler<T> = Object Function(Object error,
+    [StackTrace stackTrace]);
 
 /// Catches errors on the observable to be handled by returning a new
 /// observable or throwing an error.
