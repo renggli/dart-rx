@@ -17,6 +17,12 @@ This library is open source and well tested. Development happens on [GitHub](htt
 
 The package is hosted on [dart packages](https://pub.dartlang.org/packages/rx). Up-to-date [class documentation](https://pub.dartlang.org/documentation/rx/latest/) is created with every release.
 
+Currently the Dart programming language (or my inability to use it correctly) is blocking a more pleasant API in a few places:
+
+- The lack of extension methods in Dart makes it awkward to access operator functions and constructor methods: dart-lang/language#40, dart-lang/language#41, dart-lang/language#42, dart-lang/language#177, dart-lang/language#309, dart-lang/language#8547.
+- For some reason type inference over chained operators does not work. For example `observable.pipe2(filter(()) => ...), map(() => ...))` does not correctly infer the types, while `observable.pipe(filter() => ...).pipe(map(() => ...)` does.
+- The lack of variable length arguments and generics requires duplicated functions and typedefs with a number suffix.
+
 ### License
 
 The MIT License, see [LICENSE](https://github.com/renggli/dart-rx/raw/master/LICENSE).
