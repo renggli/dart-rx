@@ -6,8 +6,9 @@ import 'package:rx/src/core/subscriber.dart';
 
 /// Ignores all items emitted by the source and only passes calls to
 /// `complete` or `error`.
-Operator<T, T> ignoreElements<T>() => (subscriber, source) =>
-    source.subscribe(_IgnoreElementsSubscriber(subscriber));
+OperatorFunction<T, T> ignoreElements<T>() =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_IgnoreElementsSubscriber<T>(subscriber)));
 
 class _IgnoreElementsSubscriber<T> extends Subscriber<T> {
   _IgnoreElementsSubscriber(Observer<T> destination) : super(destination);

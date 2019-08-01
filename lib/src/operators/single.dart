@@ -10,7 +10,7 @@ import 'package:rx/src/shared/functions.dart';
 /// Returns the single element of an observable sequence, or emits [TooFewError]
 /// if there was no element, or emits [TooManyError] if there was more than 1
 /// element.
-Operator<T, T> single<T>() => singleOrElse(
+OperatorFunction<T, T> single<T>() => singleOrElse(
       tooFew: throwFunction0(TooFewError()),
       tooMany: throwFunction0(TooManyError()),
     );
@@ -18,7 +18,8 @@ Operator<T, T> single<T>() => singleOrElse(
 /// Returns the single element of an observable sequence, or emits `tooFew`
 /// if there was no element, or emits `tooMany` if there was more than 1
 /// element.
-Operator<T, T> singleOrDefault<T>({T tooFew, T tooMany}) => singleOrElse(
+OperatorFunction<T, T> singleOrDefault<T>({T tooFew, T tooMany}) =>
+    singleOrElse(
       tooFew: constantFunction0(tooFew),
       tooMany: constantFunction0(tooMany),
     );
@@ -26,9 +27,9 @@ Operator<T, T> singleOrDefault<T>({T tooFew, T tooMany}) => singleOrElse(
 /// Returns the single element of an observable sequence, or evaluates the
 /// `tooFew` callback if there was no element, or evaluates the `tooMany`
 /// callback if there was more than 1 element.
-Operator<T, T> singleOrElse<T>({Map0<T> tooFew, Map0<T> tooMany}) =>
-    (subscriber, source) =>
-        source.subscribe(_SingleSubscriber(subscriber, tooFew, tooMany));
+OperatorFunction<T, T> singleOrElse<T>({Map0<T> tooFew, Map0<T> tooMany}) =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_SingleSubscriber<T>(subscriber, tooFew, tooMany)));
 
 class _SingleSubscriber<T> extends Subscriber<T> {
   final Map0<T> tooFewCallback;

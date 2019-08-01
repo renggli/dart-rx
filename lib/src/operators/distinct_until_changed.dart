@@ -4,25 +4,22 @@ import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
-
-typedef DistinctUntilChangedKeySelectorFunction<T, K> = K Function(T value);
-typedef DistinctUntilChangedEqualsFunction<T, K> = bool Function(
-    K value1, K value2);
+import 'package:rx/src/shared/functions.dart';
 
 /// Emits all items emitted by the source Observable that are distinct
 /// from the previous item.
-Operator<T, T> distinctUntilChanged<T, K>(
-        {DistinctUntilChangedKeySelectorFunction<T, K> key,
-        DistinctUntilChangedEqualsFunction<T, K> compare}) =>
-    (subscriber, source) => source.subscribe(_DistinctUntilChangedSubscriber(
+OperatorFunction<T, T> distinctUntilChanged<T, K>(
+        {Map1<T, K> key, Predicate2<K, K> compare}) =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_DistinctUntilChangedSubscriber<T, K>(
           subscriber,
           key ?? (value) => value as K,
           compare ?? (a, b) => a == b,
-        ));
+        )));
 
 class _DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
-  final DistinctUntilChangedKeySelectorFunction<T, K> key;
-  final DistinctUntilChangedEqualsFunction<T, K> compare;
+  final Map1<T, K> key;
+  final Predicate2<K, K> compare;
 
   bool seenKey = false;
   K lastKey;

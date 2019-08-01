@@ -7,14 +7,15 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/shared/functions.dart';
 
 /// Combines a sequence of values by repeatedly applying [transform].
-Operator<T, T> reduce<T>(Map2<T, T, T> transform) => (subscriber, source) =>
-    source.subscribe(_ScanSubscriber(subscriber, transform, false, null));
+OperatorFunction<T, T> reduce<T>(Map2<T, T, T> transform) =>
+    (source) => source.lift((source, subscriber) => source
+        .subscribe(_ScanSubscriber<T, T>(subscriber, transform, false, null)));
 
 /// Combines a sequence of values by repeatedly applying [transform], starting
 /// with the provided [initialValue].
-Operator<T, S> fold<T, S>(S initialValue, Map2<S, T, S> transform) =>
-    (subscriber, source) => source
-        .subscribe(_ScanSubscriber(subscriber, transform, true, initialValue));
+OperatorFunction<T, S> fold<T, S>(S initialValue, Map2<S, T, S> transform) =>
+    (source) => source.lift((source, subscriber) => source.subscribe(
+        _ScanSubscriber<T, S>(subscriber, transform, true, initialValue)));
 
 class _ScanSubscriber<T, S> extends Subscriber<T> {
   final Map2<S, T, S> transform;

@@ -5,8 +5,9 @@ import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
 /// Emits the first [count] values before completing.
-Operator<T, T> take<T>([int count = 1]) => (subscriber, source) =>
-    source.subscribe(_TakeSubscriber(subscriber, count));
+OperatorFunction<T, T> take<T>([int count = 1]) =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_TakeSubscriber<T>(subscriber, count)));
 
 class _TakeSubscriber<T> extends Subscriber<T> {
   int count;

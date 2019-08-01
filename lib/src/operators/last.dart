@@ -9,33 +9,35 @@ import 'package:rx/src/shared/functions.dart';
 
 /// Return the last item of an observable sequence, or emits an
 /// [TooFewError] otherwise.
-Operator<T, T> last<T>() => lastOrElse(throwFunction0(TooFewError()));
+OperatorFunction<T, T> last<T>() => lastOrElse(throwFunction0(TooFewError()));
 
 /// Return the last item of an observable sequence, or the provided
 /// default [value] otherwise.
-Operator<T, T> lastOrDefault<T>([T value]) =>
+OperatorFunction<T, T> lastOrDefault<T>([T value]) =>
     lastOrElse(constantFunction0(value));
 
 /// Return the last item of an observable sequence, or evaluate the
 /// provided [callback] otherwise.
-Operator<T, T> lastOrElse<T>(Map0<T> callback) =>
+OperatorFunction<T, T> lastOrElse<T>(Map0<T> callback) =>
     findLastOrElse<T>(constantFunction1(true), callback);
 
 /// Return the last item an observable sequence matching the [predicate], or
 /// emits an [TooFewError] otherwise.
-Operator<T, T> findLast<T>(Predicate1<T> predicate) =>
+OperatorFunction<T, T> findLast<T>(Predicate1<T> predicate) =>
     findLastOrElse(predicate, throwFunction0(TooFewError()));
 
 /// Return the last item an observable sequence matching the [predicate], or
 /// the provided default [value] otherwise.
-Operator<T, T> findLastOrDefault<T>(Predicate1<T> predicate, [T value]) =>
+OperatorFunction<T, T> findLastOrDefault<T>(Predicate1<T> predicate,
+        [T value]) =>
     findLastOrElse(predicate, constantFunction0(value));
 
 /// Return the last item an observable sequence matching the [predicate], or
 /// evaluate the provided [callback] otherwise.
-Operator<T, T> findLastOrElse<T>(Predicate1<T> predicate, Map0<T> callback) =>
-    (subscriber, source) =>
-        source.subscribe(_FindLastSubscriber(subscriber, predicate, callback));
+OperatorFunction<T, T> findLastOrElse<T>(
+        Predicate1<T> predicate, Map0<T> callback) =>
+    (source) => source.lift((source, subscriber) => source
+        .subscribe(_FindLastSubscriber<T>(subscriber, predicate, callback)));
 
 class _FindLastSubscriber<T> extends Subscriber<T> {
   final Predicate1<T> predicate;

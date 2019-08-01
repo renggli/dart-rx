@@ -11,8 +11,8 @@ import 'package:rx/src/observers/inner.dart';
 
 /// Combines multiple Observables to create an Observable whose values are
 /// calculated from the next value of each of its input Observables.
-Operator<Observable<T>, List<T>> zip<T>() =>
-    (subscriber, source) => source.subscribe(_ZipSubscriber(subscriber));
+OperatorFunction<Observable<T>, List<T>> zip<T>() => (source) => source.lift(
+    (source, subscriber) => source.subscribe(_ZipSubscriber<T>(subscriber)));
 
 class _ZipSubscriber<T> extends Subscriber<Observable<T>>
     implements InnerEvents<T, int> {

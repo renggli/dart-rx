@@ -5,8 +5,9 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
-Operator<Event<T>, T> dematerialize<T>() => (subscriber, source) =>
-    source.subscribe(_DematerializeSubscriber<T>(subscriber));
+OperatorFunction<Event<T>, T> dematerialize<T>() =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_DematerializeSubscriber<T>(subscriber)));
 
 class _DematerializeSubscriber<T> extends Subscriber<Event<T>> {
   _DematerializeSubscriber(Observer<T> destination) : super(destination);

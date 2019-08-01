@@ -13,15 +13,16 @@ typedef CatchHandler<T> = Function(Object error, [StackTrace stackTrace]);
 
 /// Catches errors on the observable to be handled by returning a new
 /// observable or throwing an error.
-Operator<T, T> catchError<T>(CatchHandler<T> handler) => (subscriber, source) =>
-    source.subscribe(_CatchErrorSubscriber(subscriber, source, handler));
+OperatorFunction<T, T> catchError<T>(CatchHandler<T> handler) =>
+    (source) => source.lift((source, subscriber) => source
+        .subscribe(_CatchErrorSubscriber<T>(source, subscriber, handler)));
 
 class _CatchErrorSubscriber<T> extends Subscriber<T>
     implements InnerEvents<T, void> {
   final Observable<T> source;
   final CatchHandler<T> handler;
 
-  _CatchErrorSubscriber(Observer<T> destination, this.source, this.handler)
+  _CatchErrorSubscriber(this.source, Observer<T> destination, this.handler)
       : super(destination);
 
   @override

@@ -7,9 +7,9 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/shared/functions.dart';
 
 /// Re-emits all notifications from the source with a custom scheduler.
-Operator<T, T> observeOn<T>(Scheduler scheduler, {Duration delay}) =>
-    (subscriber, source) =>
-        source.subscribe(_ObserveOnSubscriber(subscriber, scheduler, delay));
+OperatorFunction<T, T> observeOn<T>(Scheduler scheduler, {Duration delay}) =>
+    (source) => source.lift((source, subscriber) => source
+        .subscribe(_ObserveOnSubscriber<T>(subscriber, scheduler, delay)));
 
 class _ObserveOnSubscriber<T> extends Subscriber<T> {
   final Scheduler scheduler;

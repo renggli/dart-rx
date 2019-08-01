@@ -3,6 +3,7 @@ library rx.example.example;
 import 'package:more/collection.dart';
 import 'package:rx/operators.dart' as ops;
 import 'package:rx/rx.dart' as rx;
+import 'package:rx/src/operators/multicast.dart';
 
 rx.Observer<T> printObserver<T>(String name) => rx.Observer(
       next: (value) => print('$name.next($value)'),
@@ -50,16 +51,22 @@ void main() {
   final throwError = rx.throwError(Exception('Hello World'));
   throwError.subscribe(printObserver('throw'));
 
-  // Other:
+  // double subscription
   final transformed = rx
       .fromIterable(IntegerRange(0, 100))
-      .lift(ops.filter((value) => value.isEven))
-      .lift(ops.map((value) => '{value * value}'))
-      .lift(ops.filter((value) => value.length < 3));
-
+      .pipe(ops.filter((value) => value.isEven))
+      .pipe(ops.map((value) => '{value * value}'))
+      .pipe(ops.filter((value) => value.length < 3));
   transformed.subscribe(printObserver('one'));
   transformed.subscribe(printObserver('two'));
 
+  // subject subscription
+  final subject =
+      rx.fromIterable(IntegerRange(0, 100, 25)).pipe(publishReplay());
+  subject.subscribe(printObserver('subject1'));
+  subject.subscribe(printObserver('subject2'));
+
+  // timer
   final obs = rx.timer(
       delay: const Duration(seconds: 2),
       period: const Duration(milliseconds: 500));

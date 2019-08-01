@@ -8,8 +8,9 @@ import 'package:rx/src/shared/functions.dart';
 
 /// Filter items emitted by the source Observable by only emitting those that
 /// satisfy a specified predicate.
-Operator<T, T> filter<T>(Predicate1<T> predicate) => (subscriber, source) =>
-    source.subscribe(_FilterSubscriber(subscriber, predicate));
+OperatorFunction<T, T> filter<T>(Predicate1<T> predicate) =>
+    (source) => source.lift<T>((source, subscriber) =>
+        source.subscribe(_FilterSubscriber<T>(subscriber, predicate)));
 
 class _FilterSubscriber<T> extends Subscriber<T> {
   final Predicate1<T> predicate;

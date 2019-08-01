@@ -7,8 +7,9 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/shared/functions.dart';
 
 /// Skips over the values while the [predicate] is `true`.
-Operator<T, T> skipWhile<T>(Predicate1<T> predicate) => (subscriber, source) =>
-    source.subscribe(_SkipWhileSubscriber(subscriber, predicate));
+OperatorFunction<T, T> skipWhile<T>(Predicate1<T> predicate) =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_SkipWhileSubscriber<T>(subscriber, predicate)));
 
 class _SkipWhileSubscriber<T> extends Subscriber<T> {
   final Predicate1<T> predicate;

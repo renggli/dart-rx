@@ -8,13 +8,13 @@ import 'package:rx/src/shared/functions.dart';
 
 /// Applies a given project function to each value emitted by the source
 /// Observable, and emits the resulting values as an Observable.
-Operator<T, S> map<T, S>(Map1<T, S> transform) => (subscriber, source) =>
-    source.subscribe(_MapSubscriber(subscriber, transform));
+OperatorFunction<T, S> map<T, S>(Map1<T, S> transform) =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_MapSubscriber<T, S>(subscriber, transform)));
 
 /// Emits the given constant value on the output Observable every time the
 /// source Observable emits a value.
-Operator<T, S> mapTo<T, S>(S value) => (subscriber, source) =>
-    source.subscribe(_MapSubscriber(subscriber, constantFunction1(value)));
+OperatorFunction<T, S> mapTo<T, S>(S value) => map(constantFunction1(value));
 
 class _MapSubscriber<T, S> extends Subscriber<T> {
   final Map1<T, S> transform;

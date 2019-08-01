@@ -6,8 +6,9 @@ import 'package:rx/src/core/subscriber.dart';
 
 /// Emits a given value if the source completes without emitting any value,
 /// otherwise mirrors the source.
-Operator<T, T> defaultIfEmpty<T>([T value]) => (subscriber, source) =>
-    source.subscribe(_DefaultIfEmptySubscriber(subscriber, value));
+OperatorFunction<T, T> defaultIfEmpty<T>([T value]) =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_DefaultIfEmptySubscriber<T>(subscriber, value)));
 
 class _DefaultIfEmptySubscriber<T> extends Subscriber<T> {
   final T defaultValue;

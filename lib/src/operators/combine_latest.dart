@@ -9,8 +9,9 @@ import 'package:rx/src/observers/inner.dart';
 
 /// Combines multiple Observables to create an Observable whose values are
 /// calculated from the latest values of each of its input Observables.
-Operator<Observable<T>, List<T>> combineLatest<T>() => (subscriber, source) =>
-    source.subscribe(_CombineLatestSubscriber(subscriber));
+OperatorFunction<Observable<T>, List<T>> combineLatest<T>() =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_CombineLatestSubscriber<T>(subscriber)));
 
 class _CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
     implements InnerEvents<T, int> {

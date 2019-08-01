@@ -498,14 +498,14 @@ void main() {
       expect(actual, scheduler.isObservable('-----(0|)', values: values));
     });
     test('periodic', () {
-      final actual = timer(period: scheduler.stepDuration * 2).lift(take(5));
+      final actual = timer(period: scheduler.stepDuration * 2).pipe(take(5));
       expect(actual, scheduler.isObservable('0-1-2-3-(4|)', values: values));
     });
     test('delay & periodic', () {
       final actual = timer(
               delay: scheduler.stepDuration * 3,
               period: scheduler.stepDuration * 2)
-          .lift(take(5));
+          .pipe(take(5));
       expect(actual, scheduler.isObservable('---0-1-2-3-(4|)', values: values));
     });
   });

@@ -10,4 +10,4 @@ import 'iterable.dart';
 /// complete then subscribe to the next one.
 Observable<T> concat<T>(Iterable<Observable<T>> observables) =>
     fromIterable(observables)
-        .lift(mergeMap((observable) => observable, concurrent: 1));
+        .pipe(mergeMap((observable) => observable, concurrent: 1));

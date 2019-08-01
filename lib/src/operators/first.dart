@@ -9,33 +9,35 @@ import 'package:rx/src/shared/functions.dart';
 
 /// Return the first item of an observable sequence, or emits an
 /// [TooFewError] otherwise.
-Operator<T, T> first<T>() => firstOrElse(throwFunction0(TooFewError()));
+OperatorFunction<T, T> first<T>() => firstOrElse(throwFunction0(TooFewError()));
 
 /// Return the first item of an observable sequence, or the provided
 /// default [value] otherwise.
-Operator<T, T> firstOrDefault<T>([T value]) =>
+OperatorFunction<T, T> firstOrDefault<T>([T value]) =>
     firstOrElse(constantFunction0(value));
 
 /// Return the first item of an observable sequence, or evaluate the
 /// provided [callback] otherwise.
-Operator<T, T> firstOrElse<T>(Map0<T> callback) =>
+OperatorFunction<T, T> firstOrElse<T>(Map0<T> callback) =>
     findFirstOrElse<T>(constantFunction1(true), callback);
 
 /// Return the first item an observable sequence matching the [predicate], or
 /// emits an [TooFewError] otherwise.
-Operator<T, T> findFirst<T>(Predicate1<T> predicate) =>
+OperatorFunction<T, T> findFirst<T>(Predicate1<T> predicate) =>
     findFirstOrElse(predicate, throwFunction0(TooFewError()));
 
 /// Return the first item an observable sequence matching the [predicate], or
 /// the provided default [value] otherwise.
-Operator<T, T> findFirstOrDefault<T>(Predicate1<T> predicate, [T value]) =>
+OperatorFunction<T, T> findFirstOrDefault<T>(Predicate1<T> predicate,
+        [T value]) =>
     findFirstOrElse(predicate, constantFunction0(value));
 
 /// Return the first item an observable sequence matching the [predicate], or
 /// evaluate the provided [callback] otherwise.
-Operator<T, T> findFirstOrElse<T>(Predicate1<T> predicate, Map0<T> callback) =>
-    (subscriber, source) =>
-        source.subscribe(_FindFirstSubscriber(subscriber, predicate, callback));
+OperatorFunction<T, T> findFirstOrElse<T>(
+        Predicate1<T> predicate, Map0<T> callback) =>
+    (source) => source.lift((source, subscriber) => source
+        .subscribe(_FindFirstSubscriber<T>(subscriber, predicate, callback)));
 
 class _FindFirstSubscriber<T> extends Subscriber<T> {
   final Predicate1<T> predicate;

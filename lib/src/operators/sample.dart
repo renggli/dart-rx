@@ -10,9 +10,9 @@ import 'package:rx/src/observers/inner.dart';
 
 /// Emits the most recently emitted value from the source [Observable] whenever
 /// the `trigger` [Observable] emits.
-Operator<T, T> sample<T>(Observable trigger, {Scheduler scheduler}) =>
-    (subscriber, source) =>
-        source.subscribe(_SampleSubscriber(subscriber, trigger));
+OperatorFunction<T, T> sample<T>(Observable trigger, {Scheduler scheduler}) =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_SampleSubscriber<T>(subscriber, trigger)));
 
 class _SampleSubscriber<T> extends Subscriber<T>
     implements InnerEvents<T, void> {

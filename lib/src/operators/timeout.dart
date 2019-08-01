@@ -10,9 +10,10 @@ import 'package:rx/src/schedulers/settings.dart';
 
 /// Completes with a [TimeoutError], if the observable does not complete within
 /// the given duration.
-Operator<T, T> timeout<T>(Duration duration, {Scheduler scheduler}) =>
-    (subscriber, source) => source.subscribe(_TimeoutSubscriber(
-        subscriber, duration, scheduler ?? defaultScheduler));
+OperatorFunction<T, T> timeout<T>(Duration duration, {Scheduler scheduler}) =>
+    (source) => source.lift((source, subscriber) => source.subscribe(
+        _TimeoutSubscriber<T>(
+            subscriber, duration, scheduler ?? defaultScheduler)));
 
 class _TimeoutSubscriber<T> extends Subscriber<T> {
   Subscription subscription;

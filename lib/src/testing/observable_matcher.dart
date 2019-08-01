@@ -36,8 +36,8 @@ class ObservableMatcher<T> {
 
     final events = <TestEvent<T>>[];
     final subscription = observable
-        .lift(materialize())
-        .lift(map((event) => TestEvent(getIndex(), event)))
+        .pipe(materialize())
+        .pipe(map((event) => TestEvent(getIndex(), event)))
         .subscribe(Observer.next(events.add));
 
     while (!subscription.isClosed) {

@@ -6,9 +6,14 @@ import 'subscriber.dart';
 import 'subscription.dart';
 
 abstract class Observable<T> {
-  Observable<S> lift<S>(Operator<T, S> operator) =>
+  /// Creates a new observable with the provided [operator].
+  Observable<R> lift<R>(Operator<T, R> operator) =>
       _OperatorObservable(this, operator);
 
+  /// Creates a new observable by chaining a sequence of operator functions.
+  Observable<R> pipe<R>(OperatorFunction<T, R> function) => function(this);
+
+  /// Subscribes with the provided [observer].
   Subscription subscribe(Observer<T> observer);
 }
 
@@ -21,7 +26,7 @@ class _OperatorObservable<T, R> extends Observable<R> {
   @override
   Subscription subscribe(Observer<R> observer) {
     final subscriber = Subscriber<R>(observer);
-    subscriber.add(operator.call(subscriber, source));
+    subscriber.add(operator(source, subscriber));
     return subscriber;
   }
 }

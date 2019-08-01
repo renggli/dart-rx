@@ -11,4 +11,4 @@ import 'package:rx/src/schedulers/immediate.dart';
 Observable<List<T>> combineLatest<T>(Iterable<Observable<T>> iterable,
         {Scheduler scheduler}) =>
     fromIterable(iterable, scheduler: scheduler ?? ImmediateScheduler())
-        .lift(operators.combineLatest());
+        .pipe(operators.combineLatest());

@@ -11,11 +11,11 @@ typedef DistinctEqualsFunction<T> = bool Function(T value1, T value2);
 typedef DistinctHashCodeFunction<T> = int Function(T value);
 
 /// Emits all items emitted by the source that are distinct from previous items.
-Operator<T, T> distinct<T>(
+OperatorFunction<T, T> distinct<T>(
         {DistinctEqualsFunction<T> equals,
         DistinctHashCodeFunction<T> hashCode}) =>
-    (subscriber, source) =>
-        source.subscribe(_DistinctSubscriber(subscriber, equals, hashCode));
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_DistinctSubscriber<T>(subscriber, equals, hashCode)));
 
 class _DistinctSubscriber<T> extends Subscriber<T> {
   final Set<T> values;

@@ -12,14 +12,14 @@ import 'package:rx/src/schedulers/settings.dart';
 /// Gathers items emitted by the source and bundles these items when the buffer
 /// reached a [maxLength], when the buffer reached a [maxAge], or when another
 /// observable [trigger]s.
-Operator<T, List<T>> buffer<T>({
-  Observable trigger,
-  int maxLength,
-  Duration maxAge,
-  Scheduler scheduler,
-}) =>
-    (subscriber, source) => source.subscribe(_BufferSubscriber(
-        subscriber, scheduler ?? defaultScheduler, trigger, maxLength, maxAge));
+OperatorFunction<T, List<T>> buffer<T>(
+        {Observable trigger,
+        int maxLength,
+        Duration maxAge,
+        Scheduler scheduler}) =>
+    (source) => source.lift((source, subscriber) => source.subscribe(
+        _BufferSubscriber<T>(subscriber, scheduler ?? defaultScheduler, trigger,
+            maxLength, maxAge)));
 
 class _BufferSubscriber<T> extends Subscriber<T>
     implements InnerEvents<T, void> {

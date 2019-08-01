@@ -7,8 +7,9 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/shared/functions.dart';
 
 /// Emits values while the [predicate] returns `true`.
-Operator<T, T> takeWhile<T>(Predicate1<T> predicate) => (subscriber, source) =>
-    source.subscribe(_TakeWhileSubscriber(subscriber, predicate));
+OperatorFunction<T, T> takeWhile<T>(Predicate1<T> predicate) =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_TakeWhileSubscriber<T>(subscriber, predicate)));
 
 class _TakeWhileSubscriber<T> extends Subscriber<T> {
   final Predicate1<T> predicate;

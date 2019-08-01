@@ -5,8 +5,9 @@ import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 
 /// Skips over the first [count] values before starting to emit.
-Operator<T, T> skip<T>([int count = 1]) => (subscriber, source) =>
-    source.subscribe(_SkipSubscriber(subscriber, count));
+OperatorFunction<T, T> skip<T>([int count = 1]) =>
+    (source) => source.lift((source, subscriber) =>
+        source.subscribe(_SkipSubscriber<T>(subscriber, count)));
 
 class _SkipSubscriber<T> extends Subscriber<T> {
   int count = 0;

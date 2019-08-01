@@ -9,9 +9,10 @@ import 'package:rx/src/schedulers/settings.dart';
 
 /// Emits a value from the source Observable only after a particular time span
 /// has passed without another source emission.
-Operator<T, T> debounce<T>({Duration delay, Scheduler scheduler}) =>
-    (subscriber, source) => source.subscribe(
-        _DebounceSubscriber(subscriber, scheduler ?? defaultScheduler, delay));
+OperatorFunction<T, T> debounce<T>({Duration delay, Scheduler scheduler}) =>
+    (source) => source.lift((source, subscriber) => source.subscribe(
+        _DebounceSubscriber<T>(
+            subscriber, scheduler ?? defaultScheduler, delay)));
 
 class _DebounceSubscriber<T> extends Subscriber<T> {
   final Scheduler scheduler;
