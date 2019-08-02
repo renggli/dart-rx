@@ -1,10 +1,8 @@
 library rx.example.example;
 
 import 'package:more/collection.dart';
-import 'package:rx/observables.dart';
 import 'package:rx/operators.dart' as ops;
 import 'package:rx/rx.dart' as rx;
-import 'package:rx/src/operators/multicast.dart';
 
 rx.Observer<T> printObserver<T>(String name) => rx.Observer(
       next: (value) => print('$name.next($value)'),
@@ -62,9 +60,10 @@ void main() {
   transformed.subscribe(printObserver('two'));
 
   // subject subscription
-  final subject =
-      rx.fromIterable(IntegerRange(0, 100, 25)).pipe(publishReplay());
-  (subject as ConnectableObservable).connect();
+  final subject = rx
+      .fromIterable(IntegerRange(0, 100))
+      .pipe(ops.publishReplay())
+      .pipe(ops.refCount());
   subject.subscribe(printObserver('subject1'));
   subject.subscribe(printObserver('subject2'));
 

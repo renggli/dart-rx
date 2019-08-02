@@ -22,6 +22,7 @@ export 'src/operators/materialize.dart';
 export 'src/operators/merge.dart';
 export 'src/operators/multicast.dart';
 export 'src/operators/observe_on.dart';
+export 'src/operators/publish.dart';
 export 'src/operators/ref_count.dart';
 export 'src/operators/sample.dart';
 export 'src/operators/scan.dart';

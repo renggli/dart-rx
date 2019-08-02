@@ -5,6 +5,7 @@ import 'package:rx/core.dart';
 import 'package:rx/observables.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/schedulers.dart';
+import 'package:rx/shared.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart' hide isEmpty;
 
@@ -1155,95 +1156,51 @@ void main() {
     });
   });
   group('multicast', () {
-    group('publishBehavior', () {
-      test('incomplete sequence', () {
-        final source = scheduler.cold<String>('-a-b-c-');
-        final actual =
-            source.pipe(publishBehavior('x')) as ConnectableObservable;
-        expect(actual, scheduler.isObservable<String>('x'));
-        actual.connect();
-        expect(actual, scheduler.isObservable<String>('xa-b-c-'));
-        expect(actual, scheduler.isObservable<String>('c'));
-      });
-      test('completed sequence', () {
-        final source = scheduler.cold<String>('-a-b-c-|');
-        final actual =
-            source.pipe(publishBehavior('x')) as ConnectableObservable;
-        expect(actual, scheduler.isObservable<String>('x'));
-        actual.connect();
-        expect(actual, scheduler.isObservable<String>('xa-b-c-|'));
-        expect(actual, scheduler.isObservable<String>('(c|)'));
-      });
-      test('errored sequence', () {
-        final source = scheduler.cold<String>('-a-b-c-#');
-        final actual =
-            source.pipe(publishBehavior('x')) as ConnectableObservable;
-        expect(actual, scheduler.isObservable<String>('x'));
-        actual.connect();
-        expect(actual, scheduler.isObservable<String>('xa-b-c-#'));
-        expect(actual, scheduler.isObservable<String>('#'));
-      });
+    test('argument error', () {
+      expect(() => multicast(subject: Subject(), factory: () => Subject()),
+          throwsArgumentError);
     });
-    group('publishLast', () {
-      test('incomplete sequence', () {
-        final source = scheduler.cold<String>('-a-b-c-');
-        final actual = source.pipe(publishLast()) as ConnectableObservable;
-        expect(actual, scheduler.isObservable<String>(''));
-        actual.connect();
-        expect(actual, scheduler.isObservable<String>(''));
-        expect(actual, scheduler.isObservable<String>(''));
-      });
-      test('completed sequence', () {
-        final source = scheduler.cold<String>('-a-b-c-|');
-        final actual = source.pipe(publishLast()) as ConnectableObservable;
-        expect(actual, scheduler.isObservable<String>(''));
-        actual.connect();
-        expect(actual, scheduler.isObservable<String>('-------(c|)'));
-        expect(actual, scheduler.isObservable<String>('(c|)'));
-      });
-      test('errored sequence', () {
-        final source = scheduler.cold<String>('-a-b-c-#');
-        final actual = source.pipe(publishLast()) as ConnectableObservable;
-        expect(actual, scheduler.isObservable<String>(''));
-        actual.connect();
-        expect(actual, scheduler.isObservable<String>('-------#'));
-        expect(actual, scheduler.isObservable<String>('#'));
-      });
+    test('incomplete sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-');
+      final actual = source.pipe(multicast()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
+      expect(actual, scheduler.isObservable<String>(''));
     });
-    group('publishReplay', () {
-      test('incomplete sequence', () {
-        final source = scheduler.cold<String>('-a-b-c-');
-        final actual = source.pipe(publishReplay()) as ConnectableObservable;
-        expect(actual, scheduler.isObservable<String>(''));
-        actual.connect();
-        expect(actual, scheduler.isObservable<String>('-a-b-c-'));
-        expect(actual, scheduler.isObservable<String>('(abc)'));
-      });
-      test('completed sequence', () {
-        final source = scheduler.cold<String>('-a-b-c-|');
-        final actual = source.pipe(publishReplay()) as ConnectableObservable;
-        expect(actual, scheduler.isObservable<String>(''));
-        actual.connect();
-        expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
-        expect(actual, scheduler.isObservable<String>('(abc|)'));
-      });
-      test('errored sequence', () {
-        final source = scheduler.cold<String>('-a-b-c-#');
-        final actual = source.pipe(publishReplay()) as ConnectableObservable;
-        expect(actual, scheduler.isObservable<String>(''));
-        actual.connect();
-        expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
-        expect(actual, scheduler.isObservable<String>('#'));
-      });
-      test('limited sequence', () {
-        final source = scheduler.cold<String>('-a-b-c-');
-        final actual =
-            source.pipe(publishReplay(bufferSize: 2)) as ConnectableObservable;
-        expect(actual, scheduler.isObservable<String>(''));
-        actual.connect();
-        expect(actual, scheduler.isObservable<String>('-a-b-c-'));
-        expect(actual, scheduler.isObservable<String>('(bc)'));
-      });
+    test('complete sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-|');
+      final actual = source.pipe(multicast()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
+      expect(actual, scheduler.isObservable<String>('|'));
+    });
+    test('error sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-#');
+      final actual = source.pipe(multicast()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
+      expect(actual, scheduler.isObservable<String>('#'));
+    });
+    test('incomplete selector', () {
+      final source = scheduler.cold<String>('-a-b-c-');
+      final actual = source.pipe(multicast(selector: identityFunction));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
+    });
+    test('complete selector', () {
+      final source = scheduler.cold<String>('-a-b-c-|');
+      final actual = source.pipe(multicast(selector: identityFunction));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
+    });
+    test('error selector', () {
+      final source = scheduler.cold<String>('-a-b-c-#');
+      final actual = source.pipe(multicast(selector: identityFunction));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
     });
   });
   group('observeOn', () {
@@ -1272,9 +1229,138 @@ void main() {
       expect(actual, scheduler.isObservable<String>('--a-b-c-#'));
     });
   });
-  group('refCount', () {
-    test('failure', () {});
+  group('publish', () {
+    test('incomplete sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-');
+      final actual = source.pipe(publish()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
+      expect(actual, scheduler.isObservable<String>(''));
+    });
+    test('complete sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-|');
+      final actual = source.pipe(publish()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
+      expect(actual, scheduler.isObservable<String>('|'));
+    });
+    test('error sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-#');
+      final actual = source.pipe(publish()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
+      expect(actual, scheduler.isObservable<String>('#'));
+    });
+    test('incomplete selector', () {
+      final source = scheduler.cold<String>('-a-b-c-');
+      final actual = source.pipe(publish(selector: identityFunction));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
+    });
+    test('complete selector', () {
+      final source = scheduler.cold<String>('-a-b-c-|');
+      final actual = source.pipe(publish(selector: identityFunction));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
+    });
+    test('error selector', () {
+      final source = scheduler.cold<String>('-a-b-c-#');
+      final actual = source.pipe(publish(selector: identityFunction));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
+      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
+    });
   });
+  group('publishBehavior', () {
+    test('incomplete sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-');
+      final actual = source.pipe(publishBehavior('x')) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>('x'));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('xa-b-c-'));
+      expect(actual, scheduler.isObservable<String>('c'));
+    });
+    test('complete sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-|');
+      final actual = source.pipe(publishBehavior('x')) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>('x'));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('xa-b-c-|'));
+      expect(actual, scheduler.isObservable<String>('(c|)'));
+    });
+    test('error sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-#');
+      final actual = source.pipe(publishBehavior('x')) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>('x'));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('xa-b-c-#'));
+      expect(actual, scheduler.isObservable<String>('#'));
+    });
+  });
+  group('publishLast', () {
+    test('incomplete sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-');
+      final actual = source.pipe(publishLast()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>(''));
+      expect(actual, scheduler.isObservable<String>(''));
+    });
+    test('complete sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-|');
+      final actual = source.pipe(publishLast()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-------(c|)'));
+      expect(actual, scheduler.isObservable<String>('(c|)'));
+    });
+    test('error sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-#');
+      final actual = source.pipe(publishLast()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-------#'));
+      expect(actual, scheduler.isObservable<String>('#'));
+    });
+  });
+  group('publishReplay', () {
+    test('incomplete sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-');
+      final actual = source.pipe(publishReplay()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
+      expect(actual, scheduler.isObservable<String>('(abc)'));
+    });
+    test('complete sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-|');
+      final actual = source.pipe(publishReplay()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
+      expect(actual, scheduler.isObservable<String>('(abc|)'));
+    });
+    test('error sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-#');
+      final actual = source.pipe(publishReplay()) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
+      expect(actual, scheduler.isObservable<String>('#'));
+    });
+    test('size sequence', () {
+      final source = scheduler.cold<String>('-a-b-c-');
+      final actual =
+          source.pipe(publishReplay(bufferSize: 2)) as ConnectableObservable;
+      expect(actual, scheduler.isObservable<String>(''));
+      actual.connect();
+      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
+      expect(actual, scheduler.isObservable<String>('(bc)'));
+    });
+  });
+  group('refCount', () {});
   group('sample', () {
     test('samples on value trigger', () {
       final actual = scheduler
