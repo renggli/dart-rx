@@ -16,7 +16,9 @@ OperatorFunction<T, R> multicast<T, R>({
   Map0<Subject<T>> factory,
   Map1<Observable<T>, Observable<R>> selector,
 }) {
-  if (subject != null && factory != null) {
+  if (subject == null && factory == null) {
+    throw ArgumentError.notNull('subject');
+  } else if (subject != null && factory != null) {
     throw ArgumentError.value(
         subject, 'subject', 'Subject and factory cannot both be given.');
   }
@@ -32,17 +34,25 @@ OperatorFunction<T, R> multicast<T, R>({
         });
 }
 
+/// Creates a [ConnectableObservable] that waits until its [connect] is called
+/// before it begins emitting items to all subscribers.
+OperatorFunction<T, R> publish<T, R>(
+        {Map1<Observable<T>, Observable<R>> selector}) =>
+    selector == null
+        ? multicast<T, R>(subject: Subject<T>())
+        : multicast<T, R>(factory: () => Subject<T>(), selector: selector);
+
 /// Creates a [ConnectableObservable] that emits its initial or last seen value
 /// to its subscribers.
 OperatorFunction<T, T> publishBehavior<T>(T value) =>
-    multicast<T, T>(factory: () => BehaviorSubject<T>(value));
+    (source) => multicast<T, T>(subject: BehaviorSubject<T>(value))(source);
 
 /// Creates a [ConnectableObservable] that emits its last value to all its
 /// subscribers on completion.
 OperatorFunction<T, T> publishLast<T>() =>
-    multicast<T, T>(factory: () => AsyncSubject<T>());
+    (source) => multicast<T, T>(subject: AsyncSubject<T>())(source);
 
 /// Creates a [ConnectableObservable] that replays all its previous values to
 /// new subscribers.
-OperatorFunction<T, T> publishReplay<T>({int bufferSize}) =>
-    multicast<T, T>(factory: () => ReplaySubject<T>(bufferSize: bufferSize));
+OperatorFunction<T, T> publishReplay<T>({int bufferSize}) => (source) =>
+    multicast<T, T>(subject: ReplaySubject<T>(bufferSize: bufferSize))(source);

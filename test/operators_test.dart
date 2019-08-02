@@ -1272,6 +1272,9 @@ void main() {
       expect(actual, scheduler.isObservable<String>('--a-b-c-#'));
     });
   });
+  group('refCount', () {
+    test('failure', () {});
+  });
   group('sample', () {
     test('samples on value trigger', () {
       final actual = scheduler
