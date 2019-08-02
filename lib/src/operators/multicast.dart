@@ -6,8 +6,8 @@ import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subject.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
+import 'package:rx/src/subjects/async_subject.dart';
 import 'package:rx/src/subjects/behavior_subject.dart';
-import 'package:rx/src/subjects/last_subject.dart';
 import 'package:rx/src/subjects/replay_subject.dart';
 
 /// Returns an multicast observable that shares the underlying stream.
@@ -32,11 +32,17 @@ OperatorFunction<T, R> multicast<T, R>({
         });
 }
 
+/// Creates a [ConnectableObservable] that emits its initial or last seen value
+/// to its subscribers.
 OperatorFunction<T, T> publishBehavior<T>(T value) =>
     multicast<T, T>(factory: () => BehaviorSubject<T>(value));
 
+/// Creates a [ConnectableObservable] that emits its last value to all its
+/// subscribers on completion.
 OperatorFunction<T, T> publishLast<T>() =>
-    multicast<T, T>(factory: () => LastSubject<T>());
+    multicast<T, T>(factory: () => AsyncSubject<T>());
 
+/// Creates a [ConnectableObservable] that replays all its previous values to
+/// new subscribers.
 OperatorFunction<T, T> publishReplay<T>({int bufferSize}) =>
     multicast<T, T>(factory: () => ReplaySubject<T>(bufferSize: bufferSize));

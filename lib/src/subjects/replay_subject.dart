@@ -5,7 +5,7 @@ import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/subject.dart';
 import 'package:rx/src/core/subscription.dart';
 
-/// A variant of Subject that "replays" or emits old values to new subscribers.
+/// A [Subject] that replays all its previous values to new subscribers.
 class ReplaySubject<T> extends Subject<T> {
   final int bufferSize;
 
