@@ -4,7 +4,6 @@ import 'package:rx/constructors.dart';
 import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/schedulers.dart';
-import 'package:rx/shared.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart' hide isEmpty;
 
@@ -1183,24 +1182,6 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
       expect(actual, scheduler.isObservable<String>('#'));
     });
-    test('incomplete selector', () {
-      final source = scheduler.cold<String>('-a-b-c-');
-      final actual = source.pipe(multicast(selector: identityFunction));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
-    });
-    test('complete selector', () {
-      final source = scheduler.cold<String>('-a-b-c-|');
-      final actual = source.pipe(multicast(selector: identityFunction));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
-    });
-    test('error selector', () {
-      final source = scheduler.cold<String>('-a-b-c-#');
-      final actual = source.pipe(multicast(selector: identityFunction));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
-    });
   });
   group('observeOn', () {
     test('plain sequence', () {
@@ -1226,50 +1207,6 @@ void main() {
           .cold<String>('-a-b-c-#')
           .pipe(observeOn(scheduler, delay: scheduler.stepDuration));
       expect(actual, scheduler.isObservable<String>('--a-b-c-#'));
-    });
-  });
-  group('publish', () {
-    test('incomplete sequence', () {
-      final source = scheduler.cold<String>('-a-b-c-');
-      final actual = source.pipe(publish());
-      expect(actual, scheduler.isObservable<String>(''));
-      actual.connect();
-      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
-      expect(actual, scheduler.isObservable<String>(''));
-    });
-    test('complete sequence', () {
-      final source = scheduler.cold<String>('-a-b-c-|');
-      final actual = source.pipe(publish());
-      expect(actual, scheduler.isObservable<String>(''));
-      actual.connect();
-      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
-      expect(actual, scheduler.isObservable<String>('|'));
-    });
-    test('error sequence', () {
-      final source = scheduler.cold<String>('-a-b-c-#');
-      final actual = source.pipe(publish());
-      expect(actual, scheduler.isObservable<String>(''));
-      actual.connect();
-      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
-      expect(actual, scheduler.isObservable<String>('#'));
-    });
-    test('incomplete selector', () {
-      final source = scheduler.cold<String>('-a-b-c-');
-      final actual = source.pipe(publish(selector: identityFunction));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-'));
-    });
-    test('complete selector', () {
-      final source = scheduler.cold<String>('-a-b-c-|');
-      final actual = source.pipe(publish(selector: identityFunction));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
-    });
-    test('error selector', () {
-      final source = scheduler.cold<String>('-a-b-c-#');
-      final actual = source.pipe(publish(selector: identityFunction));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
-      expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
     });
   });
   group('publishBehavior', () {

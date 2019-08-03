@@ -13,7 +13,7 @@ abstract class Observable<T> {
       _OperatorObservable(this, operator);
 
   /// Creates a new observable by chaining a sequence of operator functions.
-  R pipe<R>(Map1<Observable<T>, R> operatorFunction) => operatorFunction(this);
+  R pipe<R>(Map1<Observable<T>, R> function) => function(this);
 
   /// Subscribes with the provided [observer].
   Subscription subscribe(Observer<T> observer);

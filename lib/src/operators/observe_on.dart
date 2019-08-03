@@ -1,14 +1,13 @@
 library rx.operators.observe_on;
 
-import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/shared/functions.dart';
 
 /// Re-emits all notifications from the source with a custom scheduler.
-Map1<Observable<T>, Observable<T>> observeOn<T>(Scheduler scheduler,
-        {Duration delay}) =>
+OperatorFunction<T, T> observeOn<T>(Scheduler scheduler, {Duration delay}) =>
     (source) => source.lift((source, subscriber) => source
         .subscribe(_ObserveOnSubscriber<T>(subscriber, scheduler, delay)));
 

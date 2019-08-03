@@ -2,17 +2,17 @@ library rx.operators.buffer;
 
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
 import 'package:rx/src/schedulers/settings.dart';
-import 'package:rx/src/shared/functions.dart';
 
 /// Gathers items emitted by the source and bundles these items when the buffer
 /// reached a [maxLength], when the buffer reached a [maxAge], or when another
 /// observable [trigger]s.
-Map1<Observable<T>, Observable<List<T>>> buffer<T>(
+OperatorFunction<T, List<T>> buffer<T>(
         {Observable trigger,
         int maxLength,
         Duration maxAge,

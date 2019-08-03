@@ -1,12 +1,11 @@
 library rx.operators.take;
 
-import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/shared/functions.dart';
 
 /// Emits the first [count] values before completing.
-Map1<Observable<T>, Observable<T>> take<T>([int count = 1]) =>
+OperatorFunction<T, T> take<T>([int count = 1]) =>
     (source) => source.lift((source, subscriber) =>
         source.subscribe(_TakeSubscriber<T>(subscriber, count)));
 

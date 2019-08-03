@@ -1,12 +1,11 @@
 library rx.operators.tap;
 
-import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/shared/functions.dart';
 
 /// Perform a side effect for every emission on the source.
-Map1<Observable<T>, Observable<T>> tap<T>(Observer<T> observer) =>
+OperatorFunction<T, T> tap<T>(Observer<T> observer) =>
     (source) => source.lift((source, subscriber) =>
         source.subscribe(_TapSubscriber<T>(subscriber, observer)));
 

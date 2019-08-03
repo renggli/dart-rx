@@ -1,20 +1,20 @@
 library rx.operators.map;
 
 import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/shared/functions.dart';
 
 /// Applies a given project function to each value emitted by the source
 /// Observable, and emits the resulting values as an Observable.
-Map1<Observable<T>, Observable<R>> map<T, R>(Map1<T, R> transform) =>
+OperatorFunction<T, R> map<T, R>(Map1<T, R> transform) =>
     (source) => source.lift((source, subscriber) =>
         source.subscribe(_MapSubscriber<T, R>(subscriber, transform)));
 
 /// Emits the given constant value on the output Observable every time the
 /// source Observable emits a value.
-Map1<Observable, Observable<R>> mapTo<R>(R value) =>
+OperatorFunction<Object, R> mapTo<R>(R value) =>
     map<Object, R>(constantFunction1(value));
 
 class _MapSubscriber<T, R> extends Subscriber<T> {

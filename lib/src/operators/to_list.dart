@@ -1,13 +1,12 @@
 library rx.operators.to_list;
 
-import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/shared/functions.dart';
 
 /// Returns a [List] from an observable sequence.
-Map1<Observable<T>, Observable<List<T>>> toList<T>(
-        [Map0<List<T>> listConstructor]) =>
+OperatorFunction<T, List<T>> toList<T>([Map0<List<T>> listConstructor]) =>
     (source) => source.lift((source, subscriber) => source.subscribe(
         _ToListSubscriber<T>(
             subscriber, listConstructor != null ? listConstructor() : <T>[])));

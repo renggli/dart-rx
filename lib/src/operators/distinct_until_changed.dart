@@ -1,14 +1,14 @@
 library rx.operators.distinct_until_changed;
 
 import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
+import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/shared/functions.dart';
 
 /// Emits all items emitted by the source Observable that are distinct
 /// from the previous item.
-Map1<Observable<T>, Observable<T>> distinctUntilChanged<T, K>(
+OperatorFunction<T, T> distinctUntilChanged<T, K>(
         {Map1<T, K> key, Predicate2<K, K> compare}) =>
     (source) => source.lift((source, subscriber) =>
         source.subscribe(_DistinctUntilChangedSubscriber<T, K>(
