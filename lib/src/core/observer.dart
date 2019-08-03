@@ -33,7 +33,4 @@ abstract class Observer<T> implements Subscription {
 
   /// Pass completion to the observer.
   void complete();
-
-  /// Hides the identity of the observer.
-  Observer<T> toObserver() => BaseObserver(next, error, complete);
 }
