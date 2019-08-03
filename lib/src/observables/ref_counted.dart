@@ -21,12 +21,15 @@ class RefCountedObservable<T> extends Observable<T> {
       _subscription = observable.connect();
     }
     _count++;
-    return Subscription.create(() {
-      _count--;
-      if (_count == 0) {
-        _subscription.unsubscribe();
-        _subscription = Subscription.empty();
-      }
-    });
+    return Subscription.composite([
+      observable.subscribe(observer),
+      Subscription.create(() {
+        _count--;
+        if (_count == 0) {
+          _subscription.unsubscribe();
+          _subscription = Subscription.empty();
+        }
+      })
+    ]);
   }
 }

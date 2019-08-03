@@ -61,7 +61,7 @@ void main() {
 
   // subject subscription
   final subject = rx
-      .fromIterable(IntegerRange(0, 100))
+      .fromIterable(IntegerRange(0, 100, 25))
       .pipe(ops.publishReplay())
       .pipe(ops.refCount());
   subject.subscribe(printObserver('subject1'));
