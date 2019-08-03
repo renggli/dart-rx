@@ -2,7 +2,6 @@ library rx.test.operators_test;
 
 import 'package:rx/constructors.dart';
 import 'package:rx/core.dart';
-import 'package:rx/observables.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/schedulers.dart';
 import 'package:rx/shared.dart';
@@ -1162,7 +1161,7 @@ void main() {
     });
     test('incomplete sequence', () {
       final source = scheduler.cold<String>('-a-b-c-');
-      final actual = source.pipe(multicast()) as ConnectableObservable;
+      final actual = source.pipe(multicast());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-a-b-c-'));
@@ -1170,7 +1169,7 @@ void main() {
     });
     test('complete sequence', () {
       final source = scheduler.cold<String>('-a-b-c-|');
-      final actual = source.pipe(multicast()) as ConnectableObservable;
+      final actual = source.pipe(multicast());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
@@ -1178,7 +1177,7 @@ void main() {
     });
     test('error sequence', () {
       final source = scheduler.cold<String>('-a-b-c-#');
-      final actual = source.pipe(multicast()) as ConnectableObservable;
+      final actual = source.pipe(multicast());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
@@ -1232,7 +1231,7 @@ void main() {
   group('publish', () {
     test('incomplete sequence', () {
       final source = scheduler.cold<String>('-a-b-c-');
-      final actual = source.pipe(publish()) as ConnectableObservable;
+      final actual = source.pipe(publish());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-a-b-c-'));
@@ -1240,7 +1239,7 @@ void main() {
     });
     test('complete sequence', () {
       final source = scheduler.cold<String>('-a-b-c-|');
-      final actual = source.pipe(publish()) as ConnectableObservable;
+      final actual = source.pipe(publish());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
@@ -1248,7 +1247,7 @@ void main() {
     });
     test('error sequence', () {
       final source = scheduler.cold<String>('-a-b-c-#');
-      final actual = source.pipe(publish()) as ConnectableObservable;
+      final actual = source.pipe(publish());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
@@ -1276,7 +1275,7 @@ void main() {
   group('publishBehavior', () {
     test('incomplete sequence', () {
       final source = scheduler.cold<String>('-a-b-c-');
-      final actual = source.pipe(publishBehavior('x')) as ConnectableObservable;
+      final actual = source.pipe(publishBehavior('x'));
       expect(actual, scheduler.isObservable<String>('x'));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('xa-b-c-'));
@@ -1284,7 +1283,7 @@ void main() {
     });
     test('complete sequence', () {
       final source = scheduler.cold<String>('-a-b-c-|');
-      final actual = source.pipe(publishBehavior('x')) as ConnectableObservable;
+      final actual = source.pipe(publishBehavior('x'));
       expect(actual, scheduler.isObservable<String>('x'));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('xa-b-c-|'));
@@ -1292,7 +1291,7 @@ void main() {
     });
     test('error sequence', () {
       final source = scheduler.cold<String>('-a-b-c-#');
-      final actual = source.pipe(publishBehavior('x')) as ConnectableObservable;
+      final actual = source.pipe(publishBehavior('x'));
       expect(actual, scheduler.isObservable<String>('x'));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('xa-b-c-#'));
@@ -1302,7 +1301,7 @@ void main() {
   group('publishLast', () {
     test('incomplete sequence', () {
       final source = scheduler.cold<String>('-a-b-c-');
-      final actual = source.pipe(publishLast()) as ConnectableObservable;
+      final actual = source.pipe(publishLast());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>(''));
@@ -1310,7 +1309,7 @@ void main() {
     });
     test('complete sequence', () {
       final source = scheduler.cold<String>('-a-b-c-|');
-      final actual = source.pipe(publishLast()) as ConnectableObservable;
+      final actual = source.pipe(publishLast());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-------(c|)'));
@@ -1318,7 +1317,7 @@ void main() {
     });
     test('error sequence', () {
       final source = scheduler.cold<String>('-a-b-c-#');
-      final actual = source.pipe(publishLast()) as ConnectableObservable;
+      final actual = source.pipe(publishLast());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-------#'));
@@ -1328,7 +1327,7 @@ void main() {
   group('publishReplay', () {
     test('incomplete sequence', () {
       final source = scheduler.cold<String>('-a-b-c-');
-      final actual = source.pipe(publishReplay()) as ConnectableObservable;
+      final actual = source.pipe(publishReplay());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-a-b-c-'));
@@ -1336,7 +1335,7 @@ void main() {
     });
     test('complete sequence', () {
       final source = scheduler.cold<String>('-a-b-c-|');
-      final actual = source.pipe(publishReplay()) as ConnectableObservable;
+      final actual = source.pipe(publishReplay());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
@@ -1344,7 +1343,7 @@ void main() {
     });
     test('error sequence', () {
       final source = scheduler.cold<String>('-a-b-c-#');
-      final actual = source.pipe(publishReplay()) as ConnectableObservable;
+      final actual = source.pipe(publishReplay());
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
@@ -1352,8 +1351,7 @@ void main() {
     });
     test('size sequence', () {
       final source = scheduler.cold<String>('-a-b-c-');
-      final actual =
-          source.pipe(publishReplay(bufferSize: 2)) as ConnectableObservable;
+      final actual = source.pipe(publishReplay(bufferSize: 2));
       expect(actual, scheduler.isObservable<String>(''));
       actual.connect();
       expect(actual, scheduler.isObservable<String>('-a-b-c-'));

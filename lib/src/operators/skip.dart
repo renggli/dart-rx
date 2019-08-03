@@ -1,11 +1,12 @@
 library rx.operators.skip;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Skips over the first [count] values before starting to emit.
-OperatorFunction<T, T> skip<T>([int count = 1]) =>
+Map1<Observable<T>, Observable<T>> skip<T>([int count = 1]) =>
     (source) => source.lift((source, subscriber) =>
         source.subscribe(_SkipSubscriber<T>(subscriber, count)));
 

@@ -1,5 +1,7 @@
 library rx.core.observable;
 
+import 'package:rx/src/shared/functions.dart';
+
 import 'observer.dart';
 import 'operator.dart';
 import 'subscriber.dart';
@@ -11,7 +13,7 @@ abstract class Observable<T> {
       _OperatorObservable(this, operator);
 
   /// Creates a new observable by chaining a sequence of operator functions.
-  Observable<R> pipe<R>(OperatorFunction<T, R> function) => function(this);
+  R pipe<R>(Map1<Observable<T>, R> operatorFunction) => operatorFunction(this);
 
   /// Subscribes with the provided [observer].
   Subscription subscribe(Observer<T> observer);

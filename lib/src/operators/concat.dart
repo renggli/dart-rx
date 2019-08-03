@@ -2,10 +2,11 @@ library rx.operators.concat;
 
 import 'package:rx/src/constructors/concat.dart';
 import 'package:rx/src/constructors/from.dart';
-import 'package:rx/src/core/operator.dart';
+import 'package:rx/src/core/observable.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Prepends the emission of items with [object].
-OperatorFunction<T, T> beginWith<T>(
+Map1<Observable<T>, Observable<T>> beginWith<T>(
     /** void|Observable<T>|Iterable<T>|Future<T>|Stream<T>|T */ Object object) {
   final observable = from<T>(object);
   return (source) => source.lift((source, subscriber) =>
@@ -13,7 +14,7 @@ OperatorFunction<T, T> beginWith<T>(
 }
 
 /// Appends the emission of items with [object].
-OperatorFunction<T, T> endWith<T>(
+Map1<Observable<T>, Observable<T>> endWith<T>(
     /** void|Observable<T>|Iterable<T>|Future<T>|Stream<T>|T */ Object object) {
   final observable = from<T>(object);
   return (source) => source.lift((source, subscriber) =>

@@ -1,12 +1,13 @@
 library rx.operators.take_last;
 
 import 'package:collection/collection.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Emits the last [count] values emitted by the source.
-OperatorFunction<T, T> takeLast<T>([int count = 1]) =>
+Map1<Observable<T>, Observable<T>> takeLast<T>([int count = 1]) =>
     (source) => source.lift((source, subscriber) =>
         source.subscribe(_TakeLastSubscriber<T>(subscriber, count)));
 

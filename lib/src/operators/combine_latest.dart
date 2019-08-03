@@ -2,14 +2,14 @@ library rx.operators.combine_latest;
 
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
+import 'package:rx/src/shared/functions.dart';
 
 /// Combines multiple Observables to create an Observable whose values are
 /// calculated from the latest values of each of its input Observables.
-OperatorFunction<Observable<T>, List<T>> combineLatest<T>() =>
+Map1<Observable<Observable<T>>, Observable<List<T>>> combineLatest<T>() =>
     (source) => source.lift((source, subscriber) =>
         source.subscribe(_CombineLatestSubscriber<T>(subscriber)));
 

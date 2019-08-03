@@ -4,17 +4,17 @@ import 'package:rx/src/constructors/from.dart';
 import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
+import 'package:rx/src/shared/functions.dart';
 
 typedef CatchHandler<T> = Object Function(Object error,
     [StackTrace stackTrace]);
 
 /// Catches errors on the observable to be handled by returning a new
 /// observable or throwing an error.
-OperatorFunction<T, T> catchError<T>(CatchHandler<T> handler) =>
+Map1<Observable<T>, Observable<T>> catchError<T>(CatchHandler<T> handler) =>
     (source) => source.lift((source, subscriber) => source
         .subscribe(_CatchErrorSubscriber<T>(source, subscriber, handler)));
 
