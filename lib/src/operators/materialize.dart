@@ -15,17 +15,17 @@ class _MaterializeSubscriber<T> extends Subscriber<T> {
   _MaterializeSubscriber(Observer<Event<T>> destination) : super(destination);
 
   @override
-  void onNext(T value) => doNext(NextEvent<T>(value));
+  void onNext(T value) => doNext(Event<T>.next(value));
 
   @override
   void onError(Object error, [StackTrace stackTrace]) {
-    doNext(ErrorEvent<T>(error, stackTrace));
+    doNext(Event<T>.error(error, stackTrace));
     doComplete();
   }
 
   @override
   void onComplete() {
-    doNext(CompleteEvent<T>());
+    doNext(Event<T>.complete());
     doComplete();
   }
 }

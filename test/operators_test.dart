@@ -265,11 +265,11 @@ void main() {
   });
   group('dematerialize', () {
     final values = <String, Event<String>>{
-      'a': const NextEvent('a'),
-      'b': const NextEvent('b'),
-      'c': const CompleteEvent(),
-      'e': const ErrorEvent('Error'),
-      'f': const TestEvent(0, NextEvent('a')),
+      'a': Event.next('a'),
+      'b': Event.next('b'),
+      'c': Event.complete(),
+      'e': Event.error('Error'),
+      'f': TestEvent(0, Event.next('a')),
     };
     test('empty sequence', () {
       final input = scheduler.cold('-|', values: values);
@@ -998,10 +998,10 @@ void main() {
   });
   group('materialize', () {
     final values = <String, Event<String>>{
-      'a': const NextEvent('a'),
-      'b': const NextEvent('b'),
-      'c': const CompleteEvent(),
-      'e': const ErrorEvent('Error'),
+      'a': Event.next('a'),
+      'b': Event.next('b'),
+      'c': Event.complete(),
+      'e': Event.error('Error'),
     };
     test('empty sequence', () {
       final input = scheduler.cold<String>('-|');

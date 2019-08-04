@@ -72,15 +72,16 @@ class TestEventSequence<T> {
           sequence.add(TestEvent(index, UnsubscribeEvent()));
           break;
         case completeMarker:
-          sequence.add(TestEvent(index, CompleteEvent()));
+          sequence.add(TestEvent(index, Event<T>.complete()));
           break;
         case errorMarker:
-          sequence.add(TestEvent(index, ErrorEvent(error, StackTrace.current)));
+          sequence
+              .add(TestEvent(index, Event<T>.error(error, StackTrace.current)));
           break;
         default:
           final marble = marbles[i];
           final value = values.containsKey(marble) ? values[marble] : marble;
-          sequence.add(TestEvent(index, NextEvent(value)));
+          sequence.add(TestEvent(index, Event<T>.next(value)));
           break;
       }
       if (!withinGroup) {
