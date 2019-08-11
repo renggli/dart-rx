@@ -5,7 +5,7 @@ import 'package:rx/src/core/subscription.dart';
 
 import 'events.dart';
 
-/// Unknown eve
+/// An error throws when an operation receives an unknown [Event] type.
 class UnexpectedEventError extends Error {
   final Event event;
   final String message;
