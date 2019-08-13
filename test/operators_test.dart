@@ -97,6 +97,18 @@ void main() {
       expect(actual, scheduler.isObservable<List<String>>('--#'));
     });
   });
+  group('cast', () {
+    test('completes', () {
+      final input = scheduler.cold('--a--b--c--|');
+      final actual = input.pipe(cast<Object, String>());
+      expect(actual, scheduler.isObservable<String>('--a--b--c--|'));
+    });
+    test('error', () {
+      final input = scheduler.cold('--a--b--c--#');
+      final actual = input.pipe(cast<Object, String>());
+      expect(actual, scheduler.isObservable<String>('--a--b--c--#'));
+    });
+  });
   group('catchError', () {
     test('silent', () {
       final input = scheduler.cold('--a--b--c--|');
