@@ -1971,4 +1971,22 @@ void main() {
       expect(actual, scheduler.isObservable('--#'));
     });
   });
+  group('whereType', () {
+    const values = {'x': 1};
+    test('first value filterd', () {
+      final input = scheduler.cold<Object>('--x--a--|', values: values);
+      final actual = input.pipe(whereType<Object, String>());
+      expect(actual, scheduler.isObservable<String>('-----a--|'));
+    });
+    test('second value filtered', () {
+      final input = scheduler.cold<Object>('--a--x--|', values: values);
+      final actual = input.pipe(whereType<Object, String>());
+      expect(actual, scheduler.isObservable<String>('--a-----|'));
+    });
+    test('second value filtered and error', () {
+      final input = scheduler.cold<Object>('--a--x--#', values: values);
+      final actual = input.pipe(whereType<Object, String>());
+      expect(actual, scheduler.isObservable<String>('--a-----#'));
+    });
+  });
 }

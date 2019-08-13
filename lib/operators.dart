@@ -38,3 +38,4 @@ export 'src/operators/timeout.dart';
 export 'src/operators/to_list.dart';
 export 'src/operators/to_set.dart';
 export 'src/operators/where.dart';
+export 'src/operators/where_type.dart';
