@@ -1,4 +1,4 @@
-library rx.operators.filter;
+library rx.operators.where;
 
 import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observer.dart';
@@ -8,14 +8,14 @@ import 'package:rx/src/shared/functions.dart';
 
 /// Filter items emitted by the source Observable by only emitting those that
 /// satisfy a specified predicate.
-OperatorFunction<T, T> filter<T>(Predicate1<T> predicate) =>
+OperatorFunction<T, T> where<T>(Predicate1<T> predicate) =>
     (source) => source.lift<T>((source, subscriber) =>
-        source.subscribe(_FilterSubscriber<T>(subscriber, predicate)));
+        source.subscribe(_WhereSubscriber<T>(subscriber, predicate)));
 
-class _FilterSubscriber<T> extends Subscriber<T> {
+class _WhereSubscriber<T> extends Subscriber<T> {
   final Predicate1<T> predicate;
 
-  _FilterSubscriber(Observer<T> destination, this.predicate)
+  _WhereSubscriber(Observer<T> destination, this.predicate)
       : super(destination);
 
   @override

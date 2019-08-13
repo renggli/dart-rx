@@ -53,9 +53,9 @@ void main() {
   // double subscription
   final transformed = rx
       .fromIterable(IntegerRange(0, 100))
-      .pipe(ops.filter((value) => value.isEven))
+      .pipe(ops.where((value) => value.isEven))
       .pipe(ops.map((value) => '{value * value}'))
-      .pipe(ops.filter((value) => value.length < 3));
+      .pipe(ops.where((value) => value.length < 3));
   transformed.subscribe(printObserver('one'));
   transformed.subscribe(printObserver('two'));
 

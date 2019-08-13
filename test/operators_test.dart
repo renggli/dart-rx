@@ -531,28 +531,6 @@ void main() {
           throwsRangeError);
     });
   });
-  group('filter', () {
-    test('first value filterd', () {
-      final input = scheduler.cold('--a--b--|');
-      final actual = input.pipe(filter((value) => value != 'a'));
-      expect(actual, scheduler.isObservable('-----b--|'));
-    });
-    test('second value filtered', () {
-      final input = scheduler.cold('--a--b--|');
-      final actual = input.pipe(filter((value) => value != 'b'));
-      expect(actual, scheduler.isObservable('--a-----|'));
-    });
-    test('second value filtered and error', () {
-      final input = scheduler.cold('--a--b--#');
-      final actual = input.pipe(filter((value) => value != 'b'));
-      expect(actual, scheduler.isObservable('--a-----#'));
-    });
-    test('filter throws an error', () {
-      final input = scheduler.cold('--a--b--#');
-      final actual = input.pipe(filter((value) => throw 'Error'));
-      expect(actual, scheduler.isObservable('--#'));
-    });
-  });
   group('finalize', () {
     test('calls finalizer on completion', () {
       final input = scheduler.cold('-a--b-|');
@@ -1957,6 +1935,28 @@ void main() {
             'x': {'a', 'b', 'c'}
           }));
       expect(creation, 1);
+    });
+  });
+  group('where', () {
+    test('first value filterd', () {
+      final input = scheduler.cold('--a--b--|');
+      final actual = input.pipe(where((value) => value != 'a'));
+      expect(actual, scheduler.isObservable('-----b--|'));
+    });
+    test('second value filtered', () {
+      final input = scheduler.cold('--a--b--|');
+      final actual = input.pipe(where((value) => value != 'b'));
+      expect(actual, scheduler.isObservable('--a-----|'));
+    });
+    test('second value filtered and error', () {
+      final input = scheduler.cold('--a--b--#');
+      final actual = input.pipe(where((value) => value != 'b'));
+      expect(actual, scheduler.isObservable('--a-----#'));
+    });
+    test('filter throws an error', () {
+      final input = scheduler.cold('--a--b--#');
+      final actual = input.pipe(where((value) => throw 'Error'));
+      expect(actual, scheduler.isObservable('--#'));
     });
   });
 }
