@@ -1,17 +1,28 @@
 library rx.operators.is_empty;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 
-/// Emits `false` if the input observable emits any values, or emits `true` if
-/// the input observable completes without emitting any values.
-OperatorFunction<T, bool> isEmpty<T>() =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_IsEmptySubscriber<T>(subscriber)));
+extension IsEmptyOperator<T> on Observable<T> {
+  /// Emits `false` if the input observable emits any values, or emits `true` if
+  /// the input observable completes without emitting any values.
+  Observable<bool> isEmpty() => IsEmptyObservable<T>(this);
+}
 
-class _IsEmptySubscriber<T> extends Subscriber<T> {
-  _IsEmptySubscriber(Observer<bool> destination) : super(destination);
+class IsEmptyObservable<T> extends Observable<bool> {
+  final Observable<T> delegate;
+
+  IsEmptyObservable(this.delegate);
+
+  @override
+  Subscription subscribe(Observer<bool> observer) =>
+      delegate.subscribe(IsEmptySubscriber<T>(observer));
+}
+
+class IsEmptySubscriber<T> extends Subscriber<T> {
+  IsEmptySubscriber(Observer<bool> observer) : super(observer);
 
   @override
   void onNext(T value) {

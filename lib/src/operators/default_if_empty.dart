@@ -1,22 +1,35 @@
 library rx.operators.default_if_empty;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 
-/// Emits a given value if the source completes without emitting any value,
-/// otherwise mirrors the source.
-OperatorFunction<T, T> defaultIfEmpty<T>([T value]) =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_DefaultIfEmptySubscriber<T>(subscriber, value)));
+extension DefaultIfEmptyOperator<T> on Observable<T> {
+  /// Emits a given value if the source completes without emitting any value,
+  /// otherwise mirrors the source.
+  Observable<T> defaultIfEmpty([T value]) =>
+      DefaultIfEmptyObservable<T>(this, value);
+}
 
-class _DefaultIfEmptySubscriber<T> extends Subscriber<T> {
+class DefaultIfEmptyObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
+  final T defaultValue;
+
+  DefaultIfEmptyObservable(this.delegate, this.defaultValue);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(DefaultIfEmptySubscriber<T>(observer, defaultValue));
+}
+
+class DefaultIfEmptySubscriber<T> extends Subscriber<T> {
   final T defaultValue;
 
   bool seenValue = false;
 
-  _DefaultIfEmptySubscriber(Observer<T> destination, this.defaultValue)
-      : super(destination);
+  DefaultIfEmptySubscriber(Observer<T> observer, this.defaultValue)
+      : super(observer);
 
   @override
   void onNext(T value) {

@@ -1,7 +1,6 @@
 library rx.example.example;
 
 import 'package:more/collection.dart';
-import 'package:rx/operators.dart' as ops;
 import 'package:rx/rx.dart' as rx;
 
 rx.Observer<T> printObserver<T>(String name) => rx.Observer(
@@ -53,17 +52,17 @@ void main() {
   // double subscription
   final transformed = rx
       .fromIterable(IntegerRange(0, 100))
-      .pipe(ops.where((value) => value.isEven))
-      .pipe(ops.map((value) => '{value * value}'))
-      .pipe(ops.where((value) => value.length < 3));
+      .where((value) => value.isEven)
+      .map((value) => '{value * value}')
+      .map((value) => value.length < 3);
   transformed.subscribe(printObserver('one'));
   transformed.subscribe(printObserver('two'));
 
   // subject subscription
   final subject = rx
       .fromIterable(IntegerRange(0, 100, 25))
-      .pipe(ops.publishReplay())
-      .pipe(ops.refCount());
+      .publishReplay()
+      .refCount();
   subject.subscribe(printObserver('subject1'));
   subject.subscribe(printObserver('subject2'));
 

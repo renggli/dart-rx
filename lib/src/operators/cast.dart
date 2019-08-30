@@ -1,16 +1,27 @@
 library rx.operators.cast;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 
-/// Casts all values from a source observable to [R].
-OperatorFunction<T, R> cast<T, R>() =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_CastSubscriber<T, R>(subscriber)));
+extension CastOperator<T> on Observable<T> {
+  /// Casts all values from a source observable to [R].
+  Observable<R> cast<R>() => CastObservable<T, R>(this);
+}
 
-class _CastSubscriber<T, R> extends Subscriber<T> {
-  _CastSubscriber(Observer<R> destination) : super(destination);
+class CastObservable<T, R> extends Observable<R> {
+  final Observable<T> delegate;
+
+  CastObservable(this.delegate);
+
+  @override
+  Subscription subscribe(Observer<R> observer) =>
+      delegate.subscribe(CastSubscriber<T, R>(observer));
+}
+
+class CastSubscriber<T, R> extends Subscriber<T> {
+  CastSubscriber(Observer<R> observer) : super(observer);
 
   @override
   void onNext(T value) {

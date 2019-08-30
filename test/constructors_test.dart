@@ -2,7 +2,6 @@ library rx.test.constructors_test;
 
 import 'package:rx/constructors.dart';
 import 'package:rx/core.dart';
-import 'package:rx/operators.dart';
 import 'package:rx/schedulers.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
@@ -498,14 +497,14 @@ void main() {
       expect(actual, scheduler.isObservable('-----(0|)', values: values));
     });
     test('periodic', () {
-      final actual = timer(period: scheduler.stepDuration * 2).pipe(take(5));
+      final actual = timer(period: scheduler.stepDuration * 2).take(5);
       expect(actual, scheduler.isObservable('0-1-2-3-(4|)', values: values));
     });
     test('delay & periodic', () {
       final actual = timer(
               delay: scheduler.stepDuration * 3,
               period: scheduler.stepDuration * 2)
-          .pipe(take(5));
+          .take(5);
       expect(actual, scheduler.isObservable('---0-1-2-3-(4|)', values: values));
     });
   });

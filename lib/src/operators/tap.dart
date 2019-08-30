@@ -1,23 +1,36 @@
 library rx.operators.tap;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 
-/// Perform a side effect for every emission on the source.
-OperatorFunction<T, T> tap<T>(Observer<T> observer) =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_TapSubscriber<T>(subscriber, observer)));
+extension TapOperator<T> on Observable<T> {
+  /// Perform a side effect for every emission on the source.
+  Observable<T> tap(Observer<T> handler) =>
+      TapObservable<T>(this, handler);
+}
 
-class _TapSubscriber<T> extends Subscriber<T> {
-  final Observer<T> observer;
+class TapObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
+  final Observer<T> handler;
 
-  _TapSubscriber(Observer<T> destination, this.observer) : super(destination);
+  TapObservable(this.delegate, this.handler);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(TapSubscriber<T>(observer, handler));
+}
+
+class TapSubscriber<T> extends Subscriber<T> {
+  final Observer<T> handler;
+
+  TapSubscriber(Observer<T> observer, this.handler) : super(observer);
 
   @override
   void onNext(T value) {
     try {
-      observer.next(value);
+      handler.next(value);
     } catch (error, stackTrace) {
       doError(error, stackTrace);
       return;
@@ -28,7 +41,7 @@ class _TapSubscriber<T> extends Subscriber<T> {
   @override
   void onError(Object error, [StackTrace stackTrace]) {
     try {
-      observer.error(error, stackTrace);
+      handler.error(error, stackTrace);
     } catch (error, stackTrace) {
       doError(error, stackTrace);
       return;
@@ -39,7 +52,7 @@ class _TapSubscriber<T> extends Subscriber<T> {
   @override
   void onComplete() {
     try {
-      observer.complete();
+      handler.complete();
     } catch (error, stackTrace) {
       doError(error, stackTrace);
       return;

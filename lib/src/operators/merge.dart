@@ -5,35 +5,49 @@ import 'dart:collection';
 import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
 import 'package:rx/src/shared/constants.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Emits all merged values from a higher-order [Observable]. Subscribes to
-/// at most `concurrent` sources.
-OperatorFunction<Observable<R>, R> mergeAll<R>({int concurrent = maxInteger}) =>
-    mergeMap<Observable<R>, R>(identityFunction, concurrent: concurrent);
-
-/// Emits all merged values from a higher-order [Observable] retrieved by
-/// projecting the values of the source to higher-order [Observable]s.
-/// Subscribes to at most `concurrent` sources.
-OperatorFunction<T, R> mergeMap<T, R>(Map1<T, Observable<R>> project,
-    {int concurrent = maxInteger}) {
-  RangeError.checkValidRange(1, null, concurrent, 'concurrent');
-  return (source) => source.lift((source, subscriber) => source
-      .subscribe(_MergeSubscriber<T, R>(subscriber, project, concurrent)));
+extension MergeAllOperator<T> on Observable<Observable<T>> {
+  /// Emits all merged values from a higher-order [Observable]. Subscribes to
+  /// at most `concurrent` sources.
+  Observable<T> mergeAll({int concurrent = maxInteger}) =>
+      mergeMap<T>(identityFunction, concurrent: concurrent);
 }
 
-/// Emits all merged values from a single higher-order `observable. Subscribes
-/// to at most `concurrent` sources.
-OperatorFunction<Object, R> mergeMapTo<R>(Observable<R> observable,
-        {int concurrent = maxInteger}) =>
-    mergeMap<Object, R>(constantFunction1(observable), concurrent: concurrent);
+extension MergeMapOperator<T> on Observable<T> {
+  /// Emits all merged values from a single higher-order `observable. Subscribes
+  /// to at most `concurrent` sources.
+  Observable<R> mergeMapTo<R>(Observable<R> observable,
+      {int concurrent = maxInteger}) =>
+    mergeMap<R>(constantFunction1(observable), concurrent: concurrent);
 
-class _MergeSubscriber<T, R> extends Subscriber<T>
+  /// Emits all merged values from a higher-order [Observable] retrieved by
+  /// projecting the values of the source to higher-order [Observable]s.
+  /// Subscribes to at most `concurrent` sources.
+  Observable<R> mergeMap<R>(Map1<T, Observable<R>> project,
+      {int concurrent = maxInteger}) {
+    RangeError.checkValidRange(1, null, concurrent, 'concurrent');
+    return MergeObservable<T, R>(this, project, concurrent);
+  }
+}
+
+class MergeObservable<T, R> extends Observable<R> {
+  final Observable<T> delegate;
+  final Map1<T, Observable<R>> project;
+  final num concurrent;
+
+  MergeObservable(this.delegate, this.project, this.concurrent);
+
+  @override
+  Subscription subscribe(Observer<R> observer) =>
+      delegate.subscribe(MergeSubscriber<T, R>(observer, project, concurrent));
+}
+
+class MergeSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, int> {
   final Map1<T, Observable<R>> project;
   final num concurrent;
@@ -42,8 +56,8 @@ class _MergeSubscriber<T, R> extends Subscriber<T>
   bool hasCompleted = false;
   int active = 0;
 
-  _MergeSubscriber(Observer<R> destination, this.project, this.concurrent)
-      : super(destination);
+  MergeSubscriber(Observer<R> observer, this.project, this.concurrent)
+      : super(observer);
 
   @override
   void onNext(T value) {

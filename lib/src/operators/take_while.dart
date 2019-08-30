@@ -1,21 +1,33 @@
 library rx.operators.take_while;
 
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Emits values while the [predicate] returns `true`.
-OperatorFunction<T, T> takeWhile<T>(Predicate1<T> predicate) =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_TakeWhileSubscriber<T>(subscriber, predicate)));
+extension TakeWhileOperator<T> on Observable<T> {
+  /// Emits values while the [predicate] returns `true`.
+  Observable<T> takeWhile(Predicate1<T> predicate) =>
+      TakeWhileObservable<T>(this, predicate);
+}
 
-class _TakeWhileSubscriber<T> extends Subscriber<T> {
+class TakeWhileObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
   final Predicate1<T> predicate;
 
-  _TakeWhileSubscriber(Observer<T> destination, this.predicate)
-      : super(destination);
+  TakeWhileObservable(this.delegate, this.predicate);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(TakeWhileSubscriber<T>(observer, predicate));
+}
+
+class TakeWhileSubscriber<T> extends Subscriber<T> {
+  final Predicate1<T> predicate;
+
+  TakeWhileSubscriber(Observer<T> observer, this.predicate) : super(observer);
 
   @override
   void onNext(T value) {

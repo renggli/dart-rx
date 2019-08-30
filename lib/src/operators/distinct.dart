@@ -3,24 +3,39 @@ library rx.operators.distinct;
 import 'dart:collection';
 
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Emits all items emitted by the source that are distinct from previous items.
-OperatorFunction<T, T> distinct<T>(
-        {Predicate2<T, T> equals, Map1<T, int> hashCode}) =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_DistinctSubscriber<T>(subscriber, equals, hashCode)));
+extension DistinctOperator<T> on Observable<T> {
+  /// Emits all items emitted by the source that are distinct from previous
+  /// items.
+  Observable<T> distinct({Predicate2<T, T> equals, Map1<T, int> hashCode}) =>
+    DistinctObservable<T>(this, equals, hashCode);
+}
 
-class _DistinctSubscriber<T> extends Subscriber<T> {
+class DistinctObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
+  final Predicate2<T, T> equalsFunction;
+  final Map1<T, int> hashCodeFunction;
+
+  DistinctObservable(this.delegate, this.equalsFunction, this.hashCodeFunction);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(
+          DistinctSubscriber<T>(observer, equalsFunction, hashCodeFunction));
+}
+
+class DistinctSubscriber<T> extends Subscriber<T> {
   final Set<T> values;
 
-  _DistinctSubscriber(Observer<T> destination, Predicate2<T, T> equalsFunction,
+  DistinctSubscriber(Observer<T> observer, Predicate2<T, T> equalsFunction,
       Map1<T, int> hashCodeFunction)
       : values = HashSet(equals: equalsFunction, hashCode: hashCodeFunction),
-        super(destination);
+        super(observer);
 
   @override
   void onNext(T value) {

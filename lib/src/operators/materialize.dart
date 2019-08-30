@@ -1,18 +1,29 @@
 library rx.operators.materialize;
 
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 
-/// Materialize events into a stream of [Event] objects: [NextEvent],
-/// [ErrorEvent] and [CompleteEvent].
-OperatorFunction<T, Event<T>> materialize<T>() =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_MaterializeSubscriber<T>(subscriber)));
+extension MaterializeOperator<T> on Observable<T> {
+  /// Materialize events into a stream of [Event] objects: [NextEvent],
+  /// [ErrorEvent] and [CompleteEvent].
+  Observable<Event<T>> materialize() => MaterializeObservable<T>(this);
+}
 
-class _MaterializeSubscriber<T> extends Subscriber<T> {
-  _MaterializeSubscriber(Observer<Event<T>> destination) : super(destination);
+class MaterializeObservable<T> extends Observable<Event<T>> {
+  final Observable<T> delegate;
+
+  MaterializeObservable(this.delegate);
+
+  @override
+  Subscription subscribe(Observer<Event<T>> observer) =>
+      delegate.subscribe(MaterializeSubscriber<T>(observer));
+}
+
+class MaterializeSubscriber<T> extends Subscriber<T> {
+  MaterializeSubscriber(Observer<Event<T>> destination) : super(destination);
 
   @override
   void onNext(T value) => doNext(Event<T>.next(value));

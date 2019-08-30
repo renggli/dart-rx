@@ -1,18 +1,30 @@
 library rx.operators.take;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 
-/// Emits the first [count] values before completing.
-OperatorFunction<T, T> take<T>([int count = 1]) =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_TakeSubscriber<T>(subscriber, count)));
+extension TakeOperator<T> on Observable<T> {
+  /// Emits the first [count] values before completing.
+  Observable<T> take([int count = 1]) => TakeObservable<T>(this, count);
+}
 
-class _TakeSubscriber<T> extends Subscriber<T> {
+class TakeObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
+  final int count;
+
+  TakeObservable(this.delegate, this.count);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(TakeSubscriber<T>(observer, count));
+}
+
+class TakeSubscriber<T> extends Subscriber<T> {
   int count;
 
-  _TakeSubscriber(Observer<T> destination, this.count) : super(destination);
+  TakeSubscriber(Observer<T> observer, this.count) : super(observer);
 
   @override
   void onNext(T value) {

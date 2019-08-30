@@ -1,17 +1,28 @@
 library rx.operators.where_type;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 
-/// Filter items emitted by the source Observable by only emitting those that
-/// are of the specified type.
-OperatorFunction<T, R> whereType<T, R>() =>
-    (source) => source.lift<R>((source, subscriber) =>
-        source.subscribe(_WhereTypeSubscriber<T, R>(subscriber)));
+extension WhereTypeOperator<T> on Observable<T> {
+  /// Filter items emitted by the source Observable by only emitting those that
+  /// are of the specified type.
+  Observable<R> whereType<R>() => WhereTypeObserver<T, R>(this);
+}
 
-class _WhereTypeSubscriber<T, R> extends Subscriber<T> {
-  _WhereTypeSubscriber(Observer<R> destination) : super(destination);
+class WhereTypeObserver<T, R> extends Observable<R> {
+  final Observable<T> delegate;
+
+  WhereTypeObserver(this.delegate);
+
+  @override
+  Subscription subscribe(Observer<R> observer) =>
+      delegate.subscribe(WhereTypeSubscriber<T, R>(observer));
+}
+
+class WhereTypeSubscriber<T, R> extends Subscriber<T> {
+  WhereTypeSubscriber(Observer<R> observer) : super(observer);
 
   @override
   void onNext(T value) {

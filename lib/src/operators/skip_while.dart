@@ -1,22 +1,34 @@
 library rx.operators.skip_while;
 
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Skips over the values while the [predicate] is `true`.
-OperatorFunction<T, T> skipWhile<T>(Predicate1<T> predicate) =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_SkipWhileSubscriber<T>(subscriber, predicate)));
+extension SkipWhileOperator<T> on Observable<T> {
+  /// Skips over the values while the [predicate] is `true`.
+  Observable<T> skipWhile(Predicate1<T> predicate) =>
+      SkipWhileObservable<T>(this, predicate);
+}
 
-class _SkipWhileSubscriber<T> extends Subscriber<T> {
+class SkipWhileObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
+  final Predicate1<T> predicate;
+
+  SkipWhileObservable(this.delegate, this.predicate);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(SkipWhileSubscriber<T>(observer, predicate));
+}
+
+class SkipWhileSubscriber<T> extends Subscriber<T> {
   final Predicate1<T> predicate;
   bool skipping = true;
 
-  _SkipWhileSubscriber(Observer<T> destination, this.predicate)
-      : super(destination);
+  SkipWhileSubscriber(Observer<T> observer, this.predicate) : super(observer);
 
   @override
   void onNext(T value) {

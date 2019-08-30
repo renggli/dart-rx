@@ -1,17 +1,28 @@
 library rx.operators.ignore_elements;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 
-/// Ignores all items emitted by the source and only passes calls to
-/// `complete` or `error`.
-OperatorFunction<T, T> ignoreElements<T>() =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_IgnoreElementsSubscriber<T>(subscriber)));
+extension IgnoreElementsOperator<T> on Observable<T> {
+  /// Ignores all items emitted by the source and only passes calls to
+  /// `complete` or `error`.
+  Observable<T> ignoreElements() => IgnoreElementsObservable<T>(this);
+}
 
-class _IgnoreElementsSubscriber<T> extends Subscriber<T> {
-  _IgnoreElementsSubscriber(Observer<T> destination) : super(destination);
+class IgnoreElementsObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
+
+  IgnoreElementsObservable(this.delegate);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(IgnoreElementsSubscriber<T>(observer));
+}
+
+class IgnoreElementsSubscriber<T> extends Subscriber<T> {
+  IgnoreElementsSubscriber(Observer<T> observer) : super(observer);
 
   @override
   void onNext(T value) {}

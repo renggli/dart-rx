@@ -1,26 +1,38 @@
 library rx.operators.timeout;
 
 import 'package:rx/src/core/errors.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/settings.dart';
 
-/// Completes with a [TimeoutError], if the observable does not complete within
-/// the given duration.
-OperatorFunction<T, T> timeout<T>(Duration duration, {Scheduler scheduler}) =>
-    (source) => source.lift((source, subscriber) => source.subscribe(
-        _TimeoutSubscriber<T>(
-            subscriber, duration, scheduler ?? defaultScheduler)));
+extension TimeoutOperator<T> on Observable<T> {
+  /// Completes with a [TimeoutError], if the observable does not complete
+  /// within the given duration.
+  Observable<T> timeout(Duration duration, {Scheduler scheduler}) =>
+      TimeoutObservable<T>(this, scheduler ?? defaultScheduler, duration);
+}
 
-class _TimeoutSubscriber<T> extends Subscriber<T> {
+class TimeoutObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
+  final Scheduler scheduler;
+  final Duration duration;
+
+  TimeoutObservable(this.delegate, this.scheduler, this.duration);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(TimeoutSubscriber<T>(observer, scheduler, duration));
+}
+
+class TimeoutSubscriber<T> extends Subscriber<T> {
   Subscription subscription;
 
-  _TimeoutSubscriber(
-      Observer<T> destination, Duration duration, Scheduler scheduler)
-      : super(destination) {
+  TimeoutSubscriber(
+      Observer<T> observer, Scheduler scheduler, Duration duration)
+      : super(observer) {
     subscription = scheduler.scheduleRelative(duration, onTimeout);
   }
 

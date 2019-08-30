@@ -1,22 +1,37 @@
 library rx.operators.delay;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/settings.dart';
 
-/// Delays the emission of items from the source Observable by a given timeout.
-OperatorFunction<T, T> delay<T>(Duration delay, {Scheduler scheduler}) =>
-    (source) => source.lift((source, subscriber) => source.subscribe(
-        _DelaySubscriber<T>(subscriber, scheduler ?? defaultScheduler, delay)));
+extension DelayOperator<T> on Observable<T> {
+  /// Delays the emission of items from the source Observable by a given
+  /// timeout.
+  Observable<T> delay(Duration delay, {Scheduler scheduler}) =>
+     DelayObservable<T>(this, scheduler ?? defaultScheduler, delay);
+}
 
-class _DelaySubscriber<T> extends Subscriber<T> {
+class DelayObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
   final Scheduler scheduler;
   final Duration delay;
 
-  _DelaySubscriber(Observer<T> destination, this.scheduler, this.delay)
-      : super(destination);
+  DelayObservable(this.delegate, this.scheduler, this.delay);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(DelaySubscriber<T>(observer, scheduler, delay));
+}
+
+class DelaySubscriber<T> extends Subscriber<T> {
+  final Scheduler scheduler;
+  final Duration delay;
+
+  DelaySubscriber(Observer<T> observer, this.scheduler, this.delay)
+      : super(observer);
 
   @override
   void onNext(T value) =>

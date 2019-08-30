@@ -1,22 +1,36 @@
 library rx.operators.observe_on;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Re-emits all notifications from the source with a custom scheduler.
-OperatorFunction<T, T> observeOn<T>(Scheduler scheduler, {Duration delay}) =>
-    (source) => source.lift((source, subscriber) => source
-        .subscribe(_ObserveOnSubscriber<T>(subscriber, scheduler, delay)));
+extension ObserveOnOperator<T> on Observable<T> {
+  /// Re-emits all notifications from the source with a custom scheduler.
+  Observable<T> observeOn(Scheduler scheduler, {Duration delay}) =>
+      ObserveOnObservable<T>(this, scheduler, delay);
+}
 
-class _ObserveOnSubscriber<T> extends Subscriber<T> {
+class ObserveOnObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
   final Scheduler scheduler;
   final Duration delay;
 
-  _ObserveOnSubscriber(Observer<T> destination, this.scheduler, this.delay)
-      : super(destination);
+  ObserveOnObservable(this.delegate, this.scheduler, this.delay);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(ObserveOnSubscriber<T>(observer, scheduler, delay));
+}
+
+class ObserveOnSubscriber<T> extends Subscriber<T> {
+  final Scheduler scheduler;
+  final Duration delay;
+
+  ObserveOnSubscriber(Observer<T> observer, this.scheduler, this.delay)
+      : super(observer);
 
   void _schedule(Callback0 callback) => delay == null
       ? scheduler.schedule(callback)

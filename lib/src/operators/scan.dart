@@ -1,28 +1,43 @@
 library rx.operators.scan;
 
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Combines a sequence of values by repeatedly applying [transform].
-OperatorFunction<T, T> reduce<T>(Map2<T, T, T> transform) =>
-    (source) => source.lift((source, subscriber) => source
-        .subscribe(_ScanSubscriber<T, T>(subscriber, transform, false, null)));
+extension ScanOperator<T> on Observable<T> {
+  /// Combines a sequence of values by repeatedly applying [transform].
+  Observable<T> reduce(Map2<T, T, T> transform) =>
+      ScanObservable<T, T>(this, transform, false, null);
 
-/// Combines a sequence of values by repeatedly applying [transform], starting
-/// with the provided [initialValue].
-OperatorFunction<T, R> fold<T, R>(R initialValue, Map2<R, T, R> transform) =>
-    (source) => source.lift((source, subscriber) => source.subscribe(
-        _ScanSubscriber<T, R>(subscriber, transform, true, initialValue)));
+  /// Combines a sequence of values by repeatedly applying [transform], starting
+  /// with the provided [initialValue].
+  Observable<R> fold<R>(R initialValue, Map2<R, T, R> transform) =>
+      ScanObservable<T, R>(this, transform, true, initialValue);
+}
 
-class _ScanSubscriber<T, R> extends Subscriber<T> {
+class ScanObservable<T, R> extends Observable<R> {
+  final Observable<T> delegate;
+  final Map2<R, T, R> transform;
+  final bool hasSeed;
+  final R seedValue;
+
+  ScanObservable(this.delegate, this.transform, this.hasSeed, this.seedValue);
+
+  @override
+  Subscription subscribe(Observer<R> observer) =>
+      delegate.subscribe(
+          ScanSubscriber<T, R>(observer, transform, hasSeed, seedValue));
+}
+
+class ScanSubscriber<T, R> extends Subscriber<T> {
   final Map2<R, T, R> transform;
   bool hasSeed;
   R seedValue;
 
-  _ScanSubscriber(
+  ScanSubscriber(
       Observer<R> destination, this.transform, this.hasSeed, this.seedValue)
       : super(destination);
 

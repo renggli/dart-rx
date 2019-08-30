@@ -1,26 +1,39 @@
 library rx.operators.map;
 
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Applies a given project function to each value emitted by the source
-/// Observable, and emits the resulting values as an Observable.
-OperatorFunction<T, R> map<T, R>(Map1<T, R> transform) =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_MapSubscriber<T, R>(subscriber, transform)));
+extension MapOperator<T> on Observable<T> {
+  /// Applies a given project function to each value emitted by the source
+  /// Observable, and emits the resulting values as an Observable.
+  Observable<R> map<R>(Map1<T, R> transform) =>
+      MapObservable<T, R>(this, transform);
+  
+  /// Applies a given project function to each value emitted by the source
+  /// Observable, and emits the resulting values as an Observable.
+  Observable<R> mapTo<R>(R value) =>
+      MapObservable<T, R>(this, constantFunction1(value));
+}
 
-/// Emits the given constant value on the output Observable every time the
-/// source Observable emits a value.
-OperatorFunction<Object, R> mapTo<R>(R value) =>
-    map<Object, R>(constantFunction1(value));
-
-class _MapSubscriber<T, R> extends Subscriber<T> {
+class MapObservable<T, R> extends Observable<R> {
+  final Observable<T> delegate;
   final Map1<T, R> transform;
 
-  _MapSubscriber(Observer<R> destination, this.transform) : super(destination);
+  MapObservable(this.delegate, this.transform);
+
+  @override
+  Subscription subscribe(Observer<R> observer) =>
+      delegate.subscribe(MapSubscriber<T, R>(observer, transform));
+}
+
+class MapSubscriber<T, R> extends Subscriber<T> {
+  final Map1<T, R> transform;
+
+  MapSubscriber(Observer<R> observer, this.transform) : super(observer);
 
   @override
   void onNext(T value) {

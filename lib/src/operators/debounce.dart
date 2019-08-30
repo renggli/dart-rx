@@ -1,20 +1,32 @@
 library rx.operators.debounce;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/settings.dart';
 
-/// Emits a value from the source Observable only after a particular time span
-/// has passed without another source emission.
-OperatorFunction<T, T> debounce<T>({Duration delay, Scheduler scheduler}) =>
-    (source) => source.lift((source, subscriber) => source.subscribe(
-        _DebounceSubscriber<T>(
-            subscriber, scheduler ?? defaultScheduler, delay)));
+extension DebounceOperator<T> on Observable<T> {
+  /// Emits a value from the source Observable only after a particular time span
+  /// has passed without another source emission.
+  Observable<T> debounce({Duration delay, Scheduler scheduler}) =>
+      DebounceObservable<T>(this, scheduler ?? defaultScheduler, delay);
+}
 
-class _DebounceSubscriber<T> extends Subscriber<T> {
+class DebounceObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
+  final Scheduler scheduler;
+  final Duration delay;
+
+  DebounceObservable(this.delegate, this.scheduler, this.delay);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(DebounceSubscriber<T>(observer, scheduler, delay));
+}
+
+class DebounceSubscriber<T> extends Subscriber<T> {
   final Scheduler scheduler;
   final Duration delay;
 
@@ -22,8 +34,8 @@ class _DebounceSubscriber<T> extends Subscriber<T> {
   bool hasValue = false;
   Subscription subscription;
 
-  _DebounceSubscriber(Observer<T> destination, this.scheduler, this.delay)
-      : super(destination);
+  DebounceSubscriber(Observer<T> observer, this.scheduler, this.delay)
+      : super(observer);
 
   @override
   void onNext(T value) {

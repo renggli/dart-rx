@@ -2,18 +2,27 @@ library rx.operators.combine_latest;
 
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
 
-/// Combines multiple Observables to create an Observable whose values are
-/// calculated from the latest values of each of its input Observables.
-OperatorFunction<Observable<T>, List<T>> combineLatest<T>() =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_CombineLatestSubscriber<T>(subscriber)));
+extension CombineLatestOperator<T> on Observable<Observable<T>> {
+  /// Combines multiple Observables to create an Observable whose values are
+  /// calculated from the latest values of each of its input Observables.
+  Observable<List<T>> combineLatest() => CombineLatestObservable<T>(this);
+}
 
-class _CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
+class CombineLatestObservable<T> extends Observable<List<T>> {
+  final Observable<Observable<T>> delegate;
+
+  CombineLatestObservable(this.delegate);
+
+  @override
+  Subscription subscribe(Observer<List<T>> observer) =>
+      delegate.subscribe(CombineLatestSubscriber<T>(observer));
+}
+
+class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
     implements InnerEvents<T, int> {
   final List<Observable<T>> observables = [];
   final List<bool> hasValues = [];
@@ -22,11 +31,11 @@ class _CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
   int active;
   int pending;
 
-  _CombineLatestSubscriber(Observer<List<T>> destination) : super(destination);
+  CombineLatestSubscriber(Observer<List<T>> destination) : super(destination);
 
   @override
-  void onNext(Observable<T> observable) {
-    observables.add(observable);
+  void onNext(Observable<T> value) {
+    observables.add(value);
     hasValues.add(false);
     values.add(null);
   }

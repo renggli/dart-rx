@@ -3,36 +3,48 @@ library rx.operators.switch_;
 import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
 import 'package:rx/src/shared/functions.dart';
 import 'package:rx/src/subscriptions/sequential.dart';
 
-/// Emits values only from the most recently received higher-order [Observable].
-OperatorFunction<Observable<R>, R> switchAll<R>() =>
-    switchMap<Observable<R>, R>(identityFunction);
+extension SwitchAllOperator<T> on Observable<Observable<T>> {
+  /// Emits values only from the most recently received higher-order
+  /// [Observable].
+  Observable<T> switchAll() => switchMap<T>(identityFunction);
+}
 
-/// Emits values from the most recent higher-order [Observable] retrieved by
-/// projecting the values of the source to higher-order [Observable]s.
-OperatorFunction<T, R> switchMap<T, R>(Map1<T, Observable<R>> project) =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_SwitchSubscriber<T, R>(subscriber, project)));
+extension SwitchMapOperator<T> on Observable<T> {
+  /// Emits all values from the most recent higher-order `observable`.
+  Observable<R> switchMapTo<R>(Observable<R> observable) =>
+      switchMap<R>(constantFunction1(observable));
 
-/// Emits all values from the most recent higher-order `observable`.
-OperatorFunction<Object, R> switchMapTo<R>(Observable<R> observable) =>
-    switchMap<Object, R>(constantFunction1(observable));
+  /// Emits values from the most recent higher-order [Observable] retrieved by
+  /// projecting the values of the source to higher-order [Observable]s.
+  Observable<R> switchMap<R>(Map1<T, Observable<R>> project) =>
+      SwitchObservable<T, R>(this, project);
+}
 
-class _SwitchSubscriber<T, R> extends Subscriber<T>
+class SwitchObservable<T, R> extends Observable<R> {
+  final Observable<T> delegate;
+  final Map1<T, Observable<R>> project;
+
+  SwitchObservable(this.delegate, this.project);
+
+  @override
+  Subscription subscribe(Observer<R> observer) =>
+      delegate.subscribe(SwitchSubscriber<T, R>(observer, project));
+}
+
+class SwitchSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
   final Map1<T, Observable<R>> project;
   final SequentialSubscription subscription = SequentialSubscription();
 
   bool hasCompleted = false;
 
-  _SwitchSubscriber(Observer<R> destination, this.project)
-      : super(destination) {
+  SwitchSubscriber(Observer<R> observer, this.project) : super(observer) {
     add(subscription);
   }
 

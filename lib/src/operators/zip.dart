@@ -4,26 +4,36 @@ import 'dart:collection';
 
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
 
-/// Combines multiple Observables to create an Observable whose values are
-/// calculated from the next value of each of its input Observables.
-OperatorFunction<Observable<T>, List<T>> zip<T>() => (source) => source.lift(
-    (source, subscriber) => source.subscribe(_ZipSubscriber<T>(subscriber)));
+extension ZipOperator<T> on Observable<Observable<T>> {
+  /// Combines multiple Observables to create an Observable whose values are
+  /// calculated from the next value of each of its input Observables.
+  Observable<List<T>> zip() => ZipObservable<T>(this);
+}
 
-class _ZipSubscriber<T> extends Subscriber<Observable<T>>
+class ZipObservable<T> extends Observable<List<T>> {
+  final Observable<Observable<T>> delegate;
+
+  ZipObservable(this.delegate);
+
+  @override
+  Subscription subscribe(Observer<List<T>> observer) =>
+      delegate.subscribe(ZipSubscriber<T>(observer));
+}
+
+class ZipSubscriber<T> extends Subscriber<Observable<T>>
     implements InnerEvents<T, int> {
   final List<Observable<T>> observables = [];
   final List<ListQueue<T>> pending = [];
 
-  _ZipSubscriber(Observer<List<T>> destination) : super(destination);
+  ZipSubscriber(Observer<List<T>> observer) : super(observer);
 
   @override
-  void onNext(Observable<T> observable) {
-    observables.add(observable);
+  void onNext(Observable<T> value) {
+    observables.add(value);
     pending.add(ListQueue());
   }
 

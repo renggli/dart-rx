@@ -2,50 +2,62 @@ library rx.operators.first;
 
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Return the first item of an observable sequence, or emits an
-/// [TooFewError] otherwise.
-OperatorFunction<T, T> first<T>() =>
-    firstOrElse<T>(throwFunction0(TooFewError()));
+extension FirstOperator<T> on Observable<T> {
+  /// Return the first item of an observable sequence, or emits an
+  /// [TooFewError] otherwise.
+  Observable<T> first() =>
+      firstOrElse(throwFunction0(TooFewError()));
 
-/// Return the first item of an observable sequence, or the provided
-/// default [value] otherwise.
-OperatorFunction<T, T> firstOrDefault<T>([T value]) =>
-    firstOrElse<T>(constantFunction0(value));
+  /// Return the first item of an observable sequence, or the provided
+  /// default [value] otherwise.
+  Observable<T> firstOrDefault([T value]) =>
+      firstOrElse(constantFunction0(value));
 
-/// Return the first item of an observable sequence, or evaluate the
-/// provided [callback] otherwise.
-OperatorFunction<T, T> firstOrElse<T>(Map0<T> callback) =>
-    findFirstOrElse<T>(constantFunction1(true), callback);
+  /// Return the first item of an observable sequence, or evaluate the
+  /// provided [callback] otherwise.
+  Observable<T> firstOrElse(Map0<T> callback) =>
+      findFirstOrElse(constantFunction1(true), callback);
 
-/// Return the first item an observable sequence matching the [predicate], or
-/// emits an [TooFewError] otherwise.
-OperatorFunction<T, T> findFirst<T>(Predicate1<T> predicate) =>
-    findFirstOrElse<T>(predicate, throwFunction0(TooFewError()));
+  /// Return the first item an observable sequence matching the [predicate], or
+  /// emits an [TooFewError] otherwise.
+  Observable<T> findFirst(Predicate1<T> predicate) =>
+      findFirstOrElse(predicate, throwFunction0(TooFewError()));
 
-/// Return the first item an observable sequence matching the [predicate], or
-/// the provided default [value] otherwise.
-OperatorFunction<T, T> findFirstOrDefault<T>(Predicate1<T> predicate,
-        [T value]) =>
-    findFirstOrElse<T>(predicate, constantFunction0(value));
+  /// Return the first item an observable sequence matching the [predicate], or
+  /// the provided default [value] otherwise.
+  Observable<T> findFirstOrDefault(Predicate1<T> predicate, [T value]) =>
+      findFirstOrElse(predicate, constantFunction0(value));
 
-/// Return the first item an observable sequence matching the [predicate], or
-/// evaluate the provided [callback] otherwise.
-OperatorFunction<T, T> findFirstOrElse<T>(
-        Predicate1<T> predicate, Map0<T> callback) =>
-    (source) => source.lift((source, subscriber) => source
-        .subscribe(_FindFirstSubscriber<T>(subscriber, predicate, callback)));
+  /// Return the first item an observable sequence matching the [predicate], or
+  /// evaluate the provided [callback] otherwise.
+  Observable<T> findFirstOrElse(Predicate1<T> predicate, Map0<T> callback) =>
+      FirstObservable<T>(this, predicate, callback);
+}
 
-class _FindFirstSubscriber<T> extends Subscriber<T> {
+class FirstObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
   final Predicate1<T> predicate;
   final Map0<T> callback;
 
-  _FindFirstSubscriber(Observer<T> destination, this.predicate, this.callback)
-      : super(destination);
+  FirstObservable(this.delegate, this.predicate, this.callback);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(FirstSubscriber<T>(observer, predicate, callback));
+}
+
+class FirstSubscriber<T> extends Subscriber<T> {
+  final Predicate1<T> predicate;
+  final Map0<T> callback;
+
+  FirstSubscriber(Observer<T> observer, this.predicate, this.callback)
+      : super(observer);
 
   @override
   void onNext(T value) {

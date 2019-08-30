@@ -2,26 +2,38 @@ library rx.operators.buffer;
 
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/observers/inner.dart';
 import 'package:rx/src/schedulers/settings.dart';
 
-/// Gathers items emitted by the source and bundles these items when the buffer
-/// reached a [maxLength], when the buffer reached a [maxAge], or when another
-/// observable [trigger]s.
-OperatorFunction<T, List<T>> buffer<T>(
-        {Observable trigger,
-        int maxLength,
-        Duration maxAge,
-        Scheduler scheduler}) =>
-    (source) => source.lift((source, subscriber) => source.subscribe(
-        _BufferSubscriber<T>(subscriber, scheduler ?? defaultScheduler, trigger,
-            maxLength, maxAge)));
+extension BufferOperator<T> on Observable<T> {
+  /// Gathers items emitted by the source and bundles these items when the
+  /// buffer reached a [maxLength], when the buffer reached a [maxAge], or when
+  /// another observable [trigger]s.
+  Observable<List<T>> buffer({Scheduler scheduler, Observable trigger,
+      int maxLength,  Duration maxAge}) =>
+      BufferObservable<T>(this, scheduler ?? defaultScheduler, trigger,
+      maxLength, maxAge);
+}
 
-class _BufferSubscriber<T> extends Subscriber<T>
+class BufferObservable<T> extends Observable<List<T>> {
+  final Observable<T> delegate;
+  final Scheduler scheduler;
+  final Observable trigger;
+  final int maxLength;
+  final Duration maxAge;
+
+  BufferObservable(
+      this.delegate, this.scheduler, this.trigger, this.maxLength, this.maxAge);
+
+  @override
+  Subscription subscribe(Observer<List<T>> observer) => delegate.subscribe(
+      BufferSubscriber<T>(observer, scheduler, trigger, maxLength, maxAge));
+}
+
+class BufferSubscriber<T> extends Subscriber<T>
     implements InnerEvents<T, void> {
   final Scheduler scheduler;
   final int maxLength;
@@ -30,9 +42,9 @@ class _BufferSubscriber<T> extends Subscriber<T>
   List<T> buffer;
   DateTime bufferBirth;
 
-  _BufferSubscriber(Observer<List<T>> destination, this.scheduler,
+  BufferSubscriber(Observer<List<T>> observer, this.scheduler,
       Observable trigger, this.maxLength, this.maxAge)
-      : super(destination) {
+      : super(observer) {
     reset();
     if (trigger != null) {
       add(InnerObserver(trigger, this));

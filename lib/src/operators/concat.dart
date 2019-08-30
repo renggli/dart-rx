@@ -2,20 +2,16 @@ library rx.operators.concat;
 
 import 'package:rx/src/constructors/concat.dart';
 import 'package:rx/src/constructors/from.dart';
-import 'package:rx/src/core/operator.dart';
+import 'package:rx/src/core/observable.dart';
 
-/// Prepends the emission of items with [object].
-OperatorFunction<T, T> beginWith<T>(
-    /** void|Observable<T>|Iterable<T>|Future<T>|Stream<T>|T */ Object object) {
-  final observable = from<T>(object);
-  return (source) => source.lift((source, subscriber) =>
-      concat<T>([observable, source]).subscribe(subscriber));
-}
+extension ConcatOperator<T> on Observable<T> {
+  /// Prepends the emission of items with [object].
+  Observable<T> beginWith(
+      /** void|Observable<T>|Iterable<T>|Future<T>|Stream<T>|T */
+      Object object) => concat<T>([from<T>(object), this]);
 
-/// Appends the emission of items with [object].
-OperatorFunction<T, T> endWith<T>(
-    /** void|Observable<T>|Iterable<T>|Future<T>|Stream<T>|T */ Object object) {
-  final observable = from<T>(object);
-  return (source) => source.lift((source, subscriber) =>
-      concat<T>([source, observable]).subscribe(subscriber));
+  /// Appends the emission of items with [object].
+  Observable<T> endWith(
+      /** void|Observable<T>|Iterable<T>|Future<T>|Stream<T>|T */
+      Object object) => concat<T>([this, from<T>(object)]);
 }

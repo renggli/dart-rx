@@ -2,18 +2,29 @@ library rx.operators.dematerialize;
 
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 
-/// Dematerialize events into a stream from [Event] objects of type [NextEvent],
-/// [ErrorEvent] and [CompleteEvent].
-OperatorFunction<Event<T>, T> dematerialize<T>() =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_DematerializeSubscriber<T>(subscriber)));
+extension DematerializeOperator<T> on Observable<Event<T>> {
+  /// Dematerialize events into a stream from [Event] objects of type
+  /// [NextEvent], [ErrorEvent] and [CompleteEvent].
+  Observable<T> dematerialize() => DematerializeObservable<T>(this);
+}
 
-class _DematerializeSubscriber<T> extends Subscriber<Event<T>> {
-  _DematerializeSubscriber(Observer<T> destination) : super(destination);
+class DematerializeObservable<T> extends Observable<T> {
+  final Observable<Event<T>> delegate;
+
+  DematerializeObservable(this.delegate);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(DematerializeSubscriber<T>(observer));
+}
+
+class DematerializeSubscriber<T> extends Subscriber<Event<T>> {
+  DematerializeSubscriber(Observer<T> observer) : super(observer);
 
   @override
   void onNext(Event<T> value) {

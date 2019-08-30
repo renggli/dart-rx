@@ -2,53 +2,65 @@ library rx.operators.last;
 
 import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Return the last item of an observable sequence, or emits an
-/// [TooFewError] otherwise.
-OperatorFunction<T, T> last<T>() =>
-    lastOrElse<T>(throwFunction0(TooFewError()));
+extension LastOperator<T> on Observable<T> {
+  /// Return the last item of an observable sequence, or emits an
+  /// [TooFewError] otherwise.
+  Observable<T> last() =>
+      lastOrElse(throwFunction0(TooFewError()));
 
-/// Return the last item of an observable sequence, or the provided
-/// default [value] otherwise.
-OperatorFunction<T, T> lastOrDefault<T>([T value]) =>
-    lastOrElse<T>(constantFunction0(value));
+  /// Return the last item of an observable sequence, or the provided
+  /// default [value] otherwise.
+  Observable<T> lastOrDefault([T value]) =>
+      lastOrElse(constantFunction0(value));
 
-/// Return the last item of an observable sequence, or evaluate the
-/// provided [callback] otherwise.
-OperatorFunction<T, T> lastOrElse<T>(Map0<T> callback) =>
-    findLastOrElse<T>(constantFunction1(true), callback);
+  /// Return the last item of an observable sequence, or evaluate the
+  /// provided [callback] otherwise.
+  Observable<T> lastOrElse(Map0<T> callback) =>
+      findLastOrElse(constantFunction1(true), callback);
 
-/// Return the last item an observable sequence matching the [predicate], or
-/// emits an [TooFewError] otherwise.
-OperatorFunction<T, T> findLast<T>(Predicate1<T> predicate) =>
-    findLastOrElse<T>(predicate, throwFunction0(TooFewError()));
+  /// Return the last item an observable sequence matching the [predicate], or
+  /// emits an [TooFewError] otherwise.
+  Observable<T> findLast(Predicate1<T> predicate) =>
+      findLastOrElse(predicate, throwFunction0(TooFewError()));
 
-/// Return the last item an observable sequence matching the [predicate], or
-/// the provided default [value] otherwise.
-OperatorFunction<T, T> findLastOrDefault<T>(Predicate1<T> predicate,
-        [T value]) =>
-    findLastOrElse<T>(predicate, constantFunction0(value));
+  /// Return the last item an observable sequence matching the [predicate], or
+  /// the provided default [value] otherwise.
+  Observable<T> findLastOrDefault(Predicate1<T> predicate, [T value]) =>
+      findLastOrElse(predicate, constantFunction0(value));
 
-/// Return the last item an observable sequence matching the [predicate], or
-/// evaluate the provided [callback] otherwise.
-OperatorFunction<T, T> findLastOrElse<T>(
-        Predicate1<T> predicate, Map0<T> callback) =>
-    (source) => source.lift((source, subscriber) => source
-        .subscribe(_FindLastSubscriber<T>(subscriber, predicate, callback)));
+  /// Return the last item an observable sequence matching the [predicate], or
+  /// evaluate the provided [callback] otherwise.
+  Observable<T> findLastOrElse(Predicate1<T> predicate, Map0<T> callback) =>
+      LastObservable<T>(this, predicate, callback);
+}
 
-class _FindLastSubscriber<T> extends Subscriber<T> {
+class LastObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
+  final Predicate1<T> predicate;
+  final Map0<T> callback;
+
+  LastObservable(this.delegate, this.predicate, this.callback);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(LastSubscriber<T>(observer, predicate, callback));
+}
+
+class LastSubscriber<T> extends Subscriber<T> {
   final Predicate1<T> predicate;
   final Map0<T> callback;
 
   T lastValue;
   bool seenValue = false;
 
-  _FindLastSubscriber(Observer<T> destination, this.predicate, this.callback)
-      : super(destination);
+  LastSubscriber(Observer<T> observer, this.predicate, this.callback)
+      : super(observer);
 
   @override
   void onNext(T value) {

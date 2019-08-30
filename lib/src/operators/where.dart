@@ -1,22 +1,34 @@
 library rx.operators.where;
 
 import 'package:rx/src/core/events.dart';
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Filter items emitted by the source Observable by only emitting those that
-/// satisfy a specified predicate.
-OperatorFunction<T, T> where<T>(Predicate1<T> predicate) =>
-    (source) => source.lift<T>((source, subscriber) =>
-        source.subscribe(_WhereSubscriber<T>(subscriber, predicate)));
+extension WhereOperator<T> on Observable<T> {
+  /// Filter items emitted by the source Observable by only emitting those that
+  /// satisfy a specified predicate.
+  Observable<T> where(Predicate1<T> predicate) =>
+      WhereObservable<T>(this, predicate);
+}
 
-class _WhereSubscriber<T> extends Subscriber<T> {
+class WhereObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
   final Predicate1<T> predicate;
 
-  _WhereSubscriber(Observer<T> destination, this.predicate)
-      : super(destination);
+  WhereObservable(this.delegate, this.predicate);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(WhereSubscriber<T>(observer, predicate));
+}
+
+class WhereSubscriber<T> extends Subscriber<T> {
+  final Predicate1<T> predicate;
+
+  WhereSubscriber(Observer<T> observer, this.predicate) : super(observer);
 
   @override
   void onNext(T value) {

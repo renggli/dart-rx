@@ -9,4 +9,4 @@ import 'iterable.dart';
 /// Creates an [Observable] which concurrently emits all values from every
 /// source [Observable].
 Observable<T> merge<T>(Iterable<Observable<T>> observables) =>
-    fromIterable(observables).pipe(mergeMap(identityFunction));
+    fromIterable(observables).mergeMap(identityFunction);

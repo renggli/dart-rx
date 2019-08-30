@@ -1,18 +1,30 @@
 library rx.operators.skip;
 
+import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/operator.dart';
 import 'package:rx/src/core/subscriber.dart';
+import 'package:rx/src/core/subscription.dart';
 
-/// Skips over the first [count] values before starting to emit.
-OperatorFunction<T, T> skip<T>([int count = 1]) =>
-    (source) => source.lift((source, subscriber) =>
-        source.subscribe(_SkipSubscriber<T>(subscriber, count)));
+extension SkipOperator<T> on Observable<T> {
+  /// Skips over the first [count] values before starting to emit.
+  Observable<T> skip([int count = 1]) => SkipObservable<T>(this, count);
+}
 
-class _SkipSubscriber<T> extends Subscriber<T> {
-  int count = 0;
+class SkipObservable<T> extends Observable<T> {
+  final Observable<T> delegate;
+  final int count;
 
-  _SkipSubscriber(Observer<T> destination, this.count) : super(destination);
+  SkipObservable(this.delegate, this.count);
+
+  @override
+  Subscription subscribe(Observer<T> observer) =>
+      delegate.subscribe(SkipSubscriber<T>(observer, count));
+}
+
+class SkipSubscriber<T> extends Subscriber<T> {
+  int count;
+
+  SkipSubscriber(Observer<T> observer, this.count) : super(observer);
 
   @override
   void onNext(T value) {
@@ -23,3 +35,5 @@ class _SkipSubscriber<T> extends Subscriber<T> {
     }
   }
 }
+
+
