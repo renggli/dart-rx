@@ -10,9 +10,9 @@ import 'package:rx/src/shared/functions.dart';
 extension DistinctUntilChangedOperator<T> on Observable<T> {
   /// Emits all items emitted by the source Observable that are distinct
   /// from the previous item.
-  Observable<T> distinctUntilChanged<K>({Map1<T, K> key,
-      Predicate2<K, K> compare})
-    => DistinctUntilChangedObservable<T, K>(this, key, compare);
+  Observable<T> distinctUntilChanged<K>(
+          {Map1<T, K> key, Predicate2<K, K> compare}) =>
+      DistinctUntilChangedObservable<T, K>(this, key, compare);
 }
 
 class DistinctUntilChangedObservable<T, K> extends Observable<T> {
@@ -23,9 +23,8 @@ class DistinctUntilChangedObservable<T, K> extends Observable<T> {
   DistinctUntilChangedObservable(this.delegate, this.key, this.compare);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(
-          DistinctUntilChangedSubscriber<T, K>(observer, key, compare));
+  Subscription subscribe(Observer<T> observer) => delegate
+      .subscribe(DistinctUntilChangedSubscriber<T, K>(observer, key, compare));
 }
 
 class DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
@@ -35,8 +34,7 @@ class DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
   bool seenKey = false;
   K lastKey;
 
-  DistinctUntilChangedSubscriber(
-      Observer<T> observer, this.key, this.compare)
+  DistinctUntilChangedSubscriber(Observer<T> observer, this.key, this.compare)
       : super(observer);
 
   @override

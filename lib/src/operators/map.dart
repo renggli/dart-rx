@@ -12,7 +12,7 @@ extension MapOperator<T> on Observable<T> {
   /// Observable, and emits the resulting values as an Observable.
   Observable<R> map<R>(Map1<T, R> transform) =>
       MapObservable<T, R>(this, transform);
-  
+
   /// Applies a given project function to each value emitted by the source
   /// Observable, and emits the resulting values as an Observable.
   Observable<R> mapTo<R>(R value) =>

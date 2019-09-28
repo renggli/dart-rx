@@ -11,8 +11,7 @@ import 'package:rx/src/shared/functions.dart';
 extension LastOperator<T> on Observable<T> {
   /// Return the last item of an observable sequence, or emits an
   /// [TooFewError] otherwise.
-  Observable<T> last() =>
-      lastOrElse(throwFunction0(TooFewError()));
+  Observable<T> last() => lastOrElse(throwFunction0(TooFewError()));
 
   /// Return the last item of an observable sequence, or the provided
   /// default [value] otherwise.

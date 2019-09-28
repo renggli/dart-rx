@@ -12,10 +12,13 @@ extension BufferOperator<T> on Observable<T> {
   /// Gathers items emitted by the source and bundles these items when the
   /// buffer reached a [maxLength], when the buffer reached a [maxAge], or when
   /// another observable [trigger]s.
-  Observable<List<T>> buffer({Scheduler scheduler, Observable trigger,
-      int maxLength,  Duration maxAge}) =>
-      BufferObservable<T>(this, scheduler ?? defaultScheduler, trigger,
-      maxLength, maxAge);
+  Observable<List<T>> buffer(
+          {Scheduler scheduler,
+          Observable trigger,
+          int maxLength,
+          Duration maxAge}) =>
+      BufferObservable<T>(
+          this, scheduler ?? defaultScheduler, trigger, maxLength, maxAge);
 }
 
 class BufferObservable<T> extends Observable<List<T>> {

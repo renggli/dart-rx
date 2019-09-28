@@ -27,9 +27,8 @@ class ScanObservable<T, R> extends Observable<R> {
   ScanObservable(this.delegate, this.transform, this.hasSeed, this.seedValue);
 
   @override
-  Subscription subscribe(Observer<R> observer) =>
-      delegate.subscribe(
-          ScanSubscriber<T, R>(observer, transform, hasSeed, seedValue));
+  Subscription subscribe(Observer<R> observer) => delegate
+      .subscribe(ScanSubscriber<T, R>(observer, transform, hasSeed, seedValue));
 }
 
 class ScanSubscriber<T, R> extends Subscriber<T> {

@@ -6,18 +6,20 @@ import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/immediate.dart';
 
-/// An [Observable] that emits no items and immediately throws an error.
-Observable<T> throwError<T>(Object error,
-        {StackTrace stackTrace, Scheduler scheduler}) =>
-    _ThrowErrorObservable<T>(
-        error, stackTrace, scheduler ?? const ImmediateScheduler());
+extension ThrowErrorConstructor on Observable {
+  /// An [Observable] that emits no items and immediately throws an error.
+  static Observable<T> throwError<T>(Object error,
+          {StackTrace stackTrace, Scheduler scheduler}) =>
+      ThrowErrorObservable<T>(
+          error, stackTrace, scheduler ?? const ImmediateScheduler());
+}
 
-class _ThrowErrorObservable<T> with Observable<T> {
+class ThrowErrorObservable<T> with Observable<T> {
   final Object error;
   final StackTrace stackTrace;
   final Scheduler scheduler;
 
-  const _ThrowErrorObservable(this.error, this.stackTrace, this.scheduler);
+  const ThrowErrorObservable(this.error, this.stackTrace, this.scheduler);
 
   @override
   Subscription subscribe(Observer observer) =>

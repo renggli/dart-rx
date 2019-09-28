@@ -29,8 +29,7 @@ class SampleSubscriber<T> extends Subscriber<T>
   T lastValue;
   bool hasValue = false;
 
-  SampleSubscriber(Observer<T> observer, Observable trigger)
-      : super(observer) {
+  SampleSubscriber(Observer<T> observer, Observable trigger) : super(observer) {
     add(InnerObserver(trigger, this));
   }
 

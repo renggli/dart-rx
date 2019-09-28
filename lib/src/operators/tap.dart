@@ -7,8 +7,7 @@ import 'package:rx/src/core/subscription.dart';
 
 extension TapOperator<T> on Observable<T> {
   /// Perform a side effect for every emission on the source.
-  Observable<T> tap(Observer<T> handler) =>
-      TapObservable<T>(this, handler);
+  Observable<T> tap(Observer<T> handler) => TapObservable<T>(this, handler);
 }
 
 class TapObservable<T> extends Observable<T> {

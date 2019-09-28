@@ -11,8 +11,7 @@ import 'package:rx/src/shared/functions.dart';
 extension FirstOperator<T> on Observable<T> {
   /// Return the first item of an observable sequence, or emits an
   /// [TooFewError] otherwise.
-  Observable<T> first() =>
-      firstOrElse(throwFunction0(TooFewError()));
+  Observable<T> first() => firstOrElse(throwFunction0(TooFewError()));
 
   /// Return the first item of an observable sequence, or the provided
   /// default [value] otherwise.

@@ -7,15 +7,18 @@ import 'package:rx/src/core/subscriber.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/shared/functions.dart';
 
-/// Creates an observable sequence from a specified subscribe method
-/// implementation.
-Observable<T> create<T>(Map1<Subscriber<T>, dynamic> subscribeFunction) =>
-    _SubscribeObservable<T>(subscribeFunction);
+extension CreateConstructor on Observable {
+  /// Creates an observable sequence from a specified subscribe method
+  /// implementation.
+  static Observable<T> create<T>(
+          Map1<Subscriber<T>, dynamic> subscribeFunction) =>
+      SubscribeObservable<T>(subscribeFunction);
+}
 
-class _SubscribeObservable<T> extends Observable<T> {
+class SubscribeObservable<T> extends Observable<T> {
   final Map1<Subscriber<T>, dynamic> callback;
 
-  _SubscribeObservable(this.callback);
+  SubscribeObservable(this.callback);
 
   @override
   Subscription subscribe(Observer<T> observer) {

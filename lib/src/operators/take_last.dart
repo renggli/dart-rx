@@ -8,8 +8,7 @@ import 'package:rx/src/core/subscription.dart';
 
 extension TakeLastOperator<T> on Observable<T> {
   /// Emits the last [count] values emitted by the source.
-  Observable<T> takeLast([int count = 1]) =>
-      TakeLastObservable<T>(this, count);
+  Observable<T> takeLast([int count = 1]) => TakeLastObservable<T>(this, count);
 }
 
 class TakeLastObservable<T> extends Observable<T> {
@@ -22,7 +21,6 @@ class TakeLastObservable<T> extends Observable<T> {
   Subscription subscribe(Observer<T> observer) =>
       delegate.subscribe(TakeLastSubscriber<T>(observer, count));
 }
-
 
 class TakeLastSubscriber<T> extends Subscriber<T> {
   final int count;

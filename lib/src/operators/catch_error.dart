@@ -1,6 +1,5 @@
 library rx.operators.catch_error;
 
-import 'package:rx/src/constructors/from.dart';
 import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
@@ -40,7 +39,7 @@ class CatchErrorSubscriber<T> extends Subscriber<T>
     if (handlerEvent is ErrorEvent) {
       doError(handlerEvent.error, handlerEvent.stackTrace);
     } else {
-      final observable = from<T>(handlerEvent.value);
+      final observable = Observable.from<T>(handlerEvent.value);
       add(InnerObserver(observable, this));
     }
   }

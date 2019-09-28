@@ -1,8 +1,6 @@
 library rx.test.constructors_test;
 
-import 'package:rx/constructors.dart';
-import 'package:rx/core.dart';
-import 'package:rx/schedulers.dart';
+import 'package:rx/rx.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
 
@@ -15,11 +13,11 @@ void main() {
 
   group('combine latest', () {
     test('empty sequence', () {
-      final actual = combineLatest<String>([]);
+      final actual = Observable.combineLatest<String>([]);
       expect(actual, scheduler.isObservable<List<String>>('|'));
     });
     test('basic sequence', () {
-      final actual = combineLatest<String>([
+      final actual = Observable.combineLatest<String>([
         scheduler.cold('-a---e|'),
         scheduler.cold('--b-d-|'),
         scheduler.cold('---c--|'),
@@ -33,7 +31,7 @@ void main() {
           }));
     });
     test('different length', () {
-      final actual = combineLatest<String>([
+      final actual = Observable.combineLatest<String>([
         scheduler.cold('-a---e|'),
         scheduler.cold('--b-d|'),
         scheduler.cold('---c|'),
@@ -47,7 +45,7 @@ void main() {
           }));
     });
     test('repeated values', () {
-      final actual = combineLatest<String>([
+      final actual = Observable.combineLatest<String>([
         scheduler.cold('-ab-----|'),
         scheduler.cold('---cd---|'),
         scheduler.cold('-----ef-|'),
@@ -60,7 +58,7 @@ void main() {
           }));
     });
     test('early error', () {
-      final actual = combineLatest<String>([
+      final actual = Observable.combineLatest<String>([
         scheduler.cold('-a---e|'),
         scheduler.cold('--#'),
         scheduler.cold('---c--|'),
@@ -68,7 +66,7 @@ void main() {
       expect(actual, scheduler.isObservable<List<String>>('--#'));
     });
     test('late error', () {
-      final actual = combineLatest<String>([
+      final actual = Observable.combineLatest<String>([
         scheduler.cold('-a---#'),
         scheduler.cold('--b-d-|'),
         scheduler.cold('---c--|'),
@@ -83,7 +81,7 @@ void main() {
   });
   group('concat', () {
     test('elements from 3 different sources', () {
-      final actual = concat([
+      final actual = Observable.concat([
         scheduler.cold('-a-b-c-|'),
         scheduler.cold('-0-1-|'),
         scheduler.cold('-w-x-y-z-|'),
@@ -92,11 +90,11 @@ void main() {
     });
     test('elements from 3 same sources', () {
       final source = scheduler.cold('--i-j-|');
-      final actual = concat([source, source, source]);
+      final actual = Observable.concat([source, source, source]);
       expect(actual, scheduler.isObservable('--i-j---i-j---i-j-|'));
     });
     test('no elements from empty sources', () {
-      final actual = concat([
+      final actual = Observable.concat([
         scheduler.cold('--|'),
         scheduler.cold('---|'),
         scheduler.cold('-|'),
@@ -104,7 +102,7 @@ void main() {
       expect(actual, scheduler.isObservable('------|'));
     });
     test('no elements after error', () {
-      final actual = concat([
+      final actual = Observable.concat([
         scheduler.cold('-a-|'),
         scheduler.cold('-#'),
         scheduler.cold('-b-|'),
@@ -114,7 +112,7 @@ void main() {
   });
   group('create', () {
     test('complete sequence of values', () {
-      final actual = create((subscriber) {
+      final actual = Observable.create((subscriber) {
         subscriber.next('a');
         subscriber.next('b');
         subscriber.complete();
@@ -122,7 +120,7 @@ void main() {
       expect(actual, scheduler.isObservable('(ab|)'));
     });
     test('error sequence of values', () {
-      final actual = create((subscriber) {
+      final actual = Observable.create((subscriber) {
         subscriber.next('a');
         subscriber.next('b');
         subscriber.error('Error');
@@ -130,7 +128,7 @@ void main() {
       expect(actual, scheduler.isObservable('(ab#)'));
     });
     test('throws an error while creating values', () {
-      final actual = create((subscriber) {
+      final actual = Observable.create((subscriber) {
         subscriber.next('a');
         subscriber.next('b');
         throw 'Error';
@@ -141,7 +139,7 @@ void main() {
   group('defer', () {
     test('complete value', () {
       var seen = false;
-      final actual = defer(() {
+      final actual = Observable.defer(() {
         seen = true;
         return just('a');
       });
@@ -151,7 +149,7 @@ void main() {
     });
     test('throws error', () {
       var seen = false;
-      final actual = defer<String>(() {
+      final actual = Observable.defer<String>(() {
         seen = true;
         throw 'Error';
       });
@@ -161,7 +159,7 @@ void main() {
     });
     test('does not return', () {
       var seen = false;
-      final actual = defer<String>(() {
+      final actual = Observable.defer<String>(() {
         seen = true;
         return null;
       });
@@ -172,17 +170,17 @@ void main() {
   });
   group('empty', () {
     test('immediately completes', () {
-      final actual = empty();
+      final actual = Observable.empty();
       expect(actual, scheduler.isObservable('|'));
     });
     test('synchronous by default', () {
-      final actual = empty();
+      final actual = Observable.empty();
       var seen = false;
       actual.subscribe(Observer.complete(() => seen = true));
       expect(seen, isTrue);
     });
     test('asynchronous with custom scheduler', () {
-      final actual = empty(scheduler: scheduler);
+      final actual = Observable.empty(scheduler: scheduler);
       var seen = false;
       actual.subscribe(Observer.complete(() => seen = true));
       expect(seen, isFalse);
@@ -192,7 +190,7 @@ void main() {
   });
   group('forkJoin', () {
     test('joins the last values', () {
-      final actual = forkJoin<String>([
+      final actual = Observable.forkJoin<String>([
         scheduler.cold('--a--b--c--d--|'),
         scheduler.cold('(b|)'),
         scheduler.cold('--1--2--3--|'),
@@ -204,7 +202,7 @@ void main() {
           }));
     });
     test('accepts null values', () {
-      final actual = forkJoin<String>([
+      final actual = Observable.forkJoin<String>([
         scheduler.cold('--a--b--c--d--|'),
         scheduler.cold('(b|)', values: {'b': null}),
         scheduler.cold('--1--2--3--|'),
@@ -216,7 +214,7 @@ void main() {
           }));
     });
     test('accepts a single observable', () {
-      final actual = forkJoin<String>([
+      final actual = Observable.forkJoin<String>([
         scheduler.cold('---a---b---c---d---|'),
       ]);
       expect(
@@ -226,7 +224,7 @@ void main() {
           }));
     });
     test('completes empty with empty observable', () {
-      final actual = forkJoin<String>([
+      final actual = Observable.forkJoin<String>([
         scheduler.cold('--a--b--c--d--|'),
         scheduler.cold('(b|)'),
         scheduler.cold('------------------|'),
@@ -235,7 +233,7 @@ void main() {
           actual, scheduler.isObservable<List<String>>('------------------|'));
     });
     test('completes early with empty observable', () {
-      final actual = forkJoin<String>([
+      final actual = Observable.forkJoin<String>([
         scheduler.cold('--a--b--c--d--|'),
         scheduler.cold('(b|)'),
         scheduler.cold('-----|'),
@@ -243,7 +241,7 @@ void main() {
       expect(actual, scheduler.isObservable<List<String>>('-----|'));
     });
     test('completes when all sources are empty', () {
-      final actual = forkJoin<String>([
+      final actual = Observable.forkJoin<String>([
         scheduler.cold('---------|'),
         scheduler.cold('---------------|'),
         scheduler.cold('-----|'),
@@ -251,18 +249,18 @@ void main() {
       expect(actual, scheduler.isObservable<List<String>>('-----|'));
     });
     test('completes when one never completes, but another is emptuy', () {
-      final actual = forkJoin<String>([
+      final actual = Observable.forkJoin<String>([
         scheduler.cold('--------------'),
         scheduler.cold('--|'),
       ]);
       expect(actual, scheduler.isObservable<List<String>>('--|'));
     });
     test('completes immediately when empty', () {
-      final actual = forkJoin<String>([]);
+      final actual = Observable.forkJoin<String>([]);
       expect(actual, scheduler.isObservable<List<String>>('|'));
     });
     test('raises error when any of the sources raises error', () {
-      final actual = forkJoin<String>([
+      final actual = Observable.forkJoin<String>([
         scheduler.cold('--a--b--c--d--|'),
         scheduler.cold('(b|)'),
         scheduler.cold('--1--2-#'),
@@ -272,26 +270,27 @@ void main() {
   });
   group('from', () {
     test('empty', () {
-      final actual = from<String>(null);
+      final actual = Observable.from<String>(null);
       expect(actual, scheduler.isObservable<String>('|'));
     });
     test('observable', () {
-      final actual = from<String>(just('x'));
+      final actual = Observable.from<String>(Observable.just('x'));
       expect(actual, scheduler.isObservable<String>('(x|)'));
     });
     test('iterable', () {
-      final actual = from<String>(['a', 'b', 'c']);
+      final actual = Observable.from<String>(['a', 'b', 'c']);
       expect(actual, scheduler.isObservable<String>('(abc|)'));
     });
     test('future', () {
-      final actual = from<String>(Future.value('a'));
+      final actual = Observable.from<String>(Future.value('a'));
       actual.subscribe(Observer(
         next: (value) => expect(value, 'a'),
         error: (error, [stack]) => fail('No error expected'),
       ));
     });
     test('stream', () {
-      final actual = from<String>(Stream.fromIterable(['a', 'b', 'c']));
+      final actual =
+          Observable.from<String>(Stream.fromIterable(['a', 'b', 'c']));
       final observed = <String>[];
       actual.subscribe(Observer<String>(
         next: (value) => observed.add(value),
@@ -300,33 +299,33 @@ void main() {
       ));
     });
     test('just', () {
-      final actual = from<int>(42);
+      final actual = Observable.from<int>(42);
       expect(actual, scheduler.isObservable('(x|)', values: {'x': 42}));
     });
     test('invalid', () {
-      expect(() => from<int>('a'), throwsArgumentError);
+      expect(() => Observable.from<int>('a'), throwsArgumentError);
     });
   });
   group('fromIterable', () {
     test('completes on empty collection', () {
-      final actual = fromIterable(<String>[]);
+      final actual = Observable.fromIterable(<String>[]);
       expect(actual, scheduler.isObservable<String>('|'));
     });
     test('emits all the values', () {
-      final actual = fromIterable(['a', 'b', 'c']);
+      final actual = Observable.fromIterable(['a', 'b', 'c']);
       expect(actual, scheduler.isObservable<String>('(abc|)'));
     });
   });
   group('fromFuture', () {
     test('completes with value', () {
-      final actual = fromFuture(Future.value('a'));
+      final actual = Observable.fromFuture(Future.value('a'));
       actual.subscribe(Observer(
         next: (value) => expect(value, 'a'),
         error: (error, [stack]) => fail('No error expected'),
       ));
     });
     test('completes with error', () {
-      final actual = fromFuture(Future<String>.error('Error'));
+      final actual = Observable.fromFuture(Future<String>.error('Error'));
       actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
         error: (error, [stack]) => expect(error, 'Error'),
@@ -335,7 +334,7 @@ void main() {
   });
   group('fromStream', () {
     test('completes immediately', () {
-      final actual = fromStream(Stream.empty());
+      final actual = Observable.fromStream(Stream.empty());
       final observed = <String>[];
       actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
@@ -344,7 +343,8 @@ void main() {
       ));
     });
     test('completes with values', () {
-      final actual = fromStream(Stream.fromIterable(['a', 'b', 'c']));
+      final actual =
+          Observable.fromStream(Stream.fromIterable(['a', 'b', 'c']));
       final observed = <String>[];
       actual.subscribe(Observer(
         next: (value) => observed.add(value),
@@ -353,7 +353,8 @@ void main() {
       ));
     });
     test('completes with error', () {
-      final actual = fromStream(Stream.fromFuture(Future.error('Error')));
+      final actual =
+          Observable.fromStream(Stream.fromFuture(Future.error('Error')));
       actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
         error: (error, [stack]) => expect(error, 'Error'),
@@ -361,7 +362,7 @@ void main() {
       ));
     });
     test('subscription', () {
-      final actual = fromStream(Stream.fromIterable([1, 2, 3]));
+      final actual = Observable.fromStream(Stream.fromIterable([1, 2, 3]));
       final subscription = actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
         error: (error, [stack]) => expect(error, 'Error'),
@@ -374,7 +375,7 @@ void main() {
   });
   group('iff', () {
     test('true branch', () {
-      final actual = iff(
+      final actual = Observable.iff(
         () => true,
         scheduler.cold('-t--|'),
         scheduler.cold('--f-|'),
@@ -382,7 +383,7 @@ void main() {
       expect(actual, scheduler.isObservable('-t--|'));
     });
     test('false branch', () {
-      final actual = iff(
+      final actual = Observable.iff(
         () => false,
         scheduler.cold('-t--|'),
         scheduler.cold('--f-|'),
@@ -392,22 +393,22 @@ void main() {
   });
   group('just', () {
     test('immediately emits value', () {
-      final actual = just('a');
+      final actual = Observable.just('a');
       expect(actual, scheduler.isObservable<String>('(a|)'));
     });
     test('immediately emits null', () {
-      final actual = just<String>(null);
+      final actual = Observable.just<String>(null);
       expect(
           actual, scheduler.isObservable<String>('(a|)', values: {'a': null}));
     });
     test('synchronous by default', () {
-      final actual = just('a');
+      final actual = Observable.just('a');
       String seenValue;
       actual.subscribe(Observer.next((value) => seenValue = value));
       expect(seenValue, 'a');
     });
     test('asynchronous with custom scheduler', () {
-      final actual = just('a', scheduler: scheduler);
+      final actual = Observable.just('a', scheduler: scheduler);
       String seenValue;
       actual.subscribe(Observer.next((value) => seenValue = value));
       expect(seenValue, isNull);
@@ -417,28 +418,28 @@ void main() {
   });
   group('merge', () {
     test('merges two interleaving sequences', () {
-      final actual = merge([
+      final actual = Observable.merge([
         scheduler.cold<String>('--a-----b-----c----|'),
         scheduler.cold<String>('-----x-----y-----z---|'),
       ]);
       expect(actual, scheduler.isObservable<String>('--a--x--b--y--c--z---|'));
     });
     test('merges two overlapping sequences', () {
-      final actual = merge([
+      final actual = Observable.merge([
         scheduler.cold<String>('--a--b--c--|'),
         scheduler.cold<String>('--x--y--z--|'),
       ]);
       expect(actual, scheduler.isObservable<String>('--(ax)--(by)--(cz)--|'));
     });
     test('merges throwing sequence', () {
-      final actual = merge([
+      final actual = Observable.merge([
         scheduler.cold<String>('--a--#'),
         scheduler.cold<String>('--x-----y--|'),
       ]);
       expect(actual, scheduler.isObservable<String>('--(ax)--#'));
     });
     test('merges many sequences', () {
-      final actual = merge([
+      final actual = Observable.merge([
         scheduler.cold<String>('a--|'),
         scheduler.cold<String>('-b--|'),
         scheduler.cold<String>('--c--|'),
@@ -451,7 +452,7 @@ void main() {
   });
   group('never', () {
     test('immediately closed', () {
-      final actual = never();
+      final actual = Observable.never();
       final subscription = actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
         error: (error, [stack]) => fail('No error expected'),
@@ -463,19 +464,19 @@ void main() {
   group('throwError', () {
     test('immediately throws', () {
       final error = Exception('My Error');
-      final actual = throwError(error);
+      final actual = Observable.throwError(error);
       expect(actual, scheduler.isObservable('#', error: error));
     });
     test('synchronous by default', () {
       final error = Exception('My Error');
-      final actual = throwError(error);
+      final actual = Observable.throwError(error);
       Exception seenError;
       actual.subscribe(Observer.error((error, [stack]) => seenError = error));
       expect(seenError, error);
     });
     test('asynchronous with custom scheduler', () {
       final error = Exception('My Error');
-      final actual = throwError(error, scheduler: scheduler);
+      final actual = Observable.throwError(error, scheduler: scheduler);
       Exception seenError;
       actual.subscribe(Observer.error((error, [stack]) => seenError = error));
       expect(seenError, isNull);
@@ -489,19 +490,20 @@ void main() {
       List.generate(10, (i) => i),
     );
     test('no delay', () {
-      final actual = timer();
+      final actual = Observable.timer();
       expect(actual, scheduler.isObservable('(0|)', values: values));
     });
     test('delay', () {
-      final actual = timer(delay: scheduler.stepDuration * 5);
+      final actual = Observable.timer(delay: scheduler.stepDuration * 5);
       expect(actual, scheduler.isObservable('-----(0|)', values: values));
     });
     test('periodic', () {
-      final actual = timer(period: scheduler.stepDuration * 2).take(5);
+      final actual =
+          Observable.timer(period: scheduler.stepDuration * 2).take(5);
       expect(actual, scheduler.isObservable('0-1-2-3-(4|)', values: values));
     });
     test('delay & periodic', () {
-      final actual = timer(
+      final actual = Observable.timer(
               delay: scheduler.stepDuration * 3,
               period: scheduler.stepDuration * 2)
           .take(5);
@@ -510,49 +512,51 @@ void main() {
   });
   group('toFuture', () {
     test('empty observable', () {
-      final actual = toFuture(empty());
+      final actual = Observable.empty().toFuture();
       expect(actual, throwsTooFewError);
     });
     test('single value', () {
-      final actual = toFuture(just(42));
+      final actual = Observable.just(42).toFuture();
       expect(actual, completion(42));
     });
     test('multiple values', () {
       final actual =
-          toFuture(fromIterable([1, 2, 3], scheduler: ImmediateScheduler()));
+          Observable.fromIterable([1, 2, 3], scheduler: ImmediateScheduler())
+              .toFuture();
       expect(actual, completion(1));
     });
     test('immediate error', () {
-      final actual = toFuture(throwError(TooManyError()));
+      final actual = Observable.throwError(TooManyError()).toFuture();
       expect(actual, throwsTooManyError);
     });
   });
   group('toStream', () {
     test('empty observable', () {
-      final actual = toStream(empty());
+      final actual = Observable.empty().toStream();
       expect(actual, emitsDone);
     });
     test('single value', () {
-      final actual = toStream(just(42));
+      final actual = Observable.just(42).toStream();
       expect(actual, emitsInOrder([42]));
     });
     test('multiple values', () {
       final actual =
-          toStream(fromIterable([1, 2, 3], scheduler: ImmediateScheduler()));
+          Observable.fromIterable([1, 2, 3], scheduler: ImmediateScheduler())
+              .toStream();
       expect(actual, emitsInOrder([1, 2, 3]));
     });
     test('immediate error', () {
-      final actual = toStream(throwError(TooManyError()));
+      final actual = Observable.throwError(TooManyError()).toStream();
       expect(actual, emitsError(const TypeMatcher<TooManyError>()));
     });
   });
   group('zip', () {
     test('empty sequence', () {
-      final actual = zip<String>([]);
+      final actual = Observable.zip<String>([]);
       expect(actual, scheduler.isObservable<List<String>>('|'));
     });
     test('basic sequence', () {
-      final actual = zip<String>([
+      final actual = Observable.zip<String>([
         scheduler.cold('-a---e|'),
         scheduler.cold('--b-d-|'),
         scheduler.cold('---c--|'),
@@ -564,7 +568,7 @@ void main() {
           }));
     });
     test('different length', () {
-      final actual = zip<String>([
+      final actual = Observable.zip<String>([
         scheduler.cold('-a---e-|'),
         scheduler.cold('--b-d-|'),
         scheduler.cold('---c-|'),
@@ -576,7 +580,7 @@ void main() {
           }));
     });
     test('repeated values', () {
-      final actual = zip<String>([
+      final actual = Observable.zip<String>([
         scheduler.cold('-ab-----|'),
         scheduler.cold('---cd---|'),
         scheduler.cold('-----ef-|'),
@@ -589,7 +593,7 @@ void main() {
           }));
     });
     test('early error', () {
-      final actual = zip<String>([
+      final actual = Observable.zip<String>([
         scheduler.cold('-a---e|'),
         scheduler.cold('--#'),
         scheduler.cold('---c--|'),
@@ -597,7 +601,7 @@ void main() {
       expect(actual, scheduler.isObservable<List<String>>('--#'));
     });
     test('late error', () {
-      final actual = zip<String>([
+      final actual = Observable.zip<String>([
         scheduler.cold('-a---#'),
         scheduler.cold('--b-d-|'),
         scheduler.cold('---c--|'),

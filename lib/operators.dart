@@ -11,7 +11,8 @@ export 'src/operators/default_if_empty.dart' show DefaultIfEmptyOperator;
 export 'src/operators/delay.dart' show DelayOperator;
 export 'src/operators/dematerialize.dart' show DematerializeOperator;
 export 'src/operators/distinct.dart' show DistinctOperator;
-export 'src/operators/distinct_until_changed.dart' show DistinctUntilChangedOperator;
+export 'src/operators/distinct_until_changed.dart'
+    show DistinctUntilChangedOperator;
 export 'src/operators/exhaust.dart' show ExhaustAllOperator, ExhaustMapOperator;
 export 'src/operators/finalize.dart' show FinalizeOperator;
 export 'src/operators/first.dart' show FirstOperator;

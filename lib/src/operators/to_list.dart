@@ -20,15 +20,14 @@ class ToListObservable<T> extends Observable<List<T>> {
 
   @override
   Subscription subscribe(Observer<List<T>> observer) =>
-      delegate.subscribe(ToListSubscriber<T>(observer,
-          listConstructor != null ? listConstructor() : <T>[]));
+      delegate.subscribe(ToListSubscriber<T>(
+          observer, listConstructor != null ? listConstructor() : <T>[]));
 }
 
 class ToListSubscriber<T> extends Subscriber<T> {
   final List<T> list;
 
-  ToListSubscriber(Observer<List<T>> observer, this.list)
-      : super(observer);
+  ToListSubscriber(Observer<List<T>> observer, this.list) : super(observer);
 
   @override
   void onNext(T value) => list.add(value);

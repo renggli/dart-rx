@@ -13,7 +13,7 @@ extension DistinctOperator<T> on Observable<T> {
   /// Emits all items emitted by the source that are distinct from previous
   /// items.
   Observable<T> distinct({Predicate2<T, T> equals, Map1<T, int> hashCode}) =>
-    DistinctObservable<T>(this, equals, hashCode);
+      DistinctObservable<T>(this, equals, hashCode);
 }
 
 class DistinctObservable<T> extends Observable<T> {
@@ -24,9 +24,8 @@ class DistinctObservable<T> extends Observable<T> {
   DistinctObservable(this.delegate, this.equalsFunction, this.hashCodeFunction);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(
-          DistinctSubscriber<T>(observer, equalsFunction, hashCodeFunction));
+  Subscription subscribe(Observer<T> observer) => delegate.subscribe(
+      DistinctSubscriber<T>(observer, equalsFunction, hashCodeFunction));
 }
 
 class DistinctSubscriber<T> extends Subscriber<T> {

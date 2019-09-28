@@ -1,6 +1,5 @@
 library rx.operators.finalize;
 
-
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/subscription.dart';
@@ -21,9 +20,8 @@ class FinalizeObservable<T> extends Observable<T> {
   FinalizeObservable(this.delegate, this.finalize);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-    Subscription.composite([
-      Subscription.of(finalize),
-      delegate.subscribe(observer),
-    ]);
+  Subscription subscribe(Observer<T> observer) => Subscription.composite([
+        Subscription.of(finalize),
+        delegate.subscribe(observer),
+      ]);
 }

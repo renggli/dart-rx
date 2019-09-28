@@ -22,8 +22,8 @@ extension MergeMapOperator<T> on Observable<T> {
   /// Emits all merged values from a single higher-order `observable. Subscribes
   /// to at most `concurrent` sources.
   Observable<R> mergeMapTo<R>(Observable<R> observable,
-      {int concurrent = maxInteger}) =>
-    mergeMap<R>(constantFunction1(observable), concurrent: concurrent);
+          {int concurrent = maxInteger}) =>
+      mergeMap<R>(constantFunction1(observable), concurrent: concurrent);
 
   /// Emits all merged values from a higher-order [Observable] retrieved by
   /// projecting the values of the source to higher-order [Observable]s.

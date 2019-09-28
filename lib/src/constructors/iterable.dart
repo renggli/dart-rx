@@ -1,4 +1,4 @@
-library rx.constructors.iterable;
+library rx.converters.iterable;
 
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
@@ -6,15 +6,17 @@ import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/settings.dart';
 
-/// An [Observable] that emits the items of an [Iterable].
-Observable<T> fromIterable<T>(Iterable<T> iterable, {Scheduler scheduler}) =>
-    _IterableObservable<T>(iterable, scheduler ?? defaultScheduler);
+extension IterableConstructor<T> on Iterable<T> {
+  /// Converts this to an [Observable] that emits the items of an [Iterable].
+  Observable<T> toObservable({Scheduler scheduler}) =>
+      IterableObservable<T>(this, scheduler ?? defaultScheduler);
+}
 
-class _IterableObservable<T> with Observable<T> {
+class IterableObservable<T> with Observable<T> {
   final Iterable<T> iterable;
   final Scheduler scheduler;
 
-  _IterableObservable(this.iterable, this.scheduler);
+  IterableObservable(this.iterable, this.scheduler);
 
   @override
   Subscription subscribe(Observer<T> observer) {

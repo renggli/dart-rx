@@ -35,5 +35,3 @@ class SkipSubscriber<T> extends Subscriber<T> {
     }
   }
 }
-
-

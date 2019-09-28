@@ -6,14 +6,16 @@ import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/immediate.dart';
 
-/// An [Observable] that emits no items and immediately completes.
-Observable<T> empty<T>({Scheduler scheduler}) =>
-    _EmptyObservable<T>(scheduler ?? const ImmediateScheduler());
+extension EmptyConstructor on Observable {
+  /// An [Observable] that emits no items and immediately completes.
+  static Observable<T> empty<T>({Scheduler scheduler}) =>
+      EmptyObservable<T>(scheduler ?? const ImmediateScheduler());
+}
 
-class _EmptyObservable<T> with Observable<T> {
+class EmptyObservable<T> with Observable<T> {
   final Scheduler scheduler;
 
-  const _EmptyObservable(this.scheduler);
+  const EmptyObservable(this.scheduler);
 
   @override
   Subscription subscribe(Observer<void> observer) =>

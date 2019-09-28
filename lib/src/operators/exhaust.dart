@@ -20,8 +20,8 @@ extension ExhaustMapOperator<T> on Observable<T> {
   /// Subscribes to at most `concurrent` sources, drops observables exceeding
   /// this threshold.
   Observable<R> exhaustMapTo<R>(Observable<R> observable,
-      {int concurrent = 1}) =>
-    exhaustMap<R>(constantFunction1(observable), concurrent: concurrent);
+          {int concurrent = 1}) =>
+      exhaustMap<R>(constantFunction1(observable), concurrent: concurrent);
 
   /// Emits and completes values from a higher-order [Observable] retrieved by
   /// projecting the values of the source to higher-order [Observable]s.
@@ -42,9 +42,8 @@ class ExhaustObservable<T, R> extends Observable<R> {
   ExhaustObservable(this.delegate, this.project, this.concurrent);
 
   @override
-  Subscription subscribe(Observer<R> observer) =>
-      delegate.subscribe(ExhaustSubscriber<T, R>(
-          observer, project, concurrent));
+  Subscription subscribe(Observer<R> observer) => delegate
+      .subscribe(ExhaustSubscriber<T, R>(observer, project, concurrent));
 }
 
 class ExhaustSubscriber<T, R> extends Subscriber<T>
