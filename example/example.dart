@@ -24,10 +24,10 @@ void main() {
   empty.subscribe(printObserver('empty'));
 
   // future
-  final fromFuture = Observable.fromFuture(Future.value(42));
+  final fromFuture = Future.value(42).toObservable();
   fromFuture.subscribe(printObserver('fromFuture'));
 
-  final toFuture = Observable.toFuture(Observable.fromIterable([1, 2, 3]));
+  final toFuture = [1, 2, 3].toObservable().toFuture();
   toFuture.then((value) => print('toFuture.then($value)'));
 
   // just
@@ -39,10 +39,10 @@ void main() {
   never.subscribe(printObserver('never'));
 
   // stream
-  final fromStream = Observable.fromStream(Stream.fromIterable([1, 2, 3]));
+  final fromStream = Stream.fromIterable([1, 2, 3]).toObservable();
   fromStream.subscribe(printObserver('fromStream'));
 
-  final toStream = Observable.toStream(Observable.fromIterable([1, 2, 3]));
+  final toStream = [1, 2, 3].toObservable().toStream();
   toStream.listen((value) => print('toStream.value($value)'));
 
   // throw
@@ -50,7 +50,8 @@ void main() {
   throwError.subscribe(printObserver('throw'));
 
   // double subscription
-  final transformed = Observable.fromIterable(IntegerRange(0, 100))
+  final transformed = IntegerRange(0, 100)
+      .toObservable()
       .where((value) => value.isEven)
       .map((value) => '{value * value}')
       .map((value) => value.length < 3);
@@ -58,9 +59,8 @@ void main() {
   transformed.subscribe(printObserver('two'));
 
   // subject subscription
-  final subject = Observable.fromIterable(IntegerRange(0, 100, 25))
-      .publishReplay()
-      .refCount();
+  final subject =
+      IntegerRange(0, 100, 25).toObservable().publishReplay().refCount();
   subject.subscribe(printObserver('subject1'));
   subject.subscribe(printObserver('subject2'));
 
