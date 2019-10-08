@@ -1,6 +1,7 @@
 library rx.operators.concat;
 
 import 'package:rx/src/constructors/concat.dart';
+import 'package:rx/src/constructors/from.dart';
 import 'package:rx/src/core/observable.dart';
 
 extension ConcatOperator<T> on Observable<T> {
@@ -8,11 +9,11 @@ extension ConcatOperator<T> on Observable<T> {
   Observable<T> beginWith(
           /** void|Observable<T>|Iterable<T>|Future<T>|Stream<T>|T */
           Object object) =>
-      concat<T>([Observable.from<T>(object), this]);
+      concat<T>([from<T>(object), this]);
 
   /// Appends the emission of items with [object].
   Observable<T> endWith(
           /** void|Observable<T>|Iterable<T>|Future<T>|Stream<T>|T */
           Object object) =>
-      concat<T>([this, Observable.from<T>(object)]);
+      concat<T>([this, from<T>(object)]);
 }

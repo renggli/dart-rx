@@ -1,9 +1,5 @@
 # http://dart-lang.github.io/linter/lints/
 # https://github.com/dart-lang/linter/blob/master/example/all.yaml
-analyzer:
-  enable-experiment:
-    # https://github.com/dart-lang/language/blob/master/accepted/future-releases/static-extension-methods/feature-specification.md
-    - extension-methods
 linter:
   rules:
     - always_declare_return_types

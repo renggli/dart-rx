@@ -141,7 +141,7 @@ void main() {
       var seen = false;
       final actual = Observable.defer(() {
         seen = true;
-        return just('a');
+        return Observable.just('a');
       });
       expect(seen, isFalse);
       expect(actual, scheduler.isObservable<String>('(a|)'));

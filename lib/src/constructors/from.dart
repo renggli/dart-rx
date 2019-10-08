@@ -1,17 +1,17 @@
 library rx.constructors.from;
 
+import 'package:rx/src/constructors/empty.dart';
 import 'package:rx/src/constructors/future.dart';
 import 'package:rx/src/constructors/iterable.dart';
+import 'package:rx/src/constructors/just.dart';
 import 'package:rx/src/constructors/stream.dart';
 import 'package:rx/src/core/observable.dart';
 
 extension FromConstructor on Observable {
   /// An [Observable] inferred from the `object`s input type.
-  static Observable<T> from<T>(
-      /** void|Observable<T>|Iterable<T>|Future<T>|Stream<T>|T */ Object
-          object) {
+  static Observable<T> from<T>(Object object) {
     if (object == null) {
-      return Observable.empty<T>();
+      return empty<T>();
     } else if (object is Observable<T>) {
       return object;
     } else if (object is Iterable<T>) {
@@ -21,9 +21,8 @@ extension FromConstructor on Observable {
     } else if (object is Stream<T>) {
       return object.toObservable();
     } else if (object is T) {
-      return Observable.just<T>(object);
-    } else {
-      throw ArgumentError.value(object, 'object');
+      return just<T>(object);
     }
+    throw ArgumentError.value(object, 'object');
   }
 }

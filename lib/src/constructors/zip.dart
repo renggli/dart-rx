@@ -1,7 +1,9 @@
 library rx.operators.zip;
 
+import 'package:rx/src/constructors/iterable.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/scheduler.dart';
+import 'package:rx/src/operators/zip.dart';
 import 'package:rx/src/schedulers/immediate.dart';
 
 extension ZipConstructor on Observable {
@@ -9,7 +11,5 @@ extension ZipConstructor on Observable {
   /// calculated from the next value of each of its inputs.
   static Observable<List<T>> zip<T>(Iterable<Observable<T>> iterable,
           {Scheduler scheduler}) =>
-      Observable.fromIterable(iterable,
-              scheduler: scheduler ?? ImmediateScheduler())
-          .zip();
+      iterable.toObservable(scheduler: scheduler ?? ImmediateScheduler()).zip();
 }
