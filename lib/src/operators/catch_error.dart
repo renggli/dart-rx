@@ -1,5 +1,6 @@
 library rx.operators.catch_error;
 
+import 'package:rx/src/constructors/from.dart';
 import 'package:rx/src/core/events.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
