@@ -14,6 +14,7 @@ abstract class Event<T> {
   factory Event.complete() = CompleteEvent<T>;
 
   /// Maps the evaluation of the 0-argument callback to an event.
+  // ignore: prefer_constructors_over_static_methods
   static Event<R> map0<R>(Map0<R> callback) {
     try {
       return Event<R>.next(callback());
@@ -23,6 +24,7 @@ abstract class Event<T> {
   }
 
   /// Maps the evaluation of the 1-argument callback to an event.
+  // ignore: prefer_constructors_over_static_methods
   static Event<R> map1<R, T1>(Map1<T1, R> callback, T1 value1) {
     try {
       return Event<R>.next(callback(value1));
@@ -32,6 +34,7 @@ abstract class Event<T> {
   }
 
   /// Maps the evaluation of the 2-argument callback to an event.
+  // ignore: prefer_constructors_over_static_methods
   static Event<R> map2<R, T1, T2>(
       Map2<T1, T2, R> callback, T1 value1, T2 value2) {
     try {
