@@ -7,15 +7,13 @@ import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/settings.dart';
 import 'package:rx/src/subscriptions/sequential.dart';
 
-extension TimerConstructor on Observable {
-  /// An [Observable] that starts emitting after `delay` and that emits an ever
-  /// increasing numbers after each `period` thereafter.
-  static Observable<int> timer(
-          {Duration delay = Duration.zero,
-          Duration period,
-          Scheduler scheduler}) =>
-      TimerObservable(delay, period, scheduler ?? defaultScheduler);
-}
+/// An [Observable] that starts emitting after `delay` and that emits an ever
+/// increasing numbers after each `period` thereafter.
+Observable<int> timer(
+        {Duration delay = Duration.zero,
+        Duration period,
+        Scheduler scheduler}) =>
+    TimerObservable(delay, period, scheduler ?? defaultScheduler);
 
 class TimerObservable with Observable<int> {
   final Duration delay;

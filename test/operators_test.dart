@@ -1,6 +1,9 @@
 library rx.test.operators_test;
 
-import 'package:rx/rx.dart';
+import 'package:rx/constructors.dart';
+import 'package:rx/core.dart';
+import 'package:rx/operators.dart';
+import 'package:rx/schedulers.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
 
@@ -155,7 +158,7 @@ void main() {
       });
       test('error', () {
         final input = scheduler.cold<String>('abc|');
-        final actual = input.beginWith(Observable.throwError<String>('Error'));
+        final actual = input.beginWith(throwError<String>('Error'));
         expect(actual, scheduler.isObservable<String>('#', error: 'Error'));
       });
     });
@@ -177,7 +180,7 @@ void main() {
       });
       test('error', () {
         final input = scheduler.cold<String>('abc|');
-        final actual = input.endWith(Observable.throwError<String>('Error'));
+        final actual = input.endWith(throwError<String>('Error'));
         expect(actual, scheduler.isObservable<String>('abc#', error: 'Error'));
       });
     });
@@ -437,8 +440,8 @@ void main() {
       expect(actual, scheduler.isObservable<String>('xy---|'));
     });
     test('invalid concurrent', () {
-      expect(
-          () => Observable.never().exhaustAll(concurrent: 0), throwsRangeError);
+      expect(() => never<Observable<void>>().exhaustAll(concurrent: 0),
+          throwsRangeError);
     });
   });
   group('exhaustMap', () {
@@ -494,8 +497,7 @@ void main() {
     });
     test('invalid concurrent', () {
       expect(
-          () => Observable.never().exhaustMap(
-              (inner) => scheduler.cold<String>(inner),
+          () => never().exhaustMap((inner) => scheduler.cold<String>(inner),
               concurrent: 0),
           throwsRangeError);
     });
@@ -533,8 +535,7 @@ void main() {
     });
     test('invalid concurrent', () {
       expect(
-          () => Observable.never()
-              .exhaustMapTo(scheduler.cold<String>(''), concurrent: 0),
+          () => never().exhaustMapTo(scheduler.cold<String>(''), concurrent: 0),
           throwsRangeError);
     });
   });
@@ -1042,8 +1043,7 @@ void main() {
     });
     test('invalid concurrent', () {
       expect(
-          () => Observable.never().mergeMap(
-              (inner) => scheduler.cold<String>(inner),
+          () => never().mergeMap((inner) => scheduler.cold<String>(inner),
               concurrent: 0),
           throwsRangeError);
     });
@@ -1088,14 +1088,14 @@ void main() {
     });
     test('invalid concurrent', () {
       expect(
-          () => Observable.mergeMap((inner) => scheduler.cold<String>(inner),
+          () => never().mergeMap((inner) => scheduler.cold<String>(inner),
               concurrent: 0),
           throwsRangeError);
     });
   });
   group('mergeMapTo', () {
     test('inner emits a single value', () {
-      final inner = Observable.just('x');
+      final inner = just('x');
       final actual = scheduler.cold('-a--a---a-|').mergeMapTo(inner);
       expect(actual, scheduler.isObservable<String>('-x--x---x-|'));
     });
@@ -1131,17 +1131,14 @@ void main() {
       expect(actual, scheduler.isObservable<String>('xyz-xyz-|'));
     });
     test('invalid concurrent', () {
-      expect(
-          () =>
-              Observable.never().mergeMapTo(scheduler.cold(''), concurrent: 0),
+      expect(() => never().mergeMapTo(scheduler.cold(''), concurrent: 0),
           throwsRangeError);
     });
   });
   group('multicast', () {
     test('argument error', () {
       expect(
-          () => Observable.never()
-              .multicast(subject: Subject(), factory: () => Subject()),
+          () => never().multicast(subject: Subject(), factory: () => Subject()),
           throwsArgumentError);
     });
     test('incomplete sequence', () {

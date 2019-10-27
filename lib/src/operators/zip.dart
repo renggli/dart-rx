@@ -34,7 +34,7 @@ class ZipSubscriber<T> extends Subscriber<Observable<T>>
   @override
   void onNext(Observable<T> value) {
     observables.add(value);
-    pending.add(ListQueue());
+    pending.add(ListQueue<T>());
   }
 
   @override

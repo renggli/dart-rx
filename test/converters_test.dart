@@ -1,0 +1,120 @@
+library rx.test.converters_test;
+
+import 'package:rx/constructors.dart';
+import 'package:rx/converters.dart';
+import 'package:rx/core.dart';
+import 'package:rx/schedulers.dart';
+import 'package:rx/testing.dart';
+import 'package:test/test.dart';
+
+import 'matchers.dart';
+
+void main() {
+  final scheduler = TestScheduler();
+  setUp(scheduler.setUp);
+  tearDown(scheduler.tearDown);
+
+  group('Iterable.toObservable', () {
+    test('completes on empty collection', () {
+      final actual = [].toObservable();
+      expect(actual, scheduler.isObservable('|'));
+    });
+    test('emits all the values', () {
+      final actual = ['a', 'b', 'c'].toObservable();
+      expect(actual, scheduler.isObservable<String>('(abc|)'));
+    });
+  });
+  group('Future.toObservable', () {
+    test('completes with value', () {
+      final actual = Future.value('a').toObservable();
+      actual.subscribe(Observer(
+        next: (value) => expect(value, 'a'),
+        error: (error, [stack]) => fail('No error expected'),
+      ));
+    });
+    test('completes with error', () {
+      final actual = Future<String>.error('Error').toObservable();
+      actual.subscribe(Observer(
+        next: (value) => fail('No value expected'),
+        error: (error, [stack]) => expect(error, 'Error'),
+      ));
+    });
+  });
+  group('Stream.toObservable', () {
+    test('completes immediately', () {
+      final actual = Stream.empty().toObservable();
+      final observed = <String>[];
+      actual.subscribe(Observer(
+        next: (value) => fail('No value expected'),
+        error: (error, [stack]) => fail('No error expected'),
+        complete: () => expect(observed, []),
+      ));
+    });
+    test('completes with values', () {
+      final actual = Stream.fromIterable(['a', 'b', 'c']).toObservable();
+      final observed = <String>[];
+      actual.subscribe(Observer(
+        next: (value) => observed.add(value),
+        error: (error, [stack]) => fail('No error expected'),
+        complete: () => expect(observed, ['a', 'b', 'c']),
+      ));
+    });
+    test('completes with error', () {
+      final actual = Stream.fromFuture(Future.error('Error')).toObservable();
+      actual.subscribe(Observer(
+        next: (value) => fail('No value expected'),
+        error: (error, [stack]) => expect(error, 'Error'),
+        complete: () => fail('No completion expected'),
+      ));
+    });
+    test('subscription', () {
+      final actual = Stream.fromIterable([1, 2, 3]).toObservable();
+      final subscription = actual.subscribe(Observer(
+        next: (value) => fail('No value expected'),
+        error: (error, [stack]) => expect(error, 'Error'),
+        complete: () => fail('No completion expected'),
+      ));
+      expect(subscription.isClosed, isFalse);
+      subscription.unsubscribe();
+      expect(subscription.isClosed, isTrue);
+    });
+  });
+  group('Observable.toFuture', () {
+    test('empty observable', () {
+      final actual = empty().toFuture();
+      expect(actual, throwsTooFewError);
+    });
+    test('single value', () {
+      final actual = just(42).toFuture();
+      expect(actual, completion(42));
+    });
+    test('multiple values', () {
+      final actual =
+          [1, 2, 3].toObservable(scheduler: ImmediateScheduler()).toFuture();
+      expect(actual, completion(1));
+    });
+    test('immediate error', () {
+      final actual = throwError(TooManyError()).toFuture();
+      expect(actual, throwsTooManyError);
+    });
+  });
+  group('Observable.toStream', () {
+    test('empty observable', () {
+      final actual = empty().toStream();
+      expect(actual, emitsDone);
+    });
+    test('single value', () {
+      final actual = just(42).toStream();
+      expect(actual, emitsInOrder([42]));
+    });
+    test('multiple values', () {
+      final actual =
+          [1, 2, 3].toObservable(scheduler: ImmediateScheduler()).toStream();
+      expect(actual, emitsInOrder([1, 2, 3]));
+    });
+    test('immediate error', () {
+      final actual = throwError(TooManyError()).toStream();
+      expect(actual, emitsError(const TypeMatcher<TooManyError>()));
+    });
+  });
+}

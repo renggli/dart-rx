@@ -6,11 +6,9 @@ import 'package:rx/src/core/scheduler.dart';
 import 'package:rx/src/core/subscription.dart';
 import 'package:rx/src/schedulers/immediate.dart';
 
-extension JustConstructor on Observable {
-  /// An [Observable] with a single element.
-  static Observable<T> just<T>(T value, {Scheduler scheduler}) =>
-      JustObservable<T>(value, scheduler ?? const ImmediateScheduler());
-}
+/// An [Observable] with a single element.
+Observable<T> just<T>(T value, {Scheduler scheduler}) =>
+    JustObservable<T>(value, scheduler ?? const ImmediateScheduler());
 
 class JustObservable<T> with Observable<T> {
   final T value;

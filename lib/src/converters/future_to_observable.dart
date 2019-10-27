@@ -1,13 +1,12 @@
-library rx.constructors.future;
+library rx.converters.future_to_observable;
 
 import 'dart:async';
 
-import 'package:rx/src/core/errors.dart';
 import 'package:rx/src/core/observable.dart';
 import 'package:rx/src/core/observer.dart';
 import 'package:rx/src/core/subscription.dart';
 
-extension FromFutureConstructor<T> on Future<T> {
+extension FutureToObservable<T> on Future<T> {
   /// An [Observable] that listens to the completion of a [Future].
   Observable<T> toObservable() => FutureObservable<T>(this);
 }
@@ -42,30 +41,5 @@ class FutureObservable<T> with Observable<T> {
       return;
     }
     observer.error(error, stackTrace);
-  }
-}
-
-extension ToFutureConstructor<T> on Observable<T> {
-  /// A [Future] that completes with the first value of an [Observable].
-  Future<T> toFuture() {
-    final subscriptions = Subscription.composite();
-    final completer = Completer<T>();
-    final observer = Observer(
-      next: (value) {
-        completer.complete(value);
-        subscriptions.unsubscribe();
-      },
-      error: (error, [stackTrace]) {
-        completer.completeError(error, stackTrace);
-        subscriptions.unsubscribe();
-      },
-      complete: () {
-        completer.completeError(TooFewError());
-        subscriptions.unsubscribe();
-      },
-    );
-    subscriptions.add(observer);
-    subscriptions.add(subscribe(observer));
-    return completer.future;
   }
 }

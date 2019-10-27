@@ -40,7 +40,7 @@ class CatchErrorSubscriber<T> extends Subscriber<T>
     if (handlerEvent is ErrorEvent) {
       doError(handlerEvent.error, handlerEvent.stackTrace);
     } else {
-      final observable = Observable.from<T>(handlerEvent.value);
+      final observable = from<T>(handlerEvent.value);
       add(InnerObserver(observable, this));
     }
   }
