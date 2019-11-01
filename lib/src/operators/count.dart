@@ -16,8 +16,11 @@ class CountObservable<T> extends Observable<int> {
   CountObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<int> observer) =>
-      delegate.subscribe(CountSubscriber<T>(observer));
+  Subscription subscribe(Observer<int> observer) {
+    final subscriber = CountSubscriber<T>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class CountSubscriber<T> extends Subscriber<T> {

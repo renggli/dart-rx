@@ -19,9 +19,12 @@ class ToSetObservable<T> extends Observable<Set<T>> {
   ToSetObservable(this.delegate, this.setConstructor);
 
   @override
-  Subscription subscribe(Observer<Set<T>> observer) =>
-      delegate.subscribe(ToSetSubscriber<T>(
-          observer, setConstructor != null ? setConstructor() : <T>{}));
+  Subscription subscribe(Observer<Set<T>> observer) {
+    final subscriber = ToSetSubscriber<T>(
+        observer, setConstructor != null ? setConstructor() : <T>{});
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class ToSetSubscriber<T> extends Subscriber<T> {

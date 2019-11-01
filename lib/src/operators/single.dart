@@ -40,8 +40,12 @@ class SingleObservable<T> extends Observable<T> {
   SingleObservable(this.delegate, this.tooFewCallback, this.tooManyCallback);
 
   @override
-  Subscription subscribe(Observer<T> observer) => delegate.subscribe(
-      SingleSubscriber<T>(observer, tooFewCallback, tooManyCallback));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber =
+        SingleSubscriber<T>(observer, tooFewCallback, tooManyCallback);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class SingleSubscriber<T> extends Subscriber<T> {

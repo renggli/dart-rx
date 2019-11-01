@@ -17,8 +17,11 @@ class TapObservable<T> extends Observable<T> {
   TapObservable(this.delegate, this.handler);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(TapSubscriber<T>(observer, handler));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = TapSubscriber<T>(observer, handler);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class TapSubscriber<T> extends Subscriber<T> {

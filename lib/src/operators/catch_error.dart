@@ -24,8 +24,11 @@ class CatchErrorObservable<T> extends Observable<T> {
   CatchErrorObservable(this.delegate, this.handler);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(CatchErrorSubscriber<T>(observer, handler));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = CatchErrorSubscriber<T>(observer, handler);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class CatchErrorSubscriber<T> extends Subscriber<T>

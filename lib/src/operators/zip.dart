@@ -20,8 +20,11 @@ class ZipObservable<T> extends Observable<List<T>> {
   ZipObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<List<T>> observer) =>
-      delegate.subscribe(ZipSubscriber<T>(observer));
+  Subscription subscribe(Observer<List<T>> observer) {
+    final subscriber = ZipSubscriber<T>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class ZipSubscriber<T> extends Subscriber<Observable<T>>

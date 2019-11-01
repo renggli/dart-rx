@@ -19,9 +19,12 @@ class ToListObservable<T> extends Observable<List<T>> {
   ToListObservable(this.delegate, this.listConstructor);
 
   @override
-  Subscription subscribe(Observer<List<T>> observer) =>
-      delegate.subscribe(ToListSubscriber<T>(
-          observer, listConstructor != null ? listConstructor() : <T>[]));
+  Subscription subscribe(Observer<List<T>> observer) {
+    final subscriber = ToListSubscriber<T>(
+        observer, listConstructor != null ? listConstructor() : <T>[]);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class ToListSubscriber<T> extends Subscriber<T> {

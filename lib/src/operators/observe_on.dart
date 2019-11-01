@@ -21,8 +21,11 @@ class ObserveOnObservable<T> extends Observable<T> {
   ObserveOnObservable(this.delegate, this.scheduler, this.delay);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(ObserveOnSubscriber<T>(observer, scheduler, delay));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = ObserveOnSubscriber<T>(observer, scheduler, delay);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class ObserveOnSubscriber<T> extends Subscriber<T> {

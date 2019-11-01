@@ -18,8 +18,11 @@ class TakeLastObservable<T> extends Observable<T> {
   TakeLastObservable(this.delegate, this.count);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(TakeLastSubscriber<T>(observer, count));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = TakeLastSubscriber<T>(observer, count);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class TakeLastSubscriber<T> extends Subscriber<T> {

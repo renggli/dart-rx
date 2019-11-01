@@ -32,8 +32,12 @@ class BufferObservable<T> extends Observable<List<T>> {
       this.delegate, this.scheduler, this.trigger, this.maxLength, this.maxAge);
 
   @override
-  Subscription subscribe(Observer<List<T>> observer) => delegate.subscribe(
-      BufferSubscriber<T>(observer, scheduler, trigger, maxLength, maxAge));
+  Subscription subscribe(Observer<List<T>> observer) {
+    final subscriber =
+        BufferSubscriber<T>(observer, scheduler, trigger, maxLength, maxAge);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class BufferSubscriber<T> extends Subscriber<T>

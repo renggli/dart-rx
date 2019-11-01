@@ -17,8 +17,11 @@ class TakeObservable<T> extends Observable<T> {
   TakeObservable(this.delegate, this.count);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(TakeSubscriber<T>(observer, count));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = TakeSubscriber<T>(observer, count);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class TakeSubscriber<T> extends Subscriber<T> {

@@ -17,8 +17,11 @@ class WhereTypeObserver<T, R> extends Observable<R> {
   WhereTypeObserver(this.delegate);
 
   @override
-  Subscription subscribe(Observer<R> observer) =>
-      delegate.subscribe(WhereTypeSubscriber<T, R>(observer));
+  Subscription subscribe(Observer<R> observer) {
+    final subscriber = WhereTypeSubscriber<T, R>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class WhereTypeSubscriber<T, R> extends Subscriber<T> {

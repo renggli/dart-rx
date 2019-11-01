@@ -47,8 +47,11 @@ class FirstObservable<T> extends Observable<T> {
   FirstObservable(this.delegate, this.predicate, this.callback);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(FirstSubscriber<T>(observer, predicate, callback));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = FirstSubscriber<T>(observer, predicate, callback);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class FirstSubscriber<T> extends Subscriber<T> {

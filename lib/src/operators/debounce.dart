@@ -22,8 +22,11 @@ class DebounceObservable<T> extends Observable<T> {
   DebounceObservable(this.delegate, this.scheduler, this.delay);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(DebounceSubscriber<T>(observer, scheduler, delay));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = DebounceSubscriber<T>(observer, scheduler, delay);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class DebounceSubscriber<T> extends Subscriber<T> {

@@ -23,8 +23,11 @@ class TimeoutObservable<T> extends Observable<T> {
   TimeoutObservable(this.delegate, this.scheduler, this.duration);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(TimeoutSubscriber<T>(observer, scheduler, duration));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = TimeoutSubscriber<T>(observer, scheduler, duration);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class TimeoutSubscriber<T> extends Subscriber<T> {

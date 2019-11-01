@@ -20,8 +20,11 @@ class TakeWhileObservable<T> extends Observable<T> {
   TakeWhileObservable(this.delegate, this.predicate);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(TakeWhileSubscriber<T>(observer, predicate));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = TakeWhileSubscriber<T>(observer, predicate);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class TakeWhileSubscriber<T> extends Subscriber<T> {

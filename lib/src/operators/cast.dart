@@ -16,8 +16,11 @@ class CastObservable<T, R> extends Observable<R> {
   CastObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<R> observer) =>
-      delegate.subscribe(CastSubscriber<T, R>(observer));
+  Subscription subscribe(Observer<R> observer) {
+    final subscriber = CastSubscriber<T, R>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class CastSubscriber<T, R> extends Subscriber<T> {

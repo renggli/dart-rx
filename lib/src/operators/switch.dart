@@ -33,8 +33,11 @@ class SwitchObservable<T, R> extends Observable<R> {
   SwitchObservable(this.delegate, this.project);
 
   @override
-  Subscription subscribe(Observer<R> observer) =>
-      delegate.subscribe(SwitchSubscriber<T, R>(observer, project));
+  Subscription subscribe(Observer<R> observer) {
+    final subscriber = SwitchSubscriber<T, R>(observer, project);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class SwitchSubscriber<T, R> extends Subscriber<T>

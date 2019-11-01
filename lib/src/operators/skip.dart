@@ -17,8 +17,11 @@ class SkipObservable<T> extends Observable<T> {
   SkipObservable(this.delegate, this.count);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(SkipSubscriber<T>(observer, count));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = SkipSubscriber<T>(observer, count);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class SkipSubscriber<T> extends Subscriber<T> {

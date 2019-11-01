@@ -20,8 +20,11 @@ class SampleObservable<T> extends Observable<T> {
   SampleObservable(this.delegate, this.trigger);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(SampleSubscriber<T>(observer, trigger));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = SampleSubscriber<T>(observer, trigger);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class SampleSubscriber<T> extends Subscriber<T>

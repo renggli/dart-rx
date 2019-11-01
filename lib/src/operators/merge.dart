@@ -43,8 +43,11 @@ class MergeObservable<T, R> extends Observable<R> {
   MergeObservable(this.delegate, this.project, this.concurrent);
 
   @override
-  Subscription subscribe(Observer<R> observer) =>
-      delegate.subscribe(MergeSubscriber<T, R>(observer, project, concurrent));
+  Subscription subscribe(Observer<R> observer) {
+    final subscriber = MergeSubscriber<T, R>(observer, project, concurrent);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class MergeSubscriber<T, R> extends Subscriber<T>

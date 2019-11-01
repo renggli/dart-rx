@@ -17,8 +17,11 @@ class IsEmptyObservable<T> extends Observable<bool> {
   IsEmptyObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<bool> observer) =>
-      delegate.subscribe(IsEmptySubscriber<T>(observer));
+  Subscription subscribe(Observer<bool> observer) {
+    final subscriber = IsEmptySubscriber<T>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class IsEmptySubscriber<T> extends Subscriber<T> {

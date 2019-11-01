@@ -17,8 +17,11 @@ class IgnoreElementsObservable<T> extends Observable<T> {
   IgnoreElementsObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(IgnoreElementsSubscriber<T>(observer));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = IgnoreElementsSubscriber<T>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class IgnoreElementsSubscriber<T> extends Subscriber<T> {

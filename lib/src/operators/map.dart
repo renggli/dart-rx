@@ -26,8 +26,11 @@ class MapObservable<T, R> extends Observable<R> {
   MapObservable(this.delegate, this.transform);
 
   @override
-  Subscription subscribe(Observer<R> observer) =>
-      delegate.subscribe(MapSubscriber<T, R>(observer, transform));
+  Subscription subscribe(Observer<R> observer) {
+    final subscriber = MapSubscriber<T, R>(observer, transform);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class MapSubscriber<T, R> extends Subscriber<T> {

@@ -47,8 +47,11 @@ class LastObservable<T> extends Observable<T> {
   LastObservable(this.delegate, this.predicate, this.callback);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(LastSubscriber<T>(observer, predicate, callback));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = LastSubscriber<T>(observer, predicate, callback);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class LastSubscriber<T> extends Subscriber<T> {

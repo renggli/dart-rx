@@ -20,8 +20,11 @@ class SkipWhileObservable<T> extends Observable<T> {
   SkipWhileObservable(this.delegate, this.predicate);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(SkipWhileSubscriber<T>(observer, predicate));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = SkipWhileSubscriber<T>(observer, predicate);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class SkipWhileSubscriber<T> extends Subscriber<T> {

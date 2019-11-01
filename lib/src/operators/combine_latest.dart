@@ -18,8 +18,11 @@ class CombineLatestObservable<T> extends Observable<List<T>> {
   CombineLatestObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<List<T>> observer) =>
-      delegate.subscribe(CombineLatestSubscriber<T>(observer));
+  Subscription subscribe(Observer<List<T>> observer) {
+    final subscriber = CombineLatestSubscriber<T>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>

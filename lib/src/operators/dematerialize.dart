@@ -19,8 +19,11 @@ class DematerializeObservable<T> extends Observable<T> {
   DematerializeObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(DematerializeSubscriber<T>(observer));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = DematerializeSubscriber<T>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class DematerializeSubscriber<T> extends Subscriber<Event<T>> {

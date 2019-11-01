@@ -19,8 +19,11 @@ class DefaultIfEmptyObservable<T> extends Observable<T> {
   DefaultIfEmptyObservable(this.delegate, this.defaultValue);
 
   @override
-  Subscription subscribe(Observer<T> observer) =>
-      delegate.subscribe(DefaultIfEmptySubscriber<T>(observer, defaultValue));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber = DefaultIfEmptySubscriber<T>(observer, defaultValue);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class DefaultIfEmptySubscriber<T> extends Subscriber<T> {

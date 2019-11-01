@@ -463,7 +463,7 @@ void main() {
     });
     test('projection throws', () {
       final actual =
-          scheduler.cold<String>('-a-b-|').exhaustMap((inner) => throw 'Error');
+          scheduler.cold('-a-b-|').exhaustMap<String>((inner) => throw 'Error');
       expect(actual, scheduler.isObservable<String>('-#'));
     });
     test('inner throws', () {
@@ -954,7 +954,7 @@ void main() {
     });
     test('mapper throws error', () {
       final input = scheduler.cold<String>('--a--b--c--|');
-      final actual = input.map((value) => throw 'Error');
+      final actual = input.map<String>((value) => throw 'Error');
       expect(actual, scheduler.isObservable<String>('--#'));
     });
   });
@@ -1059,7 +1059,7 @@ void main() {
     });
     test('projection throws', () {
       final actual =
-          scheduler.cold<String>('-a-|').mergeMap((inner) => throw 'Error');
+          scheduler.cold('-a-|').mergeMap<String>((inner) => throw 'Error');
       expect(actual, scheduler.isObservable<String>('-#'));
     });
     test('inner with error', () {
@@ -1356,8 +1356,8 @@ void main() {
       });
       test('type transformation', () {
         final input = scheduler.cold<String>('-a--b---c-|');
-        final actual =
-            input.fold([], (previous, value) => [...previous, value]);
+        final actual = input.fold(
+            <String>[], (previous, value) => <String>[...previous, value]);
         expect(
             actual,
             scheduler.isObservable('-x--y---z-|', values: {

@@ -24,8 +24,12 @@ class DistinctObservable<T> extends Observable<T> {
   DistinctObservable(this.delegate, this.equalsFunction, this.hashCodeFunction);
 
   @override
-  Subscription subscribe(Observer<T> observer) => delegate.subscribe(
-      DistinctSubscriber<T>(observer, equalsFunction, hashCodeFunction));
+  Subscription subscribe(Observer<T> observer) {
+    final subscriber =
+        DistinctSubscriber<T>(observer, equalsFunction, hashCodeFunction);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class DistinctSubscriber<T> extends Subscriber<T> {

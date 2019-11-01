@@ -18,8 +18,11 @@ class MaterializeObservable<T> extends Observable<Event<T>> {
   MaterializeObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<Event<T>> observer) =>
-      delegate.subscribe(MaterializeSubscriber<T>(observer));
+  Subscription subscribe(Observer<Event<T>> observer) {
+    final subscriber = MaterializeSubscriber<T>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
 }
 
 class MaterializeSubscriber<T> extends Subscriber<T> {
