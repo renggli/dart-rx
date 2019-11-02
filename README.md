@@ -13,15 +13,11 @@ Reactive Extensions Library for Dart providing an API for asynchronous programmi
 
 Reactive is created in the style of [ReactiveX](http://reactivex.io/), and does not depend on Dart Streams. At this point this code is quite experimental, and might miss features or have serious bugs.
 
+The package depends on the latest development version of _Dart 2.6.0-dev.8.0_. It does not work with earlier version due to extensive use of static extension methods.
+
 This library is open source and well tested. Development happens on [GitHub](http://github.com/renggli/dart-rx). Feel free to report issues or create a pull-request there. General questions are best asked on [StackOverflow](http://stackoverflow.com/questions/tagged/rx+dart).
 
 The package is hosted on [dart packages](https://pub.dartlang.org/packages/rx). Up-to-date [class documentation](https://pub.dartlang.org/documentation/rx/latest/) is created with every release.
-
-Currently the Dart programming language (or my inability to use it correctly) is blocking a more pleasant API in a few places:
-
-- The lack of extension methods in Dart makes it awkward to access operator functions and constructor methods: dart-lang/language#40, dart-lang/language#41, dart-lang/language#42, dart-lang/language#177, dart-lang/language#309, dart-lang/language#8547.
-- For some reason type inference over chained operators does not work. For example `observable.pipe2(filter(()) => ...), map(() => ...))` is unable to correctly infer the types in the second operator, while `observable.pipe(filter() => ...).pipe(map(() => ...)` does.
-- The lack of variable length arguments and generics requires duplicated functions and typedefs with a number suffix (see above).
 
 ### License
 
