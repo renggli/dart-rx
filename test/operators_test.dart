@@ -139,6 +139,15 @@ void main() {
       expect(actual, scheduler.isObservable('--a--b--c--1--#', error: 'B'));
     });
   });
+  group('compose', () {
+    Transformer<dynamic, T> mapper<T>(T ignore, T value) => (observable) =>
+        observable.where((each) => each != ignore).mapTo<T>(value);
+    test('basic', () {
+      final input = scheduler.cold('-a-b-c-|');
+      final actual = input.compose(mapper('a', 'a'));
+      expect(actual, scheduler.isObservable<String>('---a-a-|'));
+    });
+  });
   group('concat', () {
     group('beginWith', () {
       test('single value', () {

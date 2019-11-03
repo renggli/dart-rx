@@ -4,6 +4,7 @@ export 'src/operators/buffer.dart' show BufferOperator;
 export 'src/operators/cast.dart' show CastOperator;
 export 'src/operators/catch_error.dart' show CatchErrorOperator;
 export 'src/operators/combine_latest.dart' show CombineLatestOperator;
+export 'src/operators/compose.dart' show Transformer, ComposeOperator;
 export 'src/operators/concat.dart' show ConcatOperator;
 export 'src/operators/count.dart' show CountOperator;
 export 'src/operators/debounce.dart' show DebounceOperator;
