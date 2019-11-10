@@ -1,8 +1,8 @@
 library rx.core.observer;
 
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/observers/base.dart';
-import 'package:rx/src/shared/functions.dart';
+import '../observers/base.dart';
+import '../shared/functions.dart';
+import 'subscription.dart';
 
 abstract class Observer<T> implements Subscription {
   /// An observer with custom handlers.

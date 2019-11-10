@@ -1,10 +1,10 @@
 library rx.operators.finalize;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/shared/functions.dart';
-import 'package:rx/subscriptions.dart';
+import '../../subscriptions.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscription.dart';
+import '../shared/functions.dart';
 
 extension FinalizeOperator<T> on Observable<T> {
   /// Return an [Observable] that mirrors the source [Observable], but will call

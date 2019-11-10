@@ -1,9 +1,8 @@
 library rx.core.errors;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/subscription.dart';
-
 import 'events.dart';
+import 'observable.dart';
+import 'subscription.dart';
 
 /// An error throws when an operation receives an unknown [Event] type.
 class UnexpectedEventError extends Error {

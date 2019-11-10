@@ -1,7 +1,7 @@
 library rx.subscriptions.serial;
 
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/subscriptions/stateful.dart';
+import '../core/subscription.dart';
+import 'stateful.dart';
 
 class SequentialSubscription extends StatefulSubscription {
   Subscription _current = Subscription.empty();
@@ -16,11 +16,9 @@ class SequentialSubscription extends StatefulSubscription {
       subscription.unsubscribe();
       return;
     }
-    if (subscription.isClosed) {
-      subscription = Subscription.empty();
-    }
+    final current = subscription.isClosed ? subscription : Subscription.empty();
     final previous = _current;
-    _current = subscription;
+    _current = current;
     previous.unsubscribe();
   }
 

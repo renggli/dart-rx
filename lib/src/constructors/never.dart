@@ -1,8 +1,8 @@
 library rx.constructors.never;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscription.dart';
 
 /// An [Observable] that emits no items and never completes.
 Observable<T> never<T>() => NeverObservable<T>();

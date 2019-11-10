@@ -1,11 +1,11 @@
 library rx.constructors.from;
 
-import 'package:rx/src/constructors/empty.dart';
-import 'package:rx/src/constructors/just.dart';
-import 'package:rx/src/converters/future_to_observable.dart';
-import 'package:rx/src/converters/iterable_to_observable.dart';
-import 'package:rx/src/converters/stream_to_observable.dart';
-import 'package:rx/src/core/observable.dart';
+import '../converters/future_to_observable.dart';
+import '../converters/iterable_to_observable.dart';
+import '../converters/stream_to_observable.dart';
+import '../core/observable.dart';
+import 'empty.dart';
+import 'just.dart';
 
 /// An [Observable] inferred from the `object`s input type.
 Observable<T> from<T>(Object object) {

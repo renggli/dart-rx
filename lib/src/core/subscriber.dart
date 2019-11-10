@@ -1,8 +1,9 @@
 library rx.core.subscriber;
 
 import 'package:meta/meta.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/subscriptions/composite.dart';
+
+import '../subscriptions/composite.dart';
+import 'observer.dart';
 
 class Subscriber<T> extends CompositeSubscription
     with Observer<T>

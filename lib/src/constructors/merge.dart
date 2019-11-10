@@ -1,9 +1,9 @@
 library rx.constructors.merge;
 
-import 'package:rx/src/converters/iterable_to_observable.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/operators/merge.dart';
-import 'package:rx/src/shared/functions.dart';
+import '../converters/iterable_to_observable.dart';
+import '../core/observable.dart';
+import '../operators/merge.dart';
+import '../shared/functions.dart';
 
 /// Creates an [Observable] which concurrently emits all values from every
 /// source [Observable].

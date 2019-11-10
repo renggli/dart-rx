@@ -1,9 +1,8 @@
 library rx.testing.test_subscriber;
 
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
-
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
 import 'test_scheduler.dart';
 
 class TestSubscriber<T> extends Subscriber<T> {

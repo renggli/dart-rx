@@ -1,11 +1,11 @@
 library rx.operators.skip_while;
 
-import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/shared/functions.dart';
+import '../core/events.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
+import '../shared/functions.dart';
 
 extension SkipWhileOperator<T> on Observable<T> {
   /// Skips over the values while the [predicate] is `true`.

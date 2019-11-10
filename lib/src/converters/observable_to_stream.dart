@@ -2,9 +2,9 @@ library rx.converters.observable_to_stream;
 
 import 'dart:async' show Stream, StreamController;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscription.dart';
 
 extension ObservableToStream<T> on Observable<T> {
   /// A [Stream] that listens to an [Observable].

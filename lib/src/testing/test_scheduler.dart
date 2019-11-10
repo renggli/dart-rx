@@ -1,15 +1,15 @@
 library rx.testing.test_scheduler;
 
 import 'package:more/iterable.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/schedulers/async.dart';
-import 'package:rx/src/schedulers/settings.dart';
-import 'package:rx/src/testing/test_event_sequence.dart';
 
+import '../core/observable.dart';
+import '../core/subscription.dart';
+import '../schedulers/async.dart';
+import '../schedulers/settings.dart';
 import 'cold_observable.dart';
 import 'hot_observable.dart';
 import 'observable_matcher.dart';
+import 'test_event_sequence.dart';
 import 'test_events.dart';
 
 class TestScheduler extends AsyncScheduler {

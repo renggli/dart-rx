@@ -104,8 +104,8 @@ void main() {
       expectDateTimeList(expected, actual, accuracy);
     });
   });
-  group('root zone', () => testZone(RootZoneScheduler()));
-  group('current zone', () => testZone(CurrentZoneScheduler()));
+  group('root zone', () => testZone(const RootZoneScheduler()));
+  group('current zone', () => testZone(const CurrentZoneScheduler()));
 }
 
 void testZone(ZoneScheduler scheduler) {

@@ -1,11 +1,11 @@
 library rx.operators.multicast;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subject.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/observables/connectable.dart';
-import 'package:rx/src/shared/functions.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subject.dart';
+import '../core/subscription.dart';
+import '../observables/connectable.dart';
+import '../shared/functions.dart';
 
 extension MulticastOperator<T> on Observable<T> {
   /// Returns an multicast observable that shares the underlying stream.

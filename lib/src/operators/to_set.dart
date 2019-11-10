@@ -1,10 +1,10 @@
 library rx.operators.to_set;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/shared/functions.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
+import '../shared/functions.dart';
 
 extension ToSetOperator<T> on Observable<T> {
   /// Returns a [Set] from an observable sequence.

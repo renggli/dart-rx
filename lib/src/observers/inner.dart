@@ -1,8 +1,8 @@
 library rx.observers.base;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscription.dart';
 
 /// Observes an inner [Observable] and passes the events to an outer object
 /// with optional state.

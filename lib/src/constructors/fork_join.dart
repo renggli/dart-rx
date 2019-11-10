@@ -1,9 +1,9 @@
 library rx.constructors.fork_join;
 
-import 'package:rx/src/constructors/create.dart';
-import 'package:rx/src/constructors/empty.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import 'create.dart';
+import 'empty.dart';
 
 /// Waits for all passed [Observable] to complete and then it will emit an
 /// list with last values from corresponding observables.

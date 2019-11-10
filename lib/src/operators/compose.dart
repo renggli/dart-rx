@@ -1,6 +1,6 @@
 library rx.operators.compose;
 
-import 'package:rx/src/core/observable.dart';
+import '../core/observable.dart';
 
 /// Function that receives an [Observable] and returns another one, possibly
 /// changing its type.

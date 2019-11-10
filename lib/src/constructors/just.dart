@@ -1,10 +1,10 @@
 library rx.constructors.just;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/schedulers/immediate.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/scheduler.dart';
+import '../core/subscription.dart';
+import '../schedulers/immediate.dart';
 
 /// An [Observable] with a single element.
 Observable<T> just<T>(T value, {Scheduler scheduler}) =>

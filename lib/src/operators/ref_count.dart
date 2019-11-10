@@ -1,9 +1,9 @@
 library rx.operators.ref_count;
 
-import 'package:rx/observables.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../../observables.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscription.dart';
 
 extension RefCountOperator<T> on ConnectableObservable<T> {
   /// Connects to the source only if there is more than one subscriber.

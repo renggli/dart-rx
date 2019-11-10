@@ -1,8 +1,8 @@
 library rx.schedulers.immediate;
 
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/shared/functions.dart';
+import '../core/scheduler.dart';
+import '../core/subscription.dart';
+import '../shared/functions.dart';
 
 class ImmediateScheduler extends Scheduler {
   const ImmediateScheduler();

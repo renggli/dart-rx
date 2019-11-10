@@ -2,7 +2,7 @@ library rx.subscriptions.timer;
 
 import 'dart:async' as async;
 
-import 'package:rx/src/core/subscription.dart';
+import '../core/subscription.dart';
 
 class TimerSubscription extends Subscription {
   async.Timer _timer;

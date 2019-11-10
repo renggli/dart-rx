@@ -1,12 +1,12 @@
 library rx.operators.timeout;
 
-import 'package:rx/src/core/errors.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/schedulers/settings.dart';
+import '../core/errors.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/scheduler.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
+import '../schedulers/settings.dart';
 
 extension TimeoutOperator<T> on Observable<T> {
   /// Completes with a [TimeoutError], if the observable does not complete

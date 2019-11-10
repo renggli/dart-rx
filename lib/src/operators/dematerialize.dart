@@ -1,11 +1,11 @@
 library rx.operators.dematerialize;
 
-import 'package:rx/src/core/errors.dart';
-import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/errors.dart';
+import '../core/events.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
 
 extension DematerializeOperator<T> on Observable<Event<T>> {
   /// Dematerialize events into a stream from [Event] objects of type

@@ -1,9 +1,10 @@
 library rx.subjects.replay;
 
 import 'package:collection/collection.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subject.dart';
-import 'package:rx/src/core/subscription.dart';
+
+import '../core/observer.dart';
+import '../core/subject.dart';
+import '../core/subscription.dart';
 
 /// A [Subject] that replays all its previous values to new subscribers.
 class ReplaySubject<T> extends Subject<T> {

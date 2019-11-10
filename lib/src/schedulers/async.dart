@@ -3,10 +3,11 @@ library rx.schedulers.async;
 import 'dart:collection';
 
 import 'package:meta/meta.dart';
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/schedulers/action.dart';
-import 'package:rx/src/shared/functions.dart';
+
+import '../core/scheduler.dart';
+import '../core/subscription.dart';
+import '../shared/functions.dart';
+import 'action.dart';
 
 class AsyncScheduler extends Scheduler {
   /// Sorted list of scheduled actions.

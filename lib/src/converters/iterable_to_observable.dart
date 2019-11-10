@@ -1,10 +1,10 @@
 library rx.converters.iterable_to_observable;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/schedulers/settings.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/scheduler.dart';
+import '../core/subscription.dart';
+import '../schedulers/settings.dart';
 
 extension IterableToObservable<T> on Iterable<T> {
   /// Converts this to an [Observable] that emits the items of an [Iterable].

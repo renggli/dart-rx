@@ -1,6 +1,6 @@
 library rx.subscriptions.stateful;
 
-import 'package:rx/src/core/subscription.dart';
+import '../core/subscription.dart';
 
 class StatefulSubscription extends Subscription {
   bool _isClosed = false;

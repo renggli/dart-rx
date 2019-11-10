@@ -1,11 +1,10 @@
 library rx.operators.publish;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/observables/connectable.dart';
-import 'package:rx/src/subjects/async_subject.dart';
-import 'package:rx/src/subjects/behavior_subject.dart';
-import 'package:rx/src/subjects/replay_subject.dart';
-
+import '../core/observable.dart';
+import '../observables/connectable.dart';
+import '../subjects/async_subject.dart';
+import '../subjects/behavior_subject.dart';
+import '../subjects/replay_subject.dart';
 import 'multicast.dart';
 
 extension PublishOperator<T> on Observable<T> {

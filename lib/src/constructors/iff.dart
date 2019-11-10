@@ -1,8 +1,8 @@
 library rx.constructors.iff;
 
-import 'package:rx/src/constructors/defer.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/shared/functions.dart';
+import '../core/observable.dart';
+import '../shared/functions.dart';
+import 'defer.dart';
 
 /// Decides at subscription time which [Observable] will actually be
 /// subscribed to.

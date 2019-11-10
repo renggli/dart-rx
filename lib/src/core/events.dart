@@ -1,17 +1,21 @@
 library rx.core.events;
 
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/shared/functions.dart';
+import 'package:meta/meta.dart';
 
+import '../shared/functions.dart';
+import 'observer.dart';
+
+@immutable
 abstract class Event<T> {
   /// Creates a next event.
-  factory Event.next(T value) = NextEvent<T>;
+  const factory Event.next(T value) = NextEvent<T>;
 
   /// Creates an error event.
-  factory Event.error(Object object, [StackTrace stackTrace]) = ErrorEvent<T>;
+  const factory Event.error(Object object, [StackTrace stackTrace]) =
+      ErrorEvent<T>;
 
   /// Creates a completion event.
-  factory Event.complete() = CompleteEvent<T>;
+  const factory Event.complete() = CompleteEvent<T>;
 
   /// Maps the evaluation of the 0-argument callback to an event.
   // ignore: prefer_constructors_over_static_methods

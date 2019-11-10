@@ -1,9 +1,9 @@
 library rx.operators.take;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
 
 extension TakeOperator<T> on Observable<T> {
   /// Emits the first [count] values before completing.

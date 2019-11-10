@@ -2,10 +2,10 @@ library rx.converters.observable_to_future;
 
 import 'dart:async';
 
-import 'package:rx/src/core/errors.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/errors.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscription.dart';
 
 extension ObservableToFuture<T> on Observable<T> {
   /// A [Future] that completes with the first value of an [Observable].

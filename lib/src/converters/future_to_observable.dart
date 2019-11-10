@@ -2,9 +2,9 @@ library rx.converters.future_to_observable;
 
 import 'dart:async';
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscription.dart';
 
 extension FutureToObservable<T> on Future<T> {
   /// An [Observable] that listens to the completion of a [Future].

@@ -1,9 +1,9 @@
 library rx.operators.ignore_elements;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
 
 extension IgnoreElementsOperator<T> on Observable<T> {
   /// Ignores all items emitted by the source and only passes calls to

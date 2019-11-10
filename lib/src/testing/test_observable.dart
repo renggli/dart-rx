@@ -1,10 +1,10 @@
 library rx.testing.test_observable;
 
 import 'package:meta/meta.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/testing/test_event_sequence.dart';
 
+import '../core/observable.dart';
+import '../core/observer.dart';
+import 'test_event_sequence.dart';
 import 'test_scheduler.dart';
 import 'test_subscriber.dart';
 

@@ -1,7 +1,6 @@
 library rx.core.scheduler;
 
-import 'package:rx/src/shared/functions.dart';
-
+import '../shared/functions.dart';
 import 'subscription.dart';
 
 abstract class Scheduler {

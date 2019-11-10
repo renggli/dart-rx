@@ -1,10 +1,12 @@
 library rx.testing.test_event_sequence;
 
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 import 'package:more/collection.dart';
 import 'package:more/hash.dart';
-import 'package:rx/src/core/events.dart';
-import 'package:rx/src/testing/test_events.dart';
+
+import '../core/events.dart';
+import 'test_events.dart';
 
 const nextMarkers = 'abcdefghijklmnopqrstuvwxyz'
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -18,6 +20,7 @@ const subscribeMarker = '^';
 const unsubscribeMarker = '!';
 
 /// Encapsulates a sequence of [TestEvent] instances.
+@immutable
 class TestEventSequence<T> {
   /// Sequence of events.
   final List<TestEvent<T>> events;
@@ -60,7 +63,7 @@ class TestEventSequence<T> {
             throw ArgumentError.value(
                 marbles, 'marbles', 'Repeated subscription.');
           }
-          sequence.add(TestEvent(index, SubscribeEvent()));
+          sequence.add(TestEvent(index, const SubscribeEvent()));
           break;
         case unsubscribeMarker:
           if (sequence
@@ -69,7 +72,7 @@ class TestEventSequence<T> {
             throw ArgumentError.value(
                 marbles, 'marbles', 'Repeated unsubscription.');
           }
-          sequence.add(TestEvent(index, UnsubscribeEvent()));
+          sequence.add(TestEvent(index, const UnsubscribeEvent()));
           break;
         case completeMarker:
           sequence.add(TestEvent(index, Event<T>.complete()));

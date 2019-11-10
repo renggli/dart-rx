@@ -1,8 +1,8 @@
 library rx.subjects.async;
 
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subject.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/observer.dart';
+import '../core/subject.dart';
+import '../core/subscription.dart';
 
 /// A [Subject] that emits its last value to all its subscribers on completion.
 class AsyncSubject<T> extends Subject<T> {

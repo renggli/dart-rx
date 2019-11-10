@@ -35,7 +35,7 @@ void main() {
       });
     });
     test('inferred character mapping', () {
-      final result = TestEventSequence([
+      final result = TestEventSequence(const [
         TestEvent(1, Event.next(1)),
         TestEvent(3, Event.next(2)),
         TestEvent(5, Event.next(1)),
@@ -43,7 +43,7 @@ void main() {
       expect(result.toMarbles(), '-a-b-a');
     });
     test('inferred string character mapping', () {
-      final result = TestEventSequence([
+      final result = TestEventSequence(const [
         TestEvent(1, Event.next('x')),
         TestEvent(3, Event.next('yy')),
         TestEvent(5, Event.next('x')),

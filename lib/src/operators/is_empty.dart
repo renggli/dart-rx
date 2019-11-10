@@ -1,9 +1,9 @@
 library rx.operators.is_empty;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
 
 extension IsEmptyOperator<T> on Observable<T> {
   /// Emits `false` if the input observable emits any values, or emits `true` if

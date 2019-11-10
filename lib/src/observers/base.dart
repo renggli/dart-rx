@@ -1,8 +1,9 @@
 library rx.observers.base;
 
 import 'package:meta/meta.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/shared/functions.dart';
+
+import '../core/observer.dart';
+import '../shared/functions.dart';
 
 class BaseObserver<T> with Observer<T> implements Observer<T> {
   final NextCallback<T> _next;

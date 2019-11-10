@@ -1,11 +1,11 @@
 library rx.constructors.timer;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/schedulers/settings.dart';
-import 'package:rx/src/subscriptions/sequential.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/scheduler.dart';
+import '../core/subscription.dart';
+import '../schedulers/settings.dart';
+import '../subscriptions/sequential.dart';
 
 /// An [Observable] that starts emitting after `delay` and that emits an ever
 /// increasing numbers after each `period` thereafter.

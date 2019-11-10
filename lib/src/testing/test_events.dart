@@ -1,8 +1,9 @@
 library rx.testing.test_events;
 
 import 'package:collection/collection.dart';
-import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/observer.dart';
+
+import '../core/events.dart';
+import '../core/observer.dart';
 
 const _equality = DeepCollectionEquality();
 

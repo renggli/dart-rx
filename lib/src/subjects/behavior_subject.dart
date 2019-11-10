@@ -1,8 +1,8 @@
 library rx.subjects.behavior;
 
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subject.dart';
-import 'package:rx/src/core/subscription.dart';
+import '../core/observer.dart';
+import '../core/subject.dart';
+import '../core/subscription.dart';
 
 /// A [Subject] that emits its initial or last seen value to its subscribers.
 class BehaviorSubject<T> extends Subject<T> {

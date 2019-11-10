@@ -1,11 +1,11 @@
 library rx.core.subscription;
 
-import 'package:rx/src/shared/functions.dart';
-import 'package:rx/src/subscriptions/anonymous.dart';
-import 'package:rx/src/subscriptions/composite.dart';
-import 'package:rx/src/subscriptions/empty.dart';
-import 'package:rx/src/subscriptions/sequential.dart';
-import 'package:rx/src/subscriptions/stateful.dart';
+import '../shared/functions.dart';
+import '../subscriptions/anonymous.dart';
+import '../subscriptions/composite.dart';
+import '../subscriptions/empty.dart';
+import '../subscriptions/sequential.dart';
+import '../subscriptions/stateful.dart';
 
 abstract class Subscription {
   const Subscription();

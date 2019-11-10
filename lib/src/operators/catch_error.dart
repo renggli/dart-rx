@@ -1,12 +1,12 @@
 library rx.operators.catch_error;
 
-import 'package:rx/src/constructors/from.dart';
-import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/observers/inner.dart';
+import '../constructors/from.dart';
+import '../core/events.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
+import '../observers/inner.dart';
 
 typedef CatchHandler = Object Function(Object error, [StackTrace stackTrace]);
 

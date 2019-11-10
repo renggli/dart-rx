@@ -3,12 +3,13 @@ library rx.schedulers.zone;
 import 'dart:async' show Zone;
 
 import 'package:meta/meta.dart';
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/schedulers/action.dart';
-import 'package:rx/src/shared/functions.dart';
-import 'package:rx/src/subscriptions/stateful.dart';
-import 'package:rx/src/subscriptions/timer.dart';
+
+import '../core/scheduler.dart';
+import '../core/subscription.dart';
+import '../shared/functions.dart';
+import '../subscriptions/stateful.dart';
+import '../subscriptions/timer.dart';
+import 'action.dart';
 
 abstract class ZoneScheduler extends Scheduler {
   const ZoneScheduler();

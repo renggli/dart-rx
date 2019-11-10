@@ -1,9 +1,9 @@
 library rx.constructors.concat;
 
-import 'package:rx/src/converters/iterable_to_observable.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/operators/merge.dart';
+import '../converters/iterable_to_observable.dart';
+import '../core/observable.dart';
+import '../core/scheduler.dart';
+import '../operators/merge.dart';
 
 /// Subscribe to the list of [Observable] in order, and when the previous one
 /// complete then subscribe to the next one.

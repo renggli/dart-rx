@@ -1,9 +1,8 @@
 library rx.testing.cold_observable;
 
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/testing/test_event_sequence.dart';
-
+import '../core/observer.dart';
+import '../core/subscription.dart';
+import 'test_event_sequence.dart';
 import 'test_observable.dart';
 import 'test_scheduler.dart';
 

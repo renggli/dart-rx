@@ -1,8 +1,8 @@
 library rx.schedulers.settings;
 
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/schedulers/zone.dart';
+import '../core/scheduler.dart';
+import '../core/subscription.dart';
+import 'zone.dart';
 
 /// The default scheduler instance to be used.
 Scheduler _defaultScheduler;

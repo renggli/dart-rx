@@ -1,11 +1,11 @@
 library rx.operators.distinct_until_changed;
 
-import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/shared/functions.dart';
+import '../core/events.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
+import '../shared/functions.dart';
 
 extension DistinctUntilChangedOperator<T> on Observable<T> {
   /// Emits all items emitted by the source Observable that are distinct

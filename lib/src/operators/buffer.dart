@@ -1,12 +1,12 @@
 library rx.operators.buffer;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/observers/inner.dart';
-import 'package:rx/src/schedulers/settings.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/scheduler.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
+import '../observers/inner.dart';
+import '../schedulers/settings.dart';
 
 extension BufferOperator<T> on Observable<T> {
   /// Gathers items emitted by the source and bundles these items when the

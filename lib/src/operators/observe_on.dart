@@ -1,11 +1,11 @@
 library rx.operators.observe_on;
 
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/scheduler.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/shared/functions.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/scheduler.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
+import '../shared/functions.dart';
 
 extension ObserveOnOperator<T> on Observable<T> {
   /// Re-emits all notifications from the source with a custom scheduler.

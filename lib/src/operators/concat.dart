@@ -1,8 +1,8 @@
 library rx.operators.concat;
 
-import 'package:rx/src/constructors/concat.dart';
-import 'package:rx/src/constructors/from.dart';
-import 'package:rx/src/core/observable.dart';
+import '../constructors/concat.dart';
+import '../constructors/from.dart';
+import '../core/observable.dart';
 
 extension ConcatOperator<T> on Observable<T> {
   /// Prepends the emission of items with [object].

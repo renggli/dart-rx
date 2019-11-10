@@ -108,8 +108,9 @@ void main() {
       expect(actual, emitsInOrder([42]));
     });
     test('multiple values', () {
-      final actual =
-          [1, 2, 3].toObservable(scheduler: ImmediateScheduler()).toStream();
+      final actual = [1, 2, 3]
+          .toObservable(scheduler: const ImmediateScheduler())
+          .toStream();
       expect(actual, emitsInOrder([1, 2, 3]));
     });
     test('immediate error', () {

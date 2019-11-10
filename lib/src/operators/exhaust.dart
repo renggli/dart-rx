@@ -1,12 +1,12 @@
 library rx.operators.exhaust;
 
-import 'package:rx/src/core/events.dart';
-import 'package:rx/src/core/observable.dart';
-import 'package:rx/src/core/observer.dart';
-import 'package:rx/src/core/subscriber.dart';
-import 'package:rx/src/core/subscription.dart';
-import 'package:rx/src/observers/inner.dart';
-import 'package:rx/src/shared/functions.dart';
+import '../core/events.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../core/subscription.dart';
+import '../observers/inner.dart';
+import '../shared/functions.dart';
 
 extension ExhaustAllOperator<T> on Observable<Observable<T>> {
   /// Emits and completes higher-order [Observable]. Subscribes to at most

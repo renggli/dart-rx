@@ -1,6 +1,6 @@
 library rx.subscriptions.emtpy;
 
-import 'package:rx/src/core/subscription.dart';
+import '../core/subscription.dart';
 
 class EmptySubscription extends Subscription {
   const EmptySubscription();
