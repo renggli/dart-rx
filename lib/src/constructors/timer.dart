@@ -3,7 +3,7 @@ library rx.constructors.timer;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/scheduler.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../schedulers/settings.dart';
 
 /// An [Observable] that starts emitting after `delay` and that emits an ever
@@ -22,13 +22,13 @@ class TimerObservable with Observable<int> {
   const TimerObservable(this.delay, this.period, this.scheduler);
 
   @override
-  Subscription subscribe(Observer<int> observer) {
-    final subscription = Subscription.composite();
-    subscription.add(Subscription.create(() => observer.complete()));
+  Disposable subscribe(Observer<int> observer) {
+    final subscription = Disposable.composite();
+    subscription.add(Disposable.create(() => observer.complete()));
     subscription.add(scheduler.scheduleRelative(delay, () {
       observer.next(0);
       if (period == null) {
-        subscription.unsubscribe();
+        subscription.dispose();
       } else {
         var counter = 0;
         subscription.add(scheduler.schedulePeriodic(period, (subscription) {

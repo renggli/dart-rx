@@ -4,7 +4,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension SkipWhileOperator<T> on Observable<T> {
@@ -20,7 +20,7 @@ class SkipWhileObservable<T> extends Observable<T> {
   SkipWhileObservable(this.delegate, this.predicate);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = SkipWhileSubscriber<T>(observer, predicate);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

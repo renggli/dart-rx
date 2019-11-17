@@ -3,7 +3,7 @@ library rx.operators.where_type;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension WhereTypeOperator<T> on Observable<T> {
   /// Filter items emitted by the source Observable by only emitting those that
@@ -17,7 +17,7 @@ class WhereTypeObserver<T, R> extends Observable<R> {
   WhereTypeObserver(this.delegate);
 
   @override
-  Subscription subscribe(Observer<R> observer) {
+  Disposable subscribe(Observer<R> observer) {
     final subscriber = WhereTypeSubscriber<T, R>(observer);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

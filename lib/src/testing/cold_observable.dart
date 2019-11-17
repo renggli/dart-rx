@@ -1,7 +1,7 @@
 library rx.testing.cold_observable;
 
 import '../core/observer.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import 'test_event_sequence.dart';
 import 'test_observable.dart';
 import 'test_scheduler.dart';
@@ -11,7 +11,7 @@ class ColdObservable<T> extends TestObservable<T> {
       : super(scheduler, sequence);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = createSubscriber(observer);
     for (final event in sequence.events) {
       final timestamp = scheduler.now.add(scheduler.stepDuration * event.index);

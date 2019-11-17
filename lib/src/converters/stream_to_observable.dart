@@ -4,7 +4,7 @@ import 'dart:async' show Stream;
 
 import '../core/observable.dart';
 import '../core/observer.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension StreamToObservable<T> on Stream<T> {
   /// An [Observable] that listens to a [Stream].
@@ -17,9 +17,9 @@ class StreamObservable<T> with Observable<T> {
   StreamObservable(this.stream);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscription = stream.listen(observer.next,
         onError: observer.error, onDone: observer.complete);
-    return Subscription.create(subscription.cancel);
+    return Disposable.create(subscription.cancel);
   }
 }

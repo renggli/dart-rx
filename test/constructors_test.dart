@@ -391,7 +391,7 @@ void main() {
         error: (error, [stack]) => fail('No error expected'),
         complete: () => fail('No completion expected'),
       ));
-      expect(subscription.isClosed, isTrue);
+      expect(subscription.isDisposed, isTrue);
     });
   });
   group('throwError', () {

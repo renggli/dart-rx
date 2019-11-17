@@ -3,7 +3,7 @@ library rx.operators.to_list;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension ToListOperator<T> on Observable<T> {
@@ -19,7 +19,7 @@ class ToListObservable<T> extends Observable<List<T>> {
   ToListObservable(this.delegate, this.listConstructor);
 
   @override
-  Subscription subscribe(Observer<List<T>> observer) {
+  Disposable subscribe(Observer<List<T>> observer) {
     final subscriber = ToListSubscriber<T>(
         observer, listConstructor != null ? listConstructor() : <T>[]);
     subscriber.add(delegate.subscribe(subscriber));

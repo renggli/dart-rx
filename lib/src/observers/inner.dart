@@ -2,14 +2,14 @@ library rx.observers.base;
 
 import '../core/observable.dart';
 import '../core/observer.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 /// Observes an inner [Observable] and passes the events to an outer object
 /// with optional state.
 class InnerObserver<T, S> with Observer<T> implements Observer<T> {
   final InnerEvents<T, S> _outer;
   final S _state;
-  Subscription _subscription;
+  Disposable _subscription;
 
   InnerObserver(Observable<T> inner, this._outer, [this._state]) {
     _subscription = inner.subscribe(this);
@@ -26,18 +26,18 @@ class InnerObserver<T, S> with Observer<T> implements Observer<T> {
   void complete() => _outer.notifyComplete(this, _state);
 
   @override
-  bool get isClosed => _subscription.isClosed;
+  bool get isDisposed => _subscription.isDisposed;
 
   @override
-  void unsubscribe() => _subscription.unsubscribe();
+  void dispose() => _subscription.dispose();
 }
 
 /// Interface to receive events from an [InnerObserver].
 abstract class InnerEvents<T, S> {
-  void notifyNext(Subscription subscription, S state, T value);
+  void notifyNext(Disposable subscription, S state, T value);
 
-  void notifyError(Subscription subscription, S state, Object error,
+  void notifyError(Disposable subscription, S state, Object error,
       [StackTrace stackTrace]);
 
-  void notifyComplete(Subscription subscription, S state);
+  void notifyComplete(Disposable subscription, S state);
 }

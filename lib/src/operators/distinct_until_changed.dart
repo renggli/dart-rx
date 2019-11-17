@@ -4,7 +4,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension DistinctUntilChangedOperator<T> on Observable<T> {
@@ -27,7 +27,7 @@ class DistinctUntilChangedObservable<T, K> extends Observable<T> {
   DistinctUntilChangedObservable(this.delegate, this.key, this.compare);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber =
         DistinctUntilChangedSubscriber<T, K>(observer, key, compare);
     subscriber.add(delegate.subscribe(subscriber));

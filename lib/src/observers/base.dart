@@ -48,8 +48,8 @@ class BaseObserver<T> with Observer<T> implements Observer<T> {
   void onComplete() => _complete();
 
   @override
-  bool get isClosed => _isClosed;
+  bool get isDisposed => _isClosed;
 
   @override
-  void unsubscribe() => _isClosed = true;
+  void dispose() => _isClosed = true;
 }

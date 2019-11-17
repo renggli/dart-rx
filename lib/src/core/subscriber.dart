@@ -2,10 +2,10 @@ library rx.core.subscriber;
 
 import 'package:meta/meta.dart';
 
-import '../subscriptions/composite.dart';
+import '../disposables/composite.dart';
 import 'observer.dart';
 
-class Subscriber<T> extends CompositeSubscription
+class Subscriber<T> extends CompositeDisposable
     with Observer<T>
     implements Observer<T> {
   @protected
@@ -16,7 +16,7 @@ class Subscriber<T> extends CompositeSubscription
   /// Receives the next value.
   @override
   void next(T value) {
-    if (isClosed) {
+    if (isDisposed) {
       return;
     }
     onNext(value);
@@ -33,7 +33,7 @@ class Subscriber<T> extends CompositeSubscription
   /// Receives the error.
   @override
   void error(Object error, [StackTrace stackTrace]) {
-    if (isClosed) {
+    if (isDisposed) {
       return;
     }
     onError(error, stackTrace);
@@ -48,13 +48,13 @@ class Subscriber<T> extends CompositeSubscription
   @protected
   void doError(Object error, [StackTrace stackTrace]) {
     destination.error(error, stackTrace);
-    unsubscribe();
+    dispose();
   }
 
   /// Receives the completion.
   @override
   void complete() {
-    if (isClosed) {
+    if (isDisposed) {
       return;
     }
     onComplete();
@@ -68,6 +68,6 @@ class Subscriber<T> extends CompositeSubscription
   @protected
   void doComplete() {
     destination.complete();
-    unsubscribe();
+    dispose();
   }
 }

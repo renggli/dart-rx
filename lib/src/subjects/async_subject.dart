@@ -2,7 +2,7 @@ library rx.subjects.async;
 
 import '../core/observer.dart';
 import '../core/subject.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 /// A [Subject] that emits its last value to all its subscribers on completion.
 class AsyncSubject<T> extends Subject<T> {
@@ -35,11 +35,11 @@ class AsyncSubject<T> extends Subject<T> {
   }
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     if (_hasCompleted && _hasValue) {
       observer.next(_value);
       observer.complete();
-      return Subscription.empty();
+      return Disposable.empty();
     }
     return super.subscribe(observer);
   }

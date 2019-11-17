@@ -74,9 +74,9 @@ void main() {
         error: (error, [stack]) => expect(error, 'Error'),
         complete: () => fail('No completion expected'),
       ));
-      expect(subscription.isClosed, isFalse);
-      subscription.unsubscribe();
-      expect(subscription.isClosed, isTrue);
+      expect(subscription.isDisposed, isFalse);
+      subscription.dispose();
+      expect(subscription.isDisposed, isTrue);
     });
   });
   group('Observable.toFuture', () {

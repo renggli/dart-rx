@@ -5,7 +5,7 @@ import 'dart:collection';
 import 'package:meta/meta.dart';
 
 import '../core/scheduler.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 import 'action.dart';
 
@@ -20,16 +20,16 @@ class AsyncScheduler extends Scheduler {
   bool get hasPending => scheduled.isNotEmpty;
 
   @override
-  Subscription schedule(Callback0 callback) =>
+  Disposable schedule(Callback0 callback) =>
       _scheduleAt(now, SchedulerActionCallback(callback));
 
   @override
-  Subscription scheduleIteration(Predicate0 callback) {
+  Disposable scheduleIteration(Predicate0 callback) {
     final action = SchedulerActionCallbackWith((action) {
       if (callback()) {
         _scheduleAt(now, action);
       } else {
-        action.unsubscribe();
+        action.dispose();
       }
     });
     _scheduleAt(now, action);
@@ -37,19 +37,19 @@ class AsyncScheduler extends Scheduler {
   }
 
   @override
-  Subscription scheduleAbsolute(DateTime dateTime, Callback0 callback) =>
+  Disposable scheduleAbsolute(DateTime dateTime, Callback0 callback) =>
       _scheduleAt(dateTime, SchedulerActionCallback(callback));
 
   @override
-  Subscription scheduleRelative(Duration duration, Callback0 callback) =>
+  Disposable scheduleRelative(Duration duration, Callback0 callback) =>
       scheduleAbsolute(now.add(duration), callback);
 
   @override
-  Subscription schedulePeriodic(
-          Duration duration, Callback1<Subscription> callback) =>
+  Disposable schedulePeriodic(
+          Duration duration, Callback1<Disposable> callback) =>
       _scheduleAt(now.add(duration), SchedulerActionCallbackWith((action) {
         callback(action);
-        if (!action.isClosed) {
+        if (!action.isDisposed) {
           _scheduleAt(now.add(duration), action);
         }
       }));

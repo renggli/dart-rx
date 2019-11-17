@@ -4,7 +4,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 import '../shared/functions.dart';
 
@@ -42,7 +42,7 @@ class ExhaustObservable<T, R> extends Observable<R> {
   ExhaustObservable(this.delegate, this.project, this.concurrent);
 
   @override
-  Subscription subscribe(Observer<R> observer) {
+  Disposable subscribe(Observer<R> observer) {
     final subscriber = ExhaustSubscriber<T, R>(observer, project, concurrent);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
@@ -82,16 +82,16 @@ class ExhaustSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Subscription subscription, void state, R value) =>
+  void notifyNext(Disposable subscription, void state, R value) =>
       doNext(value);
 
   @override
-  void notifyError(Subscription subscription, void state, Object error,
+  void notifyError(Disposable subscription, void state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Subscription subscription, void state) {
+  void notifyComplete(Disposable subscription, void state) {
     active--;
     remove(subscription);
     if (active == 0 && hasCompleted) {

@@ -3,7 +3,7 @@ library rx.operators.tap;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension TapOperator<T> on Observable<T> {
   /// Perform a side effect for every emission on the source.
@@ -17,7 +17,7 @@ class TapObservable<T> extends Observable<T> {
   TapObservable(this.delegate, this.handler);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = TapSubscriber<T>(observer, handler);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

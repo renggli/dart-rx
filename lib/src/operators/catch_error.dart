@@ -5,7 +5,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 
 typedef CatchHandler = Object Function(Object error, [StackTrace stackTrace]);
@@ -24,7 +24,7 @@ class CatchErrorObservable<T> extends Observable<T> {
   CatchErrorObservable(this.delegate, this.handler);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = CatchErrorSubscriber<T>(observer, handler);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
@@ -49,14 +49,14 @@ class CatchErrorSubscriber<T> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Subscription subscription, void state, T value) =>
+  void notifyNext(Disposable subscription, void state, T value) =>
       doNext(value);
 
   @override
-  void notifyError(Subscription subscription, void state, Object error,
+  void notifyError(Disposable subscription, void state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Subscription subscription, void state) => doComplete();
+  void notifyComplete(Disposable subscription, void state) => doComplete();
 }

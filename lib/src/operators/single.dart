@@ -5,7 +5,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension SingleOperator<T> on Observable<T> {
@@ -40,7 +40,7 @@ class SingleObservable<T> extends Observable<T> {
   SingleObservable(this.delegate, this.tooFewCallback, this.tooManyCallback);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber =
         SingleSubscriber<T>(observer, tooFewCallback, tooManyCallback);
     subscriber.add(delegate.subscribe(subscriber));

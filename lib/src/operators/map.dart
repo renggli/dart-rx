@@ -4,7 +4,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension MapOperator<T> on Observable<T> {
@@ -26,7 +26,7 @@ class MapObservable<T, R> extends Observable<R> {
   MapObservable(this.delegate, this.transform);
 
   @override
-  Subscription subscribe(Observer<R> observer) {
+  Disposable subscribe(Observer<R> observer) {
     final subscriber = MapSubscriber<T, R>(observer, transform);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

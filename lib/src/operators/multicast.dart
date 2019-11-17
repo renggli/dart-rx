@@ -3,7 +3,7 @@ library rx.operators.multicast;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subject.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../observables/connectable.dart';
 import '../shared/functions.dart';
 
@@ -27,24 +27,24 @@ class MulticastObservable<T> extends Observable<T>
 
   Subject<T> _subject;
   bool _isConnected = false;
-  Subscription _subscription = Subscription.empty();
+  Disposable _subscription = Disposable.empty();
 
   MulticastObservable(this._source, this._factory);
 
   Subject<T> get subject => _subject ??= _factory();
 
   @override
-  Subscription connect() {
+  Disposable connect() {
     if (!_isConnected) {
       _isConnected = true;
-      _subscription = Subscription.composite([
+      _subscription = Disposable.composite([
         _source.subscribe(subject),
-        Subscription.create(() => _isConnected = false),
+        Disposable.create(() => _isConnected = false),
       ]);
     }
     return _subscription;
   }
 
   @override
-  Subscription subscribe(Observer<T> observer) => subject.subscribe(observer);
+  Disposable subscribe(Observer<T> observer) => subject.subscribe(observer);
 }

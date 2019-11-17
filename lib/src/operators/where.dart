@@ -4,7 +4,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension WhereOperator<T> on Observable<T> {
@@ -21,7 +21,7 @@ class WhereObservable<T> extends Observable<T> {
   WhereObservable(this.delegate, this.predicate);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = WhereSubscriber<T>(observer, predicate);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

@@ -3,7 +3,7 @@ library rx.constructors.just;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/scheduler.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../schedulers/immediate.dart';
 
 /// An [Observable] with a single element.
@@ -17,7 +17,7 @@ class JustObservable<T> with Observable<T> {
   const JustObservable(this.value, this.scheduler);
 
   @override
-  Subscription subscribe(Observer<T> observer) => scheduler.schedule(() {
+  Disposable subscribe(Observer<T> observer) => scheduler.schedule(() {
         observer.next(value);
         observer.complete();
       });

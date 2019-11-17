@@ -3,7 +3,7 @@ library rx.testing.test_scheduler;
 import 'package:more/iterable.dart';
 
 import '../core/observable.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../schedulers/async.dart';
 import '../schedulers/settings.dart';
 import 'cold_observable.dart';
@@ -14,7 +14,7 @@ import 'test_events.dart';
 
 class TestScheduler extends AsyncScheduler {
   DateTime _currentTime;
-  Subscription _subscription = Subscription.empty();
+  Disposable _subscription = Disposable.empty();
 
   final List<Observable> coldObservables = [];
   final List<Observable> hotObservables = [];
@@ -30,7 +30,7 @@ class TestScheduler extends AsyncScheduler {
 
   /// Installs the test scheduler, typically done in `setUp` method of test.
   void setUp() {
-    if (!_subscription.isClosed) {
+    if (!_subscription.isDisposed) {
       throw StateError('$this is already set-up.');
     }
     _currentTime = truncateToPeriod(DateTime.now(), period: Period.daily);
@@ -39,14 +39,14 @@ class TestScheduler extends AsyncScheduler {
 
   /// Uninstall the test scheduler, typically done in `tearDown` method of test.
   void tearDown() {
-    if (_subscription.isClosed) {
+    if (_subscription.isDisposed) {
       throw StateError('$this is already tear-down.');
     }
     advanceAll();
     coldObservables.clear();
     hotObservables.clear();
-    _subscription.unsubscribe();
-    _subscription = Subscription.empty();
+    _subscription.dispose();
+    _subscription = Disposable.empty();
   }
 
   /// Advances the time to `dateTime`. If omitted advance to the timestamp of

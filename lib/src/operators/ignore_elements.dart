@@ -3,7 +3,7 @@ library rx.operators.ignore_elements;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension IgnoreElementsOperator<T> on Observable<T> {
   /// Ignores all items emitted by the source and only passes calls to
@@ -17,7 +17,7 @@ class IgnoreElementsObservable<T> extends Observable<T> {
   IgnoreElementsObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = IgnoreElementsSubscriber<T>(observer);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

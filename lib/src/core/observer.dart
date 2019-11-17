@@ -1,10 +1,10 @@
 library rx.core.observer;
 
+import '../disposables/disposable.dart';
 import '../observers/base.dart';
 import '../shared/functions.dart';
-import 'subscription.dart';
 
-abstract class Observer<T> implements Subscription {
+abstract class Observer<T> implements Disposable {
   /// An observer with custom handlers.
   factory Observer({
     NextCallback<T> next = nullFunction1,

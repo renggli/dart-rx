@@ -4,10 +4,10 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
+import '../disposables/sequential.dart';
 import '../observers/inner.dart';
 import '../shared/functions.dart';
-import '../subscriptions/sequential.dart';
 
 extension SwitchAllOperator<T> on Observable<Observable<T>> {
   /// Emits values only from the most recently received higher-order
@@ -33,7 +33,7 @@ class SwitchObservable<T, R> extends Observable<R> {
   SwitchObservable(this.delegate, this.project);
 
   @override
-  Subscription subscribe(Observer<R> observer) {
+  Disposable subscribe(Observer<R> observer) {
     final subscriber = SwitchSubscriber<T, R>(observer, project);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
@@ -43,7 +43,7 @@ class SwitchObservable<T, R> extends Observable<R> {
 class SwitchSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
   final Map1<T, Observable<R>> project;
-  final SequentialSubscription subscription = SequentialSubscription();
+  final SequentialDisposable subscription = SequentialDisposable();
 
   bool hasCompleted = false;
 
@@ -64,23 +64,23 @@ class SwitchSubscriber<T, R> extends Subscriber<T>
   @override
   void onComplete() {
     hasCompleted = true;
-    if (subscription.current.isClosed) {
+    if (subscription.current.isDisposed) {
       doComplete();
     }
   }
 
   @override
-  void notifyNext(Subscription subscription, void state, R value) =>
+  void notifyNext(Disposable subscription, void state, R value) =>
       doNext(value);
 
   @override
-  void notifyError(Subscription subscription, void state, Object error,
+  void notifyError(Disposable subscription, void state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Subscription subscription, void state) {
-    this.subscription.current = Subscription.empty();
+  void notifyComplete(Disposable subscription, void state) {
+    this.subscription.current = Disposable.empty();
     if (hasCompleted) {
       doComplete();
     }

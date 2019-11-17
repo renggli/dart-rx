@@ -1,9 +1,9 @@
 library rx.core.observable;
 
+import '../disposables/disposable.dart';
 import 'observer.dart';
 import 'operator.dart';
 import 'subscriber.dart';
-import 'subscription.dart';
 
 abstract class Observable<T> {
   /// Creates a new observable with the provided [operator].
@@ -11,7 +11,7 @@ abstract class Observable<T> {
       _OperatorObservable(this, operator);
 
   /// Subscribes with the provided [observer].
-  Subscription subscribe(Observer<T> observer);
+  Disposable subscribe(Observer<T> observer);
 }
 
 class _OperatorObservable<T, R> extends Observable<R> {
@@ -21,7 +21,7 @@ class _OperatorObservable<T, R> extends Observable<R> {
   _OperatorObservable(this.source, this.operator);
 
   @override
-  Subscription subscribe(Observer<R> observer) {
+  Disposable subscribe(Observer<R> observer) {
     final subscriber = Subscriber<R>(observer);
     subscriber.add(operator(source, subscriber));
     return subscriber;

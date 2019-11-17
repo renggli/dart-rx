@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 
 import '../core/observer.dart';
 import '../core/subject.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import 'test_event_sequence.dart';
 import 'test_events.dart';
 import 'test_observable.dart';
@@ -30,7 +30,7 @@ class HotObservable<T> extends TestObservable<T> {
   }
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = createSubscriber(observer);
     subject.subscribe(subscriber);
     return subscriber;

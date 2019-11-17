@@ -3,7 +3,7 @@ library rx.converters.iterable_to_observable;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/scheduler.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../schedulers/settings.dart';
 
 extension IterableToObservable<T> on Iterable<T> {
@@ -19,7 +19,7 @@ class IterableObservable<T> with Observable<T> {
   IterableObservable(this.iterable, this.scheduler);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final iterator = iterable.iterator;
     return scheduler.scheduleIteration(() {
       final hasNext = iterator.moveNext();

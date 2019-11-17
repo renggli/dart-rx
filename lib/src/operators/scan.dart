@@ -4,7 +4,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension ScanOperator<T> on Observable<T> {
@@ -27,7 +27,7 @@ class ScanObservable<T, R> extends Observable<R> {
   ScanObservable(this.delegate, this.transform, this.hasSeed, this.seedValue);
 
   @override
-  Subscription subscribe(Observer<R> observer) {
+  Disposable subscribe(Observer<R> observer) {
     final subscriber =
         ScanSubscriber<T, R>(observer, transform, hasSeed, seedValue);
     subscriber.add(delegate.subscribe(subscriber));

@@ -3,7 +3,7 @@ library rx.operators.skip;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension SkipOperator<T> on Observable<T> {
   /// Skips over the first [count] values before starting to emit.
@@ -17,7 +17,7 @@ class SkipObservable<T> extends Observable<T> {
   SkipObservable(this.delegate, this.count);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = SkipSubscriber<T>(observer, count);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

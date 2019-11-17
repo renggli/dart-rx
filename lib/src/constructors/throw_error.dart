@@ -3,7 +3,7 @@ library rx.constructors.throw_error;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/scheduler.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../schedulers/immediate.dart';
 
 /// An [Observable] that emits no items and immediately throws an error.
@@ -20,6 +20,6 @@ class ThrowErrorObservable<T> with Observable<T> {
   const ThrowErrorObservable(this.error, this.stackTrace, this.scheduler);
 
   @override
-  Subscription subscribe(Observer observer) =>
+  Disposable subscribe(Observer observer) =>
       scheduler.schedule(() => observer.error(error, stackTrace));
 }

@@ -3,7 +3,7 @@ library rx.operators.sample;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 
 extension SampleOperator<T> on Observable<T> {
@@ -20,7 +20,7 @@ class SampleObservable<T> extends Observable<T> {
   SampleObservable(this.delegate, this.trigger);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = SampleSubscriber<T>(observer, trigger);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
@@ -43,16 +43,15 @@ class SampleSubscriber<T> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Subscription subscription, void state, T value) =>
-      emitValue();
+  void notifyNext(Disposable subscription, void state, T value) => emitValue();
 
   @override
-  void notifyError(Subscription subscription, void state, Object error,
+  void notifyError(Disposable subscription, void state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Subscription subscription, void state) => emitValue();
+  void notifyComplete(Disposable subscription, void state) => emitValue();
 
   void emitValue() {
     if (hasValue) {

@@ -4,7 +4,7 @@ import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/scheduler.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../schedulers/settings.dart';
 
 extension DebounceOperator<T> on Observable<T> {
@@ -22,7 +22,7 @@ class DebounceObservable<T> extends Observable<T> {
   DebounceObservable(this.delegate, this.scheduler, this.delay);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = DebounceSubscriber<T>(observer, scheduler, delay);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
@@ -35,7 +35,7 @@ class DebounceSubscriber<T> extends Subscriber<T> {
 
   T lastValue;
   bool hasValue = false;
-  Subscription subscription;
+  Disposable subscription;
 
   DebounceSubscriber(Observer<T> observer, this.scheduler, this.delay)
       : super(observer);
@@ -66,7 +66,7 @@ class DebounceSubscriber<T> extends Subscriber<T> {
 
   void reset() {
     if (subscription != null) {
-      subscription.unsubscribe();
+      subscription.dispose();
       remove(subscription);
       subscription = null;
     }

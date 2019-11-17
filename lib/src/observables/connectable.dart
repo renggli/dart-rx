@@ -1,9 +1,9 @@
 library rx.observables.connectable;
 
-import '../../subscriptions.dart';
+import '../../disposables.dart';
 import '../core/observable.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 abstract class ConnectableObservable<T> extends Observable<T> {
-  Subscription connect();
+  Disposable connect();
 }

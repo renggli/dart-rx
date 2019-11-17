@@ -1,43 +1,43 @@
 library rx.schedulers.immediate;
 
 import '../core/scheduler.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 class ImmediateScheduler extends Scheduler {
   const ImmediateScheduler();
 
   @override
-  Subscription schedule(Callback0 callback) {
+  Disposable schedule(Callback0 callback) {
     callback();
-    return Subscription.empty();
+    return Disposable.empty();
   }
 
   @override
-  Subscription scheduleIteration(Predicate0 callback) {
+  Disposable scheduleIteration(Predicate0 callback) {
     for (; callback();) {}
-    return Subscription.empty();
+    return Disposable.empty();
   }
 
   @override
-  Subscription scheduleAbsolute(DateTime dateTime, Callback0 callback) {
+  Disposable scheduleAbsolute(DateTime dateTime, Callback0 callback) {
     _busyWaitUntil(dateTime);
     callback();
-    return Subscription.empty();
+    return Disposable.empty();
   }
 
   @override
-  Subscription scheduleRelative(Duration duration, Callback0 callback) =>
+  Disposable scheduleRelative(Duration duration, Callback0 callback) =>
       scheduleAbsolute(now.add(duration), callback);
 
   @override
-  Subscription schedulePeriodic(
-      Duration duration, Callback1<Subscription> callback) {
-    final subscription = Subscription.stateful();
+  Disposable schedulePeriodic(
+      Duration duration, Callback1<Disposable> callback) {
+    final subscription = Disposable.stateful();
     do {
       _busyWaitUntil(now.add(duration));
       callback(subscription);
-    } while (!subscription.isClosed);
+    } while (!subscription.isDisposed);
     return subscription;
   }
 

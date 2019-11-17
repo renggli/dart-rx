@@ -3,7 +3,7 @@ library rx.operators.take;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension TakeOperator<T> on Observable<T> {
   /// Emits the first [count] values before completing.
@@ -17,7 +17,7 @@ class TakeObservable<T> extends Observable<T> {
   TakeObservable(this.delegate, this.count);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = TakeSubscriber<T>(observer, count);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

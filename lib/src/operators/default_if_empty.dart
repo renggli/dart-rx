@@ -3,7 +3,7 @@ library rx.operators.default_if_empty;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension DefaultIfEmptyOperator<T> on Observable<T> {
   /// Emits a given value if the source completes without emitting any value,
@@ -19,7 +19,7 @@ class DefaultIfEmptyObservable<T> extends Observable<T> {
   DefaultIfEmptyObservable(this.delegate, this.defaultValue);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = DefaultIfEmptySubscriber<T>(observer, defaultValue);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

@@ -6,7 +6,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 import '../shared/constants.dart';
 import '../shared/functions.dart';
@@ -43,7 +43,7 @@ class MergeObservable<T, R> extends Observable<R> {
   MergeObservable(this.delegate, this.project, this.concurrent);
 
   @override
-  Subscription subscribe(Observer<R> observer) {
+  Disposable subscribe(Observer<R> observer) {
     final subscriber = MergeSubscriber<T, R>(observer, project, concurrent);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
@@ -85,16 +85,15 @@ class MergeSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Subscription subscription, int state, R value) =>
-      doNext(value);
+  void notifyNext(Disposable subscription, int state, R value) => doNext(value);
 
   @override
-  void notifyError(Subscription subscription, int state, Object error,
+  void notifyError(Disposable subscription, int state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Subscription subscription, int state) {
+  void notifyComplete(Disposable subscription, int state) {
     remove(subscription);
     active--;
     if (buffer.isNotEmpty) {

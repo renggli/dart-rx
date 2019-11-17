@@ -5,7 +5,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension DematerializeOperator<T> on Observable<Event<T>> {
   /// Dematerialize events into a stream from [Event] objects of type
@@ -19,7 +19,7 @@ class DematerializeObservable<T> extends Observable<T> {
   DematerializeObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = DematerializeSubscriber<T>(observer);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

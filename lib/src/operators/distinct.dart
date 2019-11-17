@@ -6,7 +6,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension DistinctOperator<T> on Observable<T> {
@@ -24,7 +24,7 @@ class DistinctObservable<T> extends Observable<T> {
   DistinctObservable(this.delegate, this.equalsFunction, this.hashCodeFunction);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber =
         DistinctSubscriber<T>(observer, equalsFunction, hashCodeFunction);
     subscriber.add(delegate.subscribe(subscriber));

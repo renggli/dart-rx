@@ -4,7 +4,7 @@ import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/scheduler.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension ObserveOnOperator<T> on Observable<T> {
@@ -21,7 +21,7 @@ class ObserveOnObservable<T> extends Observable<T> {
   ObserveOnObservable(this.delegate, this.scheduler, this.delay);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = ObserveOnSubscriber<T>(observer, scheduler, delay);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

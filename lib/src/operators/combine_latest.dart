@@ -3,7 +3,7 @@ library rx.operators.combine_latest;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 
 extension CombineLatestOperator<T> on Observable<Observable<T>> {
@@ -18,7 +18,7 @@ class CombineLatestObservable<T> extends Observable<List<T>> {
   CombineLatestObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<List<T>> observer) {
+  Disposable subscribe(Observer<List<T>> observer) {
     final subscriber = CombineLatestSubscriber<T>(observer);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
@@ -57,7 +57,7 @@ class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
   }
 
   @override
-  void notifyNext(Subscription subscription, int index, T value) {
+  void notifyNext(Disposable subscription, int index, T value) {
     values[index] = value;
     if (!hasValues[index]) {
       pending--;
@@ -69,13 +69,13 @@ class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
   }
 
   @override
-  void notifyError(Subscription subscription, int index, Object error,
+  void notifyError(Disposable subscription, int index, Object error,
       [StackTrace stackTrace]) {
     doError(error, stackTrace);
   }
 
   @override
-  void notifyComplete(Subscription subscription, int index) {
+  void notifyComplete(Disposable subscription, int index) {
     active--;
     if (active == 0) {
       doComplete();

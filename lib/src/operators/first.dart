@@ -5,7 +5,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension FirstOperator<T> on Observable<T> {
@@ -47,7 +47,7 @@ class FirstObservable<T> extends Observable<T> {
   FirstObservable(this.delegate, this.predicate, this.callback);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = FirstSubscriber<T>(observer, predicate, callback);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

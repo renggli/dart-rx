@@ -3,7 +3,7 @@ library rx.operators.cast;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension CastOperator<T> on Observable<T> {
   /// Casts all values from a source observable to [R].
@@ -16,7 +16,7 @@ class CastObservable<T, R> extends Observable<R> {
   CastObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<R> observer) {
+  Disposable subscribe(Observer<R> observer) {
     final subscriber = CastSubscriber<T, R>(observer);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

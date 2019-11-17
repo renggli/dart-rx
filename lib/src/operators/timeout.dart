@@ -5,7 +5,7 @@ import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/scheduler.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../schedulers/settings.dart';
 
 extension TimeoutOperator<T> on Observable<T> {
@@ -23,7 +23,7 @@ class TimeoutObservable<T> extends Observable<T> {
   TimeoutObservable(this.delegate, this.scheduler, this.duration);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = TimeoutSubscriber<T>(observer, scheduler, duration);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
@@ -31,7 +31,7 @@ class TimeoutObservable<T> extends Observable<T> {
 }
 
 class TimeoutSubscriber<T> extends Subscriber<T> {
-  Subscription subscription;
+  Disposable subscription;
 
   TimeoutSubscriber(
       Observer<T> observer, Scheduler scheduler, Duration duration)
@@ -44,8 +44,8 @@ class TimeoutSubscriber<T> extends Subscriber<T> {
   }
 
   @override
-  void unsubscribe() {
-    subscription.unsubscribe();
-    super.unsubscribe();
+  void dispose() {
+    subscription.dispose();
+    super.dispose();
   }
 }

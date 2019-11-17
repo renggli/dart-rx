@@ -3,7 +3,7 @@ library rx.operators.to_set;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension ToSetOperator<T> on Observable<T> {
@@ -19,7 +19,7 @@ class ToSetObservable<T> extends Observable<Set<T>> {
   ToSetObservable(this.delegate, this.setConstructor);
 
   @override
-  Subscription subscribe(Observer<Set<T>> observer) {
+  Disposable subscribe(Observer<Set<T>> observer) {
     final subscriber = ToSetSubscriber<T>(
         observer, setConstructor != null ? setConstructor() : <T>{});
     subscriber.add(delegate.subscribe(subscriber));

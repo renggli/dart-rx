@@ -4,7 +4,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension MaterializeOperator<T> on Observable<T> {
   /// Materialize events into a stream of [Event] objects: [NextEvent],
@@ -18,7 +18,7 @@ class MaterializeObservable<T> extends Observable<Event<T>> {
   MaterializeObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<Event<T>> observer) {
+  Disposable subscribe(Observer<Event<T>> observer) {
     final subscriber = MaterializeSubscriber<T>(observer);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

@@ -4,7 +4,7 @@ import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 /// Creates an observable sequence from a specified subscribe method
@@ -18,13 +18,13 @@ class CreateObservable<T> extends Observable<T> {
   CreateObservable(this.callback);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = Subscriber<T>(observer);
     final event = Event.map1(callback, subscriber);
     if (event is ErrorEvent) {
       subscriber.error(event.error, event.stackTrace);
     } else {
-      subscriber.add(Subscription.of(event.value));
+      subscriber.add(Disposable.of(event.value));
     }
     return subscriber;
   }

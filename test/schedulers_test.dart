@@ -46,7 +46,7 @@ void main() {
       expect(defaultScheduler, isNot(scheduler));
       final subscription = replaceDefaultScheduler(scheduler);
       expect(defaultScheduler, scheduler);
-      subscription.unsubscribe();
+      subscription.dispose();
       expect(defaultScheduler, isNot(scheduler));
     });
   });
@@ -61,13 +61,13 @@ void main() {
       var called = 0;
       final subscription = scheduler.schedule(() => ++called);
       expect(called, 1);
-      expect(subscription.isClosed, isTrue);
+      expect(subscription.isDisposed, isTrue);
     });
     test('scheduleIteration', () {
       var called = 0;
       final subscription = scheduler.scheduleIteration(() => ++called < 10);
       expect(called, 10);
-      expect(subscription.isClosed, isTrue);
+      expect(subscription.isDisposed, isTrue);
     });
     test('scheduleAbsolute', () {
       var actual = epoch;
@@ -77,7 +77,7 @@ void main() {
         actual = scheduler.now;
       });
       expectDateTime(actual, expected, accuracy);
-      expect(subscription.isClosed, isTrue);
+      expect(subscription.isDisposed, isTrue);
     });
     test('scheduleRelative', () {
       var actual = epoch;
@@ -87,7 +87,7 @@ void main() {
         actual = scheduler.now;
       });
       expectDateTime(actual, expected, accuracy);
-      expect(subscription.isClosed, isTrue);
+      expect(subscription.isDisposed, isTrue);
     });
     test('schedulePeriodic', () {
       final start = scheduler.now;
@@ -95,10 +95,10 @@ void main() {
       final subscription = scheduler.schedulePeriodic(offset, (subscription) {
         actual.add(scheduler.now);
         if (actual.length == 5) {
-          subscription.unsubscribe();
+          subscription.dispose();
         }
       });
-      expect(subscription.isClosed, isTrue);
+      expect(subscription.isDisposed, isTrue);
       final expected =
           iterate<DateTime>(start, (prev) => prev.add(offset)).take(5).toList();
       expectDateTimeList(expected, actual, accuracy);
@@ -122,7 +122,7 @@ void testZone(ZoneScheduler scheduler) {
     });
     final actual = await completer.future;
     expectDateTime(actual, expected, accuracy);
-    expect(subscription.isClosed, isFalse);
+    expect(subscription.isDisposed, isFalse);
   });
   test('scheduleIteration', () async {
     var called = 0;
@@ -137,10 +137,10 @@ void testZone(ZoneScheduler scheduler) {
         return false;
       }
     });
-    expect(subscription.isClosed, isFalse);
+    expect(subscription.isDisposed, isFalse);
     final actual = await completer.future;
     expectDateTime(actual, expected, accuracy);
-    expect(subscription.isClosed, isTrue);
+    expect(subscription.isDisposed, isTrue);
     expect(called, 10);
   });
   test('scheduleAbsolute', () async {
@@ -148,7 +148,7 @@ void testZone(ZoneScheduler scheduler) {
     final expected = scheduler.now.add(offset);
     final subscription = scheduler.scheduleAbsolute(
         expected, () => completer.complete(scheduler.now));
-    expect(subscription.isClosed, isFalse);
+    expect(subscription.isDisposed, isFalse);
     final actual = await completer.future;
     expectDateTime(actual, expected, accuracy);
   });
@@ -157,7 +157,7 @@ void testZone(ZoneScheduler scheduler) {
     final expected = scheduler.now.add(offset);
     final subscription = scheduler.scheduleRelative(
         offset, () => completer.complete(scheduler.now));
-    expect(subscription.isClosed, isFalse);
+    expect(subscription.isDisposed, isFalse);
     final actual = await completer.future;
     expectDateTime(actual, expected, accuracy);
   });
@@ -169,14 +169,14 @@ void testZone(ZoneScheduler scheduler) {
       actual.add(scheduler.now);
       if (actual.length == 5) {
         completer.complete();
-        subscription.unsubscribe();
+        subscription.dispose();
       }
     });
-    expect(subscription.isClosed, isFalse);
+    expect(subscription.isDisposed, isFalse);
     await completer.future;
     final expected =
         iterate<DateTime>(start, (prev) => prev.add(offset)).take(5).toList();
     expectDateTimeList(expected, actual, accuracy);
-    expect(subscription.isClosed, isTrue);
+    expect(subscription.isDisposed, isTrue);
   });
 }

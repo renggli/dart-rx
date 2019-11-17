@@ -2,7 +2,6 @@ library rx.core.errors;
 
 import 'events.dart';
 import 'observable.dart';
-import 'subscription.dart';
 
 /// An error throws when an operation receives an unknown [Event] type.
 class UnexpectedEventError extends Error {
@@ -43,38 +42,4 @@ class TimeoutError extends Error {
 
   @override
   String toString() => 'TimeoutError{message: $message}';
-}
-
-/// An error thrown when an operation has been performed on an
-/// unsubscribed subscription.
-class UnsubscribedError extends Error {
-  static void checkOpen(Subscription subscription) {
-    if (subscription.isClosed) {
-      throw UnsubscribedError();
-    }
-  }
-
-  @override
-  String toString() => 'UnsubscribedError{}';
-}
-
-/// An error thrown when one or more errors have occurred during the
-/// `unsubscribe` of a [Subscription].
-class UnsubscriptionError extends Error {
-  static void checkList(List errors) {
-    if (errors.isNotEmpty) {
-      throw UnsubscriptionError(errors);
-    }
-  }
-
-  final List errors;
-
-  UnsubscriptionError(List<Object> errors)
-      : errors = errors
-            .expand((error) =>
-                error is UnsubscriptionError ? error.errors : [error])
-            .toList(growable: false);
-
-  @override
-  String toString() => 'UnsubscriptionError{errors: $errors}';
 }

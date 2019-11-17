@@ -1,9 +1,9 @@
 library rx.schedulers.action;
 
+import '../disposables/stateful.dart';
 import '../shared/functions.dart';
-import '../subscriptions/stateful.dart';
 
-abstract class SchedulerAction extends StatefulSubscription {
+abstract class SchedulerAction extends StatefulDisposable {
   void run();
 }
 
@@ -14,7 +14,7 @@ class SchedulerActionCallback extends SchedulerAction {
 
   @override
   void run() {
-    if (isClosed) {
+    if (isDisposed) {
       return;
     }
     _callback();
@@ -28,7 +28,7 @@ class SchedulerActionCallbackWith extends SchedulerAction {
 
   @override
   void run() {
-    if (isClosed) {
+    if (isDisposed) {
       return;
     }
     _callback(this);

@@ -97,10 +97,10 @@ void main() {
   final subs2 = obs.subscribe(printObserver('second'));
   rx
       .timer(delay: const Duration(seconds: 3))
-      .subscribe(Observer(complete: () => subs1.unsubscribe()));
+      .subscribe(Observer(complete: () => subs1.dispose()));
   rx
       .timer(delay: const Duration(seconds: 5))
-      .subscribe(Observer(complete: () => subs2.unsubscribe()));
+      .subscribe(Observer(complete: () => subs2.dispose()));
 
   // zip
   final zip = rx.zip<Object>([

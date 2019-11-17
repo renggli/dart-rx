@@ -2,10 +2,10 @@ library rx.core.subject;
 
 import 'package:meta/meta.dart';
 
-import 'errors.dart';
+import '../disposables/disposable.dart';
+import '../disposables/errors.dart';
 import 'observable.dart';
 import 'observer.dart';
-import 'subscription.dart';
 
 /// A Subject is a special type of [Observable] that allows values to be
 /// multicast to many [Observer].
@@ -15,7 +15,7 @@ import 'subscription.dart';
 /// `complete`.
 class Subject<T>
     with Observable<T>, Observer<T>
-    implements Observable<T>, Observer<T>, Subscription {
+    implements Observable<T>, Observer<T>, Disposable {
   final List<Observer<T>> _observers = [];
   bool _isClosed = false;
   bool _hasStopped = false;
@@ -25,7 +25,7 @@ class Subject<T>
 
   @override
   void next(T value) {
-    UnsubscribedError.checkOpen(this);
+    DisposedError.checkDisposed(this);
     if (_hasStopped) {
       return;
     }
@@ -37,7 +37,7 @@ class Subject<T>
 
   @override
   void error(Object error, [StackTrace stackTrace]) {
-    UnsubscribedError.checkOpen(this);
+    DisposedError.checkDisposed(this);
     if (_hasStopped) {
       return;
     }
@@ -54,7 +54,7 @@ class Subject<T>
 
   @override
   void complete() {
-    UnsubscribedError.checkOpen(this);
+    DisposedError.checkDisposed(this);
     if (_hasStopped) {
       return;
     }
@@ -67,8 +67,8 @@ class Subject<T>
   }
 
   @override
-  Subscription subscribe(Observer<T> observer) {
-    UnsubscribedError.checkOpen(this);
+  Disposable subscribe(Observer<T> observer) {
+    DisposedError.checkDisposed(this);
     if (_hasError) {
       return subscribeToError(observer, _error, _stackTrace);
     } else if (_hasStopped) {
@@ -79,29 +79,29 @@ class Subject<T>
   }
 
   @protected
-  Subscription subscribeToActive(Observer observer) {
+  Disposable subscribeToActive(Observer observer) {
     _observers.add(observer);
-    return Subscription.create(() => _observers.remove(observer));
+    return Disposable.create(() => _observers.remove(observer));
   }
 
   @protected
-  Subscription subscribeToError(
+  Disposable subscribeToError(
       Observer observer, Object error, StackTrace stackTrace) {
     observer.error(error, stackTrace);
-    return Subscription.empty();
+    return Disposable.empty();
   }
 
   @protected
-  Subscription subscribeToComplete(Observer observer) {
+  Disposable subscribeToComplete(Observer observer) {
     observer.complete();
-    return Subscription.empty();
+    return Disposable.empty();
   }
 
   @override
-  bool get isClosed => _isClosed;
+  bool get isDisposed => _isClosed;
 
   @override
-  void unsubscribe() {
+  void dispose() {
     _isClosed = true;
     _hasStopped = true;
     _observers.clear();

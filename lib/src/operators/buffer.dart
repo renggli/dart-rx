@@ -4,7 +4,7 @@ import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/scheduler.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 import '../schedulers/settings.dart';
 
@@ -32,7 +32,7 @@ class BufferObservable<T> extends Observable<List<T>> {
       this.delegate, this.scheduler, this.trigger, this.maxLength, this.maxAge);
 
   @override
-  Subscription subscribe(Observer<List<T>> observer) {
+  Disposable subscribe(Observer<List<T>> observer) {
     final subscriber =
         BufferSubscriber<T>(observer, scheduler, trigger, maxLength, maxAge);
     subscriber.add(delegate.subscribe(subscriber));
@@ -74,15 +74,15 @@ class BufferSubscriber<T> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Subscription subscription, void state, T value) => flush();
+  void notifyNext(Disposable subscription, void state, T value) => flush();
 
   @override
-  void notifyError(Subscription subscription, void state, Object error,
+  void notifyError(Disposable subscription, void state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Subscription subscription, void state) {}
+  void notifyComplete(Disposable subscription, void state) {}
 
   void reset() {
     buffer = [];

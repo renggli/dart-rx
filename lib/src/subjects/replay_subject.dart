@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 
 import '../core/observer.dart';
 import '../core/subject.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 /// A [Subject] that replays all its previous values to new subscribers.
 class ReplaySubject<T> extends Subject<T> {
@@ -26,13 +26,13 @@ class ReplaySubject<T> extends Subject<T> {
   }
 
   @override
-  Subscription subscribeToActive(Observer observer) {
+  Disposable subscribeToActive(Observer observer) {
     _buffer.forEach(observer.next);
     return super.subscribeToActive(observer);
   }
 
   @override
-  Subscription subscribeToComplete(Observer observer) {
+  Disposable subscribeToComplete(Observer observer) {
     _buffer.forEach(observer.next);
     return super.subscribeToComplete(observer);
   }

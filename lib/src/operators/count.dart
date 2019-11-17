@@ -3,7 +3,7 @@ library rx.operators.count;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension CountOperator<T> on Observable<T> {
   /// Counts the number of emissions and emits that number on completion.
@@ -16,7 +16,7 @@ class CountObservable<T> extends Observable<int> {
   CountObservable(this.delegate);
 
   @override
-  Subscription subscribe(Observer<int> observer) {
+  Disposable subscribe(Observer<int> observer) {
     final subscriber = CountSubscriber<T>(observer);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;

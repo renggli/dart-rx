@@ -1,7 +1,7 @@
 library rx.core.scheduler;
 
+import '../disposables/disposable.dart';
 import '../shared/functions.dart';
-import 'subscription.dart';
 
 abstract class Scheduler {
   /// Default constructor of the scheduler.
@@ -11,18 +11,18 @@ abstract class Scheduler {
   DateTime get now => DateTime.now();
 
   /// Schedules a `callback` to be executed.
-  Subscription schedule(Callback0 callback);
+  Disposable schedule(Callback0 callback);
 
   /// Schedules a `callback` to while returns value is `true`.
-  Subscription scheduleIteration(Predicate0 callback);
+  Disposable scheduleIteration(Predicate0 callback);
 
   /// Schedules a `callback` to be executed at the specified `dateTime`.
-  Subscription scheduleAbsolute(DateTime dateTime, Callback0 callback);
+  Disposable scheduleAbsolute(DateTime dateTime, Callback0 callback);
 
   /// Schedules a `callback` to be executed after the specified `duration`.
-  Subscription scheduleRelative(Duration duration, Callback0 callback);
+  Disposable scheduleRelative(Duration duration, Callback0 callback);
 
   /// Schedules a `callback` to be executed periodically every `duration`.
-  Subscription schedulePeriodic(
-      Duration duration, Callback1<Subscription> callback);
+  Disposable schedulePeriodic(
+      Duration duration, Callback1<Disposable> callback);
 }

@@ -1,7 +1,7 @@
 library rx.schedulers.settings;
 
 import '../core/scheduler.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 import 'zone.dart';
 
 /// The default scheduler instance to be used.
@@ -15,8 +15,8 @@ Scheduler get defaultScheduler =>
 set defaultScheduler(Scheduler scheduler) => _defaultScheduler = scheduler;
 
 /// Replaces the default scheduler instance to be used.
-Subscription replaceDefaultScheduler(Scheduler scheduler) {
+Disposable replaceDefaultScheduler(Scheduler scheduler) {
   final originalScheduler = _defaultScheduler;
   _defaultScheduler = scheduler;
-  return Subscription.create(() => _defaultScheduler = originalScheduler);
+  return Disposable.create(() => _defaultScheduler = originalScheduler);
 }

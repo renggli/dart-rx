@@ -5,7 +5,7 @@ import 'package:collection/collection.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
-import '../core/subscription.dart';
+import '../disposables/disposable.dart';
 
 extension TakeLastOperator<T> on Observable<T> {
   /// Emits the last [count] values emitted by the source.
@@ -19,7 +19,7 @@ class TakeLastObservable<T> extends Observable<T> {
   TakeLastObservable(this.delegate, this.count);
 
   @override
-  Subscription subscribe(Observer<T> observer) {
+  Disposable subscribe(Observer<T> observer) {
     final subscriber = TakeLastSubscriber<T>(observer, count);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
