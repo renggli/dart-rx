@@ -2,7 +2,8 @@ library rx.disposables.stateful;
 
 import 'disposable.dart';
 
-class StatefulDisposable extends Disposable {
+/// A stateful [Disposable] that remembers if it has been disposed.
+class StatefulDisposable implements Disposable {
   bool _isDisposed = false;
 
   StatefulDisposable();

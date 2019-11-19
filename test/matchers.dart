@@ -15,9 +15,7 @@ final Matcher throwsTooManyError = throwsA(const TypeMatcher<TooManyError>());
 final Matcher throwsTimeoutError = throwsA(const TypeMatcher<TimeoutError>());
 
 /// Matches the throwing of an [DisposedError].
-final Matcher throwsUnsubscribedError =
-    throwsA(const TypeMatcher<DisposedError>());
+final Matcher throwsDisposedError = throwsA(const TypeMatcher<DisposedError>());
 
 /// Matches the throwing of an [DisposeError].
-final Matcher throwsUnsubscriptionError =
-    throwsA(const TypeMatcher<DisposeError>());
+final Matcher throwsDisposeError = throwsA(const TypeMatcher<DisposeError>());

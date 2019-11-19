@@ -1,6 +1,7 @@
 library rx.schedulers.settings;
 
 import '../core/scheduler.dart';
+import '../disposables/action.dart';
 import '../disposables/disposable.dart';
 import 'zone.dart';
 
@@ -18,5 +19,5 @@ set defaultScheduler(Scheduler scheduler) => _defaultScheduler = scheduler;
 Disposable replaceDefaultScheduler(Scheduler scheduler) {
   final originalScheduler = _defaultScheduler;
   _defaultScheduler = scheduler;
-  return Disposable.create(() => _defaultScheduler = originalScheduler);
+  return ActionDisposable(() => _defaultScheduler = originalScheduler);
 }

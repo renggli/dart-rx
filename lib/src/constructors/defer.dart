@@ -10,5 +10,4 @@ import 'empty.dart';
 Observable<T> defer<T>(Map0<Observable<T>> callback) => create<T>((subscriber) {
       final observable = callback() ?? empty<T>();
       subscriber.add(observable.subscribe(subscriber));
-      return subscriber;
     });

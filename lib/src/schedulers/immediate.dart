@@ -2,6 +2,8 @@ library rx.schedulers.immediate;
 
 import '../core/scheduler.dart';
 import '../disposables/disposable.dart';
+import '../disposables/disposed.dart';
+import '../disposables/stateful.dart';
 import '../shared/functions.dart';
 
 class ImmediateScheduler extends Scheduler {
@@ -10,20 +12,20 @@ class ImmediateScheduler extends Scheduler {
   @override
   Disposable schedule(Callback0 callback) {
     callback();
-    return Disposable.empty();
+    return const DisposedDisposable();
   }
 
   @override
   Disposable scheduleIteration(Predicate0 callback) {
     for (; callback();) {}
-    return Disposable.empty();
+    return const DisposedDisposable();
   }
 
   @override
   Disposable scheduleAbsolute(DateTime dateTime, Callback0 callback) {
     _busyWaitUntil(dateTime);
     callback();
-    return Disposable.empty();
+    return const DisposedDisposable();
   }
 
   @override
@@ -33,7 +35,7 @@ class ImmediateScheduler extends Scheduler {
   @override
   Disposable schedulePeriodic(
       Duration duration, Callback1<Disposable> callback) {
-    final subscription = Disposable.stateful();
+    final subscription = StatefulDisposable();
     do {
       _busyWaitUntil(now.add(duration));
       callback(subscription);

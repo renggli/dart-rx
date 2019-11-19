@@ -1,22 +1,12 @@
 library rx.disposables.timer;
 
-import 'dart:async' as async;
+import 'dart:async';
 
-import 'disposable.dart';
+import 'reference.dart';
 
-class TimerDisposable extends Disposable {
-  async.Timer _timer;
-
-  TimerDisposable(this._timer);
+class TimerDisposable extends ReferenceDisposable<Timer> {
+  TimerDisposable(Timer value) : super(value);
 
   @override
-  bool get isDisposed => _timer == null;
-
-  @override
-  void dispose() {
-    if (_timer != null) {
-      _timer.cancel();
-      _timer = null;
-    }
-  }
+  void onDispose(Timer value) => value.cancel();
 }

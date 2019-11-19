@@ -3,6 +3,8 @@ library rx.constructors.timer;
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/scheduler.dart';
+import '../disposables/action.dart';
+import '../disposables/composite.dart';
 import '../disposables/disposable.dart';
 import '../schedulers/settings.dart';
 
@@ -23,8 +25,8 @@ class TimerObservable with Observable<int> {
 
   @override
   Disposable subscribe(Observer<int> observer) {
-    final subscription = Disposable.composite();
-    subscription.add(Disposable.create(() => observer.complete()));
+    final subscription = CompositeDisposable();
+    subscription.add(ActionDisposable(() => observer.complete()));
     subscription.add(scheduler.scheduleRelative(delay, () {
       observer.next(0);
       if (period == null) {

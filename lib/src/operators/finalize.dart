@@ -3,6 +3,8 @@ library rx.operators.finalize;
 import '../../disposables.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
+import '../disposables/action.dart';
+import '../disposables/composite.dart';
 import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
@@ -20,8 +22,8 @@ class FinalizeObservable<T> extends Observable<T> {
   FinalizeObservable(this.delegate, this.finalize);
 
   @override
-  Disposable subscribe(Observer<T> observer) => Disposable.composite([
-        Disposable.of(finalize),
+  Disposable subscribe(Observer<T> observer) => CompositeDisposable([
+        ActionDisposable(finalize),
         delegate.subscribe(observer),
       ]);
 }

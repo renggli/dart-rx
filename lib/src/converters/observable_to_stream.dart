@@ -4,24 +4,21 @@ import 'dart:async' show Stream, StreamController;
 
 import '../core/observable.dart';
 import '../core/observer.dart';
-import '../disposables/disposable.dart';
+import '../disposables/sequential.dart';
 
 extension ObservableToStream<T> on Observable<T> {
   /// A [Stream] that listens to an [Observable].
   Stream<T> toStream() {
-    var subscription = Disposable.empty();
+    final disposable = SequentialDisposable();
     final controller = StreamController<T>();
-    final observer = Observer<T>(
-      next: controller.add,
-      error: controller.addError,
-      complete: controller.close,
-    );
     controller.onListen = () {
-      if (subscription.isDisposed) {
-        subscription = subscribe(observer);
-      }
+      disposable.current = subscribe(Observer<T>(
+        next: controller.add,
+        error: controller.addError,
+        complete: controller.close,
+      ));
     };
-    controller.onCancel = subscription.dispose;
+    controller.onCancel = disposable.dispose;
     return controller.stream;
   }
 }

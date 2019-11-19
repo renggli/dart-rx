@@ -2,7 +2,9 @@ library rx.core.subject;
 
 import 'package:meta/meta.dart';
 
+import '../disposables/action.dart';
 import '../disposables/disposable.dart';
+import '../disposables/disposed.dart';
 import '../disposables/errors.dart';
 import 'observable.dart';
 import 'observer.dart';
@@ -81,20 +83,20 @@ class Subject<T>
   @protected
   Disposable subscribeToActive(Observer observer) {
     _observers.add(observer);
-    return Disposable.create(() => _observers.remove(observer));
+    return ActionDisposable(() => _observers.remove(observer));
   }
 
   @protected
   Disposable subscribeToError(
       Observer observer, Object error, StackTrace stackTrace) {
     observer.error(error, stackTrace);
-    return Disposable.empty();
+    return const DisposedDisposable();
   }
 
   @protected
   Disposable subscribeToComplete(Observer observer) {
     observer.complete();
-    return Disposable.empty();
+    return const DisposedDisposable();
   }
 
   @override

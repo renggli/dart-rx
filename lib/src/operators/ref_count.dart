@@ -3,7 +3,10 @@ library rx.operators.ref_count;
 import '../../observables.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
+import '../disposables/action.dart';
+import '../disposables/composite.dart';
 import '../disposables/disposable.dart';
+import '../disposables/disposed.dart';
 
 extension RefCountOperator<T> on ConnectableObservable<T> {
   /// Connects to the source only if there is more than one subscriber.
@@ -13,7 +16,7 @@ extension RefCountOperator<T> on ConnectableObservable<T> {
 class RefCountObservable<T> extends Observable<T> {
   final ConnectableObservable<T> observable;
 
-  Disposable subscription = Disposable.empty();
+  Disposable subscription = const DisposedDisposable();
   int count = 0;
 
   RefCountObservable(this.observable);
@@ -24,13 +27,13 @@ class RefCountObservable<T> extends Observable<T> {
       subscription = observable.connect();
     }
     count++;
-    return Disposable.composite([
+    return CompositeDisposable([
       observable.subscribe(observer),
-      Disposable.create(() {
+      ActionDisposable(() {
         count--;
         if (count == 0) {
           subscription.dispose();
-          subscription = Disposable.empty();
+          subscription = const DisposedDisposable();
         }
       })
     ]);

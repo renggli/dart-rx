@@ -4,6 +4,7 @@ import 'dart:async' show Stream;
 
 import '../core/observable.dart';
 import '../core/observer.dart';
+import '../disposables/action.dart';
 import '../disposables/disposable.dart';
 
 extension StreamToObservable<T> on Stream<T> {
@@ -20,6 +21,6 @@ class StreamObservable<T> with Observable<T> {
   Disposable subscribe(Observer<T> observer) {
     final subscription = stream.listen(observer.next,
         onError: observer.error, onDone: observer.complete);
-    return Disposable.create(subscription.cancel);
+    return ActionDisposable(subscription.cancel);
   }
 }

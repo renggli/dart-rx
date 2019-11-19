@@ -5,6 +5,7 @@ import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../disposables/disposed.dart';
 import '../disposables/sequential.dart';
 import '../observers/inner.dart';
 import '../shared/functions.dart';
@@ -80,7 +81,7 @@ class SwitchSubscriber<T, R> extends Subscriber<T>
 
   @override
   void notifyComplete(Disposable subscription, void state) {
-    this.subscription.current = Disposable.empty();
+    this.subscription.current = const DisposedDisposable();
     if (hasCompleted) {
       doComplete();
     }

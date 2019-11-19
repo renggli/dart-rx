@@ -4,33 +4,37 @@ import 'disposable.dart';
 import 'errors.dart';
 import 'stateful.dart';
 
+/// A [Disposable] container that holds other disposables.
 class CompositeDisposable extends StatefulDisposable {
-  final Set<Disposable> _subscriptions = {};
+  final Set<Disposable> _disposables = Set.identity();
 
-  CompositeDisposable();
-
-  CompositeDisposable.of(Iterable<Disposable> subscriptions) {
-    subscriptions.forEach(add);
+  CompositeDisposable([Iterable<Disposable> disposables]) : super() {
+    if (disposables != null && disposables.isNotEmpty) {
+      disposables.forEach(add);
+    }
   }
 
-  Set<Disposable> get subscriptions => {..._subscriptions};
+  Set<Disposable> get disposables => {..._disposables};
 
-  void add(Disposable subscription) {
-    ArgumentError.checkNotNull(subscription, 'subscription');
+  void add(Disposable disposable) {
+    ArgumentError.checkNotNull(disposable, 'disposable');
     if (isDisposed) {
-      subscription.dispose();
+      disposable.dispose();
       return;
     }
-    if (subscription.isDisposed) {
+    if (disposable.isDisposed) {
       return;
     }
-    _subscriptions.add(subscription);
+    _disposables.add(disposable);
   }
 
-  void remove(Disposable subscription) {
-    ArgumentError.checkNotNull(subscription, 'subscription');
-    if (_subscriptions.remove(subscription)) {
-      subscription.dispose();
+  void remove(Disposable disposable) {
+    ArgumentError.checkNotNull(disposable, 'disposable');
+    if (isDisposed) {
+      return;
+    }
+    if (_disposables.remove(disposable)) {
+      disposable.dispose();
     }
   }
 
@@ -39,13 +43,13 @@ class CompositeDisposable extends StatefulDisposable {
     if (isDisposed) {
       return;
     }
-    final subscriptions = _subscriptions.toList();
+    final disposables = _disposables.toList();
     super.dispose();
-    _subscriptions.clear();
+    _disposables.clear();
     final errors = [];
-    for (final subscription in subscriptions) {
+    for (final disposable in disposables) {
       try {
-        subscription.dispose();
+        disposable.dispose();
       } catch (error) {
         errors.add(error);
       }

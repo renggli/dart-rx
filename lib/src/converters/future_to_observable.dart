@@ -5,6 +5,7 @@ import 'dart:async';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../disposables/disposable.dart';
+import '../disposables/stateful.dart';
 
 extension FutureToObservable<T> on Future<T> {
   /// An [Observable] that listens to the completion of a [Future].
@@ -18,7 +19,7 @@ class FutureObservable<T> with Observable<T> {
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    final subscription = Disposable.stateful();
+    final subscription = StatefulDisposable();
     future.then(
       (value) => _onValue(subscription, observer, value),
       onError: (error, stackTrace) =>
@@ -27,17 +28,17 @@ class FutureObservable<T> with Observable<T> {
     return subscription;
   }
 
-  void _onValue(Disposable subscription, Observer<T> observer, T value) {
-    if (subscription.isDisposed) {
+  void _onValue(Disposable disposable, Observer<T> observer, T value) {
+    if (disposable.isDisposed) {
       return;
     }
     observer.next(value);
     observer.complete();
   }
 
-  void _onError(Disposable subscription, Observer<T> observer, Object error,
+  void _onError(Disposable disposable, Observer<T> observer, Object error,
       StackTrace stackTrace) {
-    if (subscription.isDisposed) {
+    if (disposable.isDisposed) {
       return;
     }
     observer.error(error, stackTrace);

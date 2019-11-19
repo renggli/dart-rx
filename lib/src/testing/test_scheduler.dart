@@ -4,6 +4,7 @@ import 'package:more/iterable.dart';
 
 import '../core/observable.dart';
 import '../disposables/disposable.dart';
+import '../disposables/disposed.dart';
 import '../schedulers/async.dart';
 import '../schedulers/settings.dart';
 import 'cold_observable.dart';
@@ -14,7 +15,7 @@ import 'test_events.dart';
 
 class TestScheduler extends AsyncScheduler {
   DateTime _currentTime;
-  Disposable _subscription = Disposable.empty();
+  Disposable _subscription = const DisposedDisposable();
 
   final List<Observable> coldObservables = [];
   final List<Observable> hotObservables = [];
@@ -46,7 +47,7 @@ class TestScheduler extends AsyncScheduler {
     coldObservables.clear();
     hotObservables.clear();
     _subscription.dispose();
-    _subscription = Disposable.empty();
+    _subscription = const DisposedDisposable();
   }
 
   /// Advances the time to `dateTime`. If omitted advance to the timestamp of

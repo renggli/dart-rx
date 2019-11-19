@@ -11,7 +11,7 @@ class Subscriber<T> extends CompositeDisposable
   @protected
   final Observer destination;
 
-  Subscriber(this.destination);
+  Subscriber(this.destination) : super();
 
   /// Receives the next value.
   @override

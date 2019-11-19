@@ -1,35 +1,38 @@
 library rx.disposables.serial;
 
 import 'disposable.dart';
+import 'disposed.dart';
 import 'stateful.dart';
 
+/// A sequence of [Disposable] instances, that can sequentially hold a single
+/// [Disposable] and dispose the previous one.
 class SequentialDisposable extends StatefulDisposable {
-  Disposable _current = Disposable.empty();
+  Disposable _current = const DisposedDisposable();
 
-  SequentialDisposable();
+  SequentialDisposable([Disposable disposable]) {
+    if (disposable != null) {
+      current = disposable;
+    }
+  }
 
   Disposable get current => _current;
 
-  set current(Disposable subscription) {
-    ArgumentError.checkNotNull(subscription, 'subscription');
+  set current(Disposable disposable) {
+    ArgumentError.checkNotNull(disposable, 'disposable');
     if (isDisposed) {
-      subscription.dispose();
+      disposable.dispose();
       return;
     }
-    final current = subscription.isDisposed ? Disposable.empty() : subscription;
     final previous = _current;
-    _current = current;
+    _current = disposable.isDisposed ? const DisposedDisposable() : disposable;
     previous.dispose();
   }
 
   @override
   void dispose() {
-    if (isDisposed) {
-      return;
-    }
     super.dispose();
     final previous = _current;
-    _current = Disposable.empty();
+    _current = const DisposedDisposable();
     previous.dispose();
   }
 }
