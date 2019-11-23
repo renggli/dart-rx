@@ -24,7 +24,11 @@ class SequentialDisposable extends StatefulDisposable {
       return;
     }
     final previous = _current;
-    _current = disposable.isDisposed ? const DisposedDisposable() : disposable;
+    if (disposable.isDisposed) {
+      _current = const DisposedDisposable();
+    } else {
+      _current = disposable;
+    }
     previous.dispose();
   }
 

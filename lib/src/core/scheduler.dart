@@ -13,7 +13,7 @@ abstract class Scheduler {
   /// Schedules a `callback` to be executed.
   Disposable schedule(Callback0 callback);
 
-  /// Schedules a `callback` to while returns value is `true`.
+  /// Schedules a `callback` to be executed while its return value is `true`.
   Disposable scheduleIteration(Predicate0 callback);
 
   /// Schedules a `callback` to be executed at the specified `dateTime`.

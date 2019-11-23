@@ -18,27 +18,28 @@ class FutureObservable<T> with Observable<T> {
   const FutureObservable(this.future);
 
   @override
-  Disposable subscribe(Observer<T> observer) {
-    final subscription = StatefulDisposable();
-    future.then(
-      (value) => _onValue(subscription, observer, value),
-      onError: (error, stackTrace) =>
-          _onError(subscription, observer, error, stackTrace),
-    );
-    return subscription;
+  Disposable subscribe(Observer<T> observer) =>
+      FutureDisposable(future, observer);
+}
+
+class FutureDisposable<T> extends StatefulDisposable {
+  final Future<T> future;
+  final Observer<T> observer;
+
+  FutureDisposable(this.future, this.observer) {
+    future.then(onValue, onError: onError);
   }
 
-  void _onValue(Disposable disposable, Observer<T> observer, T value) {
-    if (disposable.isDisposed) {
+  void onValue(T value) {
+    if (isDisposed) {
       return;
     }
     observer.next(value);
     observer.complete();
   }
 
-  void _onError(Disposable disposable, Observer<T> observer, Object error,
-      StackTrace stackTrace) {
-    if (disposable.isDisposed) {
+  void onError(Object error, StackTrace stackTrace) {
+    if (isDisposed) {
       return;
     }
     observer.error(error, stackTrace);
