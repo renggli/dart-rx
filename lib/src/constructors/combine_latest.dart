@@ -2,8 +2,8 @@ library rx.operators.combine_latest;
 
 import '../converters/iterable_to_observable.dart';
 import '../core/observable.dart';
-import '../core/scheduler.dart';
 import '../operators/combine_latest.dart';
+import '../schedulers/scheduler.dart';
 
 /// Combines a list of [Observable] to an [Observable] whose values are
 /// calculated from the latest values of each of its inputs.

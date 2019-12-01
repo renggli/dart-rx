@@ -2,8 +2,8 @@ library rx.converters.iterable_to_observable;
 
 import '../core/observable.dart';
 import '../core/observer.dart';
-import '../core/scheduler.dart';
 import '../disposables/disposable.dart';
+import '../schedulers/scheduler.dart';
 import '../schedulers/settings.dart';
 
 extension IterableToObservable<T> on Iterable<T> {

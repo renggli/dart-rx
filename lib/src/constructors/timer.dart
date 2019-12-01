@@ -2,10 +2,10 @@ library rx.constructors.timer;
 
 import '../core/observable.dart';
 import '../core/observer.dart';
-import '../core/scheduler.dart';
 import '../disposables/action.dart';
 import '../disposables/composite.dart';
 import '../disposables/disposable.dart';
+import '../schedulers/scheduler.dart';
 import '../schedulers/settings.dart';
 
 /// An [Observable] that starts emitting after `delay` and that emits an ever

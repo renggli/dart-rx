@@ -4,13 +4,14 @@ import 'dart:async' show Zone;
 
 import 'package:meta/meta.dart';
 
-import '../core/scheduler.dart';
 import '../disposables/disposable.dart';
 import '../disposables/stateful.dart';
 import '../disposables/timer.dart';
 import '../shared/functions.dart';
 import 'action.dart';
+import 'scheduler.dart';
 
+/// Abstract asynchronous scheduler that executes actions in a specific zone.
 abstract class ZoneScheduler extends Scheduler {
   const ZoneScheduler();
 
@@ -64,6 +65,7 @@ abstract class ZoneScheduler extends Scheduler {
   }
 }
 
+/// Asynchronous scheduler that executes actions in [Zone.root].
 class RootZoneScheduler extends ZoneScheduler {
   const RootZoneScheduler();
 
@@ -71,6 +73,7 @@ class RootZoneScheduler extends ZoneScheduler {
   Zone get zone => Zone.root;
 }
 
+/// Asynchronous scheduler that executes actions in [Zone.current].
 class CurrentZoneScheduler extends ZoneScheduler {
   const CurrentZoneScheduler();
 

@@ -2,9 +2,9 @@ library rx.operators.observe_on;
 
 import '../core/observable.dart';
 import '../core/observer.dart';
-import '../core/scheduler.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../schedulers/scheduler.dart';
 import '../shared/functions.dart';
 
 extension ObserveOnOperator<T> on Observable<T> {

@@ -2,9 +2,9 @@ library rx.constructors.empty;
 
 import '../core/observable.dart';
 import '../core/observer.dart';
-import '../core/scheduler.dart';
 import '../disposables/disposable.dart';
 import '../schedulers/immediate.dart';
+import '../schedulers/scheduler.dart';
 
 /// An [Observable] that emits no items and immediately completes.
 Observable<T> empty<T>({Scheduler scheduler}) =>

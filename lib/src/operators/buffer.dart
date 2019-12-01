@@ -2,10 +2,10 @@ library rx.operators.buffer;
 
 import '../core/observable.dart';
 import '../core/observer.dart';
-import '../core/scheduler.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 import '../observers/inner.dart';
+import '../schedulers/scheduler.dart';
 import '../schedulers/settings.dart';
 
 extension BufferOperator<T> on Observable<T> {

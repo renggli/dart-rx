@@ -3,6 +3,7 @@ library rx.core.scheduler;
 import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
+/// Abstract scheduler implementation.
 abstract class Scheduler {
   /// Default constructor of the scheduler.
   const Scheduler();

@@ -2,9 +2,9 @@ library rx.operators.zip;
 
 import '../converters/iterable_to_observable.dart';
 import '../core/observable.dart';
-import '../core/scheduler.dart';
 import '../operators/zip.dart';
 import '../schedulers/immediate.dart';
+import '../schedulers/scheduler.dart';
 
 /// Combines a list of [Observable] to an [Observable] whose values are
 /// calculated from the next value of each of its inputs.

@@ -1,8 +1,8 @@
 library rx.schedulers.settings;
 
-import '../core/scheduler.dart';
 import '../disposables/action.dart';
 import '../disposables/disposable.dart';
+import 'scheduler.dart';
 import 'zone.dart';
 
 /// The default scheduler instance to be used.

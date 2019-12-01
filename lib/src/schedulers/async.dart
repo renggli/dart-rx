@@ -4,20 +4,33 @@ import 'dart:collection';
 
 import 'package:meta/meta.dart';
 
-import '../core/scheduler.dart';
 import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 import 'action.dart';
+import 'scheduler.dart';
 
+/// Asynchronous scheduler that keeps track of pending actions manually.
 class AsyncScheduler extends Scheduler {
-  /// Sorted list of scheduled actions.
+  /// Sorted list of pending actions.
   @protected
   final SplayTreeMap<DateTime, List<SchedulerAction>> scheduled =
       SplayTreeMap();
 
   AsyncScheduler();
 
+  /// Returns `true`, if there are actions pending.
   bool get hasPending => scheduled.isNotEmpty;
+
+  /// Performs all the eligible pending actions.
+  void flush() {
+    final current = now;
+    while (scheduled.isNotEmpty && !scheduled.firstKey().isAfter(current)) {
+      final actions = scheduled.remove(scheduled.firstKey());
+      for (final action in actions) {
+        action.run();
+      }
+    }
+  }
 
   @override
   Disposable schedule(Callback0 callback) =>
@@ -58,15 +71,5 @@ class AsyncScheduler extends Scheduler {
     final actions = scheduled.putIfAbsent(dateTime, () => <SchedulerAction>[]);
     actions.add(action);
     return action;
-  }
-
-  void flush() {
-    final current = now;
-    while (scheduled.isNotEmpty && !scheduled.firstKey().isAfter(current)) {
-      final actions = scheduled.remove(scheduled.firstKey());
-      for (final action in actions) {
-        action.run();
-      }
-    }
   }
 }
