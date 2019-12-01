@@ -1,6 +1,7 @@
 library rx.test.operators_test;
 
 import 'package:rx/constructors.dart';
+import 'package:rx/converters.dart';
 import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/schedulers.dart';
@@ -117,8 +118,10 @@ void main() {
     });
     test('completes', () {
       final input = scheduler.cold('--a--b--c--#', error: 'A');
-      final actual =
-          input.catchError((error, [stackTrace]) => expect(error, 'A'));
+      final actual = input.catchError((error, [stackTrace]) {
+        expect(error, 'A');
+        return null;
+      });
       expect(actual, scheduler.isObservable('--a--b--c--|'));
     });
     test('throws different exception', () {
@@ -152,12 +155,12 @@ void main() {
     group('beginWith', () {
       test('single value', () {
         final input = scheduler.cold<String>('abc|');
-        final actual = input.beginWith('x');
+        final actual = input.beginWith(just('x'));
         expect(actual, scheduler.isObservable<String>('(xa)bc|'));
       });
       test('multiple values', () {
         final input = scheduler.cold<String>('abc|');
-        final actual = input.beginWith(['x', 'y', 'z']);
+        final actual = input.beginWith(['x', 'y', 'z'].toObservable());
         expect(actual, scheduler.isObservable<String>('(xyza)bc|'));
       });
       test('observable', () {
@@ -174,12 +177,12 @@ void main() {
     group('endWith', () {
       test('single value', () {
         final input = scheduler.cold<String>('abc|');
-        final actual = input.endWith('x');
+        final actual = input.endWith(just('x'));
         expect(actual, scheduler.isObservable<String>('abc(x|)'));
       });
       test('multiple values', () {
         final input = scheduler.cold<String>('abc|');
-        final actual = input.endWith(['x', 'y', 'z']);
+        final actual = input.endWith(['x', 'y', 'z'].toObservable());
         expect(actual, scheduler.isObservable<String>('abc(xyz|)'));
       });
       test('observable', () {

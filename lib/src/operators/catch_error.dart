@@ -1,6 +1,6 @@
 library rx.operators.catch_error;
 
-import '../constructors/from.dart';
+import '../constructors/empty.dart';
 import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
@@ -8,18 +8,19 @@ import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 
-typedef CatchHandler = Object Function(Object error, [StackTrace stackTrace]);
+typedef CatchHandler<T> = Observable<T> Function(Object error,
+    [StackTrace stackTrace]);
 
 extension CatchErrorOperator<T> on Observable<T> {
   /// Catches errors on the observable to be handled by returning a new
   /// observable or throwing an error.
-  Observable<T> catchError(CatchHandler handler) =>
+  Observable<T> catchError(CatchHandler<T> handler) =>
       CatchErrorObservable<T>(this, handler);
 }
 
 class CatchErrorObservable<T> extends Observable<T> {
   final Observable<T> delegate;
-  final CatchHandler handler;
+  final CatchHandler<T> handler;
 
   CatchErrorObservable(this.delegate, this.handler);
 
@@ -33,7 +34,7 @@ class CatchErrorObservable<T> extends Observable<T> {
 
 class CatchErrorSubscriber<T> extends Subscriber<T>
     implements InnerEvents<T, void> {
-  final CatchHandler handler;
+  final CatchHandler<T> handler;
 
   CatchErrorSubscriber(Observer<T> observer, this.handler) : super(observer);
 
@@ -43,7 +44,7 @@ class CatchErrorSubscriber<T> extends Subscriber<T>
     if (handlerEvent is ErrorEvent) {
       doError(handlerEvent.error, handlerEvent.stackTrace);
     } else {
-      final observable = from<T>(handlerEvent.value);
+      final observable = handlerEvent.value ?? empty<T>();
       add(InnerObserver(observable, this));
     }
   }

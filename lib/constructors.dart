@@ -6,7 +6,6 @@ export 'src/constructors/create.dart' show create;
 export 'src/constructors/defer.dart' show defer;
 export 'src/constructors/empty.dart' show empty;
 export 'src/constructors/fork_join.dart' show forkJoin;
-export 'src/constructors/from.dart' show from;
 export 'src/constructors/iff.dart' show iff;
 export 'src/constructors/just.dart' show just;
 export 'src/constructors/merge.dart' show merge;
