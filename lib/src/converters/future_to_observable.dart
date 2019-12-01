@@ -8,7 +8,7 @@ import '../disposables/disposable.dart';
 import '../disposables/stateful.dart';
 
 extension FutureToObservable<T> on Future<T> {
-  /// An [Observable] that listens to the completion of a [Future].
+  /// Returns an [Observable] that listens to the completion of this [Future].
   Observable<T> toObservable() => FutureObservable<T>(this);
 }
 

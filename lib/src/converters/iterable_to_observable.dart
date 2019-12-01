@@ -7,7 +7,7 @@ import '../disposables/disposable.dart';
 import '../schedulers/settings.dart';
 
 extension IterableToObservable<T> on Iterable<T> {
-  /// Converts this to an [Observable] that emits the items of an [Iterable].
+  /// Returns an [Observable] that emits the elements of this [Iterable].
   Observable<T> toObservable({Scheduler scheduler}) =>
       IterableObservable<T>(this, scheduler ?? defaultScheduler);
 }

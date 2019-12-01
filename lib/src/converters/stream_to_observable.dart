@@ -8,7 +8,7 @@ import '../disposables/action.dart';
 import '../disposables/disposable.dart';
 
 extension StreamToObservable<T> on Stream<T> {
-  /// An [Observable] that listens to a [Stream].
+  /// Returns an [Observable] that listens to this [Stream].
   Observable<T> toObservable() => StreamObservable<T>(this);
 }
 

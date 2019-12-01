@@ -8,7 +8,8 @@ import '../core/observer.dart';
 import '../disposables/composite.dart';
 
 extension ObservableToFuture<T> on Observable<T> {
-  /// A [Future] that completes with the first value of an [Observable].
+  /// Returns a [Future] that completes with the first value of this
+  /// [Observable].
   Future<T> toFuture() {
     final disposable = CompositeDisposable();
     final completer = Completer<T>();
