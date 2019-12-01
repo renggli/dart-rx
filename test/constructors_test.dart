@@ -112,25 +112,25 @@ void main() {
   });
   group('create', () {
     test('complete sequence of values', () {
-      final actual = create((subscriber) {
-        subscriber.next('a');
-        subscriber.next('b');
-        subscriber.complete();
+      final actual = create((emitter) {
+        emitter.next('a');
+        emitter.next('b');
+        emitter.complete();
       });
       expect(actual, scheduler.isObservable('(ab|)'));
     });
     test('error sequence of values', () {
-      final actual = create((subscriber) {
-        subscriber.next('a');
-        subscriber.next('b');
-        subscriber.error('Error');
+      final actual = create((emitter) {
+        emitter.next('a');
+        emitter.next('b');
+        emitter.error('Error');
       });
       expect(actual, scheduler.isObservable('(ab#)'));
     });
     test('throws an error while creating values', () {
-      final actual = create((subscriber) {
-        subscriber.next('a');
-        subscriber.next('b');
+      final actual = create((emitter) {
+        emitter.next('a');
+        emitter.next('b');
         throw 'Error';
       });
       expect(actual, scheduler.isObservable('(ab#)'));

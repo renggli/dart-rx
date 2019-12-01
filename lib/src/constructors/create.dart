@@ -6,8 +6,8 @@ import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
-/// Creates an observable sequence from a specified subscribe method
-/// implementation.
+/// Creates an [Observable] that uses the provided `callback` to emit elements
+/// to the provided [Observer] on each subscribe.
 Observable<T> create<T>(Callback1<Subscriber<T>> callback) =>
     CreateObservable<T>(callback);
 

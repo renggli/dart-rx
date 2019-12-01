@@ -21,11 +21,11 @@ void main() {
   concat.subscribe(printObserver('concat'));
 
   // create
-  final create = rx.create((subscriber) {
+  final create = rx.create((emitter) {
     for (var i = 0; i < 3; i++) {
-      subscriber.next(i);
+      emitter.next(i);
     }
-    subscriber.complete();
+    emitter.complete();
   });
   create.subscribe(printObserver('create'));
 

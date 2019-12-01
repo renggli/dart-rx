@@ -5,9 +5,9 @@ import '../shared/functions.dart';
 import 'create.dart';
 import 'empty.dart';
 
-/// An [Observable] that uses the `observableFactory` to create a new
+/// Creates an [Observable] that uses the provided `callback` to create a new
 /// [Observable] on each subscribe.
-Observable<T> defer<T>(Map0<Observable<T>> callback) => create<T>((subscriber) {
+Observable<T> defer<T>(Map0<Observable<T>> callback) => create<T>((emitter) {
       final observable = callback() ?? empty<T>();
-      subscriber.add(observable.subscribe(subscriber));
+      emitter.add(observable.subscribe(emitter));
     });
