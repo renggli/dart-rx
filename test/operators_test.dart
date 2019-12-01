@@ -5,6 +5,7 @@ import 'package:rx/converters.dart';
 import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/schedulers.dart';
+import 'package:rx/subjects.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
 

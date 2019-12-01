@@ -3,8 +3,8 @@ library rx.testing.hot_observable;
 import 'package:meta/meta.dart';
 
 import '../core/observer.dart';
-import '../core/subject.dart';
 import '../disposables/disposable.dart';
+import '../subjects/subject.dart';
 import 'test_event_sequence.dart';
 import 'test_events.dart';
 import 'test_observable.dart';

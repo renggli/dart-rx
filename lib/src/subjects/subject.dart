@@ -2,12 +2,12 @@ library rx.core.subject;
 
 import 'package:meta/meta.dart';
 
+import '../core/observable.dart';
+import '../core/observer.dart';
 import '../disposables/action.dart';
 import '../disposables/disposable.dart';
 import '../disposables/disposed.dart';
 import '../disposables/errors.dart';
-import 'observable.dart';
-import 'observer.dart';
 
 /// A Subject is a special type of [Observable] that allows values to be
 /// multicast to many [Observer].

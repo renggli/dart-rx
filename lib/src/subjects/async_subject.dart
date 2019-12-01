@@ -1,9 +1,9 @@
 library rx.subjects.async;
 
 import '../core/observer.dart';
-import '../core/subject.dart';
 import '../disposables/disposable.dart';
 import '../disposables/disposed.dart';
+import 'subject.dart';
 
 /// A [Subject] that emits its last value to all its subscribers on completion.
 class AsyncSubject<T> extends Subject<T> {

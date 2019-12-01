@@ -3,8 +3,8 @@ library rx.subjects.replay;
 import 'package:collection/collection.dart';
 
 import '../core/observer.dart';
-import '../core/subject.dart';
 import '../disposables/disposable.dart';
+import 'subject.dart';
 
 /// A [Subject] that replays all its previous values to new subscribers.
 class ReplaySubject<T> extends Subject<T> {
