@@ -732,6 +732,95 @@ void main() {
       });
     });
   });
+  group('flatMap', () {
+    group('flatMap', () {
+      test('inner with dynamic outputs', () {
+        final actual = scheduler.cold<String>('-a--b---c---a--|', values: {
+          'a': 'x-|',
+          'b': 'yy-|',
+          'c': 'zzz-|',
+        }).flatMap((inner) => scheduler.cold<String>(inner));
+        expect(actual, scheduler.isObservable<String>('-x--yy--zzz-x--|'));
+      });
+      test('projection throws', () {
+        final actual =
+            scheduler.cold('-a-|').flatMap<String>((inner) => throw 'Error');
+        expect(actual, scheduler.isObservable<String>('-#'));
+      });
+      test('inner with error', () {
+        final actual = scheduler.cold('-a--b---c---a--|', values: {
+          'a': 'x-|',
+          'b': 'yy-|',
+          'c': 'zz#',
+        }).flatMap((inner) => scheduler.cold<String>(inner));
+        expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
+      });
+      test('outer with error', () {
+        final actual = scheduler.cold('-a--b---c-#', values: {
+          'a': 'x-|',
+          'b': 'yy-|',
+          'c': 'zz#',
+        }).flatMap((inner) => scheduler.cold<String>(inner));
+        expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
+      });
+      test('limit concurrent', () {
+        final actual = scheduler.cold('abc|', values: {
+          'a': 'x---|',
+          'b': 'y---|',
+          'c': 'z---|',
+        }).flatMap((inner) => scheduler.cold<String>(inner), concurrent: 2);
+        expect(actual, scheduler.isObservable<String>('xy--z---|'));
+      });
+      test('invalid concurrent', () {
+        expect(
+            () => never().flatMap((inner) => scheduler.cold<String>(inner),
+                concurrent: 0),
+            throwsRangeError);
+      });
+    });
+    group('flatMapTo', () {
+      test('inner emits a single value', () {
+        final inner = just('x');
+        final actual = scheduler.cold('-a--a---a-|').flatMapTo(inner);
+        expect(actual, scheduler.isObservable<String>('-x--x---x-|'));
+      });
+      test('inner emits two values', () {
+        final inner = scheduler.cold<String>('x-y-|');
+        final actual = scheduler.cold('-a--a---a-|').flatMapTo(inner);
+        expect(actual, scheduler.isObservable<String>('-x-yx-y-x-y-|'));
+      });
+      test('inner started concurrently', () {
+        final inner = scheduler.cold<String>('x-y-|');
+        final actual = scheduler.cold('-(ab)--|').flatMapTo(inner);
+        expect(actual, scheduler.isObservable<String>('-(xx)-(yy)-|'));
+      });
+      test('inner started overlappingly', () {
+        final inner = scheduler.cold<String>('x-y-|');
+        final actual = scheduler.cold('-ab-|').flatMapTo(inner);
+        expect(actual, scheduler.isObservable<String>('-xxyy-|'));
+      });
+      test('inner throws', () {
+        final inner = scheduler.cold<String>('x---#');
+        final actual = scheduler.cold('-a-b-|').flatMapTo(inner);
+        expect(actual, scheduler.isObservable<String>('-x-x-#'));
+      });
+      test('outer throws', () {
+        final inner = scheduler.cold<String>('x-y-z-|');
+        final actual = scheduler.cold('-a--#').flatMapTo(inner);
+        expect(actual, scheduler.isObservable<String>('-x-y#'));
+      });
+      test('limit concurrent', () {
+        final inner = scheduler.cold<String>('xyz|');
+        final actual =
+            scheduler.cold('a---b---|').flatMapTo(inner, concurrent: 1);
+        expect(actual, scheduler.isObservable<String>('xyz-xyz-|'));
+      });
+      test('invalid concurrent', () {
+        expect(() => never().flatMapTo(scheduler.cold(''), concurrent: 0),
+            throwsRangeError);
+      });
+    });
+  });
   group('ignoreElements', () {
     test('multiple values and completion', () {
       final input = scheduler.cold('--a--b--c--|');
