@@ -5,16 +5,23 @@ import '../shared/constants.dart';
 import '../shared/functions.dart';
 import 'merge.dart';
 
+extension FlattenObservable<T> on Observable<Observable<T>> {
+  /// For each observable of this [Observable], subscribe to at most
+  /// `concurrent` observables and emit all values.
+  Observable<T> flatten({int concurrent = maxInteger}) =>
+      mergeAll(concurrent: concurrent);
+}
+
 extension FlatMapOperator<T> on Observable<T> {
-  /// Emits all merged values from a single higher-order `observable. Subscribes
-  /// to at most `concurrent` sources.
+  /// For each value of this [Observable], merge all values from the single
+  /// higher-order `observable`. Subscribe to at most `concurrent` sources.
   Observable<R> flatMapTo<R>(Observable<R> observable,
           {int concurrent = maxInteger}) =>
       mergeMapTo<R>(observable, concurrent: concurrent);
 
-  /// Emits all merged values from a higher-order [Observable] retrieved by
-  /// projecting the values of the source to higher-order [Observable]s.
-  /// Subscribes to at most `concurrent` sources.
+  /// For each value of this [Observable], transform that value to a
+  /// higher-order observable with the provided `project` function and merge
+  /// its emitted values. Subscribe to at most `concurrent` sources.
   Observable<R> flatMap<R>(Map1<T, Observable<R>> project,
           {int concurrent = maxInteger}) =>
       mergeMap<R>(project, concurrent: concurrent);

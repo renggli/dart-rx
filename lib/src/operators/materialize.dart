@@ -7,8 +7,8 @@ import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 
 extension MaterializeOperator<T> on Observable<T> {
-  /// Materialize events into a stream of [Event] objects: [NextEvent],
-  /// [ErrorEvent] and [CompleteEvent].
+  /// Materializes the events of this [Observable] as [Event] objects:
+  /// [NextEvent], [ErrorEvent] and [CompleteEvent].
   Observable<Event<T>> materialize() => MaterializeObservable<T>(this);
 }
 

@@ -8,8 +8,8 @@ import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension DistinctUntilChangedOperator<T> on Observable<T> {
-  /// Emits all items emitted by the source Observable that are distinct
-  /// from the previous item.
+  /// Emits all items emitted by this [Observable] that are different from the
+  /// previous one.
   Observable<T> distinctUntilChanged<K>(
           {Map1<T, K> key, Predicate2<K, K> compare}) =>
       DistinctUntilChangedObservable<T, K>(

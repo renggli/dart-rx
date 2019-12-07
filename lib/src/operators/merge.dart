@@ -12,22 +12,22 @@ import '../shared/constants.dart';
 import '../shared/functions.dart';
 
 extension MergeAllOperator<T> on Observable<Observable<T>> {
-  /// Emits all merged values from a higher-order [Observable]. Subscribes to
-  /// at most `concurrent` sources.
+  /// For each observable of this [Observable], subscribe to at most
+  /// `concurrent` observables and emit all values.
   Observable<T> mergeAll({int concurrent = maxInteger}) =>
       mergeMap<T>(identityFunction, concurrent: concurrent);
 }
 
 extension MergeMapOperator<T> on Observable<T> {
-  /// Emits all merged values from a single higher-order `observable. Subscribes
-  /// to at most `concurrent` sources.
+  /// For each value of this [Observable], merge all values from the single
+  /// higher-order `observable`. Subscribe to at most `concurrent` sources.
   Observable<R> mergeMapTo<R>(Observable<R> observable,
           {int concurrent = maxInteger}) =>
       mergeMap<R>(constantFunction1(observable), concurrent: concurrent);
 
-  /// Emits all merged values from a higher-order [Observable] retrieved by
-  /// projecting the values of the source to higher-order [Observable]s.
-  /// Subscribes to at most `concurrent` sources.
+  /// For each value of this [Observable], transform that value to a
+  /// higher-order observable with the provided `project` function and merge
+  /// its emitted values. Subscribe to at most `concurrent` sources.
   Observable<R> mergeMap<R>(Map1<T, Observable<R>> project,
       {int concurrent = maxInteger}) {
     RangeError.checkValidRange(1, null, concurrent, 'concurrent');

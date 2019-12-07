@@ -6,8 +6,8 @@ import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 
 extension IgnoreElementsOperator<T> on Observable<T> {
-  /// Ignores all items emitted by the source and only passes calls to
-  /// `complete` or `error`.
+  /// Ignores all items emitted by this [Observable] and only passes errors
+  /// and completion events.
   Observable<T> ignoreElements() => IgnoreElementsObservable<T>(this);
 }
 

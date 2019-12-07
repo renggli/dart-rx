@@ -9,9 +9,9 @@ import '../schedulers/scheduler.dart';
 import '../schedulers/settings.dart';
 
 extension BufferOperator<T> on Observable<T> {
-  /// Gathers items emitted by the source and bundles these items when the
-  /// buffer reached a [maxLength], when the buffer reached a [maxAge], or when
-  /// another observable [trigger]s.
+  /// Gathers the items emitted by this [Observable] and bundles these items
+  /// into a list when the buffer reaches a [maxLength], when the buffer reaches
+  /// a [maxAge], or when another [Observable] [trigger]s.
   Observable<List<T>> buffer(
           {Scheduler scheduler,
           Observable trigger,

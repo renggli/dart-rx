@@ -9,25 +9,24 @@ import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension SingleOperator<T> on Observable<T> {
-  /// Returns the single element of an observable sequence, or emits
-  /// [TooFewError] if there was no element, or emits [TooManyError] if there
-  /// was more than 1 element.
+  /// Emits the single element of this [Observable], or emits [TooFewError] if
+  /// there was no element, or emits [TooManyError] if there was more than 1
+  /// element.
   Observable<T> single() => singleOrElse(
         tooFew: throwFunction0(TooFewError()),
         tooMany: throwFunction0(TooManyError()),
       );
 
-  /// Returns the single element of an observable sequence, or emits `tooFew`
-  /// if there was no element, or emits `tooMany` if there was more than 1
-  /// element.
+  /// Emits the single element of this [Observable], or emits `tooFew` if there
+  /// was no element, or emits `tooMany` if there was more than 1 element.
   Observable<T> singleOrDefault({T tooFew, T tooMany}) => singleOrElse(
         tooFew: constantFunction0(tooFew),
         tooMany: constantFunction0(tooMany),
       );
 
-  /// Returns the single element of an observable sequence, or evaluates the
-  /// `tooFew` callback if there was no element, or evaluates the `tooMany`
-  /// callback if there was more than 1 element.
+  /// Emits the single element of this [Observable], or evaluates the `tooFew`
+  /// callback if there was no element, or evaluates the `tooMany` callback if
+  /// there was more than 1 element.
   Observable<T> singleOrElse({Map0<T> tooFew, Map0<T> tooMany}) =>
       SingleObservable<T>(this, tooFew, tooMany);
 }

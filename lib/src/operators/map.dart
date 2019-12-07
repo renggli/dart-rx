@@ -8,13 +8,12 @@ import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension MapOperator<T> on Observable<T> {
-  /// Applies a given project function to each value emitted by the source
-  /// Observable, and emits the resulting values as an Observable.
+  /// Applies the given projection function `transform` to each value emitted by
+  /// this [Observable], and emits the resulting value.
   Observable<R> map<R>(Map1<T, R> transform) =>
       MapObservable<T, R>(this, transform);
 
-  /// Applies a given project function to each value emitted by the source
-  /// Observable, and emits the resulting values as an Observable.
+  /// Emits a constant `value` for each value emitted by this [Observable].
   Observable<R> mapTo<R>(R value) =>
       MapObservable<T, R>(this, constantFunction1(value));
 }

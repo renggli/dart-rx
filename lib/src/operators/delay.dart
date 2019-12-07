@@ -8,8 +8,7 @@ import '../schedulers/scheduler.dart';
 import '../schedulers/settings.dart';
 
 extension DelayOperator<T> on Observable<T> {
-  /// Delays the emission of items from the source Observable by a given
-  /// timeout.
+  /// Delays the emission of items from this [Observable] by a given timeout.
   Observable<T> delay(Duration delay, {Scheduler scheduler}) =>
       DelayObservable<T>(this, scheduler ?? defaultScheduler, delay);
 }

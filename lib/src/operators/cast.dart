@@ -6,7 +6,7 @@ import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 
 extension CastOperator<T> on Observable<T> {
-  /// Casts all values from a source observable to [R].
+  /// Casts the values from this [Observable] to [R].
   Observable<R> cast<R>() => CastObservable<T, R>(this);
 }
 
@@ -27,7 +27,5 @@ class CastSubscriber<T, R> extends Subscriber<T> {
   CastSubscriber(Observer<R> observer) : super(observer);
 
   @override
-  void onNext(T value) {
-    doNext(value as R);
-  }
+  void onNext(T value) => doNext(value as R);
 }

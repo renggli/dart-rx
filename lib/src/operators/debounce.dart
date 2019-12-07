@@ -8,8 +8,8 @@ import '../schedulers/scheduler.dart';
 import '../schedulers/settings.dart';
 
 extension DebounceOperator<T> on Observable<T> {
-  /// Emits a value from the source Observable only after a particular time span
-  /// has passed without another source emission.
+  /// Emits a value from this [Observable] only after a particular time span
+  /// has passed without another emission.
   Observable<T> debounce({Duration delay, Scheduler scheduler}) =>
       DebounceObservable<T>(this, scheduler ?? defaultScheduler, delay);
 }
@@ -35,7 +35,7 @@ class DebounceSubscriber<T> extends Subscriber<T> {
 
   T lastValue;
   bool hasValue = false;
-  Disposable subscription;
+  Disposable disposable;
 
   DebounceSubscriber(Observer<T> observer, this.scheduler, this.delay)
       : super(observer);
@@ -45,8 +45,8 @@ class DebounceSubscriber<T> extends Subscriber<T> {
     reset();
     lastValue = value;
     hasValue = true;
-    subscription = scheduler.scheduleRelative(delay, flush);
-    add(subscription);
+    disposable = scheduler.scheduleRelative(delay, flush);
+    add(disposable);
   }
 
   @override
@@ -65,10 +65,10 @@ class DebounceSubscriber<T> extends Subscriber<T> {
   }
 
   void reset() {
-    if (subscription != null) {
-      subscription.dispose();
-      remove(subscription);
-      subscription = null;
+    if (disposable != null) {
+      disposable.dispose();
+      remove(disposable);
+      disposable = null;
     }
   }
 }

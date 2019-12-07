@@ -6,7 +6,8 @@ import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 
 extension CountOperator<T> on Observable<T> {
-  /// Counts the number of emissions and emits that number on completion.
+  /// Counts the number of emissions of this [Observable] and emits that number
+  /// on completion.
   Observable<int> count() => CountObservable<T>(this);
 }
 

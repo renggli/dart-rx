@@ -8,8 +8,8 @@ import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 
 extension DematerializeOperator<T> on Observable<Event<T>> {
-  /// Dematerialize events into a stream from [Event] objects of type
-  /// [NextEvent], [ErrorEvent] and [CompleteEvent].
+  /// Dematerialize events of this [Observable] into from a stream of [Event]
+  /// subclasses [NextEvent], [ErrorEvent] or [CompleteEvent].
   Observable<T> dematerialize() => DematerializeObservable<T>(this);
 }
 

@@ -6,8 +6,8 @@ import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 
 extension DefaultIfEmptyOperator<T> on Observable<T> {
-  /// Emits a given value if the source completes without emitting any value,
-  /// otherwise mirrors the source.
+  /// Emits a given value if this [Observable] completes without emitting any
+  /// value, otherwise mirrors the source.
   Observable<T> defaultIfEmpty([T value]) =>
       DefaultIfEmptyObservable<T>(this, value);
 }

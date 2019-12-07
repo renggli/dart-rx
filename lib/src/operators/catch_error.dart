@@ -8,19 +8,20 @@ import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 
-typedef CatchHandler<T> = Observable<T> Function(Object error,
+/// Handles errors, and returns a new [Observable] or `null`.
+typedef ErrorHandler<T> = Observable<T> Function(Object error,
     [StackTrace stackTrace]);
 
 extension CatchErrorOperator<T> on Observable<T> {
-  /// Catches errors on the observable to be handled by returning a new
-  /// observable or throwing an error.
-  Observable<T> catchError(CatchHandler<T> handler) =>
+  /// Catches errors of this [Observable] and handles them by either returning
+  /// a new [Observable] or throwing an error.
+  Observable<T> catchError(ErrorHandler<T> handler) =>
       CatchErrorObservable<T>(this, handler);
 }
 
 class CatchErrorObservable<T> extends Observable<T> {
   final Observable<T> delegate;
-  final CatchHandler<T> handler;
+  final ErrorHandler<T> handler;
 
   CatchErrorObservable(this.delegate, this.handler);
 
@@ -34,7 +35,7 @@ class CatchErrorObservable<T> extends Observable<T> {
 
 class CatchErrorSubscriber<T> extends Subscriber<T>
     implements InnerEvents<T, void> {
-  final CatchHandler<T> handler;
+  final ErrorHandler<T> handler;
 
   CatchErrorSubscriber(Observer<T> observer, this.handler) : super(observer);
 

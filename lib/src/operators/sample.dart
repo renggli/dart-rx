@@ -7,8 +7,8 @@ import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 
 extension SampleOperator<T> on Observable<T> {
-  /// Emits the most recently emitted value from the source [Observable]
-  /// whenever the `trigger` [Observable] emits.
+  /// Emits the most recently emitted value from this [Observable] whenever the
+  /// `trigger` emits.
   Observable<T> sample(Observable trigger) =>
       SampleObservable<T>(this, trigger);
 }

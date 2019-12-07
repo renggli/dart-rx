@@ -9,8 +9,8 @@ import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension FinalizeOperator<T> on Observable<T> {
-  /// Return an [Observable] that mirrors the source [Observable], but will call
-  /// a specified function when the source terminates on complete or error.
+  /// Return an [Observable] that mirrors this [Observable], but will call
+  /// a specified function when the source terminates on completion or error.
   Observable<T> finalize(CompleteCallback finalize) =>
       FinalizeObservable<T>(this, finalize);
 }

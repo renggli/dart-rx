@@ -8,7 +8,7 @@ import '../schedulers/scheduler.dart';
 import '../shared/functions.dart';
 
 extension ObserveOnOperator<T> on Observable<T> {
-  /// Re-emits all notifications from the source with a custom scheduler.
+  /// Re-emits all notifications from this [Observable] with a custom scheduler.
   Observable<T> observeOn(Scheduler scheduler, {Duration delay}) =>
       ObserveOnObservable<T>(this, scheduler, delay);
 }

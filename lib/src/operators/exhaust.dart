@@ -10,13 +10,13 @@ import '../shared/functions.dart';
 
 extension ExhaustAllOperator<T> on Observable<Observable<T>> {
   /// Emits and completes higher-order [Observable]. Subscribes to at most
-  /// `concurrent` sources, drops observables exceeding this threshold.
+  /// `concurrent` sources, and drops observables exceeding this threshold.
   Observable<T> exhaustAll({int concurrent = 1}) =>
       exhaustMap<T>(identityFunction, concurrent: concurrent);
 }
 
 extension ExhaustMapOperator<T> on Observable<T> {
-  /// Emits and completes values from a single higher-order [Observable].
+  /// Emits and completes values from single higher-order [Observable].
   /// Subscribes to at most `concurrent` sources, drops observables exceeding
   /// this threshold.
   Observable<R> exhaustMapTo<R>(Observable<R> observable,

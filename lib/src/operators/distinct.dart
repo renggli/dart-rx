@@ -10,8 +10,8 @@ import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
 extension DistinctOperator<T> on Observable<T> {
-  /// Emits all items emitted by the source that are distinct from previous
-  /// items.
+  /// Emits all items emitted by this [Observable] that are distinct from
+  /// the previous ones.
   Observable<T> distinct({Predicate2<T, T> equals, Map1<T, int> hashCode}) =>
       DistinctObservable<T>(this, equals, hashCode);
 }
