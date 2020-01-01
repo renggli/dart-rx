@@ -733,6 +733,44 @@ void main() {
     });
   });
   group('flatMap', () {
+    group('flatten', () {
+      test('inner with dynamic outputs', () {
+        final actual = scheduler.cold('-a--b---c---a--|', values: {
+          'a': scheduler.cold<String>('x-|'),
+          'b': scheduler.cold<String>('yy-|'),
+          'c': scheduler.cold<String>('zzz-|'),
+        }).flatten();
+        expect(actual, scheduler.isObservable<String>('-x--yy--zzz-x--|'));
+      });
+      test('inner with error', () {
+        final actual = scheduler.cold('-a--b---c---a--|', values: {
+          'a': scheduler.cold<String>('x-|'),
+          'b': scheduler.cold<String>('yy-|'),
+          'c': scheduler.cold<String>('zz#'),
+        }).flatten();
+        expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
+      });
+      test('outer with error', () {
+        final actual = scheduler.cold('-a--b---c-#', values: {
+          'a': scheduler.cold<String>('x-|'),
+          'b': scheduler.cold<String>('yy-|'),
+          'c': scheduler.cold<String>('zz#'),
+        }).flatten();
+        expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
+      });
+      test('limit concurrent', () {
+        final actual = scheduler.cold('abc|', values: {
+          'a': scheduler.cold<String>('x---|'),
+          'b': scheduler.cold<String>('y---|'),
+          'c': scheduler.cold<String>('z---|'),
+        }).flatten(concurrent: 2);
+        expect(actual, scheduler.isObservable<String>('xy--z---|'));
+      });
+      test('invalid concurrent', () {
+        expect(() => never<Observable<String>>().flatten(concurrent: 0),
+            throwsRangeError);
+      });
+    });
     group('flatMap', () {
       test('inner with dynamic outputs', () {
         final actual = scheduler.cold<String>('-a--b---c---a--|', values: {
@@ -1144,9 +1182,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('xy--z---|'));
     });
     test('invalid concurrent', () {
-      expect(
-          () => never().mergeMap((inner) => scheduler.cold<String>(inner),
-              concurrent: 0),
+      expect(() => never<Observable<String>>().mergeAll(concurrent: 0),
           throwsRangeError);
     });
   });

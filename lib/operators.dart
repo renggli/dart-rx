@@ -17,7 +17,7 @@ export 'src/operators/distinct_until_changed.dart'
 export 'src/operators/exhaust.dart' show ExhaustAllOperator, ExhaustMapOperator;
 export 'src/operators/finalize.dart' show FinalizeOperator;
 export 'src/operators/first.dart' show FirstOperator;
-export 'src/operators/flat_map.dart' show FlatMapOperator;
+export 'src/operators/flat_map.dart' show FlattenObservable, FlatMapOperator;
 export 'src/operators/ignore_elements.dart' show IgnoreElementsOperator;
 export 'src/operators/is_empty.dart' show IsEmptyOperator;
 export 'src/operators/last.dart' show LastOperator;
