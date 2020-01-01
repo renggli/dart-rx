@@ -34,7 +34,7 @@ class TestScheduler extends AsyncScheduler {
     if (!_subscription.isDisposed) {
       throw StateError('$this is already set-up.');
     }
-    _currentTime = truncateToPeriod(DateTime.now(), period: Period.daily);
+    _currentTime = DateTime.now().truncate(period: Period.daily);
     _subscription = replaceDefaultScheduler(this);
   }
 

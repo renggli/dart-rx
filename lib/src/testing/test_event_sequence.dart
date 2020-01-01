@@ -128,7 +128,8 @@ class TestEventSequence<T> {
             } else {
               final unusedCharacter = value is String && value.length == 1
                   ? value
-                  : string(nextMarkers)
+                  : nextMarkers
+                      .toList()
                       .firstWhere((char) => !values.containsKey(char));
               values[unusedCharacter] = value;
               buffer.write(unusedCharacter);
