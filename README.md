@@ -1,7 +1,7 @@
 Reactive Dart 
 =============
 
-[![Pub Package](https://img.shields.io/pub/v/rx.svg)](https://pub.dartlang.org/packages/rx)
+[![Pub Package](https://img.shields.io/pub/v/rx.svg)](https://pub.dev/packages/rx)
 [![Build Status](https://travis-ci.org/renggli/dart-rx.svg)](https://travis-ci.org/renggli/dart-rx)
 [![Coverage Status](https://coveralls.io/repos/renggli/dart-rx/badge.svg)](https://coveralls.io/r/renggli/dart-rx)
 [![GitHub Issues](https://img.shields.io/github/issues/renggli/dart-rx.svg)](https://github.com/renggli/dart-rx/issues)
@@ -18,7 +18,7 @@ The package depends on the latest development version of _Dart 2.6.0_. Due to it
 
 This library is open source and well tested. Development happens on [GitHub](http://github.com/renggli/dart-rx). Feel free to report issues or create a pull-request there. General questions are best asked on [StackOverflow](http://stackoverflow.com/questions/tagged/rx+dart).
 
-The package is hosted on [dart packages](https://pub.dartlang.org/packages/rx). Up-to-date [class documentation](https://pub.dartlang.org/documentation/rx/latest/) is created with every release.
+The package is hosted on [dart packages](https://pub.dev/packages/rx). Up-to-date [class documentation](https://pub.dev/documentation/rx/latest/) is created with every release.
 
 ### License
 
