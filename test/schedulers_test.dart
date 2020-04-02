@@ -3,6 +3,7 @@ library rx.test.schedulers_test;
 import 'dart:async';
 
 import 'package:more/iterable.dart';
+import 'package:rx/disposables.dart';
 import 'package:rx/schedulers.dart';
 import 'package:rx/src/schedulers/settings.dart';
 import 'package:rx/src/shared/constants.dart';
@@ -104,11 +105,21 @@ void main() {
       expectDateTimeList(expected, actual, accuracy);
     });
   });
-  group('root zone', () => testZone(const RootZoneScheduler()));
-  group('current zone', () => testZone(const CurrentZoneScheduler()));
+  group('async', () {
+    final scheduler = AsyncScheduler();
+    final tickScheduler = CurrentZoneScheduler();
+    final tickDuration = Duration(milliseconds: 1);
+    Disposable ticker;
+    setUp(() => ticker = tickScheduler.schedulePeriodic(
+        tickDuration, (disposable) => scheduler.flush()));
+    tearDown(() => ticker.dispose());
+    testScheduler(scheduler);
+  });
+  group('root zone', () => testScheduler(const RootZoneScheduler()));
+  group('current zone', () => testScheduler(const CurrentZoneScheduler()));
 }
 
-void testZone(ZoneScheduler scheduler) {
+void testScheduler(Scheduler scheduler) {
   test('now', () {
     final actual = scheduler.now;
     final expected = DateTime.now();
