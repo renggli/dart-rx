@@ -12,7 +12,10 @@ class BaseObserver<T> with Observer<T> implements Observer<T> {
 
   bool _isClosed = false;
 
-  BaseObserver(this._next, this._error, this._complete);
+  BaseObserver(this._next, this._error, this._complete)
+      : assert(_next != null, 'next handler is null'),
+        assert(_error != null, 'error handler is null'),
+        assert(_complete != null, 'complete handler is null');
 
   @override
   void next(T value) {

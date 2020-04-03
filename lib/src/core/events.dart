@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import '../shared/functions.dart';
 import 'observer.dart';
 
+/// Abstract immutable event object of type `T.
 @immutable
 abstract class Event<T> {
   /// Creates a next event.
@@ -64,6 +65,7 @@ abstract class Event<T> {
   void observe(Observer<T> observer);
 }
 
+/// Event with value of type `T`.
 class NextEvent<T> extends Event<T> {
   @override
   final T value;
@@ -84,6 +86,7 @@ class NextEvent<T> extends Event<T> {
   String toString() => 'NextEvent{value: $value}';
 }
 
+/// Event of an error with optional stack trace of a sequence of type `T`.
 class ErrorEvent<T> extends Event<T> {
   @override
   final Object error;
@@ -107,6 +110,7 @@ class ErrorEvent<T> extends Event<T> {
   String toString() => 'ErrorEvent{error: $error, stackTrace: $stackTrace}';
 }
 
+/// Event of the completion of a sequence of type `T`.
 class CompleteEvent<T> extends Event<T> {
   const CompleteEvent();
 
