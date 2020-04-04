@@ -1,15 +1,18 @@
 library rx.testing.test_scheduler;
 
+import 'package:matcher/matcher.dart';
 import 'package:more/iterable.dart';
 
 import '../core/observable.dart';
+import '../core/observer.dart';
 import '../disposables/disposable.dart';
 import '../disposables/disposed.dart';
+import '../operators/map.dart';
+import '../operators/materialize.dart';
 import '../schedulers/async.dart';
 import '../schedulers/settings.dart';
 import 'cold_observable.dart';
 import 'hot_observable.dart';
-import 'observable_matcher.dart';
 import 'test_event_sequence.dart';
 import 'test_events.dart';
 
@@ -68,12 +71,28 @@ class TestScheduler extends AsyncScheduler {
   }
 
   /// Creates a matcher for an observable.
-  bool Function(Object observable) isObservable<T>(String marbles,
+  Matcher isObservable<T>(String marbles,
       {Map<String, T> values = const {}, Object error = 'Error'}) {
+    if (this != defaultScheduler || _subscription.isDisposed) {
+      throw StateError('Called outside of the scope of this scheduler.');
+    }
     final expected =
         TestEventSequence.fromString(marbles, values: values, error: error);
-    final matcher = ObservableMatcher<T>(expected);
-    return (actual) => matcher.matches(actual);
+    return isA<Observable<T>>().having((observable) {
+      final start = now;
+      final events = <TestEvent<T>>[];
+      final subscription = observable
+          .materialize()
+          .map((event) => TestEvent(
+              now.difference(start).inMilliseconds ~/
+                  stepDuration.inMilliseconds,
+              event))
+          .subscribe(Observer.next(events.add));
+      while (hasPending && !subscription.isDisposed) {
+        advance();
+      }
+      return TestEventSequence<T>(events, values: values);
+    }, 'events', expected);
   }
 
   /// Creates a "cold" [Observable] whose subscription starts when the test
@@ -110,5 +129,3 @@ class TestScheduler extends AsyncScheduler {
     return observable;
   }
 }
-
-class TestAction<T> {}
