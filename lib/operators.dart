@@ -40,6 +40,7 @@ export 'src/operators/take_while.dart' show TakeWhileOperator;
 export 'src/operators/tap.dart' show TapOperator;
 export 'src/operators/timeout.dart' show TimeoutOperator;
 export 'src/operators/to_list.dart' show ToListOperator;
+export 'src/operators/to_map.dart' show ToMapOperator;
 export 'src/operators/to_set.dart' show ToSetOperator;
 export 'src/operators/where.dart' show WhereOperator;
 export 'src/operators/where_type.dart' show WhereTypeOperator;

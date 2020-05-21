@@ -1,5 +1,6 @@
 library rx.test.operators_test;
 
+import 'package:more/collection.dart';
 import 'package:rx/constructors.dart';
 import 'package:rx/converters.dart';
 import 'package:rx/core.dart';
@@ -2012,6 +2013,180 @@ void main() {
             'x': ['a', 'b', 'c']
           }));
       expect(creation, 1);
+    });
+  });
+  group('toMap', () {
+    test('empty and completion', () {
+      final input = scheduler.cold<String>('--|');
+      final actual = input.toMap();
+      expect(actual, scheduler.isObservable<Map>('--(x|)', values: {'x': {}}));
+    });
+    test('empty and error', () {
+      final input = scheduler.cold<String>('--#');
+      final actual = input.toMap();
+      expect(actual, scheduler.isObservable<Map>('--#'));
+    });
+    test('single value and completion', () {
+      final input = scheduler.cold<String>('--a--|');
+      final actual = input.toMap<String, String>();
+      expect(
+          actual,
+          scheduler.isObservable('-----(x|)', values: {
+            'x': {'a': 'a'}
+          }));
+    });
+    test('single value and error', () {
+      final input = scheduler.cold<String>('--a--#');
+      final actual = input.toMap<String, String>();
+      expect(actual, scheduler.isObservable<Map<String, String>>('-----#'));
+    });
+    test('key selector', () {
+      final input = scheduler.cold<String>('--a--b--c--|');
+      final actual = input.toMap<String, String>(
+          keySelector: (value) => value.toUpperCase());
+      expect(
+          actual,
+          scheduler.isObservable('-----------(x|)', values: {
+            'x': {'A': 'a', 'B': 'b', 'C': 'c'}
+          }));
+    });
+    test('value selector', () {
+      final input = scheduler.cold<String>('--a--b--c--|');
+      final actual = input.toMap<String, String>(
+          valueSelector: (value) => value.toUpperCase());
+      expect(
+          actual,
+          scheduler.isObservable('-----------(x|)', values: {
+            'x': {'a': 'A', 'b': 'B', 'c': 'C'}
+          }));
+    });
+  });
+  group('toListMultimap', () {
+    test('empty and completion', () {
+      final input = scheduler.cold<String>('--|');
+      final actual = input.toListMultimap().map((map) => map.asMap());
+      expect(
+          actual,
+          scheduler.isObservable('--(x|)',
+              values: {'x': <dynamic, List<dynamic>>{}}));
+    });
+    test('empty and error', () {
+      final input = scheduler.cold<String>('--#');
+      final actual = input.toListMultimap();
+      expect(actual, scheduler.isObservable<ListMultimap>('--#'));
+    });
+    test('single value and completion', () {
+      final input = scheduler.cold<String>('--a--|');
+      final actual =
+          input.toListMultimap<String, String>().map((map) => map.asMap());
+      expect(
+          actual,
+          scheduler.isObservable('-----(x|)', values: {
+            'x': {
+              'a': ['a']
+            }
+          }));
+    });
+    test('single value and error', () {
+      final input = scheduler.cold<String>('--a--#');
+      final actual =
+          input.toListMultimap<String, String>().map((map) => map.asMap());
+      expect(
+          actual, scheduler.isObservable<Map<String, List<String>>>('-----#'));
+    });
+    test('key selector', () {
+      final input = scheduler.cold<String>('--a--a--b--|');
+      final actual = input
+          .toListMultimap<String, String>(
+              keySelector: (value) => value.toUpperCase())
+          .map((map) => map.asMap());
+      expect(
+          actual,
+          scheduler.isObservable('-----------(x|)', values: {
+            'x': {
+              'A': ['a', 'a'],
+              'B': ['b']
+            }
+          }));
+    });
+    test('value selector', () {
+      final input = scheduler.cold<String>('--a--b--b--|');
+      final actual = input
+          .toListMultimap<String, String>(
+              valueSelector: (value) => value.toUpperCase())
+          .map((map) => map.asMap());
+      expect(
+          actual,
+          scheduler.isObservable('-----------(x|)', values: {
+            'x': {
+              'a': ['A'],
+              'b': ['B', 'B']
+            }
+          }));
+    });
+  });
+  group('toSetMultimap', () {
+    test('empty and completion', () {
+      final input = scheduler.cold<String>('--|');
+      final actual = input.toSetMultimap().map((map) => map.asMap());
+      expect(
+          actual,
+          scheduler.isObservable('--(x|)',
+              values: {'x': <dynamic, Set<dynamic>>{}}));
+    });
+    test('empty and error', () {
+      final input = scheduler.cold<String>('--#');
+      final actual = input.toSetMultimap();
+      expect(actual, scheduler.isObservable<SetMultimap>('--#'));
+    });
+    test('single value and completion', () {
+      final input = scheduler.cold<String>('--a--|');
+      final actual =
+          input.toSetMultimap<String, String>().map((map) => map.asMap());
+      expect(
+          actual,
+          scheduler.isObservable('-----(x|)', values: {
+            'x': {
+              'a': {'a'}
+            }
+          }));
+    });
+    test('single value and error', () {
+      final input = scheduler.cold<String>('--a--#');
+      final actual =
+          input.toSetMultimap<String, String>().map((map) => map.asMap());
+      expect(
+          actual, scheduler.isObservable<Map<String, Set<String>>>('-----#'));
+    });
+    test('key selector', () {
+      final input = scheduler.cold<String>('--a--a--b--|');
+      final actual = input
+          .toSetMultimap<String, String>(
+              keySelector: (value) => value.toUpperCase())
+          .map((map) => map.asMap());
+      expect(
+          actual,
+          scheduler.isObservable('-----------(x|)', values: {
+            'x': {
+              'A': {'a'},
+              'B': {'b'}
+            }
+          }));
+    });
+    test('value selector', () {
+      final input = scheduler.cold<String>('--a--b--b--|');
+      final actual = input
+          .toSetMultimap<String, String>(
+              valueSelector: (value) => value.toUpperCase())
+          .map((map) => map.asMap());
+      expect(
+          actual,
+          scheduler.isObservable('-----------(x|)', values: {
+            'x': {
+              'a': {'A'},
+              'b': {'B'}
+            }
+          }));
     });
   });
   group('toSet', () {
