@@ -24,6 +24,53 @@ void main() {
   setUp(scheduler.setUp);
   tearDown(scheduler.tearDown);
 
+  group('audit', () {
+    test('pass trough values', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.auditTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('----a---b---c|'));
+    });
+    test('pass trough values and error', () {
+      final input = scheduler.cold('-a---b---c---#');
+      final actual = input.auditTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('----a---b---c#'));
+    });
+    test('throttling', () {
+      final input = scheduler.cold('-ab----|');
+      final actual = input.auditTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('----b--|'));
+    });
+    test('throttling custom', () {
+      final auditdValues = <String>[];
+      final input = scheduler.cold('-ab----|');
+      final actual = input.audit((value) {
+        auditdValues.add(value);
+        return timer(delay: scheduler.stepDuration * 3);
+      });
+      expect(actual, scheduler.isObservable('----b--|'));
+      expect(auditdValues, ['a']);
+    });
+    test('throttling with break inbetween', () {
+      final input = scheduler.cold('-ab--------cd--------|');
+      final actual = input.auditTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('----b---------d------|'));
+    });
+    test('complete during audit', () {
+      final input = scheduler.cold('-ab|');
+      final actual = input.auditTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('---|'));
+    });
+    test('throwing auditr provider', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.audit((value) => throw 'Error');
+      expect(actual, scheduler.isObservable('-#'));
+    });
+    test('throwing auditr observable', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.audit((value) => throwError('Error'));
+      expect(actual, scheduler.isObservable('-#'));
+    });
+  });
   group('buffer', () {
     test('no constraints', () {
       final input = scheduler.cold<String>('-a-b-c-|');

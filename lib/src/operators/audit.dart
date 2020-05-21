@@ -1,0 +1,99 @@
+library rx.operators.audit;
+
+import '../constructors/timer.dart';
+import '../core/events.dart';
+import '../core/observable.dart';
+import '../core/observer.dart';
+import '../core/subscriber.dart';
+import '../disposables/disposable.dart';
+import '../observers/inner.dart';
+import '../schedulers/scheduler.dart';
+import '../shared/functions.dart';
+
+typedef DurationSelector<T, R> = Observable<R> Function(T value);
+
+extension AuditOperator<T> on Observable<T> {
+  /// Ignores values from this [Observable] for a duration determined by the
+  /// [Observable] returned from `durationSelector`, then emits the most recent
+  /// source value, then repeats the process.
+  Observable<T> audit<R>(DurationSelector<T, R> durationSelector) =>
+      AuditObservable<T, R>(this, durationSelector);
+
+  /// Ignores  values from this [Observable] for the given `duration`, then
+  /// emits the most recent source value, then repeats the process.
+  Observable<T> auditTime(Duration duration, {Scheduler scheduler}) =>
+      audit<int>(
+          constantFunction1(timer(delay: duration, scheduler: scheduler)));
+}
+
+class AuditObservable<T, R> extends Observable<T> {
+  final Observable<T> delegate;
+  final DurationSelector<T, R> durationSelector;
+
+  AuditObservable(this.delegate, this.durationSelector);
+
+  @override
+  Disposable subscribe(Observer<T> observer) {
+    final subscriber = AuditSubscriber<T, R>(observer, durationSelector);
+    subscriber.add(delegate.subscribe(subscriber));
+    return subscriber;
+  }
+}
+
+class AuditSubscriber<T, R> extends Subscriber<T>
+    implements InnerEvents<R, void> {
+  final DurationSelector<T, R> durationSelector;
+
+  T lastValue;
+  bool hasLastValue = false;
+  Disposable throttled;
+
+  AuditSubscriber(Observer<T> observer, this.durationSelector)
+      : super(observer);
+
+  @override
+  void onNext(T value) {
+    lastValue = value;
+    hasLastValue = true;
+    if (throttled == null) {
+      final durationEvent = Event.map1(durationSelector, value);
+      if (durationEvent is ErrorEvent) {
+        doError(durationEvent.error, durationEvent.stackTrace);
+      } else {
+        add(throttled = InnerObserver(durationEvent.value, this));
+      }
+    }
+  }
+
+  @override
+  void notifyNext(Disposable subscription, void state, R value) {
+    flush();
+  }
+
+  @override
+  void notifyError(Disposable subscription, void state, Object error,
+      [StackTrace stackTrace]) {
+    doError(error, stackTrace);
+  }
+
+  @override
+  void notifyComplete(Disposable subscription, void state) {
+    flush();
+  }
+
+  void flush() {
+    final value = lastValue;
+    final hasValue = hasLastValue;
+    final subscription = throttled;
+    lastValue = null;
+    hasLastValue = false;
+    if (subscription != null) {
+      remove(subscription);
+      throttled = null;
+      subscription.dispose();
+    }
+    if (hasValue) {
+      doNext(value);
+    }
+  }
+}
