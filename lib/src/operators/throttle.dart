@@ -8,6 +8,7 @@ import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 import '../schedulers/scheduler.dart';
+import '../shared/functions.dart';
 
 typedef DurationSelector<T, R> = Observable<R> Function(T value);
 
@@ -22,8 +23,10 @@ extension ThrottleOperator<T> on Observable<T> {
   /// Emits a value from this [Observable], then ignores values for `duration`.
   Observable<T> throttleTime(Duration duration,
           {bool leading = true, bool trailing = true, Scheduler scheduler}) =>
-      throttle<int>((value) => timer(delay: duration, scheduler: scheduler),
-          leading: leading, trailing: trailing);
+      throttle<int>(
+          constantFunction1(timer(delay: duration, scheduler: scheduler)),
+          leading: leading,
+          trailing: trailing);
 }
 
 class ThrottleObservable<T, R> extends Observable<T> {
@@ -106,11 +109,13 @@ class ThrottleSubscriber<T, R> extends Subscriber<T>
   }
 
   void dispatchThrottled() {
-    if (throttled != null) {
+    final current = throttled;
+    if (current != null) {
       if (hasLastValue && trailing) {
         dispatchValue(lastValue);
       }
-      remove(throttled);
+      current.dispose();
+      remove(current);
       throttled = null;
     }
   }

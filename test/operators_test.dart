@@ -223,30 +223,60 @@ void main() {
     });
   });
   group('debounce', () {
-    test('together', () {
-      final input = scheduler.cold<String>('-ab----|');
-      final actual = input.debounce(delay: scheduler.stepDuration * 2);
-      expect(actual, scheduler.isObservable<String>('----b--|'));
+    test('pass trough values', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.debounceTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('----a---b---c|'));
     });
-    test('separate', () {
-      final input = scheduler.cold<String>('-a-b---|');
-      final actual = input.debounce(delay: scheduler.stepDuration * 2);
-      expect(actual, scheduler.isObservable<String>('-----b-|'));
+    test('pass trough values and error', () {
+      final input = scheduler.cold('-a---b---c---#');
+      final actual = input.debounceTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('----a---b---c#'));
     });
-    test('split', () {
-      final input = scheduler.cold<String>('-a--b--|');
-      final actual = input.debounce(delay: scheduler.stepDuration * 2);
-      expect(actual, scheduler.isObservable<String>('---a--b|'));
+    test('basic', () {
+      final input = scheduler.cold('-ab----|');
+      final actual = input.debounceTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('-----b-|'));
     });
-    test('end early', () {
+    test('sequence', () {
+      final input = scheduler.cold('-ab-c--d---e----|');
+      final actual = input.debounceTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('----------d---e-|'));
+    });
+    test('custom', () {
+      final debounceValues = <String>[];
+      final input = scheduler.cold('-ab----|');
+      final actual = input.debounce((value) {
+        debounceValues.add(value);
+        return timer(delay: scheduler.stepDuration * 3);
+      });
+      expect(actual, scheduler.isObservable('-----b-|'));
+      expect(debounceValues, ['a', 'b']);
+    });
+    test('error during debounce', () {
+      final input = scheduler.cold<String>('-a#');
+      final actual = input.debounceTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable<String>('--#'));
+    });
+    test('complete during debounce', () {
       final input = scheduler.cold<String>('-a|');
-      final actual = input.debounce(delay: scheduler.stepDuration * 2);
+      final actual = input.debounceTime(scheduler.stepDuration * 3);
       expect(actual, scheduler.isObservable<String>('--(a|)'));
     });
     test('throws error', () {
       final input = scheduler.cold<String>('-a#');
-      final actual = input.debounce(delay: scheduler.stepDuration * 2);
+      final actual = input.debounceTime(scheduler.stepDuration * 3);
       expect(actual, scheduler.isObservable<String>('--#'));
+    });
+    test('throwing throttler provider', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.debounce((value) => throw 'Error');
+      expect(actual, scheduler.isObservable('-#'));
+    });
+    test('throwing throttler observable', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.debounce((value) => throwError('Error'));
+      expect(actual, scheduler.isObservable('-#'));
     });
   });
   group('defaultIfEmpty', () {
