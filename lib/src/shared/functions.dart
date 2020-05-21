@@ -29,8 +29,11 @@ typedef Predicate3<T1, T2, T3> = bool Function(T1 arg1, T2 arg2, T3 arg3);
 
 /// The null functions.
 void nullFunction0() {}
+
 void nullFunction1(Object arg1) {}
+
 void nullFunction2(Object arg1, Object arg2) {}
+
 void nullFunction3(Object arg1, Object arg2, Object arg3) {}
 
 /// The identity function.
@@ -38,16 +41,22 @@ T identityFunction<T>(T argument) => argument;
 
 /// The constant functions.
 Map0<R> constantFunction0<R>(R value) => () => value;
+
 Map1<T1, R> constantFunction1<T1, R>(R value) => (arg1) => value;
+
 Map2<T1, T2, R> constantFunction2<T1, T2, R>(R value) => (arg1, arg2) => value;
+
 Map3<T1, T2, T3, R> constantFunction3<T1, T2, T3, R>(R value) =>
     (arg1, arg2, arg3) => value;
 
 /// The throwing functions.
 Map0<R> throwFunction0<R>(Object throwable) => () => throw throwable;
+
 Map1<T1, R> throwFunction1<T1, R>(Object throwable) =>
     (arg1) => throw throwable;
+
 Map2<T1, T2, R> throwFunction2<T1, T2, R>(Object throwable) =>
     (arg1, arg2) => throw throwable;
+
 Map3<T1, T2, T3, R> throwFunction3<T1, T2, T3, R>(Object throwable) =>
     (arg1, arg2, arg3) => throw throwable;

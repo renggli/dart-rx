@@ -38,6 +38,7 @@ export 'src/operators/take.dart' show TakeOperator;
 export 'src/operators/take_last.dart' show TakeLastOperator;
 export 'src/operators/take_while.dart' show TakeWhileOperator;
 export 'src/operators/tap.dart' show TapOperator;
+export 'src/operators/throttle.dart' show ThrottleOperator;
 export 'src/operators/timeout.dart' show TimeoutOperator;
 export 'src/operators/to_list.dart' show ToListOperator;
 export 'src/operators/to_map.dart' show ToMapOperator;

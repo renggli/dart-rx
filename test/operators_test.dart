@@ -1917,6 +1917,65 @@ void main() {
       expect(actual, scheduler.isObservable('-a-b-c-#', error: customError));
     });
   });
+  group('throttle', () {
+    test('pass trough values', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.throttleTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('-a---b---c---|'));
+    });
+    test('pass trough values and error', () {
+      final input = scheduler.cold('-a---b---c---#');
+      final actual = input.throttleTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('-a---b---c---#'));
+    });
+    test('throttling', () {
+      final input = scheduler.cold('-ab----|');
+      final actual = input.throttleTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('-a--b--|'));
+    });
+    test('throttling custom', () {
+      final throttledValues = <String>[];
+      final input = scheduler.cold('-ab----|');
+      final actual = input.throttle((value) {
+        throttledValues.add(value);
+        return timer(delay: scheduler.stepDuration * 3);
+      });
+      expect(actual, scheduler.isObservable('-a--b--|'));
+      expect(throttledValues, ['a']);
+    });
+    test('throttling without leading', () {
+      final input = scheduler.cold('-ab----|');
+      final actual =
+          input.throttleTime(scheduler.stepDuration * 3, leading: false);
+      expect(actual, scheduler.isObservable('----b--|'));
+    });
+    test('throttling without trailing', () {
+      final input = scheduler.cold('-ab----|');
+      final actual =
+          input.throttleTime(scheduler.stepDuration * 3, trailing: false);
+      expect(actual, scheduler.isObservable('-a-----|'));
+    });
+    test('throttling with break inbetween', () {
+      final input = scheduler.cold('-ab--------cd--------|');
+      final actual = input.throttleTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('-a--b------c--d------|'));
+    });
+    test('complete during throttle', () {
+      final input = scheduler.cold('-ab|');
+      final actual = input.throttleTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable('-a-(b|)'));
+    });
+    test('throwing throttler provider', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.throttle((value) => throw 'Error');
+      expect(actual, scheduler.isObservable('-#'));
+    });
+    test('throwing throttler observable', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.throttle((value) => throwError('Error'));
+      expect(actual, scheduler.isObservable('-#'));
+    });
+  });
   group('timeout', () {
     test('after immediate completion', () {
       final input = scheduler.cold('--|');
