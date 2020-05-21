@@ -3,18 +3,24 @@ library rx.core.observer;
 import '../disposables/disposable.dart';
 import '../observers/base.dart';
 import '../shared/functions.dart';
+import '../shared/settings.dart';
 
 abstract class Observer<T> implements Disposable {
   /// An observer with custom handlers.
   factory Observer({
-    NextCallback<T> next = nullFunction1,
-    ErrorCallback error = nullFunction2,
-    CompleteCallback complete = nullFunction0,
+    NextCallback<T> next,
+    ErrorCallback error,
+    CompleteCallback complete,
   }) =>
-      BaseObserver<T>(next, error, complete);
+      BaseObserver<T>(next ?? nullFunction1, error ?? defaultErrorHandler,
+          complete ?? nullFunction0);
 
   /// An observer that is only interested in values.
   factory Observer.next(NextCallback<T> next) =>
+      BaseObserver<T>(next, defaultErrorHandler, nullFunction0);
+
+  /// An observer that is only interested in values and ignores errors.
+  factory Observer.nextIgnoringErrors(NextCallback<T> next) =>
       BaseObserver<T>(next, nullFunction2, nullFunction0);
 
   /// An observer that is only interested in failure.
@@ -23,7 +29,7 @@ abstract class Observer<T> implements Disposable {
 
   /// An observer that is only interested in success.
   factory Observer.complete(CompleteCallback complete) =>
-      BaseObserver<T>(nullFunction1, nullFunction2, complete);
+      BaseObserver<T>(nullFunction1, defaultErrorHandler, complete);
 
   /// Pass a value to the observer.
   void next(T value);

@@ -3,6 +3,19 @@ library rx.core.errors;
 import 'events.dart';
 import 'observable.dart';
 
+/// An error thrown when an error was not handled.
+class UnhandledError extends Error {
+  final Object error;
+
+  @override
+  final StackTrace stackTrace;
+
+  UnhandledError(this.error, this.stackTrace);
+
+  @override
+  String toString() => 'UnhandledError{error: $error}';
+}
+
 /// An error throws when an operation receives an unknown [Event] type.
 class UnexpectedEventError extends Error {
   final Event event;
