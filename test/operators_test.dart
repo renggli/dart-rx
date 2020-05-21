@@ -1448,26 +1448,29 @@ void main() {
   group('refCount', () {});
   group('sample', () {
     test('samples on value trigger', () {
-      final actual = scheduler
-          .cold<String>('-a-b-c---d-|')
-          .sample(scheduler.cold('--x---x-x-x--|'));
+      final input = scheduler.cold<String>('-a-b-c---d-|');
+      final actual = input.sample(scheduler.cold('--x---x-x-x--|'));
       expect(actual, scheduler.isObservable<String>('--a---c---d|'));
     });
     test('samples on completion of trigger', () {
-      final actual = scheduler
-          .cold<String>('-a-b-c---d-|')
-          .sample(scheduler.cold('--x---x-x-|'));
+      final input = scheduler.cold<String>('-a-b-c---d-|');
+      final actual = input.sample(scheduler.cold('--x---x-x-|'));
       expect(actual, scheduler.isObservable<String>('--a---c---d|'));
     });
     test('input throws', () {
-      final actual =
-          scheduler.cold<String>('-#').sample(scheduler.cold('-x-|'));
+      final input = scheduler.cold<String>('-#');
+      final actual = input.sample(scheduler.cold('-x-|'));
       expect(actual, scheduler.isObservable<String>('-#'));
     });
     test('trigger throws', () {
-      final actual =
-          scheduler.cold<String>('-a-b-c---d-|').sample(scheduler.cold('--#'));
+      final input = scheduler.cold<String>('-a-b-c---d-|');
+      final actual = input.sample(scheduler.cold('--#'));
       expect(actual, scheduler.isObservable<String>('--#'));
+    });
+    test('timed', () {
+      final input = scheduler.cold<String>('-a-b-c---de-|');
+      final actual = input.sampleTime(scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable<String>('---a--c--d--|'));
     });
   });
   group('scan', () {
