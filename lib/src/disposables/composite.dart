@@ -16,6 +16,12 @@ class CompositeDisposable extends StatefulDisposable {
 
   Set<Disposable> get disposables => {..._disposables};
 
+  bool get isEmpty => _disposables.isEmpty;
+
+  bool get isNotEmpty => _disposables.isNotEmpty;
+
+  bool contains(Disposable disposable) => _disposables.contains(disposable);
+
   void add(Disposable disposable) {
     ArgumentError.checkNotNull(disposable, 'disposable');
     if (isDisposed) {

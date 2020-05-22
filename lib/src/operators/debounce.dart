@@ -14,7 +14,7 @@ typedef DurationSelector<T, R> = Observable<R> Function(T value);
 
 extension DebounceOperator<T> on Observable<T> {
   /// Emits a value from this [Observable] only after a particular time span
-  /// determined by another Observable has passed without another emission.
+  /// determined by another [Observable] has passed without another emission.
   Observable<T> debounce<R>(DurationSelector<T, R> durationSelector) =>
       DebounceObservable<T, R>(this, durationSelector);
 
@@ -67,18 +67,18 @@ class DebounceSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Disposable subscription, void state, R value) {
+  void notifyNext(Disposable disposable, void state, R value) {
     flush();
   }
 
   @override
-  void notifyError(Disposable subscription, void state, Object error,
+  void notifyError(Disposable disposable, void state, Object error,
       [StackTrace stackTrace]) {
     doError(error, stackTrace);
   }
 
   @override
-  void notifyComplete(Disposable subscription, void state) {
+  void notifyComplete(Disposable disposable, void state) {
     flush();
   }
 
@@ -86,7 +86,7 @@ class DebounceSubscriber<T, R> extends Subscriber<T>
     reset();
     lastValue = value;
     hasLastValue = true;
-    add(debounced = InnerObserver(duration, this));
+    add(debounced = InnerObserver(this, duration));
   }
 
   void reset() {

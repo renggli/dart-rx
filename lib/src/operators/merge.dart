@@ -69,7 +69,7 @@ class MergeSubscriber<T, R> extends Subscriber<T>
       if (projectEvent is ErrorEvent) {
         doError(projectEvent.error, projectEvent.stackTrace);
       } else {
-        add(InnerObserver(projectEvent.value, this, active++));
+        add(InnerObserver(this, projectEvent.value, active++));
       }
     } else {
       buffer.addLast(value);
@@ -85,16 +85,16 @@ class MergeSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Disposable subscription, int state, R value) => doNext(value);
+  void notifyNext(Disposable disposable, int state, R value) => doNext(value);
 
   @override
-  void notifyError(Disposable subscription, int state, Object error,
+  void notifyError(Disposable disposable, int state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Disposable subscription, int state) {
-    remove(subscription);
+  void notifyComplete(Disposable disposable, int state) {
+    remove(disposable);
     active--;
     if (buffer.isNotEmpty) {
       onNext(buffer.removeFirst());

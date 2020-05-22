@@ -58,7 +58,7 @@ class SwitchSubscriber<T, R> extends Subscriber<T>
     if (projectEvent is ErrorEvent) {
       doError(projectEvent.error, projectEvent.stackTrace);
     } else {
-      subscription.current = InnerObserver(projectEvent.value, this);
+      subscription.current = InnerObserver(this, projectEvent.value);
     }
   }
 
@@ -71,17 +71,16 @@ class SwitchSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Disposable subscription, void state, R value) =>
-      doNext(value);
+  void notifyNext(Disposable disposable, void state, R value) => doNext(value);
 
   @override
-  void notifyError(Disposable subscription, void state, Object error,
+  void notifyError(Disposable disposable, void state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Disposable subscription, void state) {
-    this.subscription.current = const DisposedDisposable();
+  void notifyComplete(Disposable disposable, void state) {
+    subscription.current = const DisposedDisposable();
     if (hasCompleted) {
       doComplete();
     }

@@ -9,10 +9,10 @@ import '../disposables/disposable.dart';
 class InnerObserver<T, S> with Observer<T> implements Observer<T> {
   final InnerEvents<T, S> _outer;
   final S _state;
-  Disposable _subscription;
+  Disposable _disposable;
 
-  InnerObserver(Observable<T> inner, this._outer, [this._state]) {
-    _subscription = inner.subscribe(this);
+  InnerObserver(this._outer, Observable<T> inner, [this._state]) {
+    _disposable = inner.subscribe(this);
   }
 
   @override
@@ -26,18 +26,18 @@ class InnerObserver<T, S> with Observer<T> implements Observer<T> {
   void complete() => _outer.notifyComplete(this, _state);
 
   @override
-  bool get isDisposed => _subscription.isDisposed;
+  bool get isDisposed => _disposable.isDisposed;
 
   @override
-  void dispose() => _subscription.dispose();
+  void dispose() => _disposable.dispose();
 }
 
 /// Interface to receive events from an [InnerObserver].
 abstract class InnerEvents<T, S> {
-  void notifyNext(Disposable subscription, S state, T value);
+  void notifyNext(Disposable disposable, S state, T value);
 
-  void notifyError(Disposable subscription, S state, Object error,
+  void notifyError(Disposable disposable, S state, Object error,
       [StackTrace stackTrace]);
 
-  void notifyComplete(Disposable subscription, S state);
+  void notifyComplete(Disposable disposable, S state);
 }

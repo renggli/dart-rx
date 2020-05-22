@@ -349,20 +349,37 @@ void main() {
     });
   });
   group('delay', () {
-    test('moderate delay', () {
+    test('completes after last value', () {
       final input = scheduler.cold('-a-b--c---d----|');
-      final actual = input.delay(scheduler.stepDuration * 2);
-      expect(actual, scheduler.isObservable('---a-b--c---d----|'));
+      final actual = input.delayTime(scheduler.stepDuration * 2);
+      expect(actual, scheduler.isObservable('---a-b--c---d--|'));
     });
-    test('massive delay', () {
+    test('completes before last value', () {
       final input = scheduler.cold('-a-b--c---d----|');
-      final actual = input.delay(scheduler.stepDuration * 8);
-      expect(actual, scheduler.isObservable('---------a-b--c---d----|'));
+      final actual = input.delayTime(scheduler.stepDuration * 8);
+      expect(actual, scheduler.isObservable('---------a-b--c---(d|)'));
     });
-    test('errors immediately', () {
+    test('errors before last value', () {
       final input = scheduler.cold('-a-b--c---#');
-      final actual = input.delay(scheduler.stepDuration * 4);
+      final actual = input.delayTime(scheduler.stepDuration * 4);
       expect(actual, scheduler.isObservable('-----a-b--#'));
+    });
+    test('reorders values', () {
+      final delays = {'a': 6, 'b': 3, 'c': 0};
+      final input = scheduler.cold('-a-b-c-|');
+      final actual = input.delay(
+          (value) => timer(delay: scheduler.stepDuration * delays[value]));
+      expect(actual, scheduler.isObservable('-----cb(a|)'));
+    });
+    test('throwing delay provider', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.delay((value) => throw 'Error');
+      expect(actual, scheduler.isObservable('-#'));
+    });
+    test('throwing delay observable', () {
+      final input = scheduler.cold('-a---b---c---|');
+      final actual = input.delay((value) => throwError('Error'));
+      expect(actual, scheduler.isObservable('-#'));
     });
   });
   group('dematerialize', () {

@@ -51,13 +51,13 @@ class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
       active = observables.length;
       pending = observables.length;
       for (var i = 0; i < observables.length; i++) {
-        add(InnerObserver(observables[i], this, i));
+        add(InnerObserver(this, observables[i], i));
       }
     }
   }
 
   @override
-  void notifyNext(Disposable subscription, int index, T value) {
+  void notifyNext(Disposable disposable, int index, T value) {
     values[index] = value;
     if (!hasValues[index]) {
       pending--;
@@ -69,13 +69,13 @@ class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
   }
 
   @override
-  void notifyError(Disposable subscription, int index, Object error,
+  void notifyError(Disposable disposable, int index, Object error,
       [StackTrace stackTrace]) {
     doError(error, stackTrace);
   }
 
   @override
-  void notifyComplete(Disposable subscription, int index) {
+  void notifyComplete(Disposable disposable, int index) {
     active--;
     if (active == 0) {
       doComplete();

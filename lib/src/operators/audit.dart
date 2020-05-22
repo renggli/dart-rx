@@ -60,24 +60,24 @@ class AuditSubscriber<T, R> extends Subscriber<T>
       if (durationEvent is ErrorEvent) {
         doError(durationEvent.error, durationEvent.stackTrace);
       } else {
-        add(throttled = InnerObserver(durationEvent.value, this));
+        add(throttled = InnerObserver(this, durationEvent.value));
       }
     }
   }
 
   @override
-  void notifyNext(Disposable subscription, void state, R value) {
+  void notifyNext(Disposable disposable, void state, R value) {
     flush();
   }
 
   @override
-  void notifyError(Disposable subscription, void state, Object error,
+  void notifyError(Disposable disposable, void state, Object error,
       [StackTrace stackTrace]) {
     doError(error, stackTrace);
   }
 
   @override
-  void notifyComplete(Disposable subscription, void state) {
+  void notifyComplete(Disposable disposable, void state) {
     flush();
   }
 

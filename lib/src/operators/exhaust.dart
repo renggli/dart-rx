@@ -68,7 +68,7 @@ class ExhaustSubscriber<T, R> extends Subscriber<T>
         doError(projectEvent.error, projectEvent.stackTrace);
       } else {
         active++;
-        add(InnerObserver(projectEvent.value, this));
+        add(InnerObserver(this, projectEvent.value));
       }
     }
   }
@@ -82,18 +82,17 @@ class ExhaustSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Disposable subscription, void state, R value) =>
-      doNext(value);
+  void notifyNext(Disposable disposable, void state, R value) => doNext(value);
 
   @override
-  void notifyError(Disposable subscription, void state, Object error,
+  void notifyError(Disposable disposable, void state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Disposable subscription, void state) {
+  void notifyComplete(Disposable disposable, void state) {
     active--;
-    remove(subscription);
+    remove(disposable);
     if (active == 0 && hasCompleted) {
       doComplete();
     }

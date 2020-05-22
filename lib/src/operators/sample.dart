@@ -42,7 +42,7 @@ class SampleSubscriber<T, R> extends Subscriber<T>
 
   SampleSubscriber(Observer<T> observer, Observable<R> trigger)
       : super(observer) {
-    add(InnerObserver(trigger, this));
+    add(InnerObserver(this, trigger));
   }
 
   @override
@@ -52,15 +52,15 @@ class SampleSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Disposable subscription, void state, R value) => emitValue();
+  void notifyNext(Disposable disposable, void state, R value) => emitValue();
 
   @override
-  void notifyError(Disposable subscription, void state, Object error,
+  void notifyError(Disposable disposable, void state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Disposable subscription, void state) => emitValue();
+  void notifyComplete(Disposable disposable, void state) => emitValue();
 
   void emitValue() {
     if (hasLastValue) {

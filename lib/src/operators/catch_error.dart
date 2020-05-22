@@ -46,19 +46,18 @@ class CatchErrorSubscriber<T> extends Subscriber<T>
       doError(handlerEvent.error, handlerEvent.stackTrace);
     } else {
       final observable = handlerEvent.value ?? empty<T>();
-      add(InnerObserver(observable, this));
+      add(InnerObserver(this, observable));
     }
   }
 
   @override
-  void notifyNext(Disposable subscription, void state, T value) =>
-      doNext(value);
+  void notifyNext(Disposable disposable, void state, T value) => doNext(value);
 
   @override
-  void notifyError(Disposable subscription, void state, Object error,
+  void notifyError(Disposable disposable, void state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Disposable subscription, void state) => doComplete();
+  void notifyComplete(Disposable disposable, void state) => doComplete();
 }

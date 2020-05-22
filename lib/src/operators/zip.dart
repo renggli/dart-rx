@@ -46,13 +46,13 @@ class ZipSubscriber<T> extends Subscriber<Observable<T>>
       doComplete();
     } else {
       for (var i = 0; i < observables.length; i++) {
-        add(InnerObserver(observables[i], this, i));
+        add(InnerObserver(this, observables[i], i));
       }
     }
   }
 
   @override
-  void notifyNext(Disposable subscription, int index, T value) {
+  void notifyNext(Disposable disposable, int index, T value) {
     pending[index].addLast(value);
     if (pending.every((each) => each.isNotEmpty)) {
       doNext(List.generate(pending.length, (i) => pending[i].removeFirst(),
@@ -61,13 +61,13 @@ class ZipSubscriber<T> extends Subscriber<Observable<T>>
   }
 
   @override
-  void notifyError(Disposable subscription, int index, Object error,
+  void notifyError(Disposable disposable, int index, Object error,
       [StackTrace stackTrace]) {
     doError(error, stackTrace);
   }
 
   @override
-  void notifyComplete(Disposable subscription, int index) {
+  void notifyComplete(Disposable disposable, int index) {
     if (pending[index].isEmpty) {
       doComplete();
     }

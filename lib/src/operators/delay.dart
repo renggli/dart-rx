@@ -1,45 +1,98 @@
 library rx.operators.delay;
 
+import '../constructors/timer.dart';
+import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
+import '../disposables/composite.dart';
 import '../disposables/disposable.dart';
+import '../observers/inner.dart';
 import '../schedulers/scheduler.dart';
-import '../schedulers/settings.dart';
+import '../shared/functions.dart';
+
+typedef DurationSelector<T, R> = Observable<R> Function(T value);
 
 extension DelayOperator<T> on Observable<T> {
+  /// Delays the emission of items from this [Observable] until the Observable
+  /// returned from [durationSelector] triggers.
+  Observable<T> delay<R>(DurationSelector<T, R> durationSelector) =>
+      DelayObservable<T, R>(this, durationSelector);
+
   /// Delays the emission of items from this [Observable] by a given timeout.
-  Observable<T> delay(Duration delay, {Scheduler scheduler}) =>
-      DelayObservable<T>(this, scheduler ?? defaultScheduler, delay);
+  Observable<T> delayTime(Duration duration, {Scheduler scheduler}) =>
+      delay<int>(
+          constantFunction1(timer(delay: duration, scheduler: scheduler)));
 }
 
-class DelayObservable<T> extends Observable<T> {
+class DelayObservable<T, R> extends Observable<T> {
   final Observable<T> delegate;
-  final Scheduler scheduler;
-  final Duration delay;
+  final DurationSelector<T, R> durationSelector;
 
-  DelayObservable(this.delegate, this.scheduler, this.delay);
+  DelayObservable(this.delegate, this.durationSelector);
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    final subscriber = DelaySubscriber<T>(observer, scheduler, delay);
+    final subscriber = DelaySubscriber<T, R>(observer, durationSelector);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
 }
 
-class DelaySubscriber<T> extends Subscriber<T> {
-  final Scheduler scheduler;
-  final Duration delay;
+class DelaySubscriber<T, R> extends Subscriber<T> implements InnerEvents<R, T> {
+  final DurationSelector<T, R> durationSelector;
+  final CompositeDisposable pendingDisposables = CompositeDisposable();
 
-  DelaySubscriber(Observer<T> observer, this.scheduler, this.delay)
-      : super(observer);
+  bool hasCompleted = false;
+
+  DelaySubscriber(Observer<T> observer, this.durationSelector)
+      : super(observer) {
+    add(pendingDisposables);
+  }
 
   @override
-  void onNext(T value) =>
-      add(scheduler.scheduleRelative(delay, () => doNext(value)));
+  void onNext(T value) {
+    final durationEvent = Event.map1(durationSelector, value);
+    if (durationEvent is ErrorEvent) {
+      doError(durationEvent.error, durationEvent.stackTrace);
+    } else {
+      pendingDisposables.add(InnerObserver(this, durationEvent.value, value));
+    }
+  }
 
   @override
-  void onComplete() =>
-      add(scheduler.scheduleRelative(delay, () => doComplete()));
+  void onComplete() {
+    hasCompleted = true;
+    tryComplete();
+  }
+
+  @override
+  void notifyNext(Disposable disposable, T state, R object) {
+    emitValue(disposable, state);
+  }
+
+  @override
+  void notifyError(Disposable disposable, T state, Object error,
+      [StackTrace stackTrace]) {
+    doError(error, stackTrace);
+  }
+
+  @override
+  void notifyComplete(Disposable disposable, T state) {
+    emitValue(disposable, state);
+  }
+
+  void emitValue(Disposable disposable, T value) {
+    if (pendingDisposables.contains(disposable)) {
+      doNext(value);
+      pendingDisposables.remove(disposable);
+    }
+    tryComplete();
+  }
+
+  void tryComplete() {
+    if (hasCompleted && pendingDisposables.isEmpty) {
+      doComplete();
+    }
+  }
 }
