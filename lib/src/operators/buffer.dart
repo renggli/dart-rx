@@ -10,8 +10,12 @@ import '../schedulers/settings.dart';
 
 extension BufferOperator<T> on Observable<T> {
   /// Gathers the items emitted by this [Observable] and bundles these items
-  /// into a list when the buffer reaches a [maxLength], when the buffer reaches
-  /// a [maxAge], or when another [Observable] [trigger]s.
+  /// into a list until either
+  ///
+  /// - another [Observable] [trigger]s,
+  /// - the buffer reaches [maxLength], or
+  /// - the buffer reaches [maxAge].
+  ///
   Observable<List<T>> buffer(
           {Scheduler scheduler,
           Observable trigger,
@@ -84,11 +88,6 @@ class BufferSubscriber<T> extends Subscriber<T>
   @override
   void notifyComplete(Disposable disposable, void state) {}
 
-  void reset() {
-    buffer = [];
-    bufferBirth = null;
-  }
-
   bool get shouldFlush =>
       (maxLength != null && maxLength <= buffer.length) ||
       (maxAge != null &&
@@ -100,5 +99,10 @@ class BufferSubscriber<T> extends Subscriber<T>
       doNext(buffer);
       reset();
     }
+  }
+
+  void reset() {
+    buffer = [];
+    bufferBirth = null;
   }
 }

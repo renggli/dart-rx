@@ -51,7 +51,7 @@ class MergeObservable<T, R> extends Observable<R> {
 }
 
 class MergeSubscriber<T, R> extends Subscriber<T>
-    implements InnerEvents<R, int> {
+    implements InnerEvents<R, void> {
   final Map1<T, Observable<R>> project;
   final num concurrent;
 
@@ -69,7 +69,8 @@ class MergeSubscriber<T, R> extends Subscriber<T>
       if (projectEvent is ErrorEvent) {
         doError(projectEvent.error, projectEvent.stackTrace);
       } else {
-        add(InnerObserver(this, projectEvent.value, active++));
+        active++;
+        add(InnerObserver(this, projectEvent.value));
       }
     } else {
       buffer.addLast(value);
@@ -85,15 +86,15 @@ class MergeSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Disposable disposable, int state, R value) => doNext(value);
+  void notifyNext(Disposable disposable, void state, R value) => doNext(value);
 
   @override
-  void notifyError(Disposable disposable, int state, Object error,
+  void notifyError(Disposable disposable, void state, Object error,
           [StackTrace stackTrace]) =>
       doError(error, stackTrace);
 
   @override
-  void notifyComplete(Disposable disposable, int state) {
+  void notifyComplete(Disposable disposable, void state) {
     remove(disposable);
     active--;
     if (buffer.isNotEmpty) {
