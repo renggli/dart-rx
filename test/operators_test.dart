@@ -1510,6 +1510,33 @@ void main() {
     });
   });
   group('refCount', () {});
+  group('repeat', () {
+    test('empty', () {
+      final input = scheduler.cold<String>('-a-b-|');
+      final actual = input.repeat(0);
+      expect(actual, scheduler.isObservable<String>('|'));
+    });
+    test('once', () {
+      final input = scheduler.cold<String>('-a-b-|');
+      final actual = input.repeat(1);
+      expect(actual, scheduler.isObservable<String>('-a-b-|'));
+    });
+    test('twice', () {
+      final input = scheduler.cold<String>('-a-b-|');
+      final actual = input.repeat(2);
+      expect(actual, scheduler.isObservable<String>('-a-b--a-b-|'));
+    });
+    test('infinite', () {
+      final input = scheduler.cold<String>('-a-b-|');
+      final actual = input.repeat().take(5);
+      expect(actual, scheduler.isObservable<String>('-a-b--a-b--(a|)'));
+    });
+    test('error', () {
+      final input = scheduler.cold<String>('-a-b-#');
+      final actual = input.repeat();
+      expect(actual, scheduler.isObservable<String>('-a-b-#'));
+    });
+  });
   group('sample', () {
     test('samples on value trigger', () {
       final input = scheduler.cold<String>('-a-b-c---d-|');

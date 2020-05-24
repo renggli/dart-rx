@@ -29,6 +29,7 @@ export 'src/operators/multicast.dart' show MulticastOperator;
 export 'src/operators/observe_on.dart' show ObserveOnOperator;
 export 'src/operators/publish.dart' show PublishOperator;
 export 'src/operators/ref_count.dart' show RefCountOperator;
+export 'src/operators/repeat.dart' show RepeatOperator;
 export 'src/operators/sample.dart' show SampleOperator;
 export 'src/operators/scan.dart' show ScanOperator;
 export 'src/operators/single.dart' show SingleOperator;
