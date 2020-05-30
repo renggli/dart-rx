@@ -1,5 +1,5 @@
 name: rx
-version: 0.0.5
+version: 0.0.6
 
 homepage: https://github.com/renggli/dart-rx
 description: Reactive Extensions Library for Dart providing an API for asynchronous programming with observable streams.
