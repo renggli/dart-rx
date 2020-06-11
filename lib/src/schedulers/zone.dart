@@ -20,7 +20,7 @@ abstract class ZoneScheduler extends Scheduler {
 
   @override
   Disposable schedule(Callback0 callback) {
-    final action = SchedulerActionCallback(callback);
+    final action = SchedulerActionCallback0(callback);
     zone.scheduleMicrotask(action.run);
     return action;
   }

@@ -34,11 +34,11 @@ class AsyncScheduler extends Scheduler {
 
   @override
   Disposable schedule(Callback0 callback) =>
-      _scheduleAt(now, SchedulerActionCallback(callback));
+      _scheduleAt(now, SchedulerActionCallback0(callback));
 
   @override
   Disposable scheduleIteration(Predicate0 callback) {
-    final action = SchedulerActionCallbackWith((action) {
+    final action = SchedulerActionCallback1((action) {
       if (callback()) {
         _scheduleAt(now, action);
       } else {
@@ -51,7 +51,7 @@ class AsyncScheduler extends Scheduler {
 
   @override
   Disposable scheduleAbsolute(DateTime dateTime, Callback0 callback) =>
-      _scheduleAt(dateTime, SchedulerActionCallback(callback));
+      _scheduleAt(dateTime, SchedulerActionCallback0(callback));
 
   @override
   Disposable scheduleRelative(Duration duration, Callback0 callback) =>
@@ -60,7 +60,7 @@ class AsyncScheduler extends Scheduler {
   @override
   Disposable schedulePeriodic(
           Duration duration, Callback1<Disposable> callback) =>
-      _scheduleAt(now.add(duration), SchedulerActionCallbackWith((action) {
+      _scheduleAt(now.add(duration), SchedulerActionCallback1((action) {
         callback(action);
         if (!action.isDisposed) {
           _scheduleAt(now.add(duration), action);
