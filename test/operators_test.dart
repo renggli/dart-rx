@@ -2011,7 +2011,7 @@ void main() {
     test('values and then error', () {
       final values = [];
       final input = scheduler.cold('-ab--c(de)-#');
-      final actual = input.tap(Observer.nextIgnoringErrors(values.add));
+      final actual = input.tap(Observer.next(values.add, ignoreErrors: true));
       expect(actual, scheduler.isObservable('-ab--c(de)-#'));
       expect(values, ['a', 'b', 'c', 'd', 'e']);
     });

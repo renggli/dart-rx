@@ -16,20 +16,23 @@ abstract class Observer<T> implements Disposable {
           complete ?? nullFunction0);
 
   /// An observer that is only interested in values.
-  factory Observer.next(NextCallback<T> next) =>
-      BaseObserver<T>(next, defaultErrorHandler, nullFunction0);
-
-  /// An observer that is only interested in values and ignores errors.
-  factory Observer.nextIgnoringErrors(NextCallback<T> next) =>
-      BaseObserver<T>(next, nullFunction2, nullFunction0);
+  factory Observer.next(NextCallback<T> next, {bool ignoreErrors = false}) =>
+      BaseObserver<T>(
+          next,
+          ignoreErrors ? nullFunction1Optional1 : defaultErrorHandler,
+          nullFunction0);
 
   /// An observer that is only interested in failure.
   factory Observer.error(ErrorCallback error) =>
       BaseObserver<T>(nullFunction1, error, nullFunction0);
 
   /// An observer that is only interested in success.
-  factory Observer.complete(CompleteCallback complete) =>
-      BaseObserver<T>(nullFunction1, defaultErrorHandler, complete);
+  factory Observer.complete(CompleteCallback complete,
+          {bool ignoreErrors = false}) =>
+      BaseObserver<T>(
+          nullFunction1,
+          ignoreErrors ? nullFunction1Optional1 : defaultErrorHandler,
+          complete);
 
   /// Pass a value to the observer.
   void next(T value);
