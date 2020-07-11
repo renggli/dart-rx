@@ -15,7 +15,7 @@ class DisposedError extends Error {
   String toString() => 'DisposedError{}';
 }
 
-/// An error thrown when one or more errors have occured during the disposal of
+/// An error thrown when one or more errors have occurred during the disposal of
 /// resources.
 class DisposeError extends Error {
   static void checkList(List errors) {

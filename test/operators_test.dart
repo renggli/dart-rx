@@ -41,16 +41,16 @@ void main() {
       expect(actual, scheduler.isObservable('----b--|'));
     });
     test('throttling custom', () {
-      final auditdValues = <String>[];
+      final auditedValues = <String>[];
       final input = scheduler.cold('-ab----|');
       final actual = input.audit((value) {
-        auditdValues.add(value);
+        auditedValues.add(value);
         return timer(delay: scheduler.stepDuration * 3);
       });
       expect(actual, scheduler.isObservable('----b--|'));
-      expect(auditdValues, ['a']);
+      expect(auditedValues, ['a']);
     });
-    test('throttling with break inbetween', () {
+    test('throttling with break in-between', () {
       final input = scheduler.cold('-ab--------cd--------|');
       final actual = input.auditTime(scheduler.stepDuration * 3);
       expect(actual, scheduler.isObservable('----b---------d------|'));
@@ -60,12 +60,12 @@ void main() {
       final actual = input.auditTime(scheduler.stepDuration * 3);
       expect(actual, scheduler.isObservable('---|'));
     });
-    test('throwing auditr provider', () {
+    test('throwing audit provider', () {
       final input = scheduler.cold('-a---b---c---|');
       final actual = input.audit((value) => throw 'Error');
       expect(actual, scheduler.isObservable('-#'));
     });
-    test('throwing auditr observable', () {
+    test('throwing audit observable', () {
       final input = scheduler.cold('-a---b---c---|');
       final actual = input.audit((value) => throwError('Error'));
       expect(actual, scheduler.isObservable('-#'));
@@ -468,7 +468,7 @@ void main() {
       final actual = input.distinctUntilChanged();
       expect(actual, scheduler.isObservable('-a-b-a-b-|'));
     });
-    test('coustom key', () {
+    test('custom key', () {
       final input = scheduler.cold('-a-b-a-b-|');
       final actual = input.distinctUntilChanged();
       expect(actual, scheduler.isObservable('-a-b-a-b-|'));
@@ -927,7 +927,7 @@ void main() {
         final actual = scheduler.cold('-(ab)--|').flatMapTo(inner);
         expect(actual, scheduler.isObservable<String>('-(xx)-(yy)-|'));
       });
-      test('inner started overlappingly', () {
+      test('inner started overlapping', () {
         final inner = scheduler.cold<String>('x-y-|');
         final actual = scheduler.cold('-ab-|').flatMapTo(inner);
         expect(actual, scheduler.isObservable<String>('-xxyy-|'));
@@ -1342,7 +1342,7 @@ void main() {
       final actual = scheduler.cold('-(ab)--|').mergeMapTo(inner);
       expect(actual, scheduler.isObservable<String>('-(xx)-(yy)-|'));
     });
-    test('inner started overlappingly', () {
+    test('inner started overlapping', () {
       final inner = scheduler.cold<String>('x-y-|');
       final actual = scheduler.cold('-ab-|').mergeMapTo(inner);
       expect(actual, scheduler.isObservable<String>('-xxyy-|'));
@@ -2079,7 +2079,7 @@ void main() {
           input.throttleTime(scheduler.stepDuration * 3, trailing: false);
       expect(actual, scheduler.isObservable('-a-----|'));
     });
-    test('throttling with break inbetween', () {
+    test('throttling with break in-between', () {
       final input = scheduler.cold('-ab--------cd--------|');
       final actual = input.throttleTime(scheduler.stepDuration * 3);
       expect(actual, scheduler.isObservable('-a--b------c--d------|'));
@@ -2429,7 +2429,7 @@ void main() {
     });
   });
   group('where', () {
-    test('first value filterd', () {
+    test('first value filtered', () {
       final input = scheduler.cold('--a--b--|');
       final actual = input.where((value) => value != 'a');
       expect(actual, scheduler.isObservable('-----b--|'));
@@ -2452,7 +2452,7 @@ void main() {
   });
   group('whereType', () {
     const values = {'x': 1};
-    test('first value filterd', () {
+    test('first value filtered', () {
       final input = scheduler.cold<Object>('--x--a--|', values: values);
       final actual = input.whereType<String>();
       expect(actual, scheduler.isObservable<String>('-----a--|'));

@@ -248,7 +248,7 @@ void main() {
       ]);
       expect(actual, scheduler.isObservable<List<String>>('-----|'));
     });
-    test('completes when one never completes, but another is emptuy', () {
+    test('completes when one never completes, but another is empty', () {
       final actual = forkJoin<String>([
         scheduler.cold('--------------'),
         scheduler.cold('--|'),
