@@ -1,4 +1,4 @@
-Reactive Dart 
+Reactive Dart
 =============
 
 [![Pub Package](https://img.shields.io/pub/v/rx.svg)](https://pub.dev/packages/rx)
@@ -13,7 +13,7 @@ Reactive Extensions Library for Dart providing an API for asynchronous programmi
 
 Reactive is created in the style of [ReactiveX](http://reactivex.io/), and does not depend on Dart Streams. Though there are converters to and from `Stream` and `Future` instances. At this point this code is quite experimental, and might miss features or have serious bugs.
 
-This library is open source and well tested. Development happens on [GitHub](http://github.com/renggli/dart-rx). Feel free to report issues or create a pull-request there. General questions are best asked on [StackOverflow](http://stackoverflow.com/questions/tagged/rx+dart).
+This library is open source and well tested. Development happens on [GitHub](https://github.com/renggli/dart-rx). Feel free to report issues or create a pull-request there. General questions are best asked on [StackOverflow](https://stackoverflow.com/questions/tagged/rx+dart).
 
 The package is hosted on [dart packages](https://pub.dev/packages/rx). Up-to-date [class documentation](https://pub.dev/documentation/rx/latest/) is created with every release.
 
