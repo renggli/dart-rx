@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.7
+
+- Cleanup action callback code.
+- StackTrace is always optional.
+- Improve documentation.
+
 ## 0.0.6
 
 - Reworked or added time based operators: `audit`, `debounce`, `throttle`, and `sample`.

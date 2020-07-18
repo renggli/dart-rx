@@ -11,7 +11,7 @@ Reactive Dart
 
 Reactive Extensions Library for Dart providing an API for asynchronous programming with observable streams.
 
-Reactive is created in the style of [ReactiveX](http://reactivex.io/), and does not depend on Dart Streams. Though there are converters to and from `Stream` and `Future` instances. At this point this code is quite experimental, and might miss features or have serious bugs.
+Reactive is created in the style of [ReactiveX](https://reactivex.github.io/), and does not depend on Dart Streams. Though there are converters to and from `Stream` and `Future` instances. At this point this code is quite experimental, and might miss features or have serious bugs.
 
 This library is open source and well tested. Development happens on [GitHub](https://github.com/renggli/dart-rx). Feel free to report issues or create a pull-request there. General questions are best asked on [StackOverflow](https://stackoverflow.com/questions/tagged/rx+dart).
 
