@@ -5,9 +5,7 @@ import 'package:meta/meta.dart';
 import '../disposables/composite.dart';
 import 'observer.dart';
 
-class Subscriber<T> extends CompositeDisposable
-    with Observer<T>
-    implements Observer<T> {
+class Subscriber<T> extends CompositeDisposable with Observer<T> {
   @protected
   final Observer destination;
 

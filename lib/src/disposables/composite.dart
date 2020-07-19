@@ -9,7 +9,7 @@ class CompositeDisposable extends StatefulDisposable {
   final Set<Disposable> _disposables = Set.identity();
 
   CompositeDisposable([Iterable<Disposable> disposables]) : super() {
-    if (disposables != null && disposables.isNotEmpty) {
+    if (disposables != null) {
       disposables.forEach(add);
     }
   }
