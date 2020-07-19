@@ -1,15 +1,15 @@
 library rx.operators.dematerialize;
 
 import '../core/errors.dart';
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 
 extension DematerializeOperator<T> on Observable<Event<T>> {
-  /// Dematerialize events of this [Observable] into from a stream of [Event]
-  /// subclasses [NextEvent], [ErrorEvent] or [CompleteEvent].
+  /// Dematerialize events of this [Observable] into from a sequence of
+  /// [Event] objects.
   Observable<T> dematerialize() => DematerializeObservable<T>(this);
 }
 
@@ -31,11 +31,11 @@ class DematerializeSubscriber<T> extends Subscriber<Event<T>> {
 
   @override
   void onNext(Event<T> value) {
-    if (value is NextEvent<T>) {
+    if (value.isNext) {
       doNext(value.value);
-    } else if (value is ErrorEvent<T>) {
+    } else if (value.isError) {
       doError(value.error, value.stackTrace);
-    } else if (value is CompleteEvent<T>) {
+    } else if (value.isComplete) {
       doComplete();
     } else {
       doError(UnexpectedEventError(value), StackTrace.current);

@@ -1,11 +1,11 @@
 library rx.operators.last;
 
 import '../core/errors.dart';
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 import '../shared/functions.dart';
 
 extension LastOperator<T> on Observable<T> {
@@ -67,7 +67,7 @@ class LastSubscriber<T> extends Subscriber<T> {
   @override
   void onNext(T value) {
     final predicateEvent = Event.map1(predicate, value);
-    if (predicateEvent is ErrorEvent) {
+    if (predicateEvent.isError) {
       doError(predicateEvent.error, predicateEvent.stackTrace);
     } else if (predicateEvent.value) {
       lastValue = value;
@@ -82,7 +82,7 @@ class LastSubscriber<T> extends Subscriber<T> {
       doComplete();
     } else {
       final resultEvent = Event.map0(callback);
-      if (resultEvent is ErrorEvent) {
+      if (resultEvent.isError) {
         doError(resultEvent.error, resultEvent.stackTrace);
       } else {
         doNext(resultEvent.value);

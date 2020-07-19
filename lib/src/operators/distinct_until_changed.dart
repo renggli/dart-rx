@@ -1,10 +1,10 @@
 library rx.operators.distinct_until_changed;
 
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 import '../shared/functions.dart';
 
 extension DistinctUntilChangedOperator<T> on Observable<T> {
@@ -48,13 +48,13 @@ class DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
   @override
   void onNext(T value) {
     final keyEvent = Event.map1(key, value);
-    if (keyEvent is ErrorEvent) {
+    if (keyEvent.isError) {
       doError(keyEvent.error, keyEvent.stackTrace);
       return;
     }
     if (seenKey) {
       final compareEvent = Event.map2(compare, lastKey, keyEvent.value);
-      if (compareEvent is ErrorEvent) {
+      if (compareEvent.isError) {
         doError(compareEvent.error, compareEvent.stackTrace);
         return;
       } else if (compareEvent.value) {

@@ -1,9 +1,12 @@
-library rx.core.events;
+library rx.events.event;
 
 import 'package:meta/meta.dart';
 
+import '../core/observer.dart';
 import '../shared/functions.dart';
-import 'observer.dart';
+import 'complete.dart';
+import 'error.dart';
+import 'next.dart';
 
 /// Abstract immutable event object of type `T.
 @immutable
@@ -52,6 +55,16 @@ abstract class Event<T> {
   /// Default constructor for events.
   const Event();
 
+  /// Returns `true`, if this is an event with a [value].
+  bool get isNext => false;
+
+  /// Returns `true`, if this is an event with an [error] and an optional
+  /// [stackTrace].
+  bool get isError => false;
+
+  /// Returns `true`, if this is a completion event.
+  bool get isComplete => false;
+
   /// Returns the value of a [NextEvent], `null` otherwise.
   T get value => null;
 
@@ -63,67 +76,4 @@ abstract class Event<T> {
 
   /// Performs this event on the [observer].
   void observe(Observer<T> observer);
-}
-
-/// Event with value of type `T`.
-class NextEvent<T> extends Event<T> {
-  @override
-  final T value;
-
-  const NextEvent(this.value);
-
-  @override
-  void observe(Observer<T> observer) => observer.next(value);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || (other is NextEvent && value == other.value);
-
-  @override
-  int get hashCode => value.hashCode;
-
-  @override
-  String toString() => 'NextEvent{value: $value}';
-}
-
-/// Event of an error with optional stack trace of a sequence of type `T`.
-class ErrorEvent<T> extends Event<T> {
-  @override
-  final Object error;
-
-  @override
-  final StackTrace stackTrace;
-
-  const ErrorEvent(this.error, [this.stackTrace]);
-
-  @override
-  void observe(Observer<T> observer) => observer.error(error, stackTrace);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || (other is ErrorEvent && error == other.error);
-
-  @override
-  int get hashCode => error.hashCode;
-
-  @override
-  String toString() => 'ErrorEvent{error: $error, stackTrace: $stackTrace}';
-}
-
-/// Event of the completion of a sequence of type `T`.
-class CompleteEvent<T> extends Event<T> {
-  const CompleteEvent();
-
-  @override
-  void observe(Observer<T> observer) => observer.complete();
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is CompleteEvent;
-
-  @override
-  int get hashCode => 34822;
-
-  @override
-  String toString() => 'CompleteEvent{}';
 }

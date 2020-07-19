@@ -1,10 +1,10 @@
 library rx.operators.skip_while;
 
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 import '../shared/functions.dart';
 
 extension SkipWhileOperator<T> on Observable<T> {
@@ -37,7 +37,7 @@ class SkipWhileSubscriber<T> extends Subscriber<T> {
   void onNext(T value) {
     if (skipping) {
       final predicateEvent = Event.map1(predicate, value);
-      if (predicateEvent is ErrorEvent) {
+      if (predicateEvent.isError) {
         doError(predicateEvent.error, predicateEvent.stackTrace);
       } else if (!predicateEvent.value) {
         skipping = false;

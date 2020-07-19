@@ -2,8 +2,8 @@ library rx.testing.test_events;
 
 import 'package:collection/collection.dart';
 
-import '../core/events.dart';
 import '../core/observer.dart';
+import '../events/event.dart';
 
 const _equality = DeepCollectionEquality();
 
@@ -21,11 +21,11 @@ class TestEvent<T> extends Event<T> {
     if (identical(this, other)) {
       return true;
     } else if (other is TestEvent && index == other.index) {
-      if (event is NextEvent) {
-        return other.event is NextEvent &&
+      if (event.isNext) {
+        return other.event.isNext &&
             _equality.equals(event.value, other.event.value);
-      } else if (event is ErrorEvent) {
-        return other.event is ErrorEvent &&
+      } else if (event.isError) {
+        return other.event.isError &&
             event.error.toString() == other.event.error.toString();
       } else {
         return event == other.event;

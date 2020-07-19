@@ -1,11 +1,11 @@
 library rx.operators.first;
 
 import '../core/errors.dart';
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 import '../shared/functions.dart';
 
 extension FirstOperator<T> on Observable<T> {
@@ -64,7 +64,7 @@ class FirstSubscriber<T> extends Subscriber<T> {
   @override
   void onNext(T value) {
     final predicateEvent = Event.map1(predicate, value);
-    if (predicateEvent is ErrorEvent) {
+    if (predicateEvent.isError) {
       doError(predicateEvent.error, predicateEvent.stackTrace);
     } else if (predicateEvent.value) {
       doNext(value);
@@ -75,7 +75,7 @@ class FirstSubscriber<T> extends Subscriber<T> {
   @override
   void onComplete() {
     final resultEvent = Event.map0(callback);
-    if (resultEvent is ErrorEvent) {
+    if (resultEvent.isError) {
       doError(resultEvent.error, resultEvent.stackTrace);
     } else {
       doNext(resultEvent.value);

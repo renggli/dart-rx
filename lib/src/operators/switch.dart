@@ -1,12 +1,12 @@
 library rx.operators.switch_;
 
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 import '../disposables/disposed.dart';
 import '../disposables/sequential.dart';
+import '../events/event.dart';
 import '../observers/inner.dart';
 import '../shared/functions.dart';
 
@@ -55,7 +55,7 @@ class SwitchSubscriber<T, R> extends Subscriber<T>
   @override
   void onNext(T value) {
     final projectEvent = Event.map1(project, value);
-    if (projectEvent is ErrorEvent) {
+    if (projectEvent.isError) {
       doError(projectEvent.error, projectEvent.stackTrace);
     } else {
       subscription.current = InnerObserver(this, projectEvent.value);

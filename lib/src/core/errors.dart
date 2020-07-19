@@ -1,6 +1,6 @@
 library rx.core.errors;
 
-import 'events.dart';
+import '../events/event.dart';
 import 'observable.dart';
 
 /// An error thrown when an error was not handled.

@@ -1,6 +1,6 @@
 library rx.test.testing_test;
 
-import 'package:rx/core.dart';
+import 'package:rx/events.dart';
 import 'package:rx/src/testing/test_event_sequence.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';

@@ -1,11 +1,11 @@
 library rx.operators.catch_error;
 
 import '../constructors/empty.dart';
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 import '../observers/inner.dart';
 
 /// Handles errors, and returns a new [Observable] or `null`.
@@ -42,7 +42,7 @@ class CatchErrorSubscriber<T> extends Subscriber<T>
   @override
   void onError(Object error, [StackTrace stackTrace]) {
     final handlerEvent = Event.map2(handler, error, stackTrace);
-    if (handlerEvent is ErrorEvent) {
+    if (handlerEvent.isError) {
       doError(handlerEvent.error, handlerEvent.stackTrace);
     } else {
       add(InnerObserver(this, handlerEvent.value ?? empty<T>()));

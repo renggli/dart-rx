@@ -1,11 +1,11 @@
 library rx.operators.single;
 
 import '../core/errors.dart';
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 import '../shared/functions.dart';
 
 extension SingleOperator<T> on Observable<T> {
@@ -80,7 +80,7 @@ class SingleSubscriber<T> extends Subscriber<T> {
 
   void doCallback(Map0<T> callback) {
     final callbackEvent = Event.map0(callback);
-    if (callbackEvent is ErrorEvent) {
+    if (callbackEvent.isError) {
       doError(callbackEvent.error, callbackEvent.stackTrace);
     } else {
       doNext(callbackEvent.value);

@@ -1,14 +1,13 @@
 library rx.operators.materialize;
 
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 
 extension MaterializeOperator<T> on Observable<T> {
-  /// Materializes the events of this [Observable] as [Event] objects:
-  /// [NextEvent], [ErrorEvent] and [CompleteEvent].
+  /// Materializes the events of this [Observable] as [Event] objects.
   Observable<Event<T>> materialize() => MaterializeObservable<T>(this);
 }
 

@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:more/collection.dart';
 import 'package:more/hash.dart';
 
-import '../core/events.dart';
+import '../events/event.dart';
 import 'test_events.dart';
 
 const nextMarkers = 'abcdefghijklmnopqrstuvwxyz'
@@ -117,11 +117,11 @@ class TestEventSequence<T> {
             buffer.write(subscribeMarker);
           } else if (event is UnsubscribeEvent) {
             buffer.write(unsubscribeMarker);
-          } else if (event is CompleteEvent) {
+          } else if (event.isComplete) {
             buffer.write(completeMarker);
-          } else if (event is ErrorEvent) {
+          } else if (event.isError) {
             buffer.write(errorMarker);
-          } else if (event is NextEvent) {
+          } else if (event.isNext) {
             final value = event.value;
             if (values.containsValue(value)) {
               buffer.write(values.inverse[value]);

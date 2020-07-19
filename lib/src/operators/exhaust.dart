@@ -1,10 +1,10 @@
 library rx.operators.exhaust;
 
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 import '../observers/inner.dart';
 import '../shared/functions.dart';
 
@@ -64,7 +64,7 @@ class ExhaustSubscriber<T, R> extends Subscriber<T>
   void onNext(T value) {
     if (active < concurrent) {
       final projectEvent = Event.map1(project, value);
-      if (projectEvent is ErrorEvent) {
+      if (projectEvent.isError) {
         doError(projectEvent.error, projectEvent.stackTrace);
       } else {
         active++;

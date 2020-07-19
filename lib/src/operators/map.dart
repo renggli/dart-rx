@@ -1,10 +1,10 @@
 library rx.operators.map;
 
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 import '../shared/functions.dart';
 
 extension MapOperator<T> on Observable<T> {
@@ -40,7 +40,7 @@ class MapSubscriber<T, R> extends Subscriber<T> {
   @override
   void onNext(T value) {
     final transformEvent = Event.map1(transform, value);
-    if (transformEvent is ErrorEvent) {
+    if (transformEvent.isError) {
       doError(transformEvent.error, transformEvent.stackTrace);
     } else {
       doNext(transformEvent.value);

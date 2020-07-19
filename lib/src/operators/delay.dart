@@ -1,12 +1,12 @@
 library rx.operators.delay;
 
 import '../constructors/timer.dart';
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/composite.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 import '../observers/inner.dart';
 import '../schedulers/scheduler.dart';
 import '../shared/functions.dart';
@@ -53,7 +53,7 @@ class DelaySubscriber<T, R> extends Subscriber<T> implements InnerEvents<R, T> {
   @override
   void onNext(T value) {
     final durationEvent = Event.map1(durationSelector, value);
-    if (durationEvent is ErrorEvent) {
+    if (durationEvent.isError) {
       doError(durationEvent.error, durationEvent.stackTrace);
     } else {
       pendingDisposables.add(InnerObserver(this, durationEvent.value, value));

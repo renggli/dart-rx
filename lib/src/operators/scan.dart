@@ -1,10 +1,10 @@
 library rx.operators.scan;
 
-import '../core/events.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/event.dart';
 import '../shared/functions.dart';
 
 extension ScanOperator<T> on Observable<T> {
@@ -48,7 +48,7 @@ class ScanSubscriber<T, R> extends Subscriber<T> {
   void onNext(T value) {
     if (hasSeed) {
       final transformEvent = Event.map2(transform, seedValue, value);
-      if (transformEvent is ErrorEvent) {
+      if (transformEvent.isError) {
         doError(transformEvent.error, transformEvent.stackTrace);
       } else {
         seedValue = transformEvent.value;
