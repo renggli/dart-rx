@@ -13,6 +13,7 @@ class Subscriber<T> extends CompositeDisposable with Observer<T> {
 
   /// Receives the next value.
   @override
+  @nonVirtual
   void next(T value) {
     if (isDisposed) {
       return;
@@ -26,10 +27,12 @@ class Subscriber<T> extends CompositeDisposable with Observer<T> {
 
   /// Passes the next value to the destination.
   @protected
+  @mustCallSuper
   void doNext(Object value) => destination.next(value);
 
   /// Receives the error.
   @override
+  @nonVirtual
   void error(Object error, [StackTrace stackTrace]) {
     if (isDisposed) {
       return;
@@ -44,6 +47,7 @@ class Subscriber<T> extends CompositeDisposable with Observer<T> {
 
   /// Passes the error to the destination.
   @protected
+  @mustCallSuper
   void doError(Object error, [StackTrace stackTrace]) {
     destination.error(error, stackTrace);
     dispose();
@@ -51,6 +55,7 @@ class Subscriber<T> extends CompositeDisposable with Observer<T> {
 
   /// Receives the completion.
   @override
+  @nonVirtual
   void complete() {
     if (isDisposed) {
       return;
@@ -64,6 +69,7 @@ class Subscriber<T> extends CompositeDisposable with Observer<T> {
 
   /// Passes the completion to the destination.
   @protected
+  @mustCallSuper
   void doComplete() {
     destination.complete();
     dispose();
