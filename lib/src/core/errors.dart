@@ -1,6 +1,5 @@
 library rx.core.errors;
 
-import '../events/event.dart';
 import 'observable.dart';
 
 /// An error thrown when an error was not handled.
@@ -14,17 +13,6 @@ class UnhandledError extends Error {
 
   @override
   String toString() => 'UnhandledError{error: $error}';
-}
-
-/// An error throws when an operation receives an unknown [Event] type.
-class UnexpectedEventError extends Error {
-  final Event event;
-  final String message;
-
-  UnexpectedEventError(this.event, [this.message = 'Unexpected event.']);
-
-  @override
-  String toString() => 'UnexpectedEventError{event: $event, message: $message}';
 }
 
 /// An error thrown when an [Observable] was queried with too few elements.

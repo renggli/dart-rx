@@ -1,10 +1,10 @@
 library rx.operators.dematerialize;
 
-import '../core/errors.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../events/errors.dart';
 import '../events/event.dart';
 
 extension DematerializeOperator<T> on Observable<Event<T>> {
