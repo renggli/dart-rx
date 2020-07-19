@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.8
+
+- `catchError` is now properly typed by the exception.
+
 ## 0.0.7
 
 - Cleanup action callback code.

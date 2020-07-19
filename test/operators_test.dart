@@ -191,6 +191,55 @@ void main() {
           (error, [stackTrace]) => scheduler.cold('1--#', error: 'B'));
       expect(actual, scheduler.isObservable('--a--b--c--1--#', error: 'B'));
     });
+    test('only catches exception of the right type', () {
+      final input = scheduler.cold('--a--b--c--#', error: 'A');
+      final actual = input.catchError<ArgumentError>(
+          (error, [stackTrace]) => fail('Not supposed to be called'));
+      expect(actual, scheduler.isObservable('--a--b--c--#', error: 'A'));
+    });
+    test('matches the specified exception type', () {
+      final input =
+          scheduler.cold('--a--b--c--#', error: ArgumentError('Some problem'));
+      final actual = input.catchError<ArgumentError>((error, [stackTrace]) {
+        expect(error.message, 'Some problem');
+        throw 'A';
+      });
+      expect(actual, scheduler.isObservable('--a--b--c--#', error: 'A'));
+    });
+    test('nested handlers with types (first responding)', () {
+      final input =
+          scheduler.cold('--a--b--c--#', error: ArgumentError('Some problem'));
+      final actual = input.catchError<ArgumentError>((error, [stackTrace]) {
+        expect(error.message, 'Some problem');
+        throw 'A';
+      }).catchError<RangeError>(
+          (error, [stackTrace]) => fail('Not supposed to be called'));
+      expect(actual, scheduler.isObservable('--a--b--c--#', error: 'A'));
+    });
+    test('nested handlers with types (second responding)', () {
+      final input =
+          scheduler.cold('--a--b--c--#', error: ArgumentError('Some problem'));
+      final actual = input
+          .catchError<RangeError>(
+              (error, [stackTrace]) => fail('Not supposed to be called'))
+          .catchError<ArgumentError>((error, [stackTrace]) {
+        expect(error.message, 'Some problem');
+        throw 'A';
+      });
+      expect(actual, scheduler.isObservable('--a--b--c--#', error: 'A'));
+    });
+    test('nested handlers with types (first triggering second)', () {
+      final input =
+          scheduler.cold('--a--b--c--#', error: ArgumentError('Some problem'));
+      final actual = input.catchError<ArgumentError>((error, [stackTrace]) {
+        expect(error.message, 'Some problem');
+        throw RangeError('Other problem');
+      }).catchError<RangeError>((error, [stackTrace]) {
+        expect(error.message, 'Other problem');
+        throw 'A';
+      });
+      expect(actual, scheduler.isObservable('--a--b--c--#', error: 'A'));
+    });
   });
   group('compose', () {
     Transformer<dynamic, T> mapper<T>(T ignore, T value) => (observable) =>

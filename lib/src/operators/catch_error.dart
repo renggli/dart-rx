@@ -8,44 +8,50 @@ import '../disposables/disposable.dart';
 import '../events/event.dart';
 import '../observers/inner.dart';
 
-/// Handles errors, and returns a new [Observable] or `null`.
-typedef ErrorHandler<T> = Observable<T> Function(Object error,
+/// Handles errors of type [E], and returns a new [Observable] of type [T],
+/// or `null` if the [Observable] should be completed.
+typedef ErrorHandler<T, E> = Observable<T> Function(E error,
     [StackTrace stackTrace]);
 
 extension CatchErrorOperator<T> on Observable<T> {
-  /// Catches errors of this [Observable] and handles them by either returning
-  /// a new [Observable] or throwing an error.
-  Observable<T> catchError(ErrorHandler<T> handler) =>
-      CatchErrorObservable<T>(this, handler);
+  /// Catches errors of type [E] thrown by this [Observable] and handles them
+  /// by either returning a new [Observable] of type [T], throwing the same or
+  /// a different error, or returning `null` to complete the [Observable].
+  Observable<T> catchError<E>(ErrorHandler<T, E> handler) =>
+      CatchErrorObservable<T, E>(this, handler);
 }
 
-class CatchErrorObservable<T> extends Observable<T> {
+class CatchErrorObservable<T, E> extends Observable<T> {
   final Observable<T> delegate;
-  final ErrorHandler<T> handler;
+  final ErrorHandler<T, E> handler;
 
   CatchErrorObservable(this.delegate, this.handler);
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    final subscriber = CatchErrorSubscriber<T>(observer, handler);
+    final subscriber = CatchErrorSubscriber<T, E>(observer, handler);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
 }
 
-class CatchErrorSubscriber<T> extends Subscriber<T>
+class CatchErrorSubscriber<T, E> extends Subscriber<T>
     implements InnerEvents<T, void> {
-  final ErrorHandler<T> handler;
+  final ErrorHandler<T, E> handler;
 
   CatchErrorSubscriber(Observer<T> observer, this.handler) : super(observer);
 
   @override
   void onError(Object error, [StackTrace stackTrace]) {
-    final handlerEvent = Event.map2(handler, error, stackTrace);
-    if (handlerEvent.isError) {
-      doError(handlerEvent.error, handlerEvent.stackTrace);
+    if (error is E) {
+      final handlerEvent = Event.map2(handler, error, stackTrace);
+      if (handlerEvent.isError) {
+        doError(handlerEvent.error, handlerEvent.stackTrace);
+      } else {
+        add(InnerObserver(this, handlerEvent.value ?? empty<T>()));
+      }
     } else {
-      add(InnerObserver(this, handlerEvent.value ?? empty<T>()));
+      doError(error, stackTrace);
     }
   }
 
