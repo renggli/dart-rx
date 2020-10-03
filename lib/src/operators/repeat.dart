@@ -11,7 +11,9 @@ extension RepeatOperator<T> on Observable<T> {
   /// Resubscribes on this observable [count] times.
   Observable<T> repeat([int count = maxInteger]) => count <= 0
       ? empty()
-      : count == 1 ? this : RepeatObservable<T>(this, count);
+      : count == 1
+          ? this
+          : RepeatObservable<T>(this, count);
 }
 
 class RepeatObservable<T> extends Observable<T> {
