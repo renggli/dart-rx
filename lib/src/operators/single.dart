@@ -19,7 +19,8 @@ extension SingleOperator<T> on Observable<T> {
 
   /// Emits the single element of this [Observable], or emits `tooFew` if there
   /// was no element, or emits `tooMany` if there was more than 1 element.
-  Observable<T> singleOrDefault({T tooFew, T tooMany}) => singleOrElse(
+  Observable<T> singleOrDefault({required T tooFew, required T tooMany}) =>
+      singleOrElse(
         tooFew: constantFunction0(tooFew),
         tooMany: constantFunction0(tooMany),
       );
@@ -27,7 +28,8 @@ extension SingleOperator<T> on Observable<T> {
   /// Emits the single element of this [Observable], or evaluates the `tooFew`
   /// callback if there was no element, or evaluates the `tooMany` callback if
   /// there was more than 1 element.
-  Observable<T> singleOrElse({Map0<T> tooFew, Map0<T> tooMany}) =>
+  Observable<T> singleOrElse(
+          {required Map0<T> tooFew, required Map0<T> tooMany}) =>
       SingleObservable<T>(this, tooFew, tooMany);
 }
 
@@ -51,7 +53,7 @@ class SingleSubscriber<T> extends Subscriber<T> {
   final Map0<T> tooFewCallback;
   final Map0<T> tooManyCallback;
 
-  T singleValue;
+  T? singleValue;
   bool seenValue = false;
 
   SingleSubscriber(

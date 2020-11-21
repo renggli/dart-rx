@@ -8,7 +8,7 @@ import 'package:rx/operators.dart';
 
 Observer<T> printObserver<T>(String name) => Observer(
       next: (value) => print('$name.next($value)'),
-      error: (error, [stackTrace]) => print('$name.error($error)'),
+      error: (error, stackTrace) => print('$name.error($error)'),
       complete: () => print('$name.complete()'),
     );
 

@@ -17,10 +17,10 @@ extension BufferOperator<T> on Observable<T> {
   /// - the buffer reaches [maxAge].
   ///
   Observable<List<T>> buffer(
-          {Scheduler scheduler,
-          Observable trigger,
-          int maxLength,
-          Duration maxAge}) =>
+          {Scheduler? scheduler,
+          Observable? trigger,
+          int? maxLength,
+          Duration? maxAge}) =>
       BufferObservable<T>(
           this, scheduler ?? defaultScheduler, trigger, maxLength, maxAge);
 }
@@ -28,9 +28,9 @@ extension BufferOperator<T> on Observable<T> {
 class BufferObservable<T> extends Observable<List<T>> {
   final Observable<T> delegate;
   final Scheduler scheduler;
-  final Observable trigger;
-  final int maxLength;
-  final Duration maxAge;
+  final Observable? trigger;
+  final int? maxLength;
+  final Duration? maxAge;
 
   BufferObservable(
       this.delegate, this.scheduler, this.trigger, this.maxLength, this.maxAge);
@@ -47,18 +47,18 @@ class BufferObservable<T> extends Observable<List<T>> {
 class BufferSubscriber<T> extends Subscriber<T>
     implements InnerEvents<T, void> {
   final Scheduler scheduler;
-  final int maxLength;
-  final Duration maxAge;
+  final int? maxLength;
+  final Duration? maxAge;
 
-  List<T> buffer;
-  DateTime bufferBirth;
+  List<T> buffer = const [];
+  DateTime? bufferBirth;
 
   BufferSubscriber(Observer<List<T>> observer, this.scheduler,
-      Observable trigger, this.maxLength, this.maxAge)
+      Observable? trigger, this.maxLength, this.maxAge)
       : super(observer) {
     reset();
     if (trigger != null) {
-      add(InnerObserver(this, trigger));
+      add(InnerObserver(this, trigger, null));
     }
   }
 
@@ -82,17 +82,17 @@ class BufferSubscriber<T> extends Subscriber<T>
 
   @override
   void notifyError(Disposable disposable, void state, Object error,
-          [StackTrace stackTrace]) =>
+          StackTrace stackTrace) =>
       doError(error, stackTrace);
 
   @override
   void notifyComplete(Disposable disposable, void state) {}
 
   bool get shouldFlush =>
-      (maxLength != null && maxLength <= buffer.length) ||
+      (maxLength != null && maxLength! <= buffer.length) ||
       (maxAge != null &&
           bufferBirth != null &&
-          bufferBirth.add(maxAge).isBefore(scheduler.now));
+          bufferBirth!.add(maxAge!).isBefore(scheduler.now));
 
   void flush() {
     if (buffer.isNotEmpty) {

@@ -70,7 +70,7 @@ class MergeSubscriber<T, R> extends Subscriber<T>
         doError(projectEvent.error, projectEvent.stackTrace);
       } else {
         active++;
-        add(InnerObserver(this, projectEvent.value));
+        add(InnerObserver(this, projectEvent.value, null));
       }
     } else {
       buffer.addLast(value);
@@ -90,7 +90,7 @@ class MergeSubscriber<T, R> extends Subscriber<T>
 
   @override
   void notifyError(Disposable disposable, void state, Object error,
-          [StackTrace stackTrace]) =>
+          StackTrace stackTrace) =>
       doError(error, stackTrace);
 
   @override

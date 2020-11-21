@@ -1,9 +1,9 @@
 library rx.testing.test_event_sequence;
 
-import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 import 'package:more/collection.dart';
 import 'package:more/hash.dart';
+import 'package:more/more.dart';
 
 import '../events/event.dart';
 import 'test_events.dart';
@@ -84,7 +84,7 @@ class TestEventSequence<T> {
         default:
           final marble = marbles[i];
           final value = values.containsKey(marble) ? values[marble] : marble;
-          sequence.add(TestEvent(index, Event<T>.next(value)));
+          sequence.add(TestEvent(index, Event<T>.next(value as T)));
           break;
       }
       if (!withinGroup) {
@@ -100,12 +100,15 @@ class TestEventSequence<T> {
   /// Converts back the event sequence to a marble string.
   String toMarbles() {
     final buffer = StringBuffer();
-    final lastEvent = maxBy(events, (message) => message.index);
-    final lastIndex = lastEvent?.index ?? 0;
-    final eventsByIndex = groupBy(events, (message) => message.index);
+    final lastEvent = Ordering.natural<num>()
+        .onResultOf<TestEvent<T>>((event) => event.index)
+        .maxOf(events);
+    final lastIndex = lastEvent.index;
+    final eventsByIndex = ListMultimap<int, TestEvent<T>>.fromIterable(events,
+        key: (event) => event.index);
     for (var index = 0; index <= lastIndex; index++) {
       final eventsAtIndex = eventsByIndex[index];
-      if (eventsAtIndex == null || eventsAtIndex.isEmpty) {
+      if (eventsAtIndex.isEmpty) {
         buffer.write(advanceMarker);
       } else {
         if (eventsAtIndex.length > 1) {

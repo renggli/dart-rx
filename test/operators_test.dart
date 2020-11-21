@@ -162,13 +162,13 @@ void main() {
   group('catchError', () {
     test('silent', () {
       final input = scheduler.cold('--a--b--c--|');
-      final actual = input.catchError(
-          (error, [stackTrace]) => fail('Not supposed to be called'));
+      final actual = input
+          .catchError((error, stackTrace) => fail('Not supposed to be called'));
       expect(actual, scheduler.isObservable('--a--b--c--|'));
     });
     test('completes', () {
       final input = scheduler.cold('--a--b--c--#', error: 'A');
-      final actual = input.catchError((error, [stackTrace]) {
+      final actual = input.catchError((error, stackTrace) {
         expect(error, 'A');
         return null;
       });
@@ -176,31 +176,31 @@ void main() {
     });
     test('throws different exception', () {
       final input = scheduler.cold('--a--b--c--#', error: 'A');
-      final actual = input.catchError((error, [stackTrace]) => throw 'B');
+      final actual = input.catchError((error, stackTrace) => throw 'B');
       expect(actual, scheduler.isObservable('--a--b--c--#', error: 'B'));
     });
     test('produces alternate observable', () {
       final input = scheduler.cold('--a--b--c--#', error: 'A');
-      final actual = input
-          .catchError((error, [stackTrace]) => scheduler.cold('1--2--3--|'));
+      final actual =
+          input.catchError((error, stackTrace) => scheduler.cold('1--2--3--|'));
       expect(actual, scheduler.isObservable('--a--b--c--1--2--3--|'));
     });
     test('produces alternate observable that throws', () {
       final input = scheduler.cold('--a--b--c--#', error: 'A');
       final actual = input.catchError(
-          (error, [stackTrace]) => scheduler.cold('1--#', error: 'B'));
+          (error, stackTrace) => scheduler.cold('1--#', error: 'B'));
       expect(actual, scheduler.isObservable('--a--b--c--1--#', error: 'B'));
     });
     test('only catches exception of the right type', () {
       final input = scheduler.cold('--a--b--c--#', error: 'A');
       final actual = input.catchError<ArgumentError>(
-          (error, [stackTrace]) => fail('Not supposed to be called'));
+          (error, stackTrace) => fail('Not supposed to be called'));
       expect(actual, scheduler.isObservable('--a--b--c--#', error: 'A'));
     });
     test('matches the specified exception type', () {
       final input =
           scheduler.cold('--a--b--c--#', error: ArgumentError('Some problem'));
-      final actual = input.catchError<ArgumentError>((error, [stackTrace]) {
+      final actual = input.catchError<ArgumentError>((error, stackTrace) {
         expect(error.message, 'Some problem');
         throw 'A';
       });
@@ -209,11 +209,11 @@ void main() {
     test('nested handlers with types (first responding)', () {
       final input =
           scheduler.cold('--a--b--c--#', error: ArgumentError('Some problem'));
-      final actual = input.catchError<ArgumentError>((error, [stackTrace]) {
+      final actual = input.catchError<ArgumentError>((error, stackTrace) {
         expect(error.message, 'Some problem');
         throw 'A';
       }).catchError<RangeError>(
-          (error, [stackTrace]) => fail('Not supposed to be called'));
+          (error, stackTrace) => fail('Not supposed to be called'));
       expect(actual, scheduler.isObservable('--a--b--c--#', error: 'A'));
     });
     test('nested handlers with types (second responding)', () {
@@ -221,8 +221,8 @@ void main() {
           scheduler.cold('--a--b--c--#', error: ArgumentError('Some problem'));
       final actual = input
           .catchError<RangeError>(
-              (error, [stackTrace]) => fail('Not supposed to be called'))
-          .catchError<ArgumentError>((error, [stackTrace]) {
+              (error, stackTrace) => fail('Not supposed to be called'))
+          .catchError<ArgumentError>((error, stackTrace) {
         expect(error.message, 'Some problem');
         throw 'A';
       });
@@ -231,10 +231,10 @@ void main() {
     test('nested handlers with types (first triggering second)', () {
       final input =
           scheduler.cold('--a--b--c--#', error: ArgumentError('Some problem'));
-      final actual = input.catchError<ArgumentError>((error, [stackTrace]) {
+      final actual = input.catchError<ArgumentError>((error, stackTrace) {
         expect(error.message, 'Some problem');
         throw RangeError('Other problem');
-      }).catchError<RangeError>((error, [stackTrace]) {
+      }).catchError<RangeError>((error, stackTrace) {
         expect(error.message, 'Other problem');
         throw 'A';
       });
@@ -418,7 +418,7 @@ void main() {
       final delays = {'a': 6, 'b': 3, 'c': 0};
       final input = scheduler.cold('-a-b-c-|');
       final actual = input.delay(
-          (value) => timer(delay: scheduler.stepDuration * delays[value]));
+          (value) => timer(delay: scheduler.stepDuration * delays[value]!));
       expect(actual, scheduler.isObservable('-----cb(a|)'));
     });
     test('throwing delay provider', () {
@@ -437,7 +437,7 @@ void main() {
       'a': Event.next('a'),
       'b': Event.next('b'),
       'c': Event.complete(),
-      'e': Event.error('Error'),
+      'e': Event.error('Error', StackTrace.current),
       'f': TestEvent(0, Event.next('a')),
     };
     test('empty sequence', () {
@@ -466,7 +466,7 @@ void main() {
       expect(
           actual,
           scheduler.isObservable<String>('-a--b---#',
-              error: UnexpectedEventError(values['f'])));
+              error: UnexpectedEventError(values['f']!)));
     });
   });
   group('distinct', () {
@@ -530,7 +530,7 @@ void main() {
     });
     test('custom comparison', () {
       final input = scheduler.cold<String>('-(aAaA)-(BbBb)-|');
-      final actual = input.distinctUntilChanged(
+      final actual = input.distinctUntilChanged<String>(
           compare: (a, b) => a.toLowerCase() == b.toLowerCase());
       expect(actual, scheduler.isObservable<String>('-a-B-|'));
     });
@@ -542,7 +542,8 @@ void main() {
     });
     test('custom key', () {
       final input = scheduler.cold<String>('-(aAaA)-(BbBb)-|');
-      final actual = input.distinctUntilChanged(key: (a) => a.toLowerCase());
+      final actual =
+          input.distinctUntilChanged<String>(key: (a) => a.toLowerCase());
       expect(actual, scheduler.isObservable<String>('-a-B-|'));
     });
     test('custom key throws', () {
@@ -1270,7 +1271,7 @@ void main() {
       'a': Event.next('a'),
       'b': Event.next('b'),
       'c': Event.complete(),
-      'e': Event.error('Error'),
+      'e': Event.error('Error', StackTrace.current),
     };
     test('empty sequence', () {
       final input = scheduler.cold<String>('-|');
@@ -1621,7 +1622,7 @@ void main() {
         final actual = input.reduce((previous, value) => '$previous$value');
         expect(
             actual,
-            scheduler.isObservable('-x--y---z-|', values: {
+            scheduler.isObservable<String?>('-x--y---z-|', values: {
               'x': 'a',
               'y': 'ab',
               'z': 'abc',
@@ -1632,7 +1633,7 @@ void main() {
         final actual = input.reduce((previous, value) => '$previous$value');
         expect(
             actual,
-            scheduler.isObservable('-x--y---z-#', values: {
+            scheduler.isObservable<String?>('-x--y---z-#', values: {
               'x': 'a',
               'y': 'ab',
               'z': 'abc',
@@ -1641,7 +1642,7 @@ void main() {
       test('error in computation', () {
         final input = scheduler.cold<String>('-a-b-c-|');
         final actual = input.reduce((previous, value) => throw 'Error');
-        expect(actual, scheduler.isObservable<String>('-a-#'));
+        expect(actual, scheduler.isObservable<String?>('-a-#'));
       });
     });
     group('fold', () {
@@ -1669,7 +1670,7 @@ void main() {
       });
       test('type transformation', () {
         final input = scheduler.cold<String>('-a--b---c-|');
-        final actual = input.fold(
+        final actual = input.fold<List<String>>(
             <String>[], (previous, value) => <String>[...previous, value]);
         expect(
             actual,
@@ -2044,12 +2045,12 @@ void main() {
       expect(completed, isTrue);
     });
     test('only error', () {
-      Object erred;
+      late Object seen;
       final input = scheduler.cold('--#');
       final actual =
-          input.tap(Observer.error((error, [stack]) => erred = error));
+          input.tap(Observer.error((error, stackTrace) => seen = error));
       expect(actual, scheduler.isObservable('--#'));
-      expect(erred, 'Error');
+      expect(seen, 'Error');
     });
     test('mirrors all values', () {
       final values = [];
@@ -2078,7 +2079,7 @@ void main() {
     test('error during error', () {
       final customError = Exception('My Error');
       final input = scheduler.cold('-a-b-c-#');
-      final actual = input.tap(Observer.error((error, [stack]) {
+      final actual = input.tap(Observer.error((error, stackTrace) {
         expect(error, 'Error');
         throw customError;
       }));

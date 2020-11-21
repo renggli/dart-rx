@@ -81,33 +81,33 @@ void main() {
   });
   group('concat', () {
     test('elements from 3 different sources', () {
-      final actual = concat([
-        scheduler.cold('-a-b-c-|'),
-        scheduler.cold('-0-1-|'),
-        scheduler.cold('-w-x-y-z-|'),
+      final actual = concat<String>([
+        scheduler.cold<String>('-a-b-c-|'),
+        scheduler.cold<String>('-0-1-|'),
+        scheduler.cold<String>('-w-x-y-z-|'),
       ]);
-      expect(actual, scheduler.isObservable('-a-b-c--0-1--w-x-y-z-|'));
+      expect(actual, scheduler.isObservable<String>('-a-b-c--0-1--w-x-y-z-|'));
     });
     test('elements from 3 same sources', () {
-      final source = scheduler.cold('--i-j-|');
-      final actual = concat([source, source, source]);
-      expect(actual, scheduler.isObservable('--i-j---i-j---i-j-|'));
+      final source = scheduler.cold<String>('--i-j-|');
+      final actual = concat<String>([source, source, source]);
+      expect(actual, scheduler.isObservable<String>('--i-j---i-j---i-j-|'));
     });
     test('no elements from empty sources', () {
-      final actual = concat([
-        scheduler.cold('--|'),
-        scheduler.cold('---|'),
-        scheduler.cold('-|'),
+      final actual = concat<String>([
+        scheduler.cold<String>('--|'),
+        scheduler.cold<String>('---|'),
+        scheduler.cold<String>('-|'),
       ]);
-      expect(actual, scheduler.isObservable('------|'));
+      expect(actual, scheduler.isObservable<String>('------|'));
     });
     test('no elements after error', () {
-      final actual = concat([
-        scheduler.cold('-a-|'),
-        scheduler.cold('-#'),
-        scheduler.cold('-b-|'),
+      final actual = concat<String>([
+        scheduler.cold<String>('-a-|'),
+        scheduler.cold<String>('-#'),
+        scheduler.cold<String>('-b-|'),
       ]);
-      expect(actual, scheduler.isObservable('-a--#'));
+      expect(actual, scheduler.isObservable<String>('-a--#'));
     });
   });
   group('create', () {
@@ -123,7 +123,7 @@ void main() {
       final actual = create((emitter) {
         emitter.next('a');
         emitter.next('b');
-        emitter.error('Error');
+        emitter.error('Error', StackTrace.current);
       });
       expect(actual, scheduler.isObservable('(ab#)'));
     });
@@ -161,7 +161,7 @@ void main() {
       var seen = false;
       final actual = defer<String>(() {
         seen = true;
-        return null;
+        return empty<String>();
       });
       expect(seen, isFalse);
       expect(actual, scheduler.isObservable<String>('|'));
@@ -199,18 +199,6 @@ void main() {
           actual,
           scheduler.isObservable('--------------(x|)', values: {
             'x': ['d', 'b', '3']
-          }));
-    });
-    test('accepts null values', () {
-      final actual = forkJoin<String>([
-        scheduler.cold('--a--b--c--d--|'),
-        scheduler.cold('(b|)', values: {'b': null}),
-        scheduler.cold('--1--2--3--|'),
-      ]);
-      expect(
-          actual,
-          scheduler.isObservable<List<String>>('--------------(x|)', values: {
-            'x': ['d', null, '3']
           }));
     });
     test('accepts a single observable', () {
@@ -291,24 +279,19 @@ void main() {
       final actual = just('a');
       expect(actual, scheduler.isObservable<String>('(a|)'));
     });
-    test('immediately emits null', () {
-      final actual = just<String>(null);
-      expect(
-          actual, scheduler.isObservable<String>('(a|)', values: {'a': null}));
-    });
     test('synchronous by default', () {
       final actual = just('a');
-      String seenValue;
-      actual.subscribe(Observer.next((value) => seenValue = value));
-      expect(seenValue, 'a');
+      late String seen;
+      actual.subscribe(Observer.next((value) => seen = value));
+      expect(seen, 'a');
     });
     test('asynchronous with custom scheduler', () {
       final actual = just('a', scheduler: scheduler);
-      String seenValue;
-      actual.subscribe(Observer.next((value) => seenValue = value));
-      expect(seenValue, isNull);
+      String? seen;
+      actual.subscribe(Observer.next((value) => seen = value));
+      expect(seen, isNull);
       scheduler.flush();
-      expect(seenValue, 'a');
+      expect(seen, 'a');
     });
   });
   group('merge', () {
@@ -350,7 +333,7 @@ void main() {
       final actual = never();
       final subscription = actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
-        error: (error, [stack]) => fail('No error expected'),
+        error: (error, stackTrace) => fail('No error expected'),
         complete: () => fail('No completion expected'),
       ));
       expect(subscription.isDisposed, isTrue);
@@ -365,18 +348,18 @@ void main() {
     test('synchronous by default', () {
       final error = Exception('My Error');
       final actual = throwError(error);
-      Exception seenError;
-      actual.subscribe(Observer.error((error, [stack]) => seenError = error));
-      expect(seenError, error);
+      late Object seen;
+      actual.subscribe(Observer.error((error, stackTrace) => seen = error));
+      expect(seen, error);
     });
     test('asynchronous with custom scheduler', () {
       final error = Exception('My Error');
       final actual = throwError(error, scheduler: scheduler);
-      Exception seenError;
-      actual.subscribe(Observer.error((error, [stack]) => seenError = error));
-      expect(seenError, isNull);
+      Object? seen;
+      actual.subscribe(Observer.error((error, stackTrace) => seen = error));
+      expect(seen, isNull);
       scheduler.flush();
-      expect(seenError, error);
+      expect(seen, error);
     });
   });
   group('timer', () {

@@ -7,7 +7,7 @@ import '../schedulers/settings.dart';
 import 'functions.dart';
 
 // ignore: prefer_function_declarations_over_variables
-ErrorCallback _defaultErrorHandler = (error, [stackTrace]) =>
+ErrorCallback _defaultErrorHandler = (error, stackTrace) =>
     defaultScheduler.schedule(() => throw UnhandledError(error, stackTrace));
 
 /// Returns the current system error handler.

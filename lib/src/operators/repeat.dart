@@ -31,7 +31,7 @@ class RepeatSubscriber<T> extends Subscriber<T> {
   final Observable<T> delegate;
 
   int count;
-  Disposable iteration;
+  Disposable? iteration;
 
   RepeatSubscriber(this.delegate, Observer<T> observer, this.count)
       : super(observer) {
@@ -45,7 +45,7 @@ class RepeatSubscriber<T> extends Subscriber<T> {
 
   void restart() {
     if (iteration != null) {
-      remove(iteration);
+      remove(iteration!);
     }
     if (count > 0) {
       add(iteration = delegate.subscribe(this));

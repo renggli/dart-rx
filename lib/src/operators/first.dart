@@ -15,7 +15,7 @@ extension FirstOperator<T> on Observable<T> {
 
   /// Emits the first item of this [Observable], or the provided default
   /// [value] otherwise.
-  Observable<T> firstOrDefault([T value]) =>
+  Observable<T> firstOrDefault(T value) =>
       firstOrElse(constantFunction0(value));
 
   /// Emits the first item of this [Observable], or evaluate the provided
@@ -30,7 +30,7 @@ extension FirstOperator<T> on Observable<T> {
 
   /// Emits the first item of this [Observable] sequence matching the
   /// [predicate], or the provided default [value] otherwise.
-  Observable<T> findFirstOrDefault(Predicate1<T> predicate, [T value]) =>
+  Observable<T> findFirstOrDefault(Predicate1<T> predicate, T value) =>
       findFirstOrElse(predicate, constantFunction0(value));
 
   /// Emits the first item of this [Observable] sequence matching the

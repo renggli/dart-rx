@@ -5,13 +5,14 @@ import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
+import '../disposables/disposed.dart';
 import '../schedulers/scheduler.dart';
 import '../schedulers/settings.dart';
 
 extension TimeoutOperator<T> on Observable<T> {
   /// Completes with a [TimeoutError], if the observable does not complete
   /// within the given duration.
-  Observable<T> timeout(Duration duration, {Scheduler scheduler}) =>
+  Observable<T> timeout(Duration duration, {Scheduler? scheduler}) =>
       TimeoutObservable<T>(this, scheduler ?? defaultScheduler, duration);
 }
 
@@ -31,7 +32,7 @@ class TimeoutObservable<T> extends Observable<T> {
 }
 
 class TimeoutSubscriber<T> extends Subscriber<T> {
-  Disposable subscription;
+  Disposable subscription = const DisposedDisposable();
 
   TimeoutSubscriber(
       Observer<T> observer, Scheduler scheduler, Duration duration)
@@ -40,7 +41,7 @@ class TimeoutSubscriber<T> extends Subscriber<T> {
   }
 
   void onTimeout() {
-    doError(TimeoutError());
+    doError(TimeoutError(), StackTrace.current);
   }
 
   @override

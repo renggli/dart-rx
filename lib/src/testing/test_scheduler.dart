@@ -17,7 +17,7 @@ import 'test_event_sequence.dart';
 import 'test_events.dart';
 
 class TestScheduler extends AsyncScheduler {
-  DateTime _currentTime;
+  DateTime _currentTime = DateTime.now();
   Disposable _subscription = const DisposedDisposable();
 
   final List<Observable> coldObservables = [];
@@ -56,7 +56,7 @@ class TestScheduler extends AsyncScheduler {
   /// Advances the time to `dateTime`. If omitted advance to the timestamp of
   /// the next scheduled action. If no scheduled action is present, keep the
   /// current timestamp and only flush pending immediate actions.
-  void advance([DateTime dateTime]) {
+  void advance([DateTime? dateTime]) {
     _currentTime = dateTime ?? scheduled.firstKey() ?? _currentTime;
     flush();
   }

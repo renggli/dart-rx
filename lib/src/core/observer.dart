@@ -17,15 +17,14 @@ abstract class Observer<T> implements Disposable {
   /// - [complete] is a callback that is called when the observer successfully
   ///   terminates.
   factory Observer({
-    NextCallback<T> next,
-    ErrorCallback error,
-    CompleteCallback complete,
+    NextCallback<T>? next,
+    ErrorCallback? error,
+    CompleteCallback? complete,
     bool ignoreErrors = false,
   }) =>
       BaseObserver<T>(
           next ?? nullFunction1,
-          error ??
-              (ignoreErrors ? nullFunction1Optional1 : defaultErrorHandler),
+          error ?? (ignoreErrors ? nullFunction2 : defaultErrorHandler),
           complete ?? nullFunction0);
 
   /// An observer that is only interested in values.
@@ -33,9 +32,7 @@ abstract class Observer<T> implements Disposable {
   /// By default errors are passed to the [defaultErrorHandler], unless
   /// [ignoreErrors] is set to `true`.
   factory Observer.next(NextCallback<T> next, {bool ignoreErrors = false}) =>
-      BaseObserver<T>(
-          next,
-          ignoreErrors ? nullFunction1Optional1 : defaultErrorHandler,
+      BaseObserver<T>(next, ignoreErrors ? nullFunction2 : defaultErrorHandler,
           nullFunction0);
 
   /// An observer that is only interested in errors.
@@ -48,16 +45,14 @@ abstract class Observer<T> implements Disposable {
   /// [ignoreErrors] is set to `true`.
   factory Observer.complete(CompleteCallback complete,
           {bool ignoreErrors = false}) =>
-      BaseObserver<T>(
-          nullFunction1,
-          ignoreErrors ? nullFunction1Optional1 : defaultErrorHandler,
-          complete);
+      BaseObserver<T>(nullFunction1,
+          ignoreErrors ? nullFunction2 : defaultErrorHandler, complete);
 
   /// Pass a value to the observer.
   void next(T value);
 
   /// Pass an error to the observer.
-  void error(Object error, [StackTrace stackTrace]);
+  void error(Object error, StackTrace stackTrace);
 
   /// Pass completion to the observer.
   void complete();

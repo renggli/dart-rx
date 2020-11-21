@@ -20,6 +20,6 @@ extension PublishOperator<T> on Observable<T> {
 
   /// Creates a [ConnectableObservable] that replays all its previous values to
   /// new subscribers.
-  ConnectableObservable<T> publishReplay({int bufferSize}) =>
+  ConnectableObservable<T> publishReplay({int? bufferSize}) =>
       multicast(subject: ReplaySubject<T>(bufferSize: bufferSize));
 }

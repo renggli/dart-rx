@@ -20,7 +20,7 @@ extension DebounceOperator<T> on Observable<T> {
 
   /// Emits a value from this [Observable] only after a particular time span
   /// has passed without another emission.
-  Observable<T> debounceTime(Duration duration, {Scheduler scheduler}) =>
+  Observable<T> debounceTime(Duration duration, {Scheduler? scheduler}) =>
       debounce<int>(
           constantFunction1(timer(delay: duration, scheduler: scheduler)));
 }
@@ -43,9 +43,9 @@ class DebounceSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
   final DurationSelector<T, R> durationSelector;
 
-  T lastValue;
+  T? lastValue;
   bool hasLastValue = false;
-  Disposable debounced;
+  Disposable? debounced;
 
   DebounceSubscriber(Observer<T> observer, this.durationSelector)
       : super(observer);
@@ -72,8 +72,8 @@ class DebounceSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyError(Disposable disposable, void state, Object error,
-      [StackTrace stackTrace]) {
+  void notifyError(
+      Disposable disposable, void state, Object error, StackTrace stackTrace) {
     doError(error, stackTrace);
   }
 
@@ -86,7 +86,7 @@ class DebounceSubscriber<T, R> extends Subscriber<T>
     reset();
     lastValue = value;
     hasLastValue = true;
-    add(debounced = InnerObserver(this, duration));
+    add(debounced = InnerObserver(this, duration, null));
   }
 
   void reset() {

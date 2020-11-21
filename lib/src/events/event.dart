@@ -15,7 +15,7 @@ abstract class Event<T> {
   const factory Event.next(T value) = NextEvent<T>;
 
   /// Creates an error event.
-  const factory Event.error(Object object, [StackTrace stackTrace]) =
+  const factory Event.error(Object object, StackTrace stackTrace) =
       ErrorEvent<T>;
 
   /// Creates a completion event.
@@ -65,14 +65,15 @@ abstract class Event<T> {
   /// Returns `true`, if this is a completion event.
   bool get isComplete => false;
 
-  /// Returns the value of a [NextEvent], `null` otherwise.
-  T get value => null;
+  /// Returns the value of a [NextEvent], throws otherwise.
+  T get value => throw UnsupportedError('$this has no value.');
 
-  /// Returns the error of a [ErrorEvent], `null` otherwise.
-  Object get error => null;
+  /// Returns the error of a [ErrorEvent], throws otherwise.
+  Object get error => throw UnsupportedError('$this has no error.');
 
-  /// Returns the optional stack trace of a [ErrorEvent], `null` otherwise.
-  StackTrace get stackTrace => null;
+  /// Returns the optional stack trace of a [ErrorEvent], throws otherwise.
+  StackTrace get stackTrace =>
+      throw UnsupportedError('$this has no stack trace.');
 
   /// Performs this event on the [observer].
   void observe(Observer<T> observer);

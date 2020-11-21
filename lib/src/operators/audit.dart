@@ -21,7 +21,7 @@ extension AuditOperator<T> on Observable<T> {
 
   /// Ignores  values from this [Observable] for the given `duration`, then
   /// emits the most recent source value, then repeats the process.
-  Observable<T> auditTime(Duration duration, {Scheduler scheduler}) =>
+  Observable<T> auditTime(Duration duration, {Scheduler? scheduler}) =>
       audit<int>(
           constantFunction1(timer(delay: duration, scheduler: scheduler)));
 }
@@ -44,9 +44,9 @@ class AuditSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
   final DurationSelector<T, R> durationSelector;
 
-  T lastValue;
+  T? lastValue;
   bool hasLastValue = false;
-  Disposable throttled;
+  Disposable? throttled;
 
   AuditSubscriber(Observer<T> observer, this.durationSelector)
       : super(observer);
@@ -60,7 +60,7 @@ class AuditSubscriber<T, R> extends Subscriber<T>
       if (durationEvent.isError) {
         doError(durationEvent.error, durationEvent.stackTrace);
       } else {
-        add(throttled = InnerObserver(this, durationEvent.value));
+        add(throttled = InnerObserver(this, durationEvent.value, null));
       }
     }
   }
@@ -71,8 +71,8 @@ class AuditSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyError(Disposable disposable, void state, Object error,
-      [StackTrace stackTrace]) {
+  void notifyError(
+      Disposable disposable, void state, Object error, StackTrace stackTrace) {
     doError(error, stackTrace);
   }
 

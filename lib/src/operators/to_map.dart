@@ -11,36 +11,36 @@ import '../shared/functions.dart';
 extension ToMapOperator<T> on Observable<T> {
   /// Returns a [Map] from an observable sequence.
   Observable<Map<K, V>> toMap<K, V>(
-          {Map0<Map<K, V>> mapConstructor,
-          Map1<T, K> keySelector,
-          Map1<T, V> valueSelector}) =>
+          {Map0<Map<K, V>>? constructor,
+          Map1<T, K>? keySelector,
+          Map1<T, V>? valueSelector}) =>
       ToMapObservable<T, Map<K, V>, K, V>(
           this,
-          mapConstructor ?? () => <K, V>{},
+          constructor ?? () => <K, V>{},
           keySelector ?? (value) => value as K,
           valueSelector ?? (value) => value as V,
           (map, key, value) => map[key] = value);
 
   /// Returns a [ListMultimap] from an observable sequence.
   Observable<ListMultimap<K, V>> toListMultimap<K, V>(
-          {Map0<ListMultimap<K, V>> multimapConstructor,
-          Map1<T, K> keySelector,
-          Map1<T, V> valueSelector}) =>
+          {Map0<ListMultimap<K, V>>? constructor,
+          Map1<T, K>? keySelector,
+          Map1<T, V>? valueSelector}) =>
       ToMapObservable<T, ListMultimap<K, V>, K, V>(
           this,
-          multimapConstructor ?? () => ListMultimap<K, V>(),
+          constructor ?? () => ListMultimap<K, V>(),
           keySelector ?? (value) => value as K,
           valueSelector ?? (value) => value as V,
           (map, key, value) => map.add(key, value));
 
   /// Returns a [SetMultimap] from an observable sequence.
   Observable<SetMultimap<K, V>> toSetMultimap<K, V>(
-          {Map0<SetMultimap<K, V>> multimapConstructor,
-          Map1<T, K> keySelector,
-          Map1<T, V> valueSelector}) =>
+          {Map0<SetMultimap<K, V>>? constructor,
+          Map1<T, K>? keySelector,
+          Map1<T, V>? valueSelector}) =>
       ToMapObservable<T, SetMultimap<K, V>, K, V>(
           this,
-          multimapConstructor ?? () => SetMultimap<K, V>(),
+          constructor ?? () => SetMultimap<K, V>(),
           keySelector ?? (value) => value as K,
           valueSelector ?? (value) => value as V,
           (map, key, value) => map.add(key, value));
@@ -48,18 +48,18 @@ extension ToMapOperator<T> on Observable<T> {
 
 class ToMapObservable<T, M, K, V> extends Observable<M> {
   final Observable<T> delegate;
-  final Map0<M> mapConstructor;
+  final Map0<M> constructor;
   final Map1<T, K> keySelector;
   final Map1<T, V> valueSelector;
   final Callback3<M, K, V> addSelector;
 
-  ToMapObservable(this.delegate, this.mapConstructor, this.keySelector,
+  ToMapObservable(this.delegate, this.constructor, this.keySelector,
       this.valueSelector, this.addSelector);
 
   @override
   Disposable subscribe(Observer<M> observer) {
     final subscriber = ToMapSubscriber<T, M, K, V>(
-        observer, mapConstructor(), keySelector, valueSelector, addSelector);
+        observer, constructor(), keySelector, valueSelector, addSelector);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }

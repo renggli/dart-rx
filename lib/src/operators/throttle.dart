@@ -22,7 +22,7 @@ extension ThrottleOperator<T> on Observable<T> {
 
   /// Emits a value from this [Observable], then ignores values for `duration`.
   Observable<T> throttleTime(Duration duration,
-          {bool leading = true, bool trailing = true, Scheduler scheduler}) =>
+          {bool leading = true, bool trailing = true, Scheduler? scheduler}) =>
       throttle<int>(
           constantFunction1(timer(delay: duration, scheduler: scheduler)),
           leading: leading,
@@ -53,9 +53,9 @@ class ThrottleSubscriber<T, R> extends Subscriber<T>
   final bool leading;
   final bool trailing;
 
-  T lastValue;
+  T? lastValue;
   bool hasLastValue = false;
-  Disposable throttled;
+  Disposable? throttled;
 
   ThrottleSubscriber(
       Observer<T> observer, this.durationSelector, this.leading, this.trailing)
@@ -68,7 +68,7 @@ class ThrottleSubscriber<T, R> extends Subscriber<T>
       if (durationEvent.isError) {
         doError(durationEvent.error, durationEvent.stackTrace);
       } else {
-        add(throttled = InnerObserver(this, durationEvent.value));
+        add(throttled = InnerObserver(this, durationEvent.value, null));
       }
       if (leading) {
         dispatchValue(value);
@@ -87,7 +87,7 @@ class ThrottleSubscriber<T, R> extends Subscriber<T>
   @override
   void onComplete() {
     if (hasLastValue) {
-      dispatchValue(lastValue);
+      dispatchValue(lastValue as T);
     }
     doComplete();
   }
@@ -98,8 +98,8 @@ class ThrottleSubscriber<T, R> extends Subscriber<T>
   }
 
   @override
-  void notifyError(Disposable disposable, void state, Object error,
-      [StackTrace stackTrace]) {
+  void notifyError(
+      Disposable disposable, void state, Object error, StackTrace stackTrace) {
     doError(error, stackTrace);
   }
 
@@ -112,7 +112,7 @@ class ThrottleSubscriber<T, R> extends Subscriber<T>
     final current = throttled;
     if (current != null) {
       if (hasLastValue && trailing) {
-        dispatchValue(lastValue);
+        dispatchValue(lastValue as T);
       }
       current.dispose();
       remove(current);

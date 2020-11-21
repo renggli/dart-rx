@@ -109,7 +109,7 @@ void main() {
     final scheduler = AsyncScheduler();
     final tickScheduler = CurrentZoneScheduler();
     final tickDuration = Duration(milliseconds: 1);
-    Disposable ticker;
+    late Disposable ticker;
     setUp(() => ticker = tickScheduler.schedulePeriodic(
         tickDuration, (disposable) => scheduler.flush()));
     tearDown(() => ticker.dispose());

@@ -31,7 +31,7 @@ class MaterializeSubscriber<T> extends Subscriber<T> {
   void onNext(T value) => doNext(Event<T>.next(value));
 
   @override
-  void onError(Object error, [StackTrace stackTrace]) {
+  void onError(Object error, StackTrace stackTrace) {
     doNext(Event<T>.error(error, stackTrace));
     doComplete();
   }

@@ -28,12 +28,12 @@ class Subscriber<T> extends CompositeDisposable with Observer<T> {
   /// Passes the next value to the destination.
   @protected
   @mustCallSuper
-  void doNext(Object value) => destination.next(value);
+  void doNext(dynamic value) => destination.next(value);
 
   /// Receives the error.
   @override
   @nonVirtual
-  void error(Object error, [StackTrace stackTrace]) {
+  void error(Object error, StackTrace stackTrace) {
     if (isDisposed) {
       return;
     }
@@ -42,13 +42,13 @@ class Subscriber<T> extends CompositeDisposable with Observer<T> {
 
   /// Handles the error.
   @protected
-  void onError(Object error, [StackTrace stackTrace]) =>
+  void onError(Object error, StackTrace stackTrace) =>
       doError(error, stackTrace);
 
   /// Passes the error to the destination.
   @protected
   @mustCallSuper
-  void doError(Object error, [StackTrace stackTrace]) {
+  void doError(Object error, StackTrace stackTrace) {
     destination.error(error, stackTrace);
     dispose();
   }

@@ -11,7 +11,7 @@ class ErrorEvent<T> extends Event<T> {
   @override
   final StackTrace stackTrace;
 
-  const ErrorEvent(this.error, [this.stackTrace]);
+  const ErrorEvent(this.error, this.stackTrace);
 
   @override
   bool get isError => true;

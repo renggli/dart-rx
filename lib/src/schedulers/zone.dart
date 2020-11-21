@@ -59,7 +59,7 @@ abstract class ZoneScheduler extends Scheduler {
   @override
   Disposable schedulePeriodic(
       Duration duration, Callback1<Disposable> callback) {
-    TimerDisposable subscription;
+    late TimerDisposable subscription;
     return subscription = TimerDisposable(
         zone.createPeriodicTimer(duration, (timer) => callback(subscription)));
   }

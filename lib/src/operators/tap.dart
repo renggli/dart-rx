@@ -41,7 +41,7 @@ class TapSubscriber<T> extends Subscriber<T> {
   }
 
   @override
-  void onError(Object error, [StackTrace stackTrace]) {
+  void onError(Object error, StackTrace stackTrace) {
     try {
       handler.error(error, stackTrace);
     } catch (error, stackTrace) {

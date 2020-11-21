@@ -29,10 +29,10 @@ class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
     implements InnerEvents<T, int> {
   final List<Observable<T>> observables = [];
   final List<bool> hasValues = [];
-  final List<T> values = [];
+  final List<T?> values = [];
 
-  int active;
-  int pending;
+  late int active;
+  late int pending;
 
   CombineLatestSubscriber(Observer<List<T>> destination) : super(destination);
 
@@ -64,13 +64,14 @@ class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
       hasValues[index] = true;
     }
     if (pending == 0) {
-      doNext(List<T>.of(values, growable: false));
+      doNext(List<T>.generate(values.length, (index) => values[index]!,
+          growable: false));
     }
   }
 
   @override
-  void notifyError(Disposable disposable, int index, Object error,
-      [StackTrace stackTrace]) {
+  void notifyError(
+      Disposable disposable, int index, Object error, StackTrace stackTrace) {
     doError(error, stackTrace);
   }
 

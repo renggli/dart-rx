@@ -9,7 +9,7 @@ class TestSubscriber<T> extends Subscriber<T> {
   final TestScheduler scheduler;
 
   final DateTime _subscriptionTimestamp;
-  DateTime _unsubscriptionTimestamp;
+  DateTime? _unsubscriptionTimestamp;
 
   TestSubscriber(this.scheduler, Observer<T> destination)
       : _subscriptionTimestamp = scheduler.now,
@@ -21,5 +21,5 @@ class TestSubscriber<T> extends Subscriber<T> {
   DateTime get subscriptionTimestamp => _subscriptionTimestamp;
 
   /// Timestamp when the observable was unsubscribed from.
-  DateTime get unsubscriptionTimestamp => _unsubscriptionTimestamp;
+  DateTime? get unsubscriptionTimestamp => _unsubscriptionTimestamp;
 }

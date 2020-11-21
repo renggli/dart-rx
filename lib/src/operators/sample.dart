@@ -16,7 +16,7 @@ extension SampleOperator<T> on Observable<T> {
 
   /// Emits the most recently emitted value from this [Observable] within
   /// periodic time intervals.
-  Observable<T> sampleTime(Duration duration, {Scheduler scheduler}) =>
+  Observable<T> sampleTime(Duration duration, {Scheduler? scheduler}) =>
       sample<int>(
           timer(delay: duration, period: duration, scheduler: scheduler));
 }
@@ -37,12 +37,12 @@ class SampleObservable<T, R> extends Observable<T> {
 
 class SampleSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  T lastValue;
+  T? lastValue;
   bool hasLastValue = false;
 
   SampleSubscriber(Observer<T> observer, Observable<R> trigger)
       : super(observer) {
-    add(InnerObserver(this, trigger));
+    add(InnerObserver(this, trigger, null));
   }
 
   @override
@@ -56,7 +56,7 @@ class SampleSubscriber<T, R> extends Subscriber<T>
 
   @override
   void notifyError(Disposable disposable, void state, Object error,
-          [StackTrace stackTrace]) =>
+          StackTrace stackTrace) =>
       doError(error, stackTrace);
 
   @override

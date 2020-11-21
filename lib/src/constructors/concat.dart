@@ -8,7 +8,7 @@ import '../schedulers/scheduler.dart';
 /// Subscribe to the list of [Observable] in order, and when the previous one
 /// complete then subscribe to the next one.
 Observable<T> concat<T>(Iterable<Observable<T>> observables,
-        {Scheduler scheduler}) =>
+        {Scheduler? scheduler}) =>
     observables
         .toObservable(scheduler: scheduler)
         .mergeMap((observable) => observable, concurrent: 1);

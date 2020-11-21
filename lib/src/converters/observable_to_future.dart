@@ -18,7 +18,7 @@ extension ObservableToFuture<T> on Observable<T> {
         completer.complete(value);
         disposable.dispose();
       },
-      error: (error, [stackTrace]) {
+      error: (error, stackTrace) {
         completer.completeError(error, stackTrace);
         disposable.dispose();
       },

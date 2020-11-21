@@ -29,14 +29,14 @@ void main() {
       final actual = Future.value('a').toObservable();
       actual.subscribe(Observer(
         next: (value) => expect(value, 'a'),
-        error: (error, [stack]) => fail('No error expected'),
+        error: (error, stackTrace) => fail('No error expected'),
       ));
     });
     test('completes with error', () {
       final actual = Future<String>.error('Error').toObservable();
       actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
-        error: (error, [stack]) => expect(error, 'Error'),
+        error: (error, stackTrace) => expect(error, 'Error'),
       ));
     });
   });
@@ -46,7 +46,7 @@ void main() {
       final observed = <String>[];
       actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
-        error: (error, [stack]) => fail('No error expected'),
+        error: (error, stackTrace) => fail('No error expected'),
         complete: () => expect(observed, []),
       ));
     });
@@ -55,7 +55,7 @@ void main() {
       final observed = <String>[];
       actual.subscribe(Observer(
         next: (value) => observed.add(value),
-        error: (error, [stack]) => fail('No error expected'),
+        error: (error, stackTrace) => fail('No error expected'),
         complete: () => expect(observed, ['a', 'b', 'c']),
       ));
     });
@@ -63,7 +63,7 @@ void main() {
       final actual = Stream.fromFuture(Future.error('Error')).toObservable();
       actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
-        error: (error, [stack]) => expect(error, 'Error'),
+        error: (error, stackTrace) => expect(error, 'Error'),
         complete: () => fail('No completion expected'),
       ));
     });
@@ -71,7 +71,7 @@ void main() {
       final actual = Stream.fromIterable([1, 2, 3]).toObservable();
       final subscription = actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
-        error: (error, [stack]) => expect(error, 'Error'),
+        error: (error, stackTrace) => expect(error, 'Error'),
         complete: () => fail('No completion expected'),
       ));
       expect(subscription.isDisposed, isFalse);

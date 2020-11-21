@@ -22,8 +22,8 @@ class Subject<T>
   bool _isClosed = false;
   bool _hasStopped = false;
   bool _hasError = false;
-  Object _error;
-  StackTrace _stackTrace;
+  late Object _error;
+  late StackTrace _stackTrace;
 
   @override
   void next(T value) {
@@ -38,7 +38,7 @@ class Subject<T>
   }
 
   @override
-  void error(Object error, [StackTrace stackTrace]) {
+  void error(Object error, StackTrace stackTrace) {
     DisposedError.checkDisposed(this);
     if (_hasStopped) {
       return;
@@ -81,20 +81,20 @@ class Subject<T>
   }
 
   @protected
-  Disposable subscribeToActive(Observer observer) {
+  Disposable subscribeToActive(Observer<T> observer) {
     _observers.add(observer);
     return ActionDisposable(() => _observers.remove(observer));
   }
 
   @protected
   Disposable subscribeToError(
-      Observer observer, Object error, StackTrace stackTrace) {
+      Observer<T> observer, Object error, StackTrace stackTrace) {
     observer.error(error, stackTrace);
     return const DisposedDisposable();
   }
 
   @protected
-  Disposable subscribeToComplete(Observer observer) {
+  Disposable subscribeToComplete(Observer<T> observer) {
     observer.complete();
     return const DisposedDisposable();
   }

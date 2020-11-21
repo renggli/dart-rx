@@ -61,7 +61,7 @@ void main() {
       expectParse('-------a---b---#', [
         TestEvent(7, Event.next('a')),
         TestEvent(11, Event.next('b')),
-        TestEvent(15, Event.error('Error')),
+        TestEvent(15, Event.error('Error', StackTrace.current)),
       ]);
     });
     test('series of values with custom error', () {
@@ -71,7 +71,7 @@ void main() {
           [
             TestEvent(7, Event.next('a')),
             TestEvent(11, Event.next('b')),
-            TestEvent(15, Event.error(error)),
+            TestEvent(15, Event.error(error, StackTrace.current)),
           ],
           error: error);
     });

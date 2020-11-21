@@ -11,14 +11,14 @@ import '../schedulers/settings.dart';
 /// An [Observable] that starts emitting after `delay` and that emits an ever
 /// increasing numbers after each `period` thereafter.
 Observable<int> timer(
-    {Duration delay = Duration.zero, Duration period, Scheduler scheduler}) {
+    {Duration delay = Duration.zero, Duration? period, Scheduler? scheduler}) {
   ArgumentError.checkNotNull(delay, 'delay');
   return TimerObservable(delay, period, scheduler ?? defaultScheduler);
 }
 
 class TimerObservable with Observable<int> {
   final Duration delay;
-  final Duration period;
+  final Duration? period;
   final Scheduler scheduler;
 
   const TimerObservable(this.delay, this.period, this.scheduler);
@@ -33,7 +33,7 @@ class TimerObservable with Observable<int> {
         subscription.dispose();
       } else {
         var counter = 0;
-        subscription.add(scheduler.schedulePeriodic(period, (subscription) {
+        subscription.add(scheduler.schedulePeriodic(period!, (subscription) {
           observer.next(++counter);
         }));
       }

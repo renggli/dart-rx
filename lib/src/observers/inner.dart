@@ -9,9 +9,9 @@ import '../disposables/disposable.dart';
 class InnerObserver<T, S> with Observer<T> implements Observer<T> {
   final InnerEvents<T, S> _outer;
   final S _state;
-  Disposable _disposable;
+  late Disposable _disposable;
 
-  InnerObserver(this._outer, Observable<T> inner, [this._state]) {
+  InnerObserver(this._outer, Observable<T> inner, this._state) {
     _disposable = inner.subscribe(this);
   }
 
@@ -19,7 +19,7 @@ class InnerObserver<T, S> with Observer<T> implements Observer<T> {
   void next(T value) => _outer.notifyNext(this, _state, value);
 
   @override
-  void error(Object error, [StackTrace stackTrace]) =>
+  void error(Object error, StackTrace stackTrace) =>
       _outer.notifyError(this, _state, error, stackTrace);
 
   @override
@@ -36,8 +36,8 @@ class InnerObserver<T, S> with Observer<T> implements Observer<T> {
 abstract class InnerEvents<T, S> {
   void notifyNext(Disposable disposable, S state, T value);
 
-  void notifyError(Disposable disposable, S state, Object error,
-      [StackTrace stackTrace]);
+  void notifyError(
+      Disposable disposable, S state, Object error, StackTrace stackTrace);
 
   void notifyComplete(Disposable disposable, S state);
 }

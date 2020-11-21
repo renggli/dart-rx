@@ -14,13 +14,13 @@ class BehaviorSubject<T> extends Subject<T> {
   void next(T value) => super.next(_value = value);
 
   @override
-  Disposable subscribeToActive(Observer observer) {
+  Disposable subscribeToActive(Observer<T> observer) {
     observer.next(_value);
     return super.subscribeToActive(observer);
   }
 
   @override
-  Disposable subscribeToComplete(Observer observer) {
+  Disposable subscribeToComplete(Observer<T> observer) {
     observer.next(_value);
     return super.subscribeToComplete(observer);
   }

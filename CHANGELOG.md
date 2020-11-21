@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0
+
+- Dart 2.12 requirement and null-safety.
+
 ## 0.0.8
 
 - `catchError` is now properly typed by the exception.

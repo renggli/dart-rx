@@ -8,7 +8,7 @@ import 'subject.dart';
 
 /// A [Subject] that replays all its previous values to new subscribers.
 class ReplaySubject<T> extends Subject<T> {
-  final int bufferSize;
+  final int? bufferSize;
 
   final QueueList<T> _buffer;
 
@@ -17,7 +17,7 @@ class ReplaySubject<T> extends Subject<T> {
   @override
   void next(T value) {
     if (bufferSize != null) {
-      while (_buffer.length >= bufferSize) {
+      while (_buffer.length >= bufferSize!) {
         _buffer.removeFirst();
       }
     }
@@ -26,13 +26,13 @@ class ReplaySubject<T> extends Subject<T> {
   }
 
   @override
-  Disposable subscribeToActive(Observer observer) {
+  Disposable subscribeToActive(Observer<T> observer) {
     _buffer.forEach(observer.next);
     return super.subscribeToActive(observer);
   }
 
   @override
-  Disposable subscribeToComplete(Observer observer) {
+  Disposable subscribeToComplete(Observer<T> observer) {
     _buffer.forEach(observer.next);
     return super.subscribeToComplete(observer);
   }

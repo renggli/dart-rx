@@ -61,8 +61,8 @@ class ZipSubscriber<T> extends Subscriber<Observable<T>>
   }
 
   @override
-  void notifyError(Disposable disposable, int index, Object error,
-      [StackTrace stackTrace]) {
+  void notifyError(
+      Disposable disposable, int index, Object error, StackTrace stackTrace) {
     doError(error, stackTrace);
   }
 

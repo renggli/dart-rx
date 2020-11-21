@@ -9,7 +9,7 @@ import 'stateful.dart';
 class SequentialDisposable extends StatefulDisposable {
   Disposable _current = const DisposedDisposable();
 
-  SequentialDisposable([Disposable disposable]) {
+  SequentialDisposable([Disposable? disposable]) {
     if (disposable != null) {
       current = disposable;
     }

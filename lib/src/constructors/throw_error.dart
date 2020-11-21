@@ -8,9 +8,9 @@ import '../schedulers/scheduler.dart';
 
 /// An [Observable] that emits no items and immediately throws an error.
 Observable<T> throwError<T>(Object error,
-        {StackTrace stackTrace, Scheduler scheduler}) =>
-    ThrowErrorObservable<T>(
-        error, stackTrace, scheduler ?? const ImmediateScheduler());
+        {StackTrace? stackTrace, Scheduler? scheduler}) =>
+    ThrowErrorObservable<T>(error, stackTrace ?? StackTrace.current,
+        scheduler ?? const ImmediateScheduler());
 
 class ThrowErrorObservable<T> with Observable<T> {
   final Object error;

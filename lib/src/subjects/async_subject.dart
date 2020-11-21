@@ -7,7 +7,7 @@ import 'subject.dart';
 
 /// A [Subject] that emits its last value to all its subscribers on completion.
 class AsyncSubject<T> extends Subject<T> {
-  T _value;
+  late T _value;
   bool _hasValue = false;
   bool _hasCompleted = false;
 
@@ -20,7 +20,7 @@ class AsyncSubject<T> extends Subject<T> {
   }
 
   @override
-  void error(Object error, [StackTrace stackTrace]) {
+  void error(Object error, StackTrace stackTrace) {
     if (!_hasCompleted) {
       super.error(error, stackTrace);
     }

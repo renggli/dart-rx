@@ -12,10 +12,7 @@ class BaseObserver<T> with Observer<T> implements Observer<T> {
 
   bool _isClosed = false;
 
-  BaseObserver(this._next, this._error, this._complete)
-      : assert(_next != null, 'next handler is null'),
-        assert(_error != null, 'error handler is null'),
-        assert(_complete != null, 'complete handler is null');
+  BaseObserver(this._next, this._error, this._complete);
 
   @override
   void next(T value) {
@@ -28,7 +25,7 @@ class BaseObserver<T> with Observer<T> implements Observer<T> {
   void onNext(T value) => _next(value);
 
   @override
-  void error(Object error, [StackTrace stackTrace]) {
+  void error(Object error, StackTrace stackTrace) {
     if (!_isClosed) {
       _isClosed = true;
       onError(error, stackTrace);
@@ -36,7 +33,7 @@ class BaseObserver<T> with Observer<T> implements Observer<T> {
   }
 
   @protected
-  void onError(Object error, [StackTrace stackTrace]) =>
+  void onError(Object error, StackTrace stackTrace) =>
       _error(error, stackTrace);
 
   @override

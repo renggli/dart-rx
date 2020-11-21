@@ -8,7 +8,7 @@ import 'stateful.dart';
 class CompositeDisposable extends StatefulDisposable {
   final Set<Disposable> _disposables = Set.identity();
 
-  CompositeDisposable([Iterable<Disposable> disposables]) : super() {
+  CompositeDisposable([Iterable<Disposable>? disposables]) : super() {
     if (disposables != null) {
       disposables.forEach(add);
     }

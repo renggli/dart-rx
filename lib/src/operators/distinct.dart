@@ -12,14 +12,14 @@ import '../shared/functions.dart';
 extension DistinctOperator<T> on Observable<T> {
   /// Emits all items emitted by this [Observable] that are distinct from
   /// the previous ones.
-  Observable<T> distinct({Predicate2<T, T> equals, Map1<T, int> hashCode}) =>
+  Observable<T> distinct({Predicate2<T, T>? equals, Map1<T, int>? hashCode}) =>
       DistinctObservable<T>(this, equals, hashCode);
 }
 
 class DistinctObservable<T> extends Observable<T> {
   final Observable<T> delegate;
-  final Predicate2<T, T> equalsFunction;
-  final Map1<T, int> hashCodeFunction;
+  final Predicate2<T, T>? equalsFunction;
+  final Map1<T, int>? hashCodeFunction;
 
   DistinctObservable(this.delegate, this.equalsFunction, this.hashCodeFunction);
 
@@ -35,8 +35,8 @@ class DistinctObservable<T> extends Observable<T> {
 class DistinctSubscriber<T> extends Subscriber<T> {
   final Set<T> values;
 
-  DistinctSubscriber(Observer<T> observer, Predicate2<T, T> equalsFunction,
-      Map1<T, int> hashCodeFunction)
+  DistinctSubscriber(Observer<T> observer, Predicate2<T, T>? equalsFunction,
+      Map1<T, int>? hashCodeFunction)
       : values = HashSet(equals: equalsFunction, hashCode: hashCodeFunction),
         super(observer);
 

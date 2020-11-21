@@ -8,20 +8,19 @@ import '../shared/functions.dart';
 
 extension ToSetOperator<T> on Observable<T> {
   /// Returns a [Set] from an observable sequence.
-  Observable<Set<T>> toSet([Map0<Set<T>> setConstructor]) =>
-      ToSetObservable<T>(this, setConstructor);
+  Observable<Set<T>> toSet([Map0<Set<T>>? constructor]) =>
+      ToSetObservable<T>(this, constructor ?? () => <T>{});
 }
 
 class ToSetObservable<T> extends Observable<Set<T>> {
   final Observable<T> delegate;
-  final Map0<Set<T>> setConstructor;
+  final Map0<Set<T>> constructor;
 
-  ToSetObservable(this.delegate, this.setConstructor);
+  ToSetObservable(this.delegate, this.constructor);
 
   @override
   Disposable subscribe(Observer<Set<T>> observer) {
-    final subscriber = ToSetSubscriber<T>(
-        observer, setConstructor != null ? setConstructor() : <T>{});
+    final subscriber = ToSetSubscriber<T>(observer, constructor());
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }

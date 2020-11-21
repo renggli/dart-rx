@@ -9,8 +9,8 @@ import '../shared/functions.dart';
 
 extension ScanOperator<T> on Observable<T> {
   /// Combines a sequence of values by repeatedly applying [transform].
-  Observable<T> reduce(Map2<T, T, T> transform) =>
-      ScanObservable<T, T>(this, transform, false, null);
+  Observable<T?> reduce(Map2<T?, T, T?> transform) =>
+      ScanObservable<T, T?>(this, transform, false, null);
 
   /// Combines a sequence of values by repeatedly applying [transform], starting
   /// with the provided [initialValue].

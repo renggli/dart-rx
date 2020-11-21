@@ -11,7 +11,7 @@ extension DistinctUntilChangedOperator<T> on Observable<T> {
   /// Emits all items emitted by this [Observable] that are different from the
   /// previous one.
   Observable<T> distinctUntilChanged<K>(
-          {Map1<T, K> key, Predicate2<K, K> compare}) =>
+          {Map1<T, K>? key, Predicate2<K, K>? compare}) =>
       DistinctUntilChangedObservable<T, K>(
         this,
         key ?? (value) => value as K,
@@ -39,8 +39,8 @@ class DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
   final Map1<T, K> key;
   final Predicate2<K, K> compare;
 
+  K? lastKey;
   bool seenKey = false;
-  K lastKey;
 
   DistinctUntilChangedSubscriber(Observer<T> observer, this.key, this.compare)
       : super(observer);
@@ -53,7 +53,7 @@ class DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
       return;
     }
     if (seenKey) {
-      final compareEvent = Event.map2(compare, lastKey, keyEvent.value);
+      final compareEvent = Event.map2(compare, lastKey!, keyEvent.value);
       if (compareEvent.isError) {
         doError(compareEvent.error, compareEvent.stackTrace);
         return;

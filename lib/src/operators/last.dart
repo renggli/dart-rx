@@ -15,8 +15,7 @@ extension LastOperator<T> on Observable<T> {
 
   /// Emits the last item of this [Observable], or the provided default [value]
   /// otherwise.
-  Observable<T> lastOrDefault([T value]) =>
-      lastOrElse(constantFunction0(value));
+  Observable<T> lastOrDefault(T value) => lastOrElse(constantFunction0(value));
 
   /// Emits the last item of this [Observable], or evaluate the provided
   /// [callback] otherwise.
@@ -30,7 +29,7 @@ extension LastOperator<T> on Observable<T> {
 
   /// Emits the last item of this [Observable] matching the [predicate], or
   /// the provided default [value] otherwise.
-  Observable<T> findLastOrDefault(Predicate1<T> predicate, [T value]) =>
+  Observable<T> findLastOrDefault(Predicate1<T> predicate, T value) =>
       findLastOrElse(predicate, constantFunction0(value));
 
   /// Emits the last item of this [Observable] matching the [predicate], or
@@ -58,7 +57,7 @@ class LastSubscriber<T> extends Subscriber<T> {
   final Predicate1<T> predicate;
   final Map0<T> callback;
 
-  T lastValue;
+  T? lastValue;
   bool seenValue = false;
 
   LastSubscriber(Observer<T> observer, this.predicate, this.callback)

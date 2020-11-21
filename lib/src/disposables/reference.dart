@@ -7,7 +7,7 @@ import 'errors.dart';
 
 /// A [Disposable] holding a disposable value until disposed.
 abstract class ReferenceDisposable<T> implements Disposable {
-  T _value;
+  T? _value;
 
   ReferenceDisposable(this._value) : assert(_value != null, 'value is null');
 
@@ -16,9 +16,10 @@ abstract class ReferenceDisposable<T> implements Disposable {
 
   @override
   void dispose() {
-    if (_value != null) {
+    final value = _value;
+    if (value != null) {
       try {
-        onDispose(_value);
+        onDispose(value);
       } catch (error) {
         if (error is DisposeError) {
           rethrow;

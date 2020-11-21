@@ -24,9 +24,9 @@ class AsyncScheduler extends Scheduler {
   /// Performs all the eligible pending actions.
   void flush() {
     final current = now;
-    while (scheduled.isNotEmpty && !scheduled.firstKey().isAfter(current)) {
+    while (scheduled.isNotEmpty && !scheduled.firstKey()!.isAfter(current)) {
       final actions = scheduled.remove(scheduled.firstKey());
-      for (final action in actions) {
+      for (final action in actions ?? const []) {
         action.run();
       }
     }

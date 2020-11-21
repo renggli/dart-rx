@@ -11,7 +11,7 @@ Observable<List<T>> forkJoin<T>(List<Observable<T>> sources) => sources.isEmpty
     ? empty()
     : create<List<T>>((emitter) {
         var completed = 0, emitted = 0;
-        final values = List<T>.filled(sources.length, null, growable: false);
+        final values = List<T?>.filled(sources.length, null, growable: false);
         for (var i = 0; i < sources.length; i++) {
           var hasValue = false;
           emitter.add(sources[i].subscribe(Observer(
@@ -22,12 +22,14 @@ Observable<List<T>> forkJoin<T>(List<Observable<T>> sources) => sources.isEmpty
               }
               values[i] = value;
             },
-            error: (error, [stack]) => emitter.error(error, stack),
+            error: (error, stackTrace) => emitter.error(error, stackTrace),
             complete: () {
               completed++;
               if (completed == sources.length || !hasValue) {
                 if (emitted == sources.length) {
-                  emitter.next(values);
+                  emitter.next(List<T>.generate(
+                      values.length, (i) => values[i]!,
+                      growable: false));
                 }
                 emitter.complete();
               }

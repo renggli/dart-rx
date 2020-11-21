@@ -4,7 +4,7 @@ library rx.shared.functions;
 typedef NextCallback<T> = void Function(T value);
 
 /// Callback type used to complete a sequence of values with a failure.
-typedef ErrorCallback = void Function(Object error, [StackTrace stackTrace]);
+typedef ErrorCallback = void Function(Object error, StackTrace stackTrace);
 
 /// Callback type used to complete a sequence of values with a success.
 typedef CompleteCallback = void Function();
@@ -30,13 +30,11 @@ typedef Predicate3<T1, T2, T3> = bool Function(T1 arg1, T2 arg2, T3 arg3);
 /// The null functions.
 void nullFunction0() {}
 
-void nullFunction1(Object arg1) {}
+void nullFunction1<T1>(T1 arg1) {}
 
-void nullFunction1Optional1(Object arg1, [Object arg2]) {}
+void nullFunction2<T1, T2>(T1 arg1, T2 arg2) {}
 
-void nullFunction2(Object arg1, Object arg2) {}
-
-void nullFunction3(Object arg1, Object arg2, Object arg3) {}
+void nullFunction3<T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3) {}
 
 /// The identity function.
 T identityFunction<T>(T argument) => argument;
