@@ -7,7 +7,7 @@ Reactive Dart
 [![GitHub Issues](https://img.shields.io/github/issues/renggli/dart-rx.svg)](https://github.com/renggli/dart-rx/issues)
 [![GitHub Forks](https://img.shields.io/github/forks/renggli/dart-rx.svg)](https://github.com/renggli/dart-rx/network)
 [![GitHub Stars](https://img.shields.io/github/stars/renggli/dart-rx.svg)](https://github.com/renggli/dart-rx/stargazers)
-[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/renggli/dart-rx/master/LICENSE)
+[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/renggli/dart-rx/main/LICENSE)
 
 Reactive Extensions Library for Dart providing an API for asynchronous programming with observable streams.
 
@@ -19,4 +19,4 @@ The package is hosted on [dart packages](https://pub.dev/packages/rx). Up-to-dat
 
 ### License
 
-The MIT License, see [LICENSE](https://github.com/renggli/dart-rx/raw/master/LICENSE).
+The MIT License, see [LICENSE](https://github.com/renggli/dart-rx/raw/main/LICENSE).

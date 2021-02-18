@@ -1,15 +1,16 @@
 name: rx
-version: 0.1.0-nullsafety
+version: 0.1.0
 
 homepage: https://github.com/renggli/dart-rx
-description: Reactive Extensions Library for Dart providing an API for asynchronous programming with observable streams.
+description: Reactive Extensions Library for Dart providing an API for asynchronous programming
+  with observable streams.
 
 environment:
-  sdk: '>=2.12.0-0 <3.0.0'
+  sdk: '>=2.12.0-259.14.beta <3.0.0'
 dependencies:
-  collection: ^1.15.0-nullsafety
-  matcher: ^0.12.0-nullsafety
-  meta: ^1.3.0-nullsafety
-  more: ^3.0.0-nullsafety
+  collection: ^1.15.0
+  matcher: ^0.12.10
+  meta: ^1.3.0
+  more: ^3.0.0
 dev_dependencies:
-  test: ^1.16.0-nullsafety
+  test: ^1.16.2
