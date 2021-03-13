@@ -6,5 +6,3 @@ import 'subscriber.dart';
 
 typedef Operator<T, R> = Disposable Function(
     Observable<T> source, Subscriber<R> subscriber);
-
-typedef OperatorFunction<T, R> = Observable<R> Function(Observable<T> source);

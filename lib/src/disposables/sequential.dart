@@ -18,7 +18,6 @@ class SequentialDisposable extends StatefulDisposable {
   Disposable get current => _current;
 
   set current(Disposable disposable) {
-    ArgumentError.checkNotNull(disposable, 'disposable');
     if (isDisposed) {
       disposable.dispose();
       return;

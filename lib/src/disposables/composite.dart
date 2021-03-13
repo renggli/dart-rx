@@ -23,7 +23,6 @@ class CompositeDisposable extends StatefulDisposable {
   bool contains(Disposable disposable) => _disposables.contains(disposable);
 
   void add(Disposable disposable) {
-    ArgumentError.checkNotNull(disposable, 'disposable');
     if (isDisposed) {
       disposable.dispose();
       return;
@@ -35,7 +34,6 @@ class CompositeDisposable extends StatefulDisposable {
   }
 
   void remove(Disposable disposable) {
-    ArgumentError.checkNotNull(disposable, 'disposable');
     if (isDisposed) {
       return;
     }

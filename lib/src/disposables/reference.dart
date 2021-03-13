@@ -9,7 +9,7 @@ import 'errors.dart';
 abstract class ReferenceDisposable<T> implements Disposable {
   T? _value;
 
-  ReferenceDisposable(this._value) : assert(_value != null, 'value is null');
+  ReferenceDisposable(T value) : _value = value;
 
   @protected
   void onDispose(T value);

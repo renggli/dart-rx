@@ -18,7 +18,7 @@ class ImmediateScheduler extends Scheduler {
 
   @override
   Disposable scheduleIteration(Predicate0 callback) {
-    for (; callback();) {}
+    while (callback()) {}
     return const DisposedDisposable();
   }
 

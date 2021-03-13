@@ -11,10 +11,10 @@ import '../schedulers/settings.dart';
 /// An [Observable] that starts emitting after `delay` and that emits an ever
 /// increasing numbers after each `period` thereafter.
 Observable<int> timer(
-    {Duration delay = Duration.zero, Duration? period, Scheduler? scheduler}) {
-  ArgumentError.checkNotNull(delay, 'delay');
-  return TimerObservable(delay, period, scheduler ?? defaultScheduler);
-}
+        {Duration delay = Duration.zero,
+        Duration? period,
+        Scheduler? scheduler}) =>
+    TimerObservable(delay, period, scheduler ?? defaultScheduler);
 
 class TimerObservable with Observable<int> {
   final Duration delay;
