@@ -5,7 +5,7 @@ import 'disposable.dart';
 /// An error thrown when an operation has been performed on an
 /// disposed resource.
 class DisposedError extends Error {
-  static void checkDisposed(Disposable disposable) {
+  static void checkNotDisposed(Disposable disposable) {
     if (disposable.isDisposed) {
       throw DisposedError();
     }

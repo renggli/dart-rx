@@ -27,7 +27,7 @@ class Subject<T>
 
   @override
   void next(T value) {
-    DisposedError.checkDisposed(this);
+    DisposedError.checkNotDisposed(this);
     if (_hasStopped) {
       return;
     }
@@ -39,7 +39,7 @@ class Subject<T>
 
   @override
   void error(Object error, StackTrace stackTrace) {
-    DisposedError.checkDisposed(this);
+    DisposedError.checkNotDisposed(this);
     if (_hasStopped) {
       return;
     }
@@ -56,7 +56,7 @@ class Subject<T>
 
   @override
   void complete() {
-    DisposedError.checkDisposed(this);
+    DisposedError.checkNotDisposed(this);
     if (_hasStopped) {
       return;
     }
@@ -70,7 +70,7 @@ class Subject<T>
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    DisposedError.checkDisposed(this);
+    DisposedError.checkNotDisposed(this);
     if (_hasError) {
       return subscribeToError(observer, _error, _stackTrace);
     } else if (_hasStopped) {
