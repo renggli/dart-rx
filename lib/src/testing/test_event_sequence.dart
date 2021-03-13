@@ -1,5 +1,3 @@
-library rx.testing.test_event_sequence;
-
 import 'package:meta/meta.dart';
 import 'package:more/collection.dart';
 import 'package:more/hash.dart';

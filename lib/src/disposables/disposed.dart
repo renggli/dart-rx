@@ -1,5 +1,3 @@
-library rx.disposables.disposed;
-
 import 'disposable.dart';
 
 /// An already disposed [Disposable].

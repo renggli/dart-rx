@@ -1,5 +1,3 @@
-library rx.operators.combine_latest;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';

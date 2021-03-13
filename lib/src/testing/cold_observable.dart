@@ -1,5 +1,3 @@
-library rx.testing.cold_observable;
-
 import '../core/observer.dart';
 import '../disposables/disposable.dart';
 import 'test_event_sequence.dart';

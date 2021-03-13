@@ -1,5 +1,3 @@
-library rx.disposables;
-
 export 'src/disposables/action.dart';
 export 'src/disposables/composite.dart';
 export 'src/disposables/disposable.dart';

@@ -1,5 +1,3 @@
-library rx.disposables.action;
-
 import '../shared/functions.dart';
 import 'disposable.dart';
 import 'reference.dart';

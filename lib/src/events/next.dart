@@ -1,5 +1,3 @@
-library rx.events.next;
-
 import '../core/observer.dart';
 import 'event.dart';
 

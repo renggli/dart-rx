@@ -1,5 +1,3 @@
-library rx.testing.test_subscriber;
-
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/action.dart';

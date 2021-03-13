@@ -1,5 +1,3 @@
-library rx.operators.observe_on;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';

@@ -1,5 +1,3 @@
-library rx.disposables.stateful;
-
 import 'disposable.dart';
 
 /// A stateful [Disposable] that remembers if it has been disposed.

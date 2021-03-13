@@ -1,5 +1,3 @@
-library rx.testing.test_observable;
-
 import 'package:meta/meta.dart';
 
 import '../core/observable.dart';

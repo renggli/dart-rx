@@ -1,5 +1,3 @@
-library rx.observers.base;
-
 import 'package:meta/meta.dart';
 
 import '../core/observer.dart';

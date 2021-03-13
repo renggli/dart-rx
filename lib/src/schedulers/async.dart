@@ -1,5 +1,3 @@
-library rx.schedulers.async;
-
 import 'dart:collection';
 
 import 'package:meta/meta.dart';

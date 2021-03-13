@@ -1,5 +1,3 @@
-library rx.core.subject;
-
 import 'package:meta/meta.dart';
 
 import '../core/observable.dart';

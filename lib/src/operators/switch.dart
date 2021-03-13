@@ -1,5 +1,3 @@
-library rx.operators.switch_;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';

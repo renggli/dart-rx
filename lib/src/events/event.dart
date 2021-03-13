@@ -1,5 +1,3 @@
-library rx.events.event;
-
 import 'package:meta/meta.dart';
 
 import '../core/observer.dart';

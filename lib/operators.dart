@@ -1,5 +1,3 @@
-library rx.operators;
-
 export 'src/operators/audit.dart' show AuditOperator;
 export 'src/operators/buffer.dart' show BufferOperator;
 export 'src/operators/cast.dart' show CastOperator;

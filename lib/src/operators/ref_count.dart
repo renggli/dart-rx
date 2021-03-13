@@ -1,5 +1,3 @@
-library rx.operators.ref_count;
-
 import '../../observables.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';

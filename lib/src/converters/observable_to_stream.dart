@@ -1,5 +1,3 @@
-library rx.converters.observable_to_stream;
-
 import 'dart:async' show Stream, StreamController;
 
 import '../core/observable.dart';

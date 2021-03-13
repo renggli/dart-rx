@@ -1,5 +1,3 @@
-library rx.operators.take_last;
-
 import 'package:collection/collection.dart';
 
 import '../core/observable.dart';

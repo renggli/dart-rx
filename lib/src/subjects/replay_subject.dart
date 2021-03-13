@@ -1,5 +1,3 @@
-library rx.subjects.replay;
-
 import 'package:collection/collection.dart';
 
 import '../core/observer.dart';

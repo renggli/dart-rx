@@ -1,5 +1,3 @@
-library rx.subjects.async;
-
 import '../core/observer.dart';
 import '../disposables/disposable.dart';
 import '../disposables/disposed.dart';

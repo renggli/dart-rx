@@ -1,5 +1,3 @@
-library rx.operators.combine_latest;
-
 import '../converters/iterable_to_observable.dart';
 import '../core/observable.dart';
 import '../operators/combine_latest.dart';

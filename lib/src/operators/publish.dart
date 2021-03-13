@@ -1,5 +1,3 @@
-library rx.operators.publish;
-
 import '../core/observable.dart';
 import '../observables/connectable.dart';
 import '../subjects/async_subject.dart';

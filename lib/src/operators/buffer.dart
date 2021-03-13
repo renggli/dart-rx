@@ -1,5 +1,3 @@
-library rx.operators.buffer;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';

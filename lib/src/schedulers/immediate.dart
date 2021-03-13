@@ -1,5 +1,3 @@
-library rx.schedulers.immediate;
-
 import '../disposables/disposable.dart';
 import '../disposables/disposed.dart';
 import '../disposables/stateful.dart';

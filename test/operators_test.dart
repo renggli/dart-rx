@@ -1,5 +1,3 @@
-library rx.test.operators_test;
-
 import 'package:more/collection.dart';
 import 'package:rx/constructors.dart';
 import 'package:rx/converters.dart';

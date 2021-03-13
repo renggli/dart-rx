@@ -1,5 +1,3 @@
-library rx.events.error;
-
 import '../core/observer.dart';
 import 'event.dart';
 

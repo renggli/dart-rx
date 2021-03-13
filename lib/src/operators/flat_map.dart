@@ -1,5 +1,3 @@
-library rx.operators.flat_map;
-
 import '../core/observable.dart';
 import '../shared/constants.dart';
 import '../shared/functions.dart';

@@ -1,5 +1,3 @@
-library rx.disposables.timer;
-
 import 'dart:async';
 
 import 'reference.dart';

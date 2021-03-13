@@ -1,5 +1,3 @@
-library rx.disposables.serial;
-
 import 'disposable.dart';
 import 'disposed.dart';
 import 'stateful.dart';

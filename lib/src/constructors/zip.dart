@@ -1,5 +1,3 @@
-library rx.operators.zip;
-
 import '../converters/iterable_to_observable.dart';
 import '../core/observable.dart';
 import '../operators/zip.dart';

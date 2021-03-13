@@ -1,5 +1,3 @@
-library rx.testing.hot_observable;
-
 import 'package:meta/meta.dart';
 
 import '../core/observer.dart';

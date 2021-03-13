@@ -1,5 +1,3 @@
-library rx.shared.settings;
-
 import '../core/errors.dart';
 import '../disposables/action.dart';
 import '../disposables/disposable.dart';

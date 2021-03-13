@@ -1,5 +1,3 @@
-library rx.converters.observable_to_future;
-
 import 'dart:async';
 
 import '../core/errors.dart';

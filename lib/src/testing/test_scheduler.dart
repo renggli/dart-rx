@@ -1,5 +1,3 @@
-library rx.testing.test_scheduler;
-
 import 'package:matcher/matcher.dart';
 import 'package:more/iterable.dart';
 

@@ -1,5 +1,3 @@
-library rx.operators.to_map;
-
 import 'package:more/collection.dart' show ListMultimap, SetMultimap;
 
 import '../core/observable.dart';

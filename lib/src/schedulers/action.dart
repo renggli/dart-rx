@@ -1,5 +1,3 @@
-library rx.schedulers.action;
-
 import 'package:meta/meta.dart';
 
 import '../disposables/stateful.dart';

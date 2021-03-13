@@ -1,5 +1,3 @@
-library rx.events.complete;
-
 import '../core/observer.dart';
 import 'event.dart';
 

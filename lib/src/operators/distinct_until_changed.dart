@@ -1,5 +1,3 @@
-library rx.operators.distinct_until_changed;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';

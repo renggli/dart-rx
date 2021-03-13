@@ -1,5 +1,3 @@
-library rx.test.disposables_test;
-
 import 'package:rx/disposables.dart';
 import 'package:test/test.dart';
 

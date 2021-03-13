@@ -1,5 +1,3 @@
-library rx.core.subscriber;
-
 import 'package:meta/meta.dart';
 
 import '../disposables/composite.dart';

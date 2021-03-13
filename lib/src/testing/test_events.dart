@@ -1,5 +1,3 @@
-library rx.testing.test_events;
-
 import 'package:collection/collection.dart';
 
 import '../core/observer.dart';

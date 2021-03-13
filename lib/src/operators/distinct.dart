@@ -1,5 +1,3 @@
-library rx.operators.distinct;
-
 import 'dart:collection';
 
 import '../core/observable.dart';

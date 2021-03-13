@@ -1,5 +1,3 @@
-library rx.schedulers.settings;
-
 import '../disposables/action.dart';
 import '../disposables/disposable.dart';
 import 'scheduler.dart';

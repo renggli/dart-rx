@@ -1,5 +1,3 @@
-library rx.converters;
-
 export 'src/converters/future_to_observable.dart' show FutureToObservable;
 export 'src/converters/iterable_to_observable.dart' show IterableToObservable;
 export 'src/converters/observable_to_future.dart' show ObservableToFuture;

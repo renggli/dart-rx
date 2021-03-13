@@ -1,5 +1,3 @@
-library rx.constructors.just;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../disposables/disposable.dart';

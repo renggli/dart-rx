@@ -1,5 +1,3 @@
-library rx.constructors.fork_join;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import 'create.dart';

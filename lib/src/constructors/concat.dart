@@ -1,5 +1,3 @@
-library rx.constructors.concat;
-
 import '../converters/iterable_to_observable.dart';
 import '../core/observable.dart';
 import '../operators/merge.dart';

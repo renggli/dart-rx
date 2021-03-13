@@ -1,5 +1,3 @@
-library rx.constructors.create;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';

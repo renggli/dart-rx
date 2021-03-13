@@ -1,5 +1,3 @@
-library rx.test.all_test;
-
 import 'package:test/test.dart';
 
 import 'constructors_test.dart' as constructors_test;

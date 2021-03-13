@@ -1,5 +1,3 @@
-library rx.schedulers.zone;
-
 import 'dart:async' show Zone;
 
 import 'package:meta/meta.dart';

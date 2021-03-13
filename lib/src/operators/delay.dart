@@ -1,5 +1,3 @@
-library rx.operators.delay;
-
 import '../constructors/timer.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';

@@ -1,5 +1,3 @@
-library rx.operators.default_if_empty;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';

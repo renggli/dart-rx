@@ -1,5 +1,3 @@
-library rx.core.scheduler;
-
 import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 

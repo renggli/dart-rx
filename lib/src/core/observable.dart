@@ -1,5 +1,3 @@
-library rx.core.observable;
-
 import '../disposables/disposable.dart';
 import 'observer.dart';
 import 'operator.dart';

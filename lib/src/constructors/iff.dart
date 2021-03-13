@@ -1,5 +1,3 @@
-library rx.constructors.iff;
-
 import '../core/observable.dart';
 import '../shared/functions.dart';
 import 'defer.dart';

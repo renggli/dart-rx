@@ -1,5 +1,3 @@
-library rx.schedulers;
-
 export 'src/schedulers/async.dart';
 export 'src/schedulers/immediate.dart';
 export 'src/schedulers/scheduler.dart';

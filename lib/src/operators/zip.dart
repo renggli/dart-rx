@@ -1,5 +1,3 @@
-library rx.operators.zip;
-
 import 'dart:collection';
 
 import '../core/observable.dart';

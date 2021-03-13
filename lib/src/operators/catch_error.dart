@@ -1,5 +1,3 @@
-library rx.operators.catch_error;
-
 import '../constructors/empty.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';

@@ -1,5 +1,3 @@
-library rx.test.schedulers_test;
-
 import 'dart:async';
 
 import 'package:more/iterable.dart';

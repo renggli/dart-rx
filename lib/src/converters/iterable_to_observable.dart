@@ -1,5 +1,3 @@
-library rx.converters.iterable_to_observable;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../disposables/disposable.dart';

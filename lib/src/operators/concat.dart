@@ -1,5 +1,3 @@
-library rx.operators.concat;
-
 import '../constructors/concat.dart';
 import '../core/observable.dart';
 

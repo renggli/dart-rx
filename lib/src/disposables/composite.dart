@@ -1,5 +1,3 @@
-library rx.disposables.composite;
-
 import 'disposable.dart';
 import 'errors.dart';
 import 'stateful.dart';

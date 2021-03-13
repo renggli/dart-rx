@@ -1,5 +1,3 @@
-library rx.test.converters_test;
-
 import 'package:rx/constructors.dart';
 import 'package:rx/converters.dart';
 import 'package:rx/core.dart';

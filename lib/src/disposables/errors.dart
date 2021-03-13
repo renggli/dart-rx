@@ -1,5 +1,3 @@
-library rx.disposables.errors;
-
 import 'disposable.dart';
 
 /// An error thrown when an operation has been performed on an

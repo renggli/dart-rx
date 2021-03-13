@@ -1,5 +1,3 @@
-library rx.operators.last;
-
 import '../core/errors.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';

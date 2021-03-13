@@ -1,5 +1,3 @@
-library rx.operators.skip_while;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';

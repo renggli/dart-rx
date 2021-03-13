@@ -1,5 +1,3 @@
-library rx.constructors;
-
 export 'src/constructors/combine_latest.dart' show combineLatest;
 export 'src/constructors/concat.dart' show concat;
 export 'src/constructors/create.dart' show create;

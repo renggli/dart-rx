@@ -1,5 +1,3 @@
-library rx.constructors.throw_error;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../disposables/disposable.dart';

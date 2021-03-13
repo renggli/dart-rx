@@ -1,5 +1,3 @@
-library rx.operators.merge;
-
 import 'dart:collection';
 
 import '../core/observable.dart';

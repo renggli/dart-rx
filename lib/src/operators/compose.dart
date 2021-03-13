@@ -1,5 +1,3 @@
-library rx.operators.compose;
-
 import '../core/observable.dart';
 
 /// Function that receives an [Observable] and returns another one, possibly

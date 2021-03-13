@@ -1,5 +1,3 @@
-library rx.core.errors;
-
 import 'observable.dart';
 
 /// An error thrown when an error was not handled.

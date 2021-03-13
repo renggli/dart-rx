@@ -1,5 +1,3 @@
-library rx.disposables.reference;
-
 import 'package:meta/meta.dart';
 
 import 'disposable.dart';

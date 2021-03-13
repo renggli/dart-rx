@@ -1,5 +1,3 @@
-library rx.events.errors;
-
 import 'event.dart';
 
 /// An error throws when an operation receives an unknown [Event] type.

@@ -1,5 +1,3 @@
-library rx.test.testing_test;
-
 import 'package:rx/events.dart';
 import 'package:rx/src/testing/test_event_sequence.dart';
 import 'package:rx/testing.dart';

@@ -1,5 +1,3 @@
-library rx.constructors.timer;
-
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../disposables/action.dart';

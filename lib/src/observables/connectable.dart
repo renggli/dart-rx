@@ -1,5 +1,3 @@
-library rx.observables.connectable;
-
 import '../../disposables.dart';
 import '../core/observable.dart';
 import '../disposables/disposable.dart';

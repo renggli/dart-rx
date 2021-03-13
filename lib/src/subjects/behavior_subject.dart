@@ -1,5 +1,3 @@
-library rx.subjects.behavior;
-
 import '../core/observer.dart';
 import '../disposables/disposable.dart';
 import 'subject.dart';
