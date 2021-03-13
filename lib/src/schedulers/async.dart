@@ -24,7 +24,7 @@ class AsyncScheduler extends Scheduler {
     final current = now;
     while (scheduled.isNotEmpty && !scheduled.firstKey()!.isAfter(current)) {
       final actions = scheduled.remove(scheduled.firstKey());
-      for (final action in actions ?? const []) {
+      for (final action in actions ?? const <SchedulerAction>[]) {
         action.run();
       }
     }

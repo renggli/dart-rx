@@ -49,14 +49,14 @@ void main() {
       expect(result.toMarbles(), '-x-a-x');
     });
     test('series of values with completion', () {
-      expectParse('-------a---b---|', [
+      expectParse<String>('-------a---b---|', [
         TestEvent(7, Event.next('a')),
         TestEvent(11, Event.next('b')),
         TestEvent(15, Event.complete()),
       ]);
     });
     test('series of values with error', () {
-      expectParse('-------a---b---#', [
+      expectParse<String>('-------a---b---#', [
         TestEvent(7, Event.next('a')),
         TestEvent(11, Event.next('b')),
         TestEvent(15, Event.error('Error', StackTrace.current)),
@@ -64,7 +64,7 @@ void main() {
     });
     test('series of values with custom error', () {
       final error = ArgumentError('Custom error');
-      expectParse(
+      expectParse<String>(
           '-------a---b---#',
           [
             TestEvent(7, Event.next('a')),
@@ -74,14 +74,16 @@ void main() {
           error: error);
     });
     test('subscription and unsubscription', () {
-      expectParse('---^---!', [
+      expectParse<String>('---^---!', [
         TestEvent(3, SubscribeEvent()),
         TestEvent(7, UnsubscribeEvent()),
       ]);
     });
     test('invalid subscription and unsubscription', () {
-      expect(() => TestEventSequence.fromString('^^'), throwsArgumentError);
-      expect(() => TestEventSequence.fromString('!!'), throwsArgumentError);
+      expect(() => TestEventSequence<String>.fromString('^^'),
+          throwsArgumentError);
+      expect(() => TestEventSequence<String>.fromString('!!'),
+          throwsArgumentError);
     });
     test('grouped values', () {
       expectParse('---(abc)', [
@@ -91,12 +93,15 @@ void main() {
       ]);
     });
     test('invalid grouping', () {
-      expect(() => TestEventSequence.fromString('(('), throwsArgumentError);
-      expect(() => TestEventSequence.fromString('(a'), throwsArgumentError);
-      expect(() => TestEventSequence.fromString(')a'), throwsArgumentError);
+      expect(() => TestEventSequence<String>.fromString('(('),
+          throwsArgumentError);
+      expect(() => TestEventSequence<String>.fromString('(a'),
+          throwsArgumentError);
+      expect(() => TestEventSequence<String>.fromString(')a'),
+          throwsArgumentError);
     });
     test('ignores whitespaces when parsing', () {
-      expectParse(
+      expectParse<String>(
           '--- a\t---b---\n|',
           [
             TestEvent(3, Event.next('a')),

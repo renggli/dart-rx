@@ -171,7 +171,7 @@ void testScheduler(Scheduler scheduler) {
     expectDateTime(actual, expected, accuracy);
   });
   test('schedulePeriodic', () async {
-    final completer = Completer();
+    final completer = Completer<void>();
     final start = scheduler.now;
     final actual = [start];
     final subscription = scheduler.schedulePeriodic(offset, (subscription) {

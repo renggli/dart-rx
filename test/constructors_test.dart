@@ -110,28 +110,28 @@ void main() {
   });
   group('create', () {
     test('complete sequence of values', () {
-      final actual = create((emitter) {
+      final actual = create<String>((emitter) {
         emitter.next('a');
         emitter.next('b');
         emitter.complete();
       });
-      expect(actual, scheduler.isObservable('(ab|)'));
+      expect(actual, scheduler.isObservable<String>('(ab|)'));
     });
     test('error sequence of values', () {
-      final actual = create((emitter) {
+      final actual = create<String>((emitter) {
         emitter.next('a');
         emitter.next('b');
         emitter.error('Error', StackTrace.current);
       });
-      expect(actual, scheduler.isObservable('(ab#)'));
+      expect(actual, scheduler.isObservable<String>('(ab#)'));
     });
     test('throws an error while creating values', () {
-      final actual = create((emitter) {
+      final actual = create<String>((emitter) {
         emitter.next('a');
         emitter.next('b');
         throw 'Error';
       });
-      expect(actual, scheduler.isObservable('(ab#)'));
+      expect(actual, scheduler.isObservable<String>('(ab#)'));
     });
   });
   group('defer', () {
@@ -169,7 +169,7 @@ void main() {
   group('empty', () {
     test('immediately completes', () {
       final actual = empty();
-      expect(actual, scheduler.isObservable('|'));
+      expect(actual, scheduler.isObservable<Never>('|'));
     });
     test('synchronous by default', () {
       final actual = empty();
@@ -258,18 +258,18 @@ void main() {
     test('true branch', () {
       final actual = iff(
         () => true,
-        scheduler.cold('-t--|'),
-        scheduler.cold('--f-|'),
+        scheduler.cold<String>('-t--|'),
+        scheduler.cold<String>('--f-|'),
       );
-      expect(actual, scheduler.isObservable('-t--|'));
+      expect(actual, scheduler.isObservable<String>('-t--|'));
     });
     test('false branch', () {
-      final actual = iff(
+      final actual = iff<String>(
         () => false,
         scheduler.cold('-t--|'),
         scheduler.cold('--f-|'),
       );
-      expect(actual, scheduler.isObservable('--f-|'));
+      expect(actual, scheduler.isObservable<String>('--f-|'));
     });
   });
   group('just', () {
@@ -341,7 +341,7 @@ void main() {
     test('immediately throws', () {
       final error = Exception('My Error');
       final actual = throwError(error);
-      expect(actual, scheduler.isObservable('#', error: error));
+      expect(actual, scheduler.isObservable<String>('#', error: error));
     });
     test('synchronous by default', () {
       final error = Exception('My Error');

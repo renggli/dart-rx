@@ -102,8 +102,8 @@ class TestEventSequence<T> {
         .onResultOf<TestEvent<T>>((event) => event.index)
         .maxOf(events);
     final lastIndex = lastEvent.index;
-    final eventsByIndex = ListMultimap<int, TestEvent<T>>.fromIterable(events,
-        key: (event) => event.index);
+    final eventsByIndex = ListMultimap<int, TestEvent<T>>.fromIterables(
+        events.map((event) => event.index), events);
     for (var index = 0; index <= lastIndex; index++) {
       final eventsAtIndex = eventsByIndex[index];
       if (eventsAtIndex.isEmpty) {

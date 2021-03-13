@@ -56,7 +56,7 @@ class BufferSubscriber<T> extends Subscriber<T>
       : super(observer) {
     reset();
     if (trigger != null) {
-      add(InnerObserver(this, trigger, null));
+      add(InnerObserver<dynamic, void>(this, trigger, null));
     }
   }
 
