@@ -4,11 +4,11 @@ import '../disposables/disposable.dart';
 import '../disposables/disposed.dart';
 
 /// An [Observable] that emits no items and never completes.
-Observable<T> never<T>() => NeverObservable<T>();
+Observable<Never> never() => NeverObservable();
 
-class NeverObservable<T> with Observable<T> {
+class NeverObservable with Observable<Never> {
   const NeverObservable();
 
   @override
-  Disposable subscribe(Observer<T> observer) => const DisposedDisposable();
+  Disposable subscribe(Observer<Never> observer) => const DisposedDisposable();
 }

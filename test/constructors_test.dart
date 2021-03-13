@@ -159,7 +159,7 @@ void main() {
       var seen = false;
       final actual = defer<String>(() {
         seen = true;
-        return empty<String>();
+        return empty();
       });
       expect(seen, isFalse);
       expect(actual, scheduler.isObservable<String>('|'));

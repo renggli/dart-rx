@@ -46,7 +46,7 @@ class CatchErrorSubscriber<T, E> extends Subscriber<T>
       if (handlerEvent.isError) {
         doError(handlerEvent.error, handlerEvent.stackTrace);
       } else {
-        add(InnerObserver(this, handlerEvent.value ?? empty<T>(), null));
+        add(InnerObserver(this, handlerEvent.value ?? empty(), null));
       }
     } else {
       doError(error, stackTrace);

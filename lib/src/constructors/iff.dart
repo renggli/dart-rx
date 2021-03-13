@@ -7,5 +7,4 @@ import 'empty.dart';
 /// subscribed to.
 Observable<T> iff<T>(Predicate0 condition,
         [Observable<T>? trueBranch, Observable<T>? falseBranch]) =>
-    defer(() =>
-        condition() ? trueBranch ?? empty<T>() : falseBranch ?? empty<T>());
+    defer(() => condition() ? trueBranch ?? empty() : falseBranch ?? empty());

@@ -5,10 +5,10 @@ import '../schedulers/immediate.dart';
 import '../schedulers/scheduler.dart';
 
 /// An [Observable] that emits no items and immediately completes.
-Observable<T> empty<T>({Scheduler? scheduler}) =>
-    EmptyObservable<T>(scheduler ?? const ImmediateScheduler());
+Observable<Never> empty({Scheduler? scheduler}) =>
+    EmptyObservable(scheduler ?? const ImmediateScheduler());
 
-class EmptyObservable<T> with Observable<T> {
+class EmptyObservable with Observable<Never> {
   final Scheduler scheduler;
 
   const EmptyObservable(this.scheduler);

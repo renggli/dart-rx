@@ -267,7 +267,7 @@ void main() {
       });
       test('error', () {
         final input = scheduler.cold<String>('abc|');
-        final actual = input.beginWith(throwError<String>('Error'));
+        final actual = input.beginWith(throwError('Error'));
         expect(actual, scheduler.isObservable<String>('#', error: 'Error'));
       });
     });
@@ -289,7 +289,7 @@ void main() {
       });
       test('error', () {
         final input = scheduler.cold<String>('abc|');
-        final actual = input.endWith(throwError<String>('Error'));
+        final actual = input.endWith(throwError('Error'));
         expect(actual, scheduler.isObservable<String>('abc#', error: 'Error'));
       });
     });
@@ -597,8 +597,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('xy---|'));
     });
     test('invalid concurrent', () {
-      expect(() => never<Observable<void>>().exhaustAll(concurrent: 0),
-          throwsRangeError);
+      expect(() => never().exhaustAll(concurrent: 0), throwsRangeError);
     });
   });
   group('exhaustMap', () {
@@ -654,8 +653,8 @@ void main() {
     });
     test('invalid concurrent', () {
       expect(
-          () => never().exhaustMap((inner) => scheduler.cold<String>(inner),
-              concurrent: 0),
+          () =>
+              never().exhaustMap((inner) => fail('Not called'), concurrent: 0),
           throwsRangeError);
     });
   });
@@ -911,8 +910,7 @@ void main() {
         expect(actual, scheduler.isObservable<String>('xy--z---|'));
       });
       test('invalid concurrent', () {
-        expect(() => never<Observable<String>>().flatten(concurrent: 0),
-            throwsRangeError);
+        expect(() => never().flatten(concurrent: 0), throwsRangeError);
       });
     });
     group('flatMap', () {
@@ -955,8 +953,7 @@ void main() {
       });
       test('invalid concurrent', () {
         expect(
-            () => never().flatMap((inner) => scheduler.cold<String>(inner),
-                concurrent: 0),
+            () => never().flatMap((inner) => fail('Not called'), concurrent: 0),
             throwsRangeError);
       });
     });
@@ -1326,8 +1323,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('xy--z---|'));
     });
     test('invalid concurrent', () {
-      expect(() => never<Observable<String>>().mergeAll(concurrent: 0),
-          throwsRangeError);
+      expect(() => never().mergeAll(concurrent: 0), throwsRangeError);
     });
   });
   group('mergeMap', () {
@@ -1370,8 +1366,7 @@ void main() {
     });
     test('invalid concurrent', () {
       expect(
-          () => never().mergeMap((inner) => scheduler.cold<String>(inner),
-              concurrent: 0),
+          () => never().mergeMap((inner) => fail('Not called'), concurrent: 0),
           throwsRangeError);
     });
   });

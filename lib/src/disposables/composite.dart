@@ -48,7 +48,7 @@ class CompositeDisposable extends StatefulDisposable {
     final disposables = _disposables.toList();
     super.dispose();
     _disposables.clear();
-    final errors = [];
+    final errors = <Object>[];
     for (final disposable in disposables) {
       try {
         disposable.dispose();
