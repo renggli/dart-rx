@@ -37,7 +37,7 @@ class DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
   final Map1<T, K> key;
   final Predicate2<K, K> compare;
 
-  K? lastKey;
+  late K lastKey;
   bool seenKey = false;
 
   DistinctUntilChangedSubscriber(Observer<T> observer, this.key, this.compare)
@@ -51,7 +51,7 @@ class DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
       return;
     }
     if (seenKey) {
-      final compareEvent = Event.map2(compare, lastKey!, keyEvent.value);
+      final compareEvent = Event.map2(compare, lastKey, keyEvent.value);
       if (compareEvent.isError) {
         doError(compareEvent.error, compareEvent.stackTrace);
         return;
