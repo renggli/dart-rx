@@ -14,19 +14,19 @@ extension BufferOperator<T> on Observable<T> {
   /// - the buffer reaches [maxLength], or
   /// - the buffer reaches [maxAge].
   ///
-  Observable<List<T>> buffer(
+  Observable<List<T>> buffer<R>(
           {Scheduler? scheduler,
-          Observable? trigger,
+          Observable<R>? trigger,
           int? maxLength,
           Duration? maxAge}) =>
-      BufferObservable<T>(
+      BufferObservable<T, R>(
           this, scheduler ?? defaultScheduler, trigger, maxLength, maxAge);
 }
 
-class BufferObservable<T> extends Observable<List<T>> {
+class BufferObservable<T, R> extends Observable<List<T>> {
   final Observable<T> delegate;
   final Scheduler scheduler;
-  final Observable? trigger;
+  final Observable<R>? trigger;
   final int? maxLength;
   final Duration? maxAge;
 
@@ -36,14 +36,14 @@ class BufferObservable<T> extends Observable<List<T>> {
   @override
   Disposable subscribe(Observer<List<T>> observer) {
     final subscriber =
-        BufferSubscriber<T>(observer, scheduler, trigger, maxLength, maxAge);
+        BufferSubscriber<T, R>(observer, scheduler, trigger, maxLength, maxAge);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
 }
 
-class BufferSubscriber<T> extends Subscriber<T>
-    implements InnerEvents<T, void> {
+class BufferSubscriber<T, R> extends Subscriber<T>
+    implements InnerEvents<R, void> {
   final Scheduler scheduler;
   final int? maxLength;
   final Duration? maxAge;
@@ -52,11 +52,11 @@ class BufferSubscriber<T> extends Subscriber<T>
   DateTime? bufferBirth;
 
   BufferSubscriber(Observer<List<T>> observer, this.scheduler,
-      Observable? trigger, this.maxLength, this.maxAge)
+      Observable<R>? trigger, this.maxLength, this.maxAge)
       : super(observer) {
     reset();
     if (trigger != null) {
-      add(InnerObserver<dynamic, void>(this, trigger, null));
+      add(InnerObserver<R, void>(this, trigger, null));
     }
   }
 
@@ -76,7 +76,7 @@ class BufferSubscriber<T> extends Subscriber<T>
   }
 
   @override
-  void notifyNext(Disposable disposable, void state, T value) => flush();
+  void notifyNext(Disposable disposable, void state, R value) => flush();
 
   @override
   void notifyError(Disposable disposable, void state, Object error,

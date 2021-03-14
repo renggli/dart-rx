@@ -73,7 +73,7 @@ void main() {
   group('buffer', () {
     test('no constraints', () {
       final input = scheduler.cold<String>('-a-b-c-|');
-      final actual = input.buffer();
+      final actual = input.buffer<void>();
       expect(
           actual,
           scheduler.isObservable('-------(x|)', values: {
@@ -82,7 +82,7 @@ void main() {
     });
     test('max length', () {
       final input = scheduler.cold<String>('-a-b-c-d-e-|');
-      final actual = input.buffer(maxLength: 2);
+      final actual = input.buffer<void>(maxLength: 2);
       expect(
           actual,
           scheduler.isObservable('---x---y---(z|)', values: {
@@ -93,7 +93,7 @@ void main() {
     });
     test('max age', () {
       final input = scheduler.cold<String>('-a-b--cdefg|');
-      final actual = input.buffer(maxAge: scheduler.stepDuration * 4);
+      final actual = input.buffer<void>(maxAge: scheduler.stepDuration * 4);
       expect(
           actual,
           scheduler.isObservable('------x----(y|)', values: {
@@ -104,7 +104,7 @@ void main() {
     test('max length and age', () {
       final input = scheduler.cold<String>('-a-b--cdefg|');
       final actual =
-          input.buffer(maxLength: 3, maxAge: scheduler.stepDuration * 4);
+          input.buffer<void>(maxLength: 3, maxAge: scheduler.stepDuration * 4);
       expect(
           actual,
           scheduler.isObservable('------x--y-(z|)', values: {
@@ -137,7 +137,7 @@ void main() {
     });
     test('error in source', () {
       final input = scheduler.cold<String>('-a-#');
-      final actual = input.buffer();
+      final actual = input.buffer<void>();
       expect(actual, scheduler.isObservable<List<String>>('---#'));
     });
     test('error in trigger', () {
@@ -1628,76 +1628,74 @@ void main() {
       expect(actual, scheduler.isObservable<String>('---a--c--d--|'));
     });
   });
-  group('scan', () {
-    group('reduce', () {
-      test('values and completion', () {
-        final input = scheduler.cold<String>('-a--b---c-|');
-        final actual = input.reduce((previous, value) => '$previous$value');
-        expect(
-            actual,
-            scheduler.isObservable('-x--y---z-|', values: {
-              'x': 'a',
-              'y': 'ab',
-              'z': 'abc',
-            }));
-      });
-      test('values and error', () {
-        final input = scheduler.cold<String>('-a--b---c-#');
-        final actual = input.reduce((previous, value) => '$previous$value');
-        expect(
-            actual,
-            scheduler.isObservable('-x--y---z-#', values: {
-              'x': 'a',
-              'y': 'ab',
-              'z': 'abc',
-            }));
-      });
-      test('error in computation', () {
-        final input = scheduler.cold<String>('-a-b-c-|');
-        final actual = input.reduce((previous, value) => throw 'Error');
-        expect(actual, scheduler.isObservable<String?>('-a-#'));
-      });
+  group('reduce', () {
+    test('values and completion', () {
+      final input = scheduler.cold<String>('-a--b---c-|');
+      final actual = input.reduce((previous, value) => '$previous$value');
+      expect(
+          actual,
+          scheduler.isObservable('-x--y---z-|', values: {
+            'x': 'a',
+            'y': 'ab',
+            'z': 'abc',
+          }));
     });
-    group('fold', () {
-      test('values and completion', () {
-        final input = scheduler.cold<String>('-a--b---c-|');
-        final actual = input.fold('x', (previous, value) => '$previous$value');
-        expect(
-            actual,
-            scheduler.isObservable('-x--y---z-|', values: {
-              'x': 'xa',
-              'y': 'xab',
-              'z': 'xabc',
-            }));
-      });
-      test('values and error', () {
-        final input = scheduler.cold<String>('-a--b---c-#');
-        final actual = input.fold('x', (previous, value) => '$previous$value');
-        expect(
-            actual,
-            scheduler.isObservable('-x--y---z-#', values: {
-              'x': 'xa',
-              'y': 'xab',
-              'z': 'xabc',
-            }));
-      });
-      test('type transformation', () {
-        final input = scheduler.cold<String>('-a--b---c-|');
-        final actual = input.fold<List<String>>(
-            <String>[], (previous, value) => <String>[...previous, value]);
-        expect(
-            actual,
-            scheduler.isObservable('-x--y---z-|', values: {
-              'x': <String>['a'],
-              'y': <String>['a', 'b'],
-              'z': <String>['a', 'b', 'c'],
-            }));
-      });
-      test('error in computation', () {
-        final input = scheduler.cold<String>('-a-b-c-|');
-        final actual = input.fold('x', (previous, value) => throw 'Error');
-        expect(actual, scheduler.isObservable<String>('-#'));
-      });
+    test('values and error', () {
+      final input = scheduler.cold<String>('-a--b---c-#');
+      final actual = input.reduce((previous, value) => '$previous$value');
+      expect(
+          actual,
+          scheduler.isObservable('-x--y---z-#', values: {
+            'x': 'a',
+            'y': 'ab',
+            'z': 'abc',
+          }));
+    });
+    test('error in computation', () {
+      final input = scheduler.cold<String>('-a-b-c-|');
+      final actual = input.reduce((previous, value) => throw 'Error');
+      expect(actual, scheduler.isObservable<String>('-a-#'));
+    });
+  });
+  group('fold', () {
+    test('values and completion', () {
+      final input = scheduler.cold<String>('-a--b---c-|');
+      final actual = input.fold('x', (previous, value) => '$previous$value');
+      expect(
+          actual,
+          scheduler.isObservable('-x--y---z-|', values: {
+            'x': 'xa',
+            'y': 'xab',
+            'z': 'xabc',
+          }));
+    });
+    test('values and error', () {
+      final input = scheduler.cold<String>('-a--b---c-#');
+      final actual = input.fold('x', (previous, value) => '$previous$value');
+      expect(
+          actual,
+          scheduler.isObservable('-x--y---z-#', values: {
+            'x': 'xa',
+            'y': 'xab',
+            'z': 'xabc',
+          }));
+    });
+    test('type transformation', () {
+      final input = scheduler.cold<String>('-a--b---c-|');
+      final actual = input.fold<List<String>>(
+          <String>[], (previous, value) => <String>[...previous, value]);
+      expect(
+          actual,
+          scheduler.isObservable('-x--y---z-|', values: {
+            'x': <String>['a'],
+            'y': <String>['a', 'b'],
+            'z': <String>['a', 'b', 'c'],
+          }));
+    });
+    test('error in computation', () {
+      final input = scheduler.cold<String>('-a-b-c-|');
+      final actual = input.fold('x', (previous, value) => throw 'Error');
+      expect(actual, scheduler.isObservable<String>('-#'));
     });
   });
   group('single', () {
@@ -2219,8 +2217,8 @@ void main() {
     test('empty and completion', () {
       final input = scheduler.cold<String>('--|');
       final actual = input.toList();
-      expect(actual,
-          scheduler.isObservable('--(x|)', values: {'x': <List<String>>[]}));
+      expect(
+          actual, scheduler.isObservable('--(x|)', values: {'x': <String>[]}));
     });
     test('empty and error', () {
       final input = scheduler.cold<String>('--#');
@@ -2388,7 +2386,7 @@ void main() {
     test('empty and completion', () {
       final input = scheduler.cold<String>('--|');
       final actual =
-          input.toSetMultimap<String, Set<String>>().map((map) => map.asMap());
+          input.toSetMultimap<String, String>().map((map) => map.asMap());
       expect(
           actual,
           scheduler

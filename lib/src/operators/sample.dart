@@ -40,7 +40,7 @@ class SampleSubscriber<T, R> extends Subscriber<T>
 
   SampleSubscriber(Observer<T> observer, Observable<R> trigger)
       : super(observer) {
-    add(InnerObserver(this, trigger, null));
+    add(InnerObserver<R, void>(this, trigger, null));
   }
 
   @override
