@@ -2,8 +2,7 @@ Reactive Dart
 =============
 
 [![Pub Package](https://img.shields.io/pub/v/rx.svg)](https://pub.dev/packages/rx)
-[![Build Status](https://travis-ci.org/renggli/dart-rx.svg)](https://travis-ci.org/renggli/dart-rx)
-[![Coverage Status](https://coveralls.io/repos/renggli/dart-rx/badge.svg)](https://coveralls.io/r/renggli/dart-rx)
+[![Build Status](https://github.com/renggli/dart-rx/actions/workflows/dart.yml/badge.svg?branch=main)](https://github.com/renggli/dart-rx/actions/workflows/dart.yml)
 [![GitHub Issues](https://img.shields.io/github/issues/renggli/dart-rx.svg)](https://github.com/renggli/dart-rx/issues)
 [![GitHub Forks](https://img.shields.io/github/forks/renggli/dart-rx.svg)](https://github.com/renggli/dart-rx/network)
 [![GitHub Stars](https://img.shields.io/github/stars/renggli/dart-rx.svg)](https://github.com/renggli/dart-rx/stargazers)
