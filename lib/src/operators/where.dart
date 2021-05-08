@@ -12,7 +12,7 @@ extension WhereOperator<T> on Observable<T> {
       WhereObservable<T>(this, predicate);
 }
 
-class WhereObservable<T> extends Observable<T> {
+class WhereObservable<T> with Observable<T> {
   final Observable<T> delegate;
   final Predicate1<T> predicate;
 

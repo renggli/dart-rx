@@ -11,7 +11,7 @@ extension RefCountOperator<T> on ConnectableObservable<T> {
   Observable<T> refCount() => RefCountObservable<T>(this);
 }
 
-class RefCountObservable<T> extends Observable<T> {
+class RefCountObservable<T> with Observable<T> {
   final ConnectableObservable<T> observable;
 
   Disposable subscription = const DisposedDisposable();

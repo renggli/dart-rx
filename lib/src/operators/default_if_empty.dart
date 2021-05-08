@@ -10,7 +10,7 @@ extension DefaultIfEmptyOperator<T> on Observable<T> {
       DefaultIfEmptyObservable<T>(this, value);
 }
 
-class DefaultIfEmptyObservable<T> extends Observable<T> {
+class DefaultIfEmptyObservable<T> with Observable<T> {
   final Observable<T> delegate;
   final T defaultValue;
 

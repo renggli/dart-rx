@@ -14,7 +14,7 @@ extension RepeatOperator<T> on Observable<T> {
           : RepeatObservable<T>(this, count);
 }
 
-class RepeatObservable<T> extends Observable<T> {
+class RepeatObservable<T> with Observable<T> {
   final Observable<T> delegate;
   final int count;
 

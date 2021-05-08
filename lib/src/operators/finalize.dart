@@ -13,7 +13,7 @@ extension FinalizeOperator<T> on Observable<T> {
       FinalizeObservable<T>(this, finalize);
 }
 
-class FinalizeObservable<T> extends Observable<T> {
+class FinalizeObservable<T> with Observable<T> {
   final Observable<T> delegate;
   final CompleteCallback finalize;
 

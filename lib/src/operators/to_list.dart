@@ -10,7 +10,7 @@ extension ToListOperator<T> on Observable<T> {
       ToListObservable<T>(this, constructor ?? () => <T>[]);
 }
 
-class ToListObservable<T> extends Observable<List<T>> {
+class ToListObservable<T> with Observable<List<T>> {
   final Observable<T> delegate;
   final Map0<List<T>> constructor;
 

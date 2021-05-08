@@ -21,7 +21,8 @@ extension MulticastOperator<T> on Observable<T> {
   }
 }
 
-class MulticastObservable<T> extends Observable<T>
+class MulticastObservable<T>
+    with Observable<T>
     implements ConnectableObservable<T> {
   final Observable<T> _source;
   final Map0<Subject<T>> _factory;

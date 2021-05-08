@@ -44,7 +44,7 @@ extension ToMapOperator<T> on Observable<T> {
           (map, key, value) => map.add(key, value));
 }
 
-class ToMapObservable<T, M, K, V> extends Observable<M> {
+class ToMapObservable<T, M, K, V> with Observable<M> {
   final Observable<T> delegate;
   final Map0<M> constructor;
   final Map1<T, K> keySelector;

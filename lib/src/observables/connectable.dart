@@ -2,6 +2,6 @@ import '../../disposables.dart';
 import '../core/observable.dart';
 import '../disposables/disposable.dart';
 
-abstract class ConnectableObservable<T> extends Observable<T> {
+mixin ConnectableObservable<T> implements Observable<T> {
   Disposable connect();
 }

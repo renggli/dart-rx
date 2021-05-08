@@ -16,7 +16,7 @@ extension MapOperator<T> on Observable<T> {
       MapObservable<T, R>(this, constantFunction1(value));
 }
 
-class MapObservable<T, R> extends Observable<R> {
+class MapObservable<T, R> with Observable<R> {
   final Observable<T> delegate;
   final Map1<T, R> transform;
 

@@ -12,7 +12,7 @@ extension FoldOperator<T> on Observable<T> {
       FoldObservable<T, R>(this, transform, initialValue);
 }
 
-class FoldObservable<T, R> extends Observable<R> {
+class FoldObservable<T, R> with Observable<R> {
   final Observable<T> delegate;
   final Map2<R, T, R> transform;
   final R seedValue;

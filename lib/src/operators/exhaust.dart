@@ -32,7 +32,7 @@ extension ExhaustMapOperator<T> on Observable<T> {
   }
 }
 
-class ExhaustObservable<T, R> extends Observable<R> {
+class ExhaustObservable<T, R> with Observable<R> {
   final Observable<T> delegate;
   final Map1<T, Observable<R>> project;
   final int concurrent;

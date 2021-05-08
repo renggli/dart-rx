@@ -11,7 +11,7 @@ extension ReduceOperator<T> on Observable<T> {
       ReduceObservable<T>(this, transform);
 }
 
-class ReduceObservable<T> extends Observable<T> {
+class ReduceObservable<T> with Observable<T> {
   final Observable<T> delegate;
   final Map2<T, T, T> transform;
 

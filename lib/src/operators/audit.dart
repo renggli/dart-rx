@@ -24,7 +24,7 @@ extension AuditOperator<T> on Observable<T> {
           constantFunction1(timer(delay: duration, scheduler: scheduler)));
 }
 
-class AuditObservable<T, R> extends Observable<T> {
+class AuditObservable<T, R> with Observable<T> {
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
 

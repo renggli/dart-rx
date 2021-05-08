@@ -31,7 +31,7 @@ extension SingleOperator<T> on Observable<T> {
       SingleObservable<T>(this, tooFew, tooMany);
 }
 
-class SingleObservable<T> extends Observable<T> {
+class SingleObservable<T> with Observable<T> {
   final Observable<T> delegate;
   final Map0<T> tooFewCallback;
   final Map0<T> tooManyCallback;

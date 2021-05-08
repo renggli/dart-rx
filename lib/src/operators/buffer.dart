@@ -23,7 +23,7 @@ extension BufferOperator<T> on Observable<T> {
           this, scheduler ?? defaultScheduler, trigger, maxLength, maxAge);
 }
 
-class BufferObservable<T, R> extends Observable<List<T>> {
+class BufferObservable<T, R> with Observable<List<T>> {
   final Observable<T> delegate;
   final Scheduler scheduler;
   final Observable<R>? trigger;

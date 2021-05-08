@@ -14,7 +14,7 @@ extension DistinctOperator<T> on Observable<T> {
       DistinctObservable<T>(this, equals, hashCode);
 }
 
-class DistinctObservable<T> extends Observable<T> {
+class DistinctObservable<T> with Observable<T> {
   final Observable<T> delegate;
   final Predicate2<T, T>? equalsFunction;
   final Map1<T, int>? hashCodeFunction;

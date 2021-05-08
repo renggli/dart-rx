@@ -33,7 +33,7 @@ extension MergeMapOperator<T> on Observable<T> {
   }
 }
 
-class MergeObservable<T, R> extends Observable<R> {
+class MergeObservable<T, R> with Observable<R> {
   final Observable<T> delegate;
   final Map1<T, Observable<R>> project;
   final num concurrent;

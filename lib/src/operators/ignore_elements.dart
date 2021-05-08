@@ -9,7 +9,7 @@ extension IgnoreElementsOperator<T> on Observable<T> {
   Observable<T> ignoreElements() => IgnoreElementsObservable<T>(this);
 }
 
-class IgnoreElementsObservable<T> extends Observable<T> {
+class IgnoreElementsObservable<T> with Observable<T> {
   final Observable<T> delegate;
 
   IgnoreElementsObservable(this.delegate);

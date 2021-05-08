@@ -23,7 +23,7 @@ extension DelayOperator<T> on Observable<T> {
           constantFunction1(timer(delay: duration, scheduler: scheduler)));
 }
 
-class DelayObservable<T, R> extends Observable<T> {
+class DelayObservable<T, R> with Observable<T> {
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
 

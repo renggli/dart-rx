@@ -11,7 +11,7 @@ extension TakeWhileOperator<T> on Observable<T> {
       TakeWhileObservable<T>(this, predicate);
 }
 
-class TakeWhileObservable<T> extends Observable<T> {
+class TakeWhileObservable<T> with Observable<T> {
   final Observable<T> delegate;
   final Predicate1<T> predicate;
 

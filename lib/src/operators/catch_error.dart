@@ -19,7 +19,7 @@ extension CatchErrorOperator<T> on Observable<T> {
       CatchErrorObservable<T, E>(this, handler);
 }
 
-class CatchErrorObservable<T, E> extends Observable<T> {
+class CatchErrorObservable<T, E> with Observable<T> {
   final Observable<T> delegate;
   final ErrorHandler<T, E> handler;
 

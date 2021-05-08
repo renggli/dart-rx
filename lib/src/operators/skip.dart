@@ -8,7 +8,7 @@ extension SkipOperator<T> on Observable<T> {
   Observable<T> skip([int count = 1]) => SkipObservable<T>(this, count);
 }
 
-class SkipObservable<T> extends Observable<T> {
+class SkipObservable<T> with Observable<T> {
   final Observable<T> delegate;
   final int count;
 

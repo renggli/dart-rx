@@ -9,7 +9,7 @@ import '../shared/functions.dart';
 Observable<T> create<T>(Callback1<Subscriber<T>> callback) =>
     CreateObservable<T>(callback);
 
-class CreateObservable<T> extends Observable<T> {
+class CreateObservable<T> with Observable<T> {
   final Callback1<Subscriber<T>> callback;
 
   CreateObservable(this.callback);

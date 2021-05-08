@@ -10,7 +10,7 @@ extension ToSetOperator<T> on Observable<T> {
       ToSetObservable<T>(this, constructor ?? () => <T>{});
 }
 
-class ToSetObservable<T> extends Observable<Set<T>> {
+class ToSetObservable<T> with Observable<Set<T>> {
   final Observable<T> delegate;
   final Map0<Set<T>> constructor;
 

@@ -27,7 +27,7 @@ extension ThrottleOperator<T> on Observable<T> {
           trailing: trailing);
 }
 
-class ThrottleObservable<T, R> extends Observable<T> {
+class ThrottleObservable<T, R> with Observable<T> {
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
   final bool leading;
