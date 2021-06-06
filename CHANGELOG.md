@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Dart 2.13 requirement.
+- Various typing improvements and optimizations.
+
 ## 0.1.0
 
 - Dart 2.12 requirement and null-safety.
