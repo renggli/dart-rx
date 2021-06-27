@@ -1,11 +1,11 @@
 import 'dart:async' show Zone;
 
 import 'package:meta/meta.dart';
+import 'package:more/functional.dart';
 
 import '../disposables/disposable.dart';
 import '../disposables/stateful.dart';
 import '../disposables/timer.dart';
-import '../shared/functions.dart';
 import 'action.dart';
 import 'scheduler.dart';
 

@@ -1,3 +1,5 @@
+import 'package:more/functional.dart';
+
 import '../constructors/timer.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
@@ -6,7 +8,6 @@ import '../disposables/disposable.dart';
 import '../events/event.dart';
 import '../observers/inner.dart';
 import '../schedulers/scheduler.dart';
-import '../shared/functions.dart';
 
 typedef DurationSelector<T, R> = Observable<R> Function(T value);
 

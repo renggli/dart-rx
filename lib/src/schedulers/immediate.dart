@@ -1,7 +1,8 @@
+import 'package:more/functional.dart';
+
 import '../disposables/disposable.dart';
 import '../disposables/disposed.dart';
 import '../disposables/stateful.dart';
-import '../shared/functions.dart';
 import 'scheduler.dart';
 
 /// Synchronous scheduler, that executes actions in the current thread.

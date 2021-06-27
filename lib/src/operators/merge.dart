@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+import 'package:more/functional.dart';
+
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
@@ -7,7 +9,6 @@ import '../disposables/disposable.dart';
 import '../events/event.dart';
 import '../observers/inner.dart';
 import '../shared/constants.dart';
-import '../shared/functions.dart';
 
 extension MergeAllOperator<T> on Observable<Observable<T>> {
   /// For each observable of this [Observable], subscribe to at most

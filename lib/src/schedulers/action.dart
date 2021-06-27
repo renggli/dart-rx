@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
+import 'package:more/functional.dart';
 
 import '../disposables/stateful.dart';
-import '../shared/functions.dart';
 
 abstract class SchedulerAction extends StatefulDisposable {
   @nonVirtual

@@ -1,10 +1,11 @@
+import 'package:more/functional.dart';
+
 import '../core/errors.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 import '../events/event.dart';
-import '../shared/functions.dart';
 
 extension SingleOperator<T> on Observable<T> {
   /// Emits the single element of this [Observable], or emits [TooFewError] if

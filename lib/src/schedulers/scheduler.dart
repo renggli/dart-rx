@@ -1,5 +1,6 @@
+import 'package:more/functional.dart';
+
 import '../disposables/disposable.dart';
-import '../shared/functions.dart';
 
 /// Abstract scheduler implementation.
 abstract class Scheduler {

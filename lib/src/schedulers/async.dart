@@ -1,9 +1,9 @@
 import 'dart:collection';
 
 import 'package:meta/meta.dart';
+import 'package:more/functional.dart';
 
 import '../disposables/disposable.dart';
-import '../shared/functions.dart';
 import 'action.dart';
 import 'scheduler.dart';
 

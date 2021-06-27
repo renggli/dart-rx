@@ -1,9 +1,10 @@
+import 'package:more/functional.dart';
+
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 import '../events/event.dart';
-import '../shared/functions.dart';
 
 extension ReduceOperator<T> on Observable<T> {
   /// Combines a sequence of values by repeatedly applying [transform].

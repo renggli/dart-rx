@@ -1,6 +1,7 @@
+import 'package:more/functional.dart';
+
 import '../core/observable.dart';
 import '../shared/constants.dart';
-import '../shared/functions.dart';
 import 'merge.dart';
 
 extension FlattenObservable<T> on Observable<Observable<T>> {

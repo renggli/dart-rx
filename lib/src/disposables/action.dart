@@ -1,4 +1,5 @@
-import '../shared/functions.dart';
+import 'package:more/functional.dart';
+
 import 'disposable.dart';
 import 'reference.dart';
 

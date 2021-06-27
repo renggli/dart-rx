@@ -1,10 +1,11 @@
+import 'package:more/functional.dart';
+
 import '../core/errors.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 import '../events/event.dart';
-import '../shared/functions.dart';
 
 extension LastOperator<T> on Observable<T> {
   /// Emits the last item of this [Observable], or emits an [TooFewError]

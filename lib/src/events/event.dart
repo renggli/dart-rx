@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
+import 'package:more/functional.dart';
 
 import '../core/observer.dart';
-import '../shared/functions.dart';
 import 'complete.dart';
 import 'error.dart';
 import 'next.dart';

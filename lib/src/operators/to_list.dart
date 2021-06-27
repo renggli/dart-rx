@@ -1,8 +1,9 @@
+import 'package:more/functional.dart';
+
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
-import '../shared/functions.dart';
 
 extension ToListOperator<T> on Observable<T> {
   /// Returns a [List] from an observable sequence.

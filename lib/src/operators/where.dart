@@ -1,9 +1,10 @@
+import 'package:more/functional.dart';
+
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
 import '../events/event.dart';
-import '../shared/functions.dart';
 
 extension WhereOperator<T> on Observable<T> {
   /// Filter items emitted by the source Observable by only emitting those that

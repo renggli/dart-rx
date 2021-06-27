@@ -1,5 +1,6 @@
+import 'package:more/functional.dart';
+
 import '../core/observable.dart';
-import '../shared/functions.dart';
 import 'create.dart';
 
 /// Creates an [Observable] that uses the provided `callback` to create a new

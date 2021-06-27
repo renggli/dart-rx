@@ -1,8 +1,9 @@
+import 'package:more/functional.dart';
+
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
-import '../shared/functions.dart';
 
 /// Creates an [Observable] that uses the provided `callback` to emit elements
 /// to the provided [Observer] on each subscribe.

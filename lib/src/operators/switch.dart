@@ -1,3 +1,5 @@
+import 'package:more/functional.dart';
+
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
@@ -6,7 +8,6 @@ import '../disposables/disposed.dart';
 import '../disposables/sequential.dart';
 import '../events/event.dart';
 import '../observers/inner.dart';
-import '../shared/functions.dart';
 
 extension SwitchAllOperator<T> on Observable<Observable<T>> {
   /// Emits values only from the most recently received higher-order

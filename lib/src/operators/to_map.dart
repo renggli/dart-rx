@@ -1,10 +1,10 @@
 import 'package:more/collection.dart' show ListMultimap, SetMultimap;
+import 'package:more/functional.dart';
 
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../core/subscriber.dart';
 import '../disposables/disposable.dart';
-import '../shared/functions.dart';
 
 extension ToMapOperator<T> on Observable<T> {
   /// Returns a [Map] from an observable sequence.

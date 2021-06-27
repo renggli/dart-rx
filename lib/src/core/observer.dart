@@ -1,3 +1,5 @@
+import 'package:more/functional.dart';
+
 import '../disposables/disposable.dart';
 import '../observers/base.dart';
 import '../shared/functions.dart';
@@ -21,21 +23,21 @@ abstract class Observer<T> implements Disposable {
     bool ignoreErrors = false,
   }) =>
       BaseObserver<T>(
-          next ?? nullFunction1,
-          error ?? (ignoreErrors ? nullFunction2 : defaultErrorHandler),
-          complete ?? nullFunction0);
+          next ?? emptyFunction1,
+          error ?? (ignoreErrors ? emptyFunction2 : defaultErrorHandler),
+          complete ?? emptyFunction0);
 
   /// An observer that is only interested in values.
   ///
   /// By default errors are passed to the [defaultErrorHandler], unless
   /// [ignoreErrors] is set to `true`.
   factory Observer.next(NextCallback<T> next, {bool ignoreErrors = false}) =>
-      BaseObserver<T>(next, ignoreErrors ? nullFunction2 : defaultErrorHandler,
-          nullFunction0);
+      BaseObserver<T>(next, ignoreErrors ? emptyFunction2 : defaultErrorHandler,
+          emptyFunction0);
 
   /// An observer that is only interested in errors.
   factory Observer.error(ErrorCallback error) =>
-      BaseObserver<T>(nullFunction1, error, nullFunction0);
+      BaseObserver<T>(emptyFunction1, error, emptyFunction0);
 
   /// An observer that is only interested in completions.
   ///
@@ -43,8 +45,8 @@ abstract class Observer<T> implements Disposable {
   /// [ignoreErrors] is set to `true`.
   factory Observer.complete(CompleteCallback complete,
           {bool ignoreErrors = false}) =>
-      BaseObserver<T>(nullFunction1,
-          ignoreErrors ? nullFunction2 : defaultErrorHandler, complete);
+      BaseObserver<T>(emptyFunction1,
+          ignoreErrors ? emptyFunction2 : defaultErrorHandler, complete);
 
   /// Pass a value to the observer.
   void next(T value);

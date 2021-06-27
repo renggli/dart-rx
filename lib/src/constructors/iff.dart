@@ -1,5 +1,6 @@
+import 'package:more/functional.dart';
+
 import '../core/observable.dart';
-import '../shared/functions.dart';
 import 'defer.dart';
 import 'empty.dart';
 
