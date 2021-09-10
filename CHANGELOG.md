@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+- Dart 2.14 requirement.
+
 ## 0.1.2
 
 - Dart 2.13 requirement.

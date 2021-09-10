@@ -1,6 +1,5 @@
 import 'package:meta/meta.dart';
 import 'package:more/collection.dart';
-import 'package:more/hash.dart';
 import 'package:more/more.dart';
 
 import '../events/event.dart';
@@ -164,7 +163,7 @@ class TestEventSequence<T> {
   }
 
   @override
-  int get hashCode => hash(events);
+  int get hashCode => Object.hashAll(events);
 
   @override
   String toString() => '${super.toString()}{${toMarbles()}}';
