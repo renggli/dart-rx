@@ -21,15 +21,27 @@ void main() {
     test('custom', () {
       Object? observedError;
       StackTrace? observedStackTrace;
-      replaceErrorHandler((error, stackTrace) {
+      void customErrorHandler(error, stackTrace) {
         observedError = error;
         observedStackTrace = stackTrace;
         throw error;
-      });
+      }
+
+      expect(defaultErrorHandler, isNot(customErrorHandler));
+      defaultErrorHandler = customErrorHandler;
+      expect(defaultErrorHandler, customErrorHandler);
       final observer = Observer();
       expect(() => observer.error(error, stackTrace), throwsArgumentError);
       expect(observedError, error);
       expect(observedStackTrace, stackTrace);
+    });
+    test('replace', () {
+      void customErrorHandler(error, stackTrace) => throw error;
+      expect(defaultErrorHandler, isNot(customErrorHandler));
+      final subscription = replaceErrorHandler(customErrorHandler);
+      expect(defaultErrorHandler, customErrorHandler);
+      subscription.dispose();
+      expect(defaultErrorHandler, isNot(customErrorHandler));
     });
   });
 }
