@@ -4,6 +4,31 @@ import 'package:test/test.dart';
 import 'matchers.dart';
 
 void main() {
+  group('errors', () {
+    test('DisposedError', () {
+      final disposable = ActionDisposable(() => null);
+      DisposedError.checkNotDisposed(disposable);
+      disposable.dispose();
+      expect(
+          () => DisposedError.checkNotDisposed(disposable),
+          throwsA(isA<DisposedError>().having(
+              (value) => value.toString(), 'toString', 'DisposedError')));
+    });
+    test('DisposeError', () {
+      DisposeError.checkList([]);
+      final innerErrors = [ArgumentError(), UnimplementedError()];
+      final errors = [Error(), DisposeError(innerErrors)];
+      expect(
+          () => DisposeError.checkList(errors),
+          throwsA(
+            isA<DisposeError>()
+              ..having((value) => value.errors, 'errors',
+                  [errors[0], ...innerErrors])
+              ..having((value) => value.toString(), 'toString()',
+                  startsWith('DisposeError')),
+          ));
+    });
+  });
   group('action', () {
     test('creation', () {
       var disposeCount = 0;

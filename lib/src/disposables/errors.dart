@@ -10,7 +10,7 @@ class DisposedError extends Error {
   }
 
   @override
-  String toString() => 'DisposedError{}';
+  String toString() => 'DisposedError';
 }
 
 /// An error thrown when one or more errors have occurred during the disposal of
