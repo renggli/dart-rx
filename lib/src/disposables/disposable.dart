@@ -1,7 +1,5 @@
 /// A disposable resource.
 abstract class Disposable {
-  const Disposable();
-
   /// Disposes the resource.
   void dispose();
 
