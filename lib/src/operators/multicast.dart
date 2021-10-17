@@ -29,7 +29,6 @@ class MulticastObservable<T>
   final Map0<Subject<T>> _factory;
 
   Subject<T>? _subject;
-  bool _isConnected = false;
   Disposable _subscription = const DisposedDisposable();
 
   MulticastObservable(this._source, this._factory);
@@ -37,12 +36,15 @@ class MulticastObservable<T>
   Subject<T> get subject => _subject ??= _factory();
 
   @override
+  bool isConnected = false;
+
+  @override
   Disposable connect() {
-    if (!_isConnected) {
-      _isConnected = true;
+    if (!isConnected) {
+      isConnected = true;
       _subscription = CompositeDisposable([
         _source.subscribe(subject),
-        ActionDisposable(() => _isConnected = false),
+        ActionDisposable(() => isConnected = false),
       ]);
     }
     return _subscription;

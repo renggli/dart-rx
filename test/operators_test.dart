@@ -1573,7 +1573,44 @@ void main() {
       expect(actual, scheduler.isObservable<String>('(bc)'));
     });
   });
-  group('refCount', () {});
+  group('refCount', () {
+    test('simple connect', () {
+      final input = Subject<int>();
+      final multicast = input.multicast();
+      expect(multicast.isConnected, isFalse);
+      final actual = multicast.refCount();
+      expect(multicast.isConnected, isFalse);
+      input.next(1);
+      // Add a first listener.
+      final firstCollector = <int>[];
+      final firstListener = actual.subscribe(Observer.next(firstCollector.add));
+      expect(multicast.isConnected, isTrue);
+      expect(firstCollector, []);
+      input.next(2);
+      expect(firstCollector, [2]);
+      // Add a second listener.
+      final secondCollector = <int>[];
+      final secondListener =
+          actual.subscribe(Observer.next(secondCollector.add));
+      expect(multicast.isConnected, isTrue);
+      expect(secondCollector, []);
+      input.next(3);
+      expect(firstCollector, [2, 3]);
+      expect(secondCollector, [3]);
+      // Remove the first listener.
+      firstListener.dispose();
+      expect(multicast.isConnected, isTrue);
+      input.next(4);
+      expect(firstCollector, [2, 3]);
+      expect(secondCollector, [3, 4]);
+      // Remove the second listener.
+      secondListener.dispose();
+      expect(multicast.isConnected, isFalse);
+      input.next(5);
+      expect(firstCollector, [2, 3]);
+      expect(secondCollector, [3, 4]);
+    });
+  });
   group('repeat', () {
     test('empty', () {
       final input = scheduler.cold<String>('-a-b-|');
