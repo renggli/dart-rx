@@ -4,19 +4,22 @@ import '../disposables/disposable.dart';
 import '../schedulers/settings.dart';
 import 'functions.dart';
 
-// ignore: prefer_function_declarations_over_variables
-ErrorCallback _defaultErrorHandler = (error, stackTrace) =>
+void _standardErrorHandler(Object error, StackTrace stackTrace) =>
     defaultScheduler.schedule(() => throw UnhandledError(error, stackTrace));
 
+/// The current system error handler.
+ErrorCallback? _defaultErrorHandler;
+
 /// Returns the current system error handler.
-ErrorCallback get defaultErrorHandler => _defaultErrorHandler;
+ErrorCallback get defaultErrorHandler =>
+    _defaultErrorHandler ?? _standardErrorHandler;
 
 /// Sets the default error handler.
-set defaultErrorHandler(ErrorCallback errorHandler) =>
+set defaultErrorHandler(ErrorCallback? errorHandler) =>
     _defaultErrorHandler = errorHandler;
 
 /// Replaces the default error handler.
-Disposable replaceErrorHandler(ErrorCallback errorHandler) {
+Disposable replaceErrorHandler(ErrorCallback? errorHandler) {
   final originalErrorHandler = _defaultErrorHandler;
   _defaultErrorHandler = errorHandler;
   return ActionDisposable(() => _defaultErrorHandler = originalErrorHandler);

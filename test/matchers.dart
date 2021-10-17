@@ -3,16 +3,19 @@ import 'package:rx/src/core/errors.dart';
 import 'package:test/test.dart';
 
 /// Matches the throwing of a [TooFewError].
-final Matcher throwsTooFewError = throwsA(const TypeMatcher<TooFewError>());
+final Matcher throwsTooFewError = throwsA(isA<TooFewError>());
 
 /// Matches the throwing of a [TooManyError].
-final Matcher throwsTooManyError = throwsA(const TypeMatcher<TooManyError>());
+final Matcher throwsTooManyError = throwsA(isA<TooManyError>());
 
 /// Matches the throwing of a [TimeoutError].
-final Matcher throwsTimeoutError = throwsA(const TypeMatcher<TimeoutError>());
+final Matcher throwsTimeoutError = throwsA(isA<TimeoutError>());
 
 /// Matches the throwing of an [DisposedError].
-final Matcher throwsDisposedError = throwsA(const TypeMatcher<DisposedError>());
+final Matcher throwsDisposedError = throwsA(isA<DisposedError>());
 
 /// Matches the throwing of an [DisposeError].
-final Matcher throwsDisposeError = throwsA(const TypeMatcher<DisposeError>());
+final Matcher throwsDisposeError = throwsA(isA<DisposeError>());
+
+/// Matches the throwing of a [UnhandledError].
+final Matcher throwsUnhandledError = throwsA(isA<UnhandledError>());
