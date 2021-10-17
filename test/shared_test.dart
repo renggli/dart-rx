@@ -10,6 +10,7 @@ void main() {
     tearDown(() => defaultErrorHandler = null);
     tearDown(() => defaultScheduler = null);
     test('default', () {
+      // The default error handler asynchronously triggers the error.
       replaceDefaultScheduler(ImmediateScheduler());
       final observer = Observer();
       expect(
