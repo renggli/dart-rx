@@ -93,8 +93,8 @@ class TestScheduler extends AsyncScheduler {
     }, 'events', expected);
   }
 
-  /// Creates a "cold" [Observable] whose subscription starts when the test
-  /// begins.
+  /// Creates a "cold" [Observable] whose events replay each time it is being
+  /// subscribed to.
   Observable<T> cold<T>(String marbles,
       {Map<String, T> values = const {}, Object error = 'Error'}) {
     final sequence =
@@ -105,22 +105,22 @@ class TestScheduler extends AsyncScheduler {
     }
     if (sequence.events.whereType<UnsubscribeEvent>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
-          'Cold observable cannot have unsubscription marker.');
+          'Cold observable cannot have un-subscription marker.');
     }
     final observable = ColdObservable<T>(this, sequence);
     coldObservables.add(observable);
     return observable;
   }
 
-  /// Creates a "hot" [Observable] whose subscription starts before the test
-  /// begins.
+  /// Creates a "hot" [Observable] whose event start replaying immediately and
+  /// where subscribers all share the same unique run.
   Observable<T> hot<T>(String marbles,
       {Map<String, T> values = const {}, Object error = 'Error'}) {
     final sequence =
         TestEventSequence.fromString(marbles, values: values, error: error);
     if (sequence.events.whereType<UnsubscribeEvent>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
-          'Hot observable cannot have unsubscription marker.');
+          'Hot observable cannot have un-subscription marker.');
     }
     final observable = HotObservable<T>(this, sequence);
     hotObservables.add(observable);

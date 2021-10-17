@@ -34,7 +34,7 @@ class TestEvent<T> extends Event<T> {
   }
 
   @override
-  int get hashCode => index;
+  int get hashCode => Object.hash(index.hashCode, event.hashCode);
 
   @override
   String toString() => 'TestEvent{index: $index, event: $event}';

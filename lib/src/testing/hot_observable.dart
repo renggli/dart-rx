@@ -13,9 +13,7 @@ class HotObservable<T> extends TestObservable<T> {
   final Subject<T> subject = Subject<T>();
 
   HotObservable(TestScheduler scheduler, TestEventSequence<T> sequence)
-      : super(scheduler, sequence);
-
-  void initialize() {
+      : super(scheduler, sequence) {
     final subscriptionIndex = sequence.events
         .where((element) => element.event is SubscribeEvent)
         .map((element) => element.index)
