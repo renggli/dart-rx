@@ -6,7 +6,7 @@ import 'matchers.dart';
 void main() {
   group('errors', () {
     test('DisposedError', () {
-      final disposable = ActionDisposable(() => null);
+      final disposable = ActionDisposable(() {});
       DisposedError.checkNotDisposed(disposable);
       disposable.dispose();
       expect(
