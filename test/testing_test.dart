@@ -111,4 +111,37 @@ void main() {
           toMarbles: false);
     });
   });
+  group('scheduler', () {
+    final scheduler = TestScheduler();
+    setUp(scheduler.setUp);
+    tearDown(scheduler.tearDown);
+
+    group('cold observable', () {
+      test('default', () {
+        final observable = scheduler.cold<String>('ab(cd)|');
+        expect(observable, scheduler.isObservable<String>('ab(cd)|'));
+        expect(observable, scheduler.isObservable<String>('ab(cd)|'));
+        expect(scheduler.coldObservables, [observable]);
+        expect(scheduler.hotObservables, isEmpty);
+      });
+      test('subscribe event not allowed', () {
+        expect(() => scheduler.cold<String>('^'), throwsArgumentError);
+      });
+      test('un-subscribe event not allowed', () {
+        expect(() => scheduler.cold<String>('!'), throwsArgumentError);
+      });
+    });
+    group('hot observable', () {
+      test('default', () {
+        final observable = scheduler.hot<String>('ab(cd)|');
+        expect(observable, scheduler.isObservable<String>('ab(cd)|'));
+        expect(observable, scheduler.isObservable<String>('|'));
+        expect(scheduler.coldObservables, isEmpty);
+        expect(scheduler.hotObservables, [observable]);
+      });
+      test('un-subscribe event not allowed', () {
+        expect(() => scheduler.hot<String>('!'), throwsArgumentError);
+      });
+    });
+  });
 }

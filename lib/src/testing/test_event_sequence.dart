@@ -19,15 +19,18 @@ const unsubscribeMarker = '!';
 /// Encapsulates a sequence of [TestEvent] instances.
 @immutable
 class TestEventSequence<T> {
-  /// Sequence of events.
-  final List<TestEvent<T>> events;
-
-  /// Optional mapping from marble tokens to objects.
-  final BiMap<String, T> values;
-
   /// Constructor of a list of events to an event sequence.
   TestEventSequence(this.events, {Map<String, T> values = const {}})
       : values = BiMap.from(values);
+
+  /// Sequence of [TestEvent] instances.
+  final List<TestEvent<T>> events;
+
+  /// Sequence of [Event] instances (unwrapping the test events).
+  Iterable<Event<T>> get baseEvents => events.map((value) => value.event);
+
+  /// Optional mapping from marble tokens to objects.
+  final BiMap<String, T> values;
 
   /// Converts a string of marbles to an event sequence.
   factory TestEventSequence.fromString(String marbles,
