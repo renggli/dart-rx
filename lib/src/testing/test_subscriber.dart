@@ -15,6 +15,7 @@ class TestSubscriber<T> extends Subscriber<T> {
   }
 
   /// Track the unsubscription timestamp.
+  @override
   dispose() {
     _unsubscriptionTimestamp ??= scheduler.now;
     super.dispose();
