@@ -1,5 +1,6 @@
 import 'package:rx/events.dart';
 import 'package:rx/src/testing/test_event_sequence.dart';
+import 'package:rx/schedulers.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
 
@@ -14,7 +15,12 @@ void main() {
       expect(result.events, events);
       if (toMarbles) {
         expect(result.toMarbles(), marbles);
+        expect(result.toString(), 'TestEventSequence<$T>{$marbles}');
       }
+      final other = TestEventSequence<T>.fromString(marbles,
+          values: values, error: error);
+      expect(result, other);
+      expect(result.hashCode, other.hashCode);
     }
 
     test('series of values', () {
@@ -130,6 +136,10 @@ void main() {
       });
       test('un-subscribe event not allowed', () {
         expect(() => scheduler.cold<String>('!'), throwsArgumentError);
+      });
+      test('assertion outside of scheduler', () {
+        defaultScheduler = null;
+        expect(() => scheduler.isObservable<String>(''), throwsStateError);
       });
     });
     group('hot observable', () {

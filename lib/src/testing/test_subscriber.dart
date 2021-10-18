@@ -5,7 +5,6 @@ import 'test_scheduler.dart';
 
 class TestSubscriber<T> extends Subscriber<T> {
   final TestScheduler scheduler;
-
   final DateTime _subscriptionTimestamp;
   DateTime? _unsubscriptionTimestamp;
 
@@ -15,9 +14,17 @@ class TestSubscriber<T> extends Subscriber<T> {
     add(ActionDisposable(() => _unsubscriptionTimestamp = scheduler.now));
   }
 
+  /// Track the unsubscription timestamp.
+  dispose() {
+    _unsubscriptionTimestamp ??= scheduler.now;
+    super.dispose();
+  }
+
   /// Timestamp when the observable was subscribed to.
   DateTime get subscriptionTimestamp => _subscriptionTimestamp;
 
   /// Timestamp when the observable was unsubscribed from.
-  DateTime? get unsubscriptionTimestamp => _unsubscriptionTimestamp;
+  DateTime get unsubscriptionTimestamp => _unsubscriptionTimestamp == null
+      ? throw StateError('Subscriber is not disposed')
+      : _unsubscriptionTimestamp!;
 }
