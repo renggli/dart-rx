@@ -2352,6 +2352,22 @@ void main() {
             'x': {'a': 'A', 'b': 'B', 'c': 'C'}
           }));
     });
+    test('key selector error', () {
+      final error = Error();
+      final input = scheduler.cold<String>('--a--|');
+      final actual =
+          input.toMap<String, String>(keySelector: (value) => throw error);
+      expect(actual,
+          scheduler.isObservable<Map<String, String>>('--#', error: error));
+    });
+    test('value selector error', () {
+      final error = Error();
+      final input = scheduler.cold<String>('--a--|');
+      final actual =
+          input.toMap<String, String>(valueSelector: (value) => throw error);
+      expect(actual,
+          scheduler.isObservable<Map<String, String>>('--#', error: error));
+    });
   });
   group('toListMultimap', () {
     test('empty and completion', () {
