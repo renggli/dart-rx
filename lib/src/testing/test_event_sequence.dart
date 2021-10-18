@@ -169,5 +169,5 @@ class TestEventSequence<T> {
   int get hashCode => Object.hashAll(events);
 
   @override
-  String toString() => '${super.toString()}{${toMarbles()}}';
+  String toString() => 'TestEventSequence{${toMarbles()}}';
 }

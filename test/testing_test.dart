@@ -119,6 +119,7 @@ void main() {
     group('cold observable', () {
       test('default', () {
         final observable = scheduler.cold<String>('ab(cd)|');
+        expect(observable.toString(), 'ColdObservable<String>{ab(cd)|}');
         expect(observable, scheduler.isObservable<String>('ab(cd)|'));
         expect(observable, scheduler.isObservable<String>('ab(cd)|'));
         expect(scheduler.coldObservables, [observable]);
@@ -134,6 +135,7 @@ void main() {
     group('hot observable', () {
       test('default', () {
         final observable = scheduler.hot<String>('ab(cd)|');
+        expect(observable.toString(), 'HotObservable<String>{ab(cd)|}');
         expect(observable, scheduler.isObservable<String>('ab(cd)|'));
         expect(observable, scheduler.isObservable<String>('|'));
         expect(scheduler.coldObservables, isEmpty);

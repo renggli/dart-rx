@@ -31,4 +31,7 @@ class HotObservable<T> extends TestObservable<T> {
     subject.subscribe(subscriber);
     return subscriber;
   }
+
+  @override
+  String toString() => 'HotObservable<$T>{${sequence.toMarbles()}}';
 }
