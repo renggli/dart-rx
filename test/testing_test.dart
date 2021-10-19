@@ -122,6 +122,12 @@ void main() {
     setUp(scheduler.setUp);
     tearDown(scheduler.tearDown);
 
+    test('lifecycle', () {
+      expect(() => scheduler.setUp(), throwsStateError);
+      scheduler.tearDown();
+      expect(() => scheduler.tearDown(), throwsStateError);
+      scheduler.setUp();
+    });
     group('cold observable', () {
       test('default', () {
         final observable = scheduler.cold<String>('ab(cd)|');
@@ -131,11 +137,13 @@ void main() {
         expect(scheduler.observables, [observable]);
         expect(scheduler.subscribers, hasLength(2));
         final firstSubscriber = scheduler.subscribers.first;
+        expect(firstSubscriber.isDisposed, isTrue);
         expect(firstSubscriber.subscriptionTimestamp,
             scheduler.now.subtract(scheduler.stepDuration * 6));
         expect(firstSubscriber.unsubscriptionTimestamp,
             scheduler.now.subtract(scheduler.stepDuration * 3));
         final secondSubscriber = scheduler.subscribers.last;
+        expect(secondSubscriber.isDisposed, isTrue);
         expect(secondSubscriber.subscriptionTimestamp,
             scheduler.now.subtract(scheduler.stepDuration * 3));
         expect(secondSubscriber.unsubscriptionTimestamp, scheduler.now);
@@ -160,10 +168,12 @@ void main() {
         expect(scheduler.observables, [observable]);
         expect(scheduler.subscribers, hasLength(2));
         final firstSubscriber = scheduler.subscribers.first;
+        expect(firstSubscriber.isDisposed, isTrue);
         expect(firstSubscriber.subscriptionTimestamp,
             scheduler.now.subtract(scheduler.stepDuration * 3));
         expect(firstSubscriber.unsubscriptionTimestamp, scheduler.now);
         final secondSubscriber = scheduler.subscribers.last;
+        expect(secondSubscriber.isDisposed, isTrue);
         expect(secondSubscriber.subscriptionTimestamp, scheduler.now);
         expect(secondSubscriber.unsubscriptionTimestamp, scheduler.now);
       });
