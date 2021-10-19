@@ -12,14 +12,16 @@ import '../schedulers/settings.dart';
 import 'cold_observable.dart';
 import 'hot_observable.dart';
 import 'test_event_sequence.dart';
+import 'test_subscriber.dart';
+import 'test_observable.dart';
 import 'test_events.dart';
 
 class TestScheduler extends AsyncScheduler {
   DateTime _currentTime = DateTime.now();
   Disposable _subscription = const DisposedDisposable();
 
-  final List<Observable> coldObservables = [];
-  final List<Observable> hotObservables = [];
+  final List<TestObservable> observables = [];
+  final List<TestSubscriber> subscribers = [];
 
   TestScheduler();
 
@@ -45,8 +47,8 @@ class TestScheduler extends AsyncScheduler {
       throw StateError('$this is already tear-down.');
     }
     advanceAll();
-    coldObservables.clear();
-    hotObservables.clear();
+    observables.clear();
+    subscribers.clear();
     _subscription.dispose();
     _subscription = const DisposedDisposable();
   }
@@ -108,7 +110,7 @@ class TestScheduler extends AsyncScheduler {
           'Cold observable cannot have un-subscription marker.');
     }
     final observable = ColdObservable<T>(this, sequence);
-    coldObservables.add(observable);
+    observables.add(observable);
     return observable;
   }
 
@@ -123,7 +125,7 @@ class TestScheduler extends AsyncScheduler {
           'Hot observable cannot have un-subscription marker.');
     }
     final observable = HotObservable<T>(this, sequence);
-    hotObservables.add(observable);
+    observables.add(observable);
     return observable;
   }
 }

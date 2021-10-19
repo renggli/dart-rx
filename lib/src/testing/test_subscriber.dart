@@ -14,13 +14,6 @@ class TestSubscriber<T> extends Subscriber<T> {
     add(ActionDisposable(() => _unsubscriptionTimestamp = scheduler.now));
   }
 
-  /// Track the unsubscription timestamp.
-  @override
-  dispose() {
-    _unsubscriptionTimestamp ??= scheduler.now;
-    super.dispose();
-  }
-
   /// Timestamp when the observable was subscribed to.
   DateTime get subscriptionTimestamp => _subscriptionTimestamp;
 

@@ -7,21 +7,16 @@ import 'test_scheduler.dart';
 import 'test_subscriber.dart';
 
 abstract class TestObservable<T> with Observable<T> {
-  @protected
+  TestObservable(this.scheduler, this.sequence);
+
   final TestScheduler scheduler;
 
-  @protected
   final TestEventSequence<T> sequence;
-
-  @protected
-  final List<TestSubscriber<T>> subscribers = [];
-
-  TestObservable(this.scheduler, this.sequence);
 
   @protected
   TestSubscriber<T> createSubscriber(Observer<T> observer) {
     final subscriber = TestSubscriber<T>(scheduler, observer);
-    subscribers.add(subscriber);
+    scheduler.subscribers.add(subscriber);
     return subscriber;
   }
 }

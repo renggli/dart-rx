@@ -128,8 +128,17 @@ void main() {
         expect(observable.toString(), 'ColdObservable<String>{ab(cd)|}');
         expect(observable, scheduler.isObservable<String>('ab(cd)|'));
         expect(observable, scheduler.isObservable<String>('ab(cd)|'));
-        expect(scheduler.coldObservables, [observable]);
-        expect(scheduler.hotObservables, isEmpty);
+        expect(scheduler.observables, [observable]);
+        expect(scheduler.subscribers, hasLength(2));
+        final firstSubscriber = scheduler.subscribers.first;
+        expect(firstSubscriber.subscriptionTimestamp,
+            scheduler.now.subtract(scheduler.stepDuration * 6));
+        expect(firstSubscriber.unsubscriptionTimestamp,
+            scheduler.now.subtract(scheduler.stepDuration * 3));
+        final secondSubscriber = scheduler.subscribers.last;
+        expect(secondSubscriber.subscriptionTimestamp,
+            scheduler.now.subtract(scheduler.stepDuration * 3));
+        expect(secondSubscriber.unsubscriptionTimestamp, scheduler.now);
       });
       test('subscribe event not allowed', () {
         expect(() => scheduler.cold<String>('^'), throwsArgumentError);
@@ -148,8 +157,15 @@ void main() {
         expect(observable.toString(), 'HotObservable<String>{ab(cd)|}');
         expect(observable, scheduler.isObservable<String>('ab(cd)|'));
         expect(observable, scheduler.isObservable<String>('|'));
-        expect(scheduler.coldObservables, isEmpty);
-        expect(scheduler.hotObservables, [observable]);
+        expect(scheduler.observables, [observable]);
+        expect(scheduler.subscribers, hasLength(2));
+        final firstSubscriber = scheduler.subscribers.first;
+        expect(firstSubscriber.subscriptionTimestamp,
+            scheduler.now.subtract(scheduler.stepDuration * 3));
+        expect(firstSubscriber.unsubscriptionTimestamp, scheduler.now);
+        final secondSubscriber = scheduler.subscribers.last;
+        expect(secondSubscriber.subscriptionTimestamp, scheduler.now);
+        expect(secondSubscriber.unsubscriptionTimestamp, scheduler.now);
       });
       test('un-subscribe event not allowed', () {
         expect(() => scheduler.hot<String>('!'), throwsArgumentError);
