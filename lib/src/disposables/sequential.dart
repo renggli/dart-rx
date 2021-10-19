@@ -5,13 +5,9 @@ import 'stateful.dart';
 /// A sequence of [Disposable] instances, that can sequentially hold a single
 /// [Disposable] and dispose the previous one.
 class SequentialDisposable extends StatefulDisposable {
-  Disposable _current = const DisposedDisposable();
+  SequentialDisposable();
 
-  SequentialDisposable([Disposable? disposable]) {
-    if (disposable != null) {
-      current = disposable;
-    }
-  }
+  Disposable _current = const DisposedDisposable();
 
   Disposable get current => _current;
 

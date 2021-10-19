@@ -16,8 +16,6 @@ class CompositeDisposable extends StatefulDisposable {
 
   bool get isEmpty => _disposables.isEmpty;
 
-  bool get isNotEmpty => _disposables.isNotEmpty;
-
   bool contains(Disposable disposable) => _disposables.contains(disposable);
 
   void add(Disposable disposable) {
