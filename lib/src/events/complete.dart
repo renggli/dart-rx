@@ -19,5 +19,5 @@ class CompleteEvent<T> extends Event<T> {
   int get hashCode => 34822;
 
   @override
-  String toString() => 'CompleteEvent{}';
+  String toString() => 'CompleteEvent<$T>()';
 }

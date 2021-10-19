@@ -64,14 +64,14 @@ abstract class Event<T> {
   bool get isComplete => false;
 
   /// Returns the value of a [NextEvent], throws otherwise.
-  T get value => throw UnsupportedError('$this has no value.');
+  T get value => throw UnimplementedError('$this has no value.');
 
   /// Returns the error of a [ErrorEvent], throws otherwise.
-  Object get error => throw UnsupportedError('$this has no error.');
+  Object get error => throw UnimplementedError('$this has no error.');
 
   /// Returns the optional stack trace of a [ErrorEvent], throws otherwise.
   StackTrace get stackTrace =>
-      throw UnsupportedError('$this has no stack trace.');
+      throw UnimplementedError('$this has no stack trace.');
 
   /// Performs this event on the [observer].
   void observe(Observer<T> observer);

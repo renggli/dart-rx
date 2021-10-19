@@ -25,5 +25,5 @@ class ErrorEvent<T> extends Event<T> {
   int get hashCode => error.hashCode;
 
   @override
-  String toString() => 'ErrorEvent{error: $error, stackTrace: $stackTrace}';
+  String toString() => 'ErrorEvent<$T>(error: $error, stackTrace: $stackTrace)';
 }

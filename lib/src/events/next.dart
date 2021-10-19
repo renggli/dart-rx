@@ -22,5 +22,5 @@ class NextEvent<T> extends Event<T> {
   int get hashCode => value.hashCode;
 
   @override
-  String toString() => 'NextEvent{value: $value}';
+  String toString() => 'NextEvent<$T>(value: $value)';
 }
