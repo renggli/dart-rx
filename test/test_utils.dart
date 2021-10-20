@@ -1,5 +1,5 @@
+import 'package:rx/core.dart';
 import 'package:rx/disposables.dart';
-import 'package:rx/src/core/errors.dart';
 import 'package:test/test.dart';
 
 /// Matches the throwing of a [TooFewError].
@@ -19,3 +19,10 @@ final Matcher throwsDisposeError = throwsA(isA<DisposeError>());
 
 /// Matches the throwing of a [UnhandledError].
 final Matcher throwsUnhandledError = throwsA(isA<UnhandledError>());
+
+/// Observer that fails all calls.
+Observer<T> createFailingObserver<T>() => Observer<T>(
+      next: (value) => fail('Unepxected next: $value.'),
+      error: (error, stackTrace) => fail('Unepxected error: $error.'),
+      complete: () => fail('Unexpected complete.'),
+    );

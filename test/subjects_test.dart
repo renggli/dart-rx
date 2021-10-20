@@ -2,7 +2,7 @@ import 'package:rx/subjects.dart';
 import 'package:rx/core.dart';
 import 'package:test/test.dart';
 
-import 'matchers.dart';
+import 'test_utils.dart';
 
 void main() {
   group('subject', () {

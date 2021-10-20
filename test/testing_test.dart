@@ -1,8 +1,9 @@
 import 'package:rx/events.dart';
-import 'package:rx/src/testing/test_event_sequence.dart';
 import 'package:rx/schedulers.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
+
+import 'test_utils.dart';
 
 void main() {
   group('marbles', () {
@@ -80,10 +81,18 @@ void main() {
           error: error);
     });
     test('subscription and unsubscription', () {
+      final subscribe = SubscribeEvent<String>();
+      final unsubscribe = UnsubscribeEvent<String>();
       expectParse<String>('---^---!', [
-        TestEvent(3, SubscribeEvent()),
-        TestEvent(7, UnsubscribeEvent()),
+        TestEvent(3, subscribe),
+        TestEvent(7, unsubscribe),
       ]);
+      expect(subscribe.toString(), startsWith('SubscribeEvent<String>'));
+      subscribe.observe(createFailingObserver<String>());
+      expect(unsubscribe.toString(), startsWith('UnsubscribeEvent<String>'));
+      unsubscribe.observe(createFailingObserver<String>());
+      expect(subscribe, isNot(unsubscribe));
+      expect(subscribe.hashCode, isNot(unsubscribe.hashCode));
     });
     test('invalid subscription and unsubscription', () {
       expect(() => TestEventSequence<String>.fromString('^^'),

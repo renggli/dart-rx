@@ -1,7 +1,7 @@
 import 'package:rx/disposables.dart';
 import 'package:test/test.dart';
 
-import 'matchers.dart';
+import 'test_utils.dart';
 
 void main() {
   group('errors', () {

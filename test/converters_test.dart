@@ -5,7 +5,7 @@ import 'package:rx/schedulers.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
 
-import 'matchers.dart';
+import 'test_utils.dart';
 
 void main() {
   final scheduler = TestScheduler();

@@ -54,7 +54,7 @@ class SubscribeEvent<T> extends Event<T> {
   int get hashCode => 36028;
 
   @override
-  String toString() => 'SubscribeEvent{}';
+  String toString() => 'SubscribeEvent<$T>{}';
 }
 
 class UnsubscribeEvent<T> extends Event<T> {
@@ -71,5 +71,5 @@ class UnsubscribeEvent<T> extends Event<T> {
   int get hashCode => 84326;
 
   @override
-  String toString() => 'UnsubscribeEvent{}';
+  String toString() => 'UnsubscribeEvent<$T>{}';
 }
