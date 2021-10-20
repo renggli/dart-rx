@@ -7,6 +7,7 @@ import 'events_test.dart' as events_test;
 import 'operators_test.dart' as operators_test;
 import 'schedulers_test.dart' as schedulers_test;
 import 'shared_test.dart' as shared_test;
+import 'subjects_test.dart' as subjects_test;
 import 'testing_test.dart' as testing_test;
 
 void main() {
@@ -17,5 +18,6 @@ void main() {
   group('operators', operators_test.main);
   group('schedulers', schedulers_test.main);
   group('shared', shared_test.main);
+  group('subjects', subjects_test.main);
   group('testing', testing_test.main);
 }
