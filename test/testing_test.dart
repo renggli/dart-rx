@@ -116,6 +116,11 @@ void main() {
           ],
           toMarbles: false);
     });
+    test('unknown test event', () {
+      final sequence = TestEventSequence(
+          [TestEvent<int>(0, TestEvent<int>(1, Event<int>.complete()))]);
+      expect(() => sequence.toString(), throwsArgumentError);
+    });
   });
   group('scheduler', () {
     final scheduler = TestScheduler();
@@ -151,7 +156,7 @@ void main() {
       test('subscribe event not allowed', () {
         expect(() => scheduler.cold<String>('^'), throwsArgumentError);
       });
-      test('un-subscribe event not allowed', () {
+      test('unsubscribe event not allowed', () {
         expect(() => scheduler.cold<String>('!'), throwsArgumentError);
       });
       test('assertion outside of scheduler', () {
@@ -177,8 +182,19 @@ void main() {
         expect(secondSubscriber.subscriptionTimestamp, scheduler.now);
         expect(secondSubscriber.unsubscriptionTimestamp, scheduler.now);
       });
-      test('un-subscribe event not allowed', () {
+      test('unsubscribe event not allowed', () {
         expect(() => scheduler.hot<String>('!'), throwsArgumentError);
+      });
+      test('active subscriber', () {
+        final observable = scheduler.hot<String>('ab');
+        expect(observable, scheduler.isObservable<String>('ab'));
+        expect(scheduler.observables, [observable]);
+        expect(scheduler.subscribers, hasLength(1));
+        final subscriber = scheduler.subscribers.first;
+        expect(subscriber.isDisposed, isFalse);
+        expect(subscriber.subscriptionTimestamp,
+            scheduler.now.subtract(scheduler.stepDuration));
+        expect(() => subscriber.unsubscriptionTimestamp, throwsStateError);
       });
     });
   });
