@@ -4,7 +4,6 @@ import 'package:more/feature.dart';
 import 'package:more/iterable.dart';
 import 'package:rx/disposables.dart';
 import 'package:rx/schedulers.dart';
-import 'package:rx/src/schedulers/settings.dart';
 import 'package:test/test.dart';
 
 final DateTime epoch = DateTime.fromMillisecondsSinceEpoch(0);

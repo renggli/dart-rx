@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:more/collection.dart';
-import 'package:more/more.dart';
+import 'package:more/ordering.dart';
 
 import '../events/event.dart';
 import 'test_events.dart';
