@@ -1,5 +1,5 @@
-import 'package:rx/events.dart';
 import 'package:rx/core.dart';
+import 'package:rx/events.dart';
 import 'package:test/test.dart';
 
 void main() {

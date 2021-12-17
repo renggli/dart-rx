@@ -1,6 +1,6 @@
-import 'package:rx/shared.dart';
 import 'package:rx/core.dart';
 import 'package:rx/schedulers.dart';
+import 'package:rx/shared.dart';
 import 'package:test/test.dart';
 
 void main() {

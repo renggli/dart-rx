@@ -1,5 +1,5 @@
-import 'package:rx/subjects.dart';
 import 'package:rx/core.dart';
+import 'package:rx/subjects.dart';
 import 'package:test/test.dart';
 
 import 'test_utils.dart';

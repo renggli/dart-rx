@@ -12,9 +12,9 @@ import '../schedulers/settings.dart';
 import 'cold_observable.dart';
 import 'hot_observable.dart';
 import 'test_event_sequence.dart';
-import 'test_subscriber.dart';
-import 'test_observable.dart';
 import 'test_events.dart';
+import 'test_observable.dart';
+import 'test_subscriber.dart';
 
 class TestScheduler extends AsyncScheduler {
   DateTime _currentTime = DateTime.now();
