@@ -1,0 +1,11 @@
+Check no dependency overrides
+Check if the git repository is clean state.
+Check if this is a not yet published version
+Update to all the latest packages
+Check if any packages are outdated
+Check if the formatter is happy
+Check if the analyzer is happy
+Run the tests
+Run the package scoring
+Publish the package
+Add the version tag to the repository
