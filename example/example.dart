@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:more/collection.dart';
 import 'package:rx/constructors.dart' as rx;
 import 'package:rx/converters.dart';
@@ -5,9 +7,9 @@ import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 
 Observer<T> printObserver<T>(String name) => Observer(
-      next: (value) => print('$name.next($value)'),
-      error: (error, stackTrace) => print('$name.error($error)'),
-      complete: () => print('$name.complete()'),
+      next: (value) => stdout.writeln('$name.next($value)'),
+      error: (error, stackTrace) => stdout.writeln('$name.error($error)'),
+      complete: () => stdout.writeln('$name.complete()'),
     );
 
 void main() {
@@ -40,7 +42,7 @@ void main() {
   fromFuture.subscribe(printObserver('fromFuture'));
 
   final toFuture = [1, 2, 3].toObservable().toFuture();
-  toFuture.then((value) => print('toFuture.then($value)'));
+  toFuture.then((value) => stdout.writeln('toFuture.then($value)'));
 
   // iff
   final iff = rx.iff(() => true, rx.just(true), rx.just(false));
@@ -66,7 +68,7 @@ void main() {
   fromStream.subscribe(printObserver('fromStream'));
 
   final toStream = [1, 2, 3].toObservable().toStream();
-  toStream.listen((value) => print('toStream.value($value)'));
+  toStream.listen((value) => stdout.writeln('toStream.value($value)'));
 
   // throwError
   final throwError = rx.throwError(Exception('Hello World'));

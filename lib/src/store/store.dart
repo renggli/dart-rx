@@ -1,6 +1,5 @@
-import 'package:rx/core.dart';
-import 'package:rx/disposables.dart';
-
+import '../../core.dart';
+import '../../disposables.dart';
 import 'types.dart';
 
 /// A redux like store that manages state.
