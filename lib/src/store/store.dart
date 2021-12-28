@@ -27,9 +27,9 @@ import 'types.dart';
 ///    // Alternatively, one can subscribe to an observable and provide
 ///    // reducer functions for its events to update the state asynchronously.
 ///    // The following line sets the state to a random value every 10 seconds.
-///    const randomValueEvery10sec = timer(period: Duration(seconds: 10))
+///    final randomValue = timer(period: Duration(seconds: 10))
 ///       .map((_) => Random().nextInt(100));
-///    store.addReducer(randomValueEvery10sec, next: (state, value) => value);
+///    store.addReducer(randomValue, next: (state, value) => value);
 ///
 class Store<S> {
   /// Constructs the store with the given initial state.
