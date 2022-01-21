@@ -15,10 +15,10 @@ extension RepeatOperator<T> on Observable<T> {
 }
 
 class RepeatObservable<T> with Observable<T> {
+  RepeatObservable(this.delegate, this.count);
+
   final Observable<T> delegate;
   final int count;
-
-  RepeatObservable(this.delegate, this.count);
 
   @override
   Disposable subscribe(Observer<T> observer) =>
@@ -26,15 +26,15 @@ class RepeatObservable<T> with Observable<T> {
 }
 
 class RepeatSubscriber<T> extends Subscriber<T> {
-  final Observable<T> delegate;
-
-  int count;
-  Disposable? iteration;
-
   RepeatSubscriber(this.delegate, Observer<T> observer, this.count)
       : super(observer) {
     restart();
   }
+
+  final Observable<T> delegate;
+
+  int count;
+  Disposable? iteration;
 
   @override
   void onComplete() {

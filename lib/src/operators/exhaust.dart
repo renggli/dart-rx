@@ -34,11 +34,11 @@ extension ExhaustMapOperator<T> on Observable<T> {
 }
 
 class ExhaustObservable<T, R> with Observable<R> {
+  ExhaustObservable(this.delegate, this.project, this.concurrent);
+
   final Observable<T> delegate;
   final Map1<T, Observable<R>> project;
   final int concurrent;
-
-  ExhaustObservable(this.delegate, this.project, this.concurrent);
 
   @override
   Disposable subscribe(Observer<R> observer) {
@@ -50,14 +50,14 @@ class ExhaustObservable<T, R> with Observable<R> {
 
 class ExhaustSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
+  ExhaustSubscriber(Observer<R> observer, this.project, this.concurrent)
+      : super(observer);
+
   final Map1<T, Observable<R>> project;
   final int concurrent;
 
   bool hasCompleted = false;
   int active = 0;
-
-  ExhaustSubscriber(Observer<R> observer, this.project, this.concurrent)
-      : super(observer);
 
   @override
   void onNext(T value) {

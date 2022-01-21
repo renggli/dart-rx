@@ -11,10 +11,10 @@ extension DefaultIfEmptyOperator<T> on Observable<T> {
 }
 
 class DefaultIfEmptyObservable<T> with Observable<T> {
+  DefaultIfEmptyObservable(this.delegate, this.defaultValue);
+
   final Observable<T> delegate;
   final T defaultValue;
-
-  DefaultIfEmptyObservable(this.delegate, this.defaultValue);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -25,12 +25,12 @@ class DefaultIfEmptyObservable<T> with Observable<T> {
 }
 
 class DefaultIfEmptySubscriber<T> extends Subscriber<T> {
+  DefaultIfEmptySubscriber(Observer<T> observer, this.defaultValue)
+      : super(observer);
+
   final T defaultValue;
 
   bool seenValue = false;
-
-  DefaultIfEmptySubscriber(Observer<T> observer, this.defaultValue)
-      : super(observer);
 
   @override
   void onNext(T value) {

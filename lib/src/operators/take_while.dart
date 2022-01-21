@@ -13,10 +13,10 @@ extension TakeWhileOperator<T> on Observable<T> {
 }
 
 class TakeWhileObservable<T> with Observable<T> {
+  TakeWhileObservable(this.delegate, this.predicate);
+
   final Observable<T> delegate;
   final Predicate1<T> predicate;
-
-  TakeWhileObservable(this.delegate, this.predicate);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -27,9 +27,9 @@ class TakeWhileObservable<T> with Observable<T> {
 }
 
 class TakeWhileSubscriber<T> extends Subscriber<T> {
-  final Predicate1<T> predicate;
-
   TakeWhileSubscriber(Observer<T> observer, this.predicate) : super(observer);
+
+  final Predicate1<T> predicate;
 
   @override
   void onNext(T value) {

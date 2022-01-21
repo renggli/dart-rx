@@ -12,10 +12,10 @@ extension ToListOperator<T> on Observable<T> {
 }
 
 class ToListObservable<T> with Observable<List<T>> {
+  ToListObservable(this.delegate, this.constructor);
+
   final Observable<T> delegate;
   final Map0<List<T>> constructor;
-
-  ToListObservable(this.delegate, this.constructor);
 
   @override
   Disposable subscribe(Observer<List<T>> observer) {
@@ -26,9 +26,9 @@ class ToListObservable<T> with Observable<List<T>> {
 }
 
 class ToListSubscriber<T> extends Subscriber<T> {
-  final List<T> list;
-
   ToListSubscriber(Observer<List<T>> observer, this.list) : super(observer);
+
+  final List<T> list;
 
   @override
   void onNext(T value) => list.add(value);

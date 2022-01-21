@@ -18,10 +18,10 @@ extension MapOperator<T> on Observable<T> {
 }
 
 class MapObservable<T, R> with Observable<R> {
+  MapObservable(this.delegate, this.transform);
+
   final Observable<T> delegate;
   final Map1<T, R> transform;
-
-  MapObservable(this.delegate, this.transform);
 
   @override
   Disposable subscribe(Observer<R> observer) {
@@ -32,9 +32,9 @@ class MapObservable<T, R> with Observable<R> {
 }
 
 class MapSubscriber<T, R> extends Subscriber<T> {
-  final Map1<T, R> transform;
-
   MapSubscriber(Observer<R> observer, this.transform) : super(observer);
+
+  final Map1<T, R> transform;
 
   @override
   void onNext(T value) {

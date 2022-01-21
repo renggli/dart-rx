@@ -4,13 +4,13 @@ import '../core/observer.dart';
 import '../shared/functions.dart';
 
 class BaseObserver<T> with Observer<T> implements Observer<T> {
+  BaseObserver(this._next, this._error, this._complete);
+
   final NextCallback<T> _next;
   final ErrorCallback _error;
   final CompleteCallback _complete;
 
   bool _isClosed = false;
-
-  BaseObserver(this._next, this._error, this._complete);
 
   @override
   void next(T value) {

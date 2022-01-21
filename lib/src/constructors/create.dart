@@ -11,9 +11,9 @@ Observable<T> create<T>(Callback1<Subscriber<T>> callback) =>
     CreateObservable<T>(callback);
 
 class CreateObservable<T> with Observable<T> {
-  final Callback1<Subscriber<T>> callback;
-
   CreateObservable(this.callback);
+
+  final Callback1<Subscriber<T>> callback;
 
   @override
   Disposable subscribe(Observer<T> observer) {

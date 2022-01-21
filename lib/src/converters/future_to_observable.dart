@@ -11,9 +11,9 @@ extension FutureToObservable<T> on Future<T> {
 }
 
 class FutureObservable<T> with Observable<T> {
-  final Future<T> future;
-
   const FutureObservable(this.future);
+
+  final Future<T> future;
 
   @override
   Disposable subscribe(Observer<T> observer) =>
@@ -21,12 +21,12 @@ class FutureObservable<T> with Observable<T> {
 }
 
 class FutureDisposable<T> extends StatefulDisposable {
-  final Future<T> future;
-  final Observer<T> observer;
-
   FutureDisposable(this.future, this.observer) {
     future.then(onValue, onError: onError);
   }
+
+  final Future<T> future;
+  final Observer<T> observer;
 
   void onValue(T value) {
     if (isDisposed) {

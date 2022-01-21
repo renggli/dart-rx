@@ -10,9 +10,9 @@ extension WhereTypeOperator<T> on Observable<T> {
 }
 
 class WhereTypeObserver<T, R> with Observable<R> {
-  final Observable<T> delegate;
-
   WhereTypeObserver(this.delegate);
+
+  final Observable<T> delegate;
 
   @override
   Disposable subscribe(Observer<R> observer) {

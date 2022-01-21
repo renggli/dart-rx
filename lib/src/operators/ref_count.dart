@@ -12,12 +12,12 @@ extension RefCountOperator<T> on ConnectableObservable<T> {
 }
 
 class RefCountObservable<T> with Observable<T> {
+  RefCountObservable(this.observable);
+
   final ConnectableObservable<T> observable;
 
   Disposable subscription = const DisposedDisposable();
   int count = 0;
-
-  RefCountObservable(this.observable);
 
   @override
   Disposable subscribe(Observer<T> observer) {

@@ -11,10 +11,10 @@ extension TakeLastOperator<T> on Observable<T> {
 }
 
 class TakeLastObservable<T> with Observable<T> {
+  TakeLastObservable(this.delegate, this.count);
+
   final Observable<T> delegate;
   final int count;
-
-  TakeLastObservable(this.delegate, this.count);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -25,12 +25,12 @@ class TakeLastObservable<T> with Observable<T> {
 }
 
 class TakeLastSubscriber<T> extends Subscriber<T> {
-  final int count;
-  final QueueList<T> buffer;
-
   TakeLastSubscriber(Observer<T> destination, this.count)
       : buffer = QueueList(count),
         super(destination);
+
+  final int count;
+  final QueueList<T> buffer;
 
   @override
   void onNext(T value) {

@@ -29,13 +29,13 @@ extension ThrottleOperator<T> on Observable<T> {
 }
 
 class ThrottleObservable<T, R> with Observable<T> {
+  ThrottleObservable(
+      this.delegate, this.durationSelector, this.leading, this.trailing);
+
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
   final bool leading;
   final bool trailing;
-
-  ThrottleObservable(
-      this.delegate, this.durationSelector, this.leading, this.trailing);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -48,6 +48,10 @@ class ThrottleObservable<T, R> with Observable<T> {
 
 class ThrottleSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
+  ThrottleSubscriber(
+      Observer<T> observer, this.durationSelector, this.leading, this.trailing)
+      : super(observer);
+
   final DurationSelector<T, R> durationSelector;
   final bool leading;
   final bool trailing;
@@ -55,10 +59,6 @@ class ThrottleSubscriber<T, R> extends Subscriber<T>
   T? lastValue;
   bool hasLastValue = false;
   Disposable? throttled;
-
-  ThrottleSubscriber(
-      Observer<T> observer, this.durationSelector, this.leading, this.trailing)
-      : super(observer);
 
   @override
   void onNext(T value) {

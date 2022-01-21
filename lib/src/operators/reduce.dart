@@ -13,10 +13,10 @@ extension ReduceOperator<T> on Observable<T> {
 }
 
 class ReduceObservable<T> with Observable<T> {
+  ReduceObservable(this.delegate, this.transform);
+
   final Observable<T> delegate;
   final Map2<T, T, T> transform;
-
-  ReduceObservable(this.delegate, this.transform);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -27,12 +27,12 @@ class ReduceObservable<T> with Observable<T> {
 }
 
 class ReduceSubscriber<T> extends Subscriber<T> {
+  ReduceSubscriber(Observer<T> destination, this.transform)
+      : super(destination);
+
   final Map2<T, T, T> transform;
   bool hasSeed = false;
   late T seedValue;
-
-  ReduceSubscriber(Observer<T> destination, this.transform)
-      : super(destination);
 
   @override
   void onNext(T value) {

@@ -9,9 +9,9 @@ Observable<Never> empty({Scheduler? scheduler}) =>
     EmptyObservable(scheduler ?? const ImmediateScheduler());
 
 class EmptyObservable with Observable<Never> {
-  final Scheduler scheduler;
-
   const EmptyObservable(this.scheduler);
+
+  final Scheduler scheduler;
 
   @override
   Disposable subscribe(Observer<void> observer) =>

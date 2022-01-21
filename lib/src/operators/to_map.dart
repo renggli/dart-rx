@@ -45,14 +45,14 @@ extension ToMapOperator<T> on Observable<T> {
 }
 
 class ToMapObservable<T, M, K, V> with Observable<M> {
+  ToMapObservable(this.delegate, this.constructor, this.keySelector,
+      this.valueSelector, this.addSelector);
+
   final Observable<T> delegate;
   final Map0<M> constructor;
   final Map1<T, K> keySelector;
   final Map1<T, V> valueSelector;
   final Callback3<M, K, V> addSelector;
-
-  ToMapObservable(this.delegate, this.constructor, this.keySelector,
-      this.valueSelector, this.addSelector);
 
   @override
   Disposable subscribe(Observer<M> observer) {
@@ -64,14 +64,14 @@ class ToMapObservable<T, M, K, V> with Observable<M> {
 }
 
 class ToMapSubscriber<T, M, K, V> extends Subscriber<T> {
+  ToMapSubscriber(Observer<M> observer, this.map, this.keySelector,
+      this.valueSelector, this.addSelector)
+      : super(observer);
+
   final M map;
   final Map1<T, K> keySelector;
   final Map1<T, V> valueSelector;
   final Callback3<M, K, V> addSelector;
-
-  ToMapSubscriber(Observer<M> observer, this.map, this.keySelector,
-      this.valueSelector, this.addSelector)
-      : super(observer);
 
   @override
   void onNext(T value) {

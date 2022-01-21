@@ -11,9 +11,9 @@ extension StreamToObservable<T> on Stream<T> {
 }
 
 class StreamObservable<T> with Observable<T> {
-  final Stream<T> stream;
-
   StreamObservable(this.stream);
+
+  final Stream<T> stream;
 
   @override
   Disposable subscribe(Observer<T> observer) {

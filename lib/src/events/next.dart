@@ -3,10 +3,10 @@ import 'event.dart';
 
 /// Event with value of type `T`.
 class NextEvent<T> extends Event<T> {
+  const NextEvent(this.value);
+
   @override
   final T value;
-
-  const NextEvent(this.value);
 
   @override
   bool get isNext => true;

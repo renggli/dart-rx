@@ -10,9 +10,9 @@ extension MaterializeOperator<T> on Observable<T> {
 }
 
 class MaterializeObservable<T> with Observable<Event<T>> {
-  final Observable<T> delegate;
-
   MaterializeObservable(this.delegate);
+
+  final Observable<T> delegate;
 
   @override
   Disposable subscribe(Observer<Event<T>> observer) {

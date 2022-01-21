@@ -17,13 +17,13 @@ import 'test_observable.dart';
 import 'test_subscriber.dart';
 
 class TestScheduler extends AsyncScheduler {
+  TestScheduler();
+
   DateTime _currentTime = DateTime.now();
   Disposable _subscription = const DisposedDisposable();
 
   final List<TestObservable> observables = [];
   final List<TestSubscriber> subscribers = [];
-
-  TestScheduler();
 
   /// Returns the current time.
   @override

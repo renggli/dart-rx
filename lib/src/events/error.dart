@@ -3,13 +3,13 @@ import 'event.dart';
 
 /// Event of an error with optional stack trace of a sequence of type `T`.
 class ErrorEvent<T> extends Event<T> {
+  const ErrorEvent(this.error, this.stackTrace);
+
   @override
   final Object error;
 
   @override
   final StackTrace stackTrace;
-
-  const ErrorEvent(this.error, this.stackTrace);
 
   @override
   bool get isError => true;

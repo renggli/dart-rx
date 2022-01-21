@@ -25,13 +25,13 @@ extension MulticastOperator<T> on Observable<T> {
 class MulticastObservable<T>
     with Observable<T>
     implements ConnectableObservable<T> {
+  MulticastObservable(this._source, this._factory);
+
   final Observable<T> _source;
   final Map0<Subject<T>> _factory;
 
   Subject<T>? _subject;
   Disposable _subscription = const DisposedDisposable();
-
-  MulticastObservable(this._source, this._factory);
 
   Subject<T> get subject => _subject ??= _factory();
 

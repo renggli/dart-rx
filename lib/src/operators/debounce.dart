@@ -25,10 +25,10 @@ extension DebounceOperator<T> on Observable<T> {
 }
 
 class DebounceObservable<T, R> with Observable<T> {
+  DebounceObservable(this.delegate, this.durationSelector);
+
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
-
-  DebounceObservable(this.delegate, this.durationSelector);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -40,14 +40,14 @@ class DebounceObservable<T, R> with Observable<T> {
 
 class DebounceSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
+  DebounceSubscriber(Observer<T> observer, this.durationSelector)
+      : super(observer);
+
   final DurationSelector<T, R> durationSelector;
 
   T? lastValue;
   bool hasLastValue = false;
   Disposable? debounced;
-
-  DebounceSubscriber(Observer<T> observer, this.durationSelector)
-      : super(observer);
 
   @override
   void onNext(T value) {

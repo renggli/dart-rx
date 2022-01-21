@@ -15,11 +15,11 @@ Observable<int> timer(
     TimerObservable(delay, period, scheduler ?? defaultScheduler);
 
 class TimerObservable with Observable<int> {
+  const TimerObservable(this.delay, this.period, this.scheduler);
+
   final Duration delay;
   final Duration? period;
   final Scheduler scheduler;
-
-  const TimerObservable(this.delay, this.period, this.scheduler);
 
   @override
   Disposable subscribe(Observer<int> observer) {

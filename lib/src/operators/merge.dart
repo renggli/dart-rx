@@ -35,11 +35,11 @@ extension MergeMapOperator<T> on Observable<T> {
 }
 
 class MergeObservable<T, R> with Observable<R> {
+  MergeObservable(this.delegate, this.project, this.concurrent);
+
   final Observable<T> delegate;
   final Map1<T, Observable<R>> project;
   final num concurrent;
-
-  MergeObservable(this.delegate, this.project, this.concurrent);
 
   @override
   Disposable subscribe(Observer<R> observer) {
@@ -51,15 +51,15 @@ class MergeObservable<T, R> with Observable<R> {
 
 class MergeSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
+  MergeSubscriber(Observer<R> observer, this.project, this.concurrent)
+      : super(observer);
+
   final Map1<T, Observable<R>> project;
   final num concurrent;
 
   Queue<T> buffer = Queue();
   bool hasCompleted = false;
   int active = 0;
-
-  MergeSubscriber(Observer<R> observer, this.project, this.concurrent)
-      : super(observer);
 
   @override
   void onNext(T value) {

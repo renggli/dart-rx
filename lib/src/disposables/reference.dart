@@ -5,9 +5,9 @@ import 'errors.dart';
 
 /// A [Disposable] holding a disposable value until disposed.
 abstract class ReferenceDisposable<T> implements Disposable {
-  T? _value;
-
   ReferenceDisposable(T value) : _value = value;
+
+  T? _value;
 
   @protected
   void onDispose(T value);

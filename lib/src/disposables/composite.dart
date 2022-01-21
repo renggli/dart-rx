@@ -4,13 +4,13 @@ import 'stateful.dart';
 
 /// A [Disposable] container that holds other disposables.
 class CompositeDisposable extends StatefulDisposable {
-  final Set<Disposable> _disposables = Set.identity();
-
   CompositeDisposable([Iterable<Disposable>? disposables]) : super() {
     if (disposables != null) {
       disposables.forEach(add);
     }
   }
+
+  final Set<Disposable> _disposables = Set.identity();
 
   Set<Disposable> get disposables => {..._disposables};
 

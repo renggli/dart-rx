@@ -27,10 +27,10 @@ extension SwitchMapOperator<T> on Observable<T> {
 }
 
 class SwitchObservable<T, R> with Observable<R> {
+  SwitchObservable(this.delegate, this.project);
+
   final Observable<T> delegate;
   final Map1<T, Observable<R>> project;
-
-  SwitchObservable(this.delegate, this.project);
 
   @override
   Disposable subscribe(Observer<R> observer) {
@@ -42,14 +42,14 @@ class SwitchObservable<T, R> with Observable<R> {
 
 class SwitchSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
+  SwitchSubscriber(Observer<R> observer, this.project) : super(observer) {
+    add(subscription);
+  }
+
   final Map1<T, Observable<R>> project;
   final SequentialDisposable subscription = SequentialDisposable();
 
   bool hasCompleted = false;
-
-  SwitchSubscriber(Observer<R> observer, this.project) : super(observer) {
-    add(subscription);
-  }
 
   @override
   void onNext(T value) {

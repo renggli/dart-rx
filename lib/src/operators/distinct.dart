@@ -16,11 +16,11 @@ extension DistinctOperator<T> on Observable<T> {
 }
 
 class DistinctObservable<T> with Observable<T> {
+  DistinctObservable(this.delegate, this.equalsFunction, this.hashCodeFunction);
+
   final Observable<T> delegate;
   final Predicate2<T, T>? equalsFunction;
   final Map1<T, int>? hashCodeFunction;
-
-  DistinctObservable(this.delegate, this.equalsFunction, this.hashCodeFunction);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -32,12 +32,12 @@ class DistinctObservable<T> with Observable<T> {
 }
 
 class DistinctSubscriber<T> extends Subscriber<T> {
-  final Set<T> values;
-
   DistinctSubscriber(Observer<T> observer, Predicate2<T, T>? equalsFunction,
       Map1<T, int>? hashCodeFunction)
       : values = HashSet(equals: equalsFunction, hashCode: hashCodeFunction),
         super(observer);
+
+  final Set<T> values;
 
   @override
   void onNext(T value) {

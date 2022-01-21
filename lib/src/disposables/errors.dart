@@ -16,6 +16,11 @@ class DisposedError extends Error {
 /// An error thrown when one or more errors have occurred during the disposal of
 /// resources.
 class DisposeError extends Error {
+  DisposeError(List<Object> errors)
+      : errors = errors
+            .expand((error) => error is DisposeError ? error.errors : [error])
+            .toList(growable: false);
+
   static void checkList(List<Object> errors) {
     if (errors.isNotEmpty) {
       throw DisposeError(errors);
@@ -23,11 +28,6 @@ class DisposeError extends Error {
   }
 
   final List<Object> errors;
-
-  DisposeError(List<Object> errors)
-      : errors = errors
-            .expand((error) => error is DisposeError ? error.errors : [error])
-            .toList(growable: false);
 
   @override
   String toString() => 'DisposeError{errors: $errors}';

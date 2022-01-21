@@ -33,11 +33,11 @@ extension SingleOperator<T> on Observable<T> {
 }
 
 class SingleObservable<T> with Observable<T> {
+  SingleObservable(this.delegate, this.tooFewCallback, this.tooManyCallback);
+
   final Observable<T> delegate;
   final Map0<T> tooFewCallback;
   final Map0<T> tooManyCallback;
-
-  SingleObservable(this.delegate, this.tooFewCallback, this.tooManyCallback);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -49,15 +49,15 @@ class SingleObservable<T> with Observable<T> {
 }
 
 class SingleSubscriber<T> extends Subscriber<T> {
+  SingleSubscriber(
+      Observer<T> destination, this.tooFewCallback, this.tooManyCallback)
+      : super(destination);
+
   final Map0<T> tooFewCallback;
   final Map0<T> tooManyCallback;
 
   T? singleValue;
   bool seenValue = false;
-
-  SingleSubscriber(
-      Observer<T> destination, this.tooFewCallback, this.tooManyCallback)
-      : super(destination);
 
   @override
   void onNext(T value) {

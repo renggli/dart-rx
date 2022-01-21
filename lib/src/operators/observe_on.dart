@@ -13,11 +13,11 @@ extension ObserveOnOperator<T> on Observable<T> {
 }
 
 class ObserveOnObservable<T> with Observable<T> {
+  ObserveOnObservable(this.delegate, this.scheduler, this.delay);
+
   final Observable<T> delegate;
   final Scheduler scheduler;
   final Duration? delay;
-
-  ObserveOnObservable(this.delegate, this.scheduler, this.delay);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -28,11 +28,11 @@ class ObserveOnObservable<T> with Observable<T> {
 }
 
 class ObserveOnSubscriber<T> extends Subscriber<T> {
-  final Scheduler scheduler;
-  final Duration? delay;
-
   ObserveOnSubscriber(Observer<T> observer, this.scheduler, this.delay)
       : super(observer);
+
+  final Scheduler scheduler;
+  final Duration? delay;
 
   void _schedule(Callback0 callback) => delay == null
       ? scheduler.schedule(callback)

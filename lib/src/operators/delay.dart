@@ -25,10 +25,10 @@ extension DelayOperator<T> on Observable<T> {
 }
 
 class DelayObservable<T, R> with Observable<T> {
+  DelayObservable(this.delegate, this.durationSelector);
+
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
-
-  DelayObservable(this.delegate, this.durationSelector);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -39,15 +39,15 @@ class DelayObservable<T, R> with Observable<T> {
 }
 
 class DelaySubscriber<T, R> extends Subscriber<T> implements InnerEvents<R, T> {
-  final DurationSelector<T, R> durationSelector;
-  final CompositeDisposable pendingDisposables = CompositeDisposable();
-
-  bool hasCompleted = false;
-
   DelaySubscriber(Observer<T> observer, this.durationSelector)
       : super(observer) {
     add(pendingDisposables);
   }
+
+  final DurationSelector<T, R> durationSelector;
+  final CompositeDisposable pendingDisposables = CompositeDisposable();
+
+  bool hasCompleted = false;
 
   @override
   void onNext(T value) {

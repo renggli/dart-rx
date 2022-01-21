@@ -9,9 +9,6 @@ import 'test_observable.dart';
 import 'test_scheduler.dart';
 
 class HotObservable<T> extends TestObservable<T> {
-  @protected
-  final Subject<T> subject = Subject<T>();
-
   HotObservable(TestScheduler scheduler, TestEventSequence<T> sequence)
       : super(scheduler, sequence) {
     final subscriptionIndex = sequence.events
@@ -24,6 +21,9 @@ class HotObservable<T> extends TestObservable<T> {
       scheduler.scheduleAbsolute(timestamp, () => event.observe(subject));
     }
   }
+
+  @protected
+  final Subject<T> subject = Subject<T>();
 
   @override
   Disposable subscribe(Observer<T> observer) {

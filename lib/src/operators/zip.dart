@@ -13,9 +13,9 @@ extension ZipOperator<T> on Observable<Observable<T>> {
 }
 
 class ZipObservable<T> with Observable<List<T>> {
-  final Observable<Observable<T>> delegate;
-
   ZipObservable(this.delegate);
+
+  final Observable<Observable<T>> delegate;
 
   @override
   Disposable subscribe(Observer<List<T>> observer) {
@@ -27,10 +27,10 @@ class ZipObservable<T> with Observable<List<T>> {
 
 class ZipSubscriber<T> extends Subscriber<Observable<T>>
     implements InnerEvents<T, int> {
+  ZipSubscriber(Observer<List<T>> observer) : super(observer);
+
   final List<Observable<T>> observables = [];
   final List<ListQueue<T>> pending = [];
-
-  ZipSubscriber(Observer<List<T>> observer) : super(observer);
 
   @override
   void onNext(Observable<T> value) {

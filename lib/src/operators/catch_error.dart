@@ -20,10 +20,10 @@ extension CatchErrorOperator<T> on Observable<T> {
 }
 
 class CatchErrorObservable<T, E> with Observable<T> {
+  CatchErrorObservable(this.delegate, this.handler);
+
   final Observable<T> delegate;
   final ErrorHandler<T, E> handler;
-
-  CatchErrorObservable(this.delegate, this.handler);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -35,9 +35,9 @@ class CatchErrorObservable<T, E> with Observable<T> {
 
 class CatchErrorSubscriber<T, E> extends Subscriber<T>
     implements InnerEvents<T, void> {
-  final ErrorHandler<T, E> handler;
-
   CatchErrorSubscriber(Observer<T> observer, this.handler) : super(observer);
+
+  final ErrorHandler<T, E> handler;
 
   @override
   void onError(Object error, StackTrace stackTrace) {

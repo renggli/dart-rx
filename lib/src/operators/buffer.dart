@@ -24,14 +24,14 @@ extension BufferOperator<T> on Observable<T> {
 }
 
 class BufferObservable<T, R> with Observable<List<T>> {
+  BufferObservable(
+      this.delegate, this.scheduler, this.trigger, this.maxLength, this.maxAge);
+
   final Observable<T> delegate;
   final Scheduler scheduler;
   final Observable<R>? trigger;
   final int? maxLength;
   final Duration? maxAge;
-
-  BufferObservable(
-      this.delegate, this.scheduler, this.trigger, this.maxLength, this.maxAge);
 
   @override
   Disposable subscribe(Observer<List<T>> observer) {
@@ -44,13 +44,6 @@ class BufferObservable<T, R> with Observable<List<T>> {
 
 class BufferSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  final Scheduler scheduler;
-  final int? maxLength;
-  final Duration? maxAge;
-
-  List<T> buffer = const [];
-  DateTime? bufferBirth;
-
   BufferSubscriber(Observer<List<T>> observer, this.scheduler,
       Observable<R>? trigger, this.maxLength, this.maxAge)
       : super(observer) {
@@ -59,6 +52,13 @@ class BufferSubscriber<T, R> extends Subscriber<T>
       add(InnerObserver<R, void>(this, trigger, null));
     }
   }
+
+  final Scheduler scheduler;
+  final int? maxLength;
+  final Duration? maxAge;
+
+  List<T> buffer = const [];
+  DateTime? bufferBirth;
 
   @override
   void onNext(T value) {

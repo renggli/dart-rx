@@ -17,18 +17,18 @@ abstract class SchedulerAction extends StatefulDisposable {
 }
 
 class SchedulerActionCallback0 extends SchedulerAction {
-  final Callback0 callback;
-
   SchedulerActionCallback0(this.callback);
+
+  final Callback0 callback;
 
   @override
   void doRun() => callback();
 }
 
 class SchedulerActionCallback1 extends SchedulerAction {
-  final Callback1<SchedulerAction> callback;
-
   SchedulerActionCallback1(this.callback);
+
+  final Callback1<SchedulerAction> callback;
 
   @override
   void doRun() => callback(this);

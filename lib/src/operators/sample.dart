@@ -20,10 +20,10 @@ extension SampleOperator<T> on Observable<T> {
 }
 
 class SampleObservable<T, R> with Observable<T> {
+  SampleObservable(this.delegate, this.trigger);
+
   final Observable<T> delegate;
   final Observable<R> trigger;
-
-  SampleObservable(this.delegate, this.trigger);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -35,13 +35,13 @@ class SampleObservable<T, R> with Observable<T> {
 
 class SampleSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  T? lastValue;
-  bool hasLastValue = false;
-
   SampleSubscriber(Observer<T> observer, Observable<R> trigger)
       : super(observer) {
     add(InnerObserver<R, void>(this, trigger, null));
   }
+
+  T? lastValue;
+  bool hasLastValue = false;
 
   @override
   void onNext(T value) {

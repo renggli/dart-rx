@@ -9,10 +9,10 @@ extension SkipOperator<T> on Observable<T> {
 }
 
 class SkipObservable<T> with Observable<T> {
+  SkipObservable(this.delegate, this.count);
+
   final Observable<T> delegate;
   final int count;
-
-  SkipObservable(this.delegate, this.count);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -23,9 +23,9 @@ class SkipObservable<T> with Observable<T> {
 }
 
 class SkipSubscriber<T> extends Subscriber<T> {
-  int count;
-
   SkipSubscriber(Observer<T> observer, this.count) : super(observer);
+
+  int count;
 
   @override
   void onNext(T value) {

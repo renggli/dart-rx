@@ -10,9 +10,9 @@ extension IgnoreElementsOperator<T> on Observable<T> {
 }
 
 class IgnoreElementsObservable<T> with Observable<T> {
-  final Observable<T> delegate;
-
   IgnoreElementsObservable(this.delegate);
+
+  final Observable<T> delegate;
 
   @override
   Disposable subscribe(Observer<T> observer) {

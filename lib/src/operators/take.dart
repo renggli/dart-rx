@@ -9,10 +9,10 @@ extension TakeOperator<T> on Observable<T> {
 }
 
 class TakeObservable<T> with Observable<T> {
+  TakeObservable(this.delegate, this.count);
+
   final Observable<T> delegate;
   final int count;
-
-  TakeObservable(this.delegate, this.count);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -23,9 +23,9 @@ class TakeObservable<T> with Observable<T> {
 }
 
 class TakeSubscriber<T> extends Subscriber<T> {
-  int count;
-
   TakeSubscriber(Observer<T> observer, this.count) : super(observer);
+
+  int count;
 
   @override
   void onNext(T value) {

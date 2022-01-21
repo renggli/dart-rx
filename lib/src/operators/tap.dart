@@ -9,10 +9,10 @@ extension TapOperator<T> on Observable<T> {
 }
 
 class TapObservable<T> with Observable<T> {
+  TapObservable(this.delegate, this.handler);
+
   final Observable<T> delegate;
   final Observer<T> handler;
-
-  TapObservable(this.delegate, this.handler);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -23,9 +23,9 @@ class TapObservable<T> with Observable<T> {
 }
 
 class TapSubscriber<T> extends Subscriber<T> {
-  final Observer<T> handler;
-
   TapSubscriber(Observer<T> observer, this.handler) : super(observer);
+
+  final Observer<T> handler;
 
   @override
   void onNext(T value) {

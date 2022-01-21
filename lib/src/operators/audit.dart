@@ -26,10 +26,10 @@ extension AuditOperator<T> on Observable<T> {
 }
 
 class AuditObservable<T, R> with Observable<T> {
+  AuditObservable(this.delegate, this.durationSelector);
+
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
-
-  AuditObservable(this.delegate, this.durationSelector);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -41,14 +41,14 @@ class AuditObservable<T, R> with Observable<T> {
 
 class AuditSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
+  AuditSubscriber(Observer<T> observer, this.durationSelector)
+      : super(observer);
+
   final DurationSelector<T, R> durationSelector;
 
   T? lastValue;
   bool hasLastValue = false;
   Disposable? throttled;
-
-  AuditSubscriber(Observer<T> observer, this.durationSelector)
-      : super(observer);
 
   @override
   void onNext(T value) {

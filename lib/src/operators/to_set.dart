@@ -12,10 +12,10 @@ extension ToSetOperator<T> on Observable<T> {
 }
 
 class ToSetObservable<T> with Observable<Set<T>> {
+  ToSetObservable(this.delegate, this.constructor);
+
   final Observable<T> delegate;
   final Map0<Set<T>> constructor;
-
-  ToSetObservable(this.delegate, this.constructor);
 
   @override
   Disposable subscribe(Observer<Set<T>> observer) {
@@ -26,9 +26,9 @@ class ToSetObservable<T> with Observable<Set<T>> {
 }
 
 class ToSetSubscriber<T> extends Subscriber<T> {
-  final Set<T> set;
-
   ToSetSubscriber(Observer<Set<T>> observer, this.set) : super(observer);
+
+  final Set<T> set;
 
   @override
   void onNext(T value) => set.add(value);

@@ -6,11 +6,10 @@ import 'subject.dart';
 
 /// A [Subject] that replays all its previous values to new subscribers.
 class ReplaySubject<T> extends Subject<T> {
-  final int? bufferSize;
-
-  final QueueList<T> _buffer;
-
   ReplaySubject({this.bufferSize}) : _buffer = QueueList(bufferSize);
+
+  final int? bufferSize;
+  final QueueList<T> _buffer;
 
   @override
   void next(T value) {

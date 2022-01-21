@@ -4,9 +4,9 @@ import 'subject.dart';
 
 /// A [Subject] that emits its initial or last seen value to its subscribers.
 class BehaviorSubject<T> extends Subject<T> {
-  T _value;
-
   BehaviorSubject(this._value);
+
+  T _value;
 
   @override
   void next(T value) => super.next(_value = value);

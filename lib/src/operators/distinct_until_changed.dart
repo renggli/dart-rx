@@ -19,11 +19,11 @@ extension DistinctUntilChangedOperator<T> on Observable<T> {
 }
 
 class DistinctUntilChangedObservable<T, K> with Observable<T> {
+  DistinctUntilChangedObservable(this.delegate, this.key, this.compare);
+
   final Observable<T> delegate;
   final Map1<T, K> key;
   final Predicate2<K, K> compare;
-
-  DistinctUntilChangedObservable(this.delegate, this.key, this.compare);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -35,14 +35,14 @@ class DistinctUntilChangedObservable<T, K> with Observable<T> {
 }
 
 class DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
+  DistinctUntilChangedSubscriber(Observer<T> observer, this.key, this.compare)
+      : super(observer);
+
   final Map1<T, K> key;
   final Predicate2<K, K> compare;
 
   late K lastKey;
   bool seenKey = false;
-
-  DistinctUntilChangedSubscriber(Observer<T> observer, this.key, this.compare)
-      : super(observer);
 
   @override
   void onNext(T value) {

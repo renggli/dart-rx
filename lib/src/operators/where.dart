@@ -14,10 +14,10 @@ extension WhereOperator<T> on Observable<T> {
 }
 
 class WhereObservable<T> with Observable<T> {
+  WhereObservable(this.delegate, this.predicate);
+
   final Observable<T> delegate;
   final Predicate1<T> predicate;
-
-  WhereObservable(this.delegate, this.predicate);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -28,9 +28,9 @@ class WhereObservable<T> with Observable<T> {
 }
 
 class WhereSubscriber<T> extends Subscriber<T> {
-  final Predicate1<T> predicate;
-
   WhereSubscriber(Observer<T> observer, this.predicate) : super(observer);
+
+  final Predicate1<T> predicate;
 
   @override
   void onNext(T value) {

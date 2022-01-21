@@ -15,11 +15,11 @@ extension TimeoutOperator<T> on Observable<T> {
 }
 
 class TimeoutObservable<T> with Observable<T> {
+  TimeoutObservable(this.delegate, this.scheduler, this.duration);
+
   final Observable<T> delegate;
   final Scheduler scheduler;
   final Duration duration;
-
-  TimeoutObservable(this.delegate, this.scheduler, this.duration);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -30,13 +30,13 @@ class TimeoutObservable<T> with Observable<T> {
 }
 
 class TimeoutSubscriber<T> extends Subscriber<T> {
-  Disposable subscription = const DisposedDisposable();
-
   TimeoutSubscriber(
       Observer<T> observer, Scheduler scheduler, Duration duration)
       : super(observer) {
     subscription = scheduler.scheduleRelative(duration, onTimeout);
   }
+
+  Disposable subscription = const DisposedDisposable();
 
   void onTimeout() {
     doError(TimeoutError(), StackTrace.current);

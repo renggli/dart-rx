@@ -23,15 +23,6 @@ class TestEventSequence<T> {
   TestEventSequence(this.events, {Map<String, T> values = const {}})
       : values = BiMap.from(values);
 
-  /// Sequence of [TestEvent] instances.
-  final List<TestEvent<T>> events;
-
-  /// Sequence of [Event] instances (unwrapping the test events).
-  Iterable<Event<T>> get baseEvents => events.map((value) => value.event);
-
-  /// Optional mapping from marble tokens to objects.
-  final BiMap<String, T> values;
-
   /// Converts a string of marbles to an event sequence.
   factory TestEventSequence.fromString(String marbles,
       {Map<String, T> values = const {}, Object error = 'Error'}) {
@@ -96,6 +87,15 @@ class TestEventSequence<T> {
     }
     return TestEventSequence(sequence, values: values);
   }
+
+  /// Sequence of [TestEvent] instances.
+  final List<TestEvent<T>> events;
+
+  /// Sequence of [Event] instances (unwrapping the test events).
+  Iterable<Event<T>> get baseEvents => events.map((value) => value.event);
+
+  /// Optional mapping from marble tokens to objects.
+  final BiMap<String, T> values;
 
   /// Converts back the event sequence to a marble string.
   String toMarbles() {

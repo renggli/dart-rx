@@ -10,9 +10,9 @@ extension IsEmptyOperator<T> on Observable<T> {
 }
 
 class IsEmptyObservable<T> with Observable<bool> {
-  final Observable<T> delegate;
-
   IsEmptyObservable(this.delegate);
+
+  final Observable<T> delegate;
 
   @override
   Disposable subscribe(Observer<bool> observer) {

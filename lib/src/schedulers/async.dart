@@ -9,12 +9,12 @@ import 'scheduler.dart';
 
 /// Asynchronous scheduler that keeps track of pending actions manually.
 class AsyncScheduler extends Scheduler {
+  AsyncScheduler();
+
   /// Sorted list of pending actions.
   @protected
   final SplayTreeMap<DateTime, List<SchedulerAction>> scheduled =
       SplayTreeMap();
-
-  AsyncScheduler();
 
   /// Returns `true`, if there are actions pending.
   bool get hasPending => scheduled.isNotEmpty;

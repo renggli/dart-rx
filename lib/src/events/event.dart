@@ -9,6 +9,9 @@ import 'next.dart';
 /// Abstract immutable event object of type `T.
 @immutable
 abstract class Event<T> {
+  /// Default constructor for events.
+  const Event();
+
   /// Creates a next event.
   const factory Event.next(T value) = NextEvent<T>;
 
@@ -49,9 +52,6 @@ abstract class Event<T> {
       return Event<R>.error(error, stackTrace);
     }
   }
-
-  /// Default constructor for events.
-  const Event();
 
   /// Returns `true`, if this is an event with a [value].
   bool get isNext => false;

@@ -38,11 +38,11 @@ extension LastOperator<T> on Observable<T> {
 }
 
 class LastObservable<T> with Observable<T> {
+  LastObservable(this.delegate, this.predicate, this.callback);
+
   final Observable<T> delegate;
   final Predicate1<T> predicate;
   final Map0<T> callback;
-
-  LastObservable(this.delegate, this.predicate, this.callback);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -53,14 +53,14 @@ class LastObservable<T> with Observable<T> {
 }
 
 class LastSubscriber<T> extends Subscriber<T> {
+  LastSubscriber(Observer<T> observer, this.predicate, this.callback)
+      : super(observer);
+
   final Predicate1<T> predicate;
   final Map0<T> callback;
 
   T? lastValue;
   bool seenValue = false;
-
-  LastSubscriber(Observer<T> observer, this.predicate, this.callback)
-      : super(observer);
 
   @override
   void onNext(T value) {

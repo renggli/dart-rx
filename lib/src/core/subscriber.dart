@@ -4,10 +4,10 @@ import '../disposables/composite.dart';
 import 'observer.dart';
 
 class Subscriber<T> extends CompositeDisposable with Observer<T> {
+  Subscriber(this.destination) : super();
+
   @protected
   final Observer destination;
-
-  Subscriber(this.destination) : super();
 
   /// Receives the next value.
   @override

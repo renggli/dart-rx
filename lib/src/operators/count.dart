@@ -10,9 +10,9 @@ extension CountOperator<T> on Observable<T> {
 }
 
 class CountObservable<T> with Observable<int> {
-  final Observable<T> delegate;
-
   CountObservable(this.delegate);
+
+  final Observable<T> delegate;
 
   @override
   Disposable subscribe(Observer<int> observer) {
@@ -23,9 +23,9 @@ class CountObservable<T> with Observable<int> {
 }
 
 class CountSubscriber<T> extends Subscriber<T> {
-  int count = 0;
-
   CountSubscriber(Observer<int> observer) : super(observer);
+
+  int count = 0;
 
   @override
   void onNext(T value) {

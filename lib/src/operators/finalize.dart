@@ -13,10 +13,10 @@ extension FinalizeOperator<T> on Observable<T> {
 }
 
 class FinalizeObservable<T> with Observable<T> {
+  FinalizeObservable(this.delegate, this.finalize);
+
   final Observable<T> delegate;
   final CompleteCallback finalize;
-
-  FinalizeObservable(this.delegate, this.finalize);
 
   @override
   Disposable subscribe(Observer<T> observer) => CompositeDisposable([

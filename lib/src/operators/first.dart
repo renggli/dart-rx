@@ -39,11 +39,11 @@ extension FirstOperator<T> on Observable<T> {
 }
 
 class FirstObservable<T> with Observable<T> {
+  FirstObservable(this.delegate, this.predicate, this.callback);
+
   final Observable<T> delegate;
   final Predicate1<T> predicate;
   final Map0<T> callback;
-
-  FirstObservable(this.delegate, this.predicate, this.callback);
 
   @override
   Disposable subscribe(Observer<T> observer) {
@@ -54,11 +54,11 @@ class FirstObservable<T> with Observable<T> {
 }
 
 class FirstSubscriber<T> extends Subscriber<T> {
-  final Predicate1<T> predicate;
-  final Map0<T> callback;
-
   FirstSubscriber(Observer<T> observer, this.predicate, this.callback)
       : super(observer);
+
+  final Predicate1<T> predicate;
+  final Map0<T> callback;
 
   @override
   void onNext(T value) {

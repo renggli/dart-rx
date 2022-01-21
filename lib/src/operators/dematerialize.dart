@@ -12,9 +12,9 @@ extension DematerializeOperator<T> on Observable<Event<T>> {
 }
 
 class DematerializeObservable<T> with Observable<T> {
-  final Observable<Event<T>> delegate;
-
   DematerializeObservable(this.delegate);
+
+  final Observable<Event<T>> delegate;
 
   @override
   Disposable subscribe(Observer<T> observer) {

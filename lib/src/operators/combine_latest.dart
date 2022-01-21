@@ -11,9 +11,9 @@ extension CombineLatestOperator<T> on Observable<Observable<T>> {
 }
 
 class CombineLatestObservable<T> with Observable<List<T>> {
-  final Observable<Observable<T>> delegate;
-
   CombineLatestObservable(this.delegate);
+
+  final Observable<Observable<T>> delegate;
 
   @override
   Disposable subscribe(Observer<List<T>> observer) {
@@ -25,14 +25,14 @@ class CombineLatestObservable<T> with Observable<List<T>> {
 
 class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
     implements InnerEvents<T, int> {
+  CombineLatestSubscriber(Observer<List<T>> destination) : super(destination);
+
   final List<Observable<T>> observables = [];
   final List<bool> hasValues = [];
   final List<T?> values = [];
 
   late int active;
   late int pending;
-
-  CombineLatestSubscriber(Observer<List<T>> destination) : super(destination);
 
   @override
   void onNext(Observable<T> value) {

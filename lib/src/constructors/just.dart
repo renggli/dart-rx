@@ -9,10 +9,10 @@ Observable<T> just<T>(T value, {Scheduler? scheduler}) =>
     JustObservable<T>(value, scheduler ?? const ImmediateScheduler());
 
 class JustObservable<T> with Observable<T> {
+  const JustObservable(this.value, this.scheduler);
+
   final T value;
   final Scheduler scheduler;
-
-  const JustObservable(this.value, this.scheduler);
 
   @override
   Disposable subscribe(Observer<T> observer) => scheduler.schedule(() {

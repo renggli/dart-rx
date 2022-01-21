@@ -9,9 +9,9 @@ extension CastOperator<T> on Observable<T> {
 }
 
 class CastObservable<T, R> with Observable<R> {
-  final Observable<T> delegate;
-
   CastObservable(this.delegate);
+
+  final Observable<T> delegate;
 
   @override
   Disposable subscribe(Observer<R> observer) {

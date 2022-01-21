@@ -6,10 +6,10 @@ import '../events/event.dart';
 const _equality = DeepCollectionEquality();
 
 class TestEvent<T> extends Event<T> {
+  const TestEvent(this.index, this.event);
+
   final int index;
   final Event<T> event;
-
-  const TestEvent(this.index, this.event);
 
   @override
   void observe(Observer<T> observer) => event.observe(observer);

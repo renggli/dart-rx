@@ -11,11 +11,11 @@ Observable<Never> throwError(Object error,
         scheduler ?? const ImmediateScheduler());
 
 class ThrowErrorObservable with Observable<Never> {
+  const ThrowErrorObservable(this.error, this.stackTrace, this.scheduler);
+
   final Object error;
   final StackTrace stackTrace;
   final Scheduler scheduler;
-
-  const ThrowErrorObservable(this.error, this.stackTrace, this.scheduler);
 
   @override
   Disposable subscribe(Observer observer) =>
