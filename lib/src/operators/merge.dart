@@ -39,7 +39,7 @@ class MergeObservable<T, R> with Observable<R> {
 
   final Observable<T> delegate;
   final Map1<T, Observable<R>> project;
-  final num concurrent;
+  final int concurrent;
 
   @override
   Disposable subscribe(Observer<R> observer) {
@@ -55,7 +55,7 @@ class MergeSubscriber<T, R> extends Subscriber<T>
       : super(observer);
 
   final Map1<T, Observable<R>> project;
-  final num concurrent;
+  final int concurrent;
 
   Queue<T> buffer = Queue();
   bool hasCompleted = false;
