@@ -27,14 +27,14 @@ extension ExhaustMapOperator<T> on Observable<T> {
   /// Subscribes to at most `concurrent` sources, drops observables exceeding
   /// this threshold.
   Observable<R> exhaustMap<R>(Map1<T, Observable<R>> project,
-      {int concurrent = 1}) {
-    RangeError.checkValidRange(1, null, concurrent, 'concurrent');
-    return ExhaustObservable<T, R>(this, project, concurrent);
-  }
+          {int concurrent = 1}) =>
+      ExhaustObservable<T, R>(this, project, concurrent);
 }
 
 class ExhaustObservable<T, R> with Observable<R> {
-  ExhaustObservable(this.delegate, this.project, this.concurrent);
+  ExhaustObservable(this.delegate, this.project, this.concurrent) {
+    RangeError.checkValidRange(1, null, concurrent, 'concurrent');
+  }
 
   final Observable<T> delegate;
   final Map1<T, Observable<R>> project;

@@ -28,14 +28,14 @@ extension MergeMapOperator<T> on Observable<T> {
   /// higher-order observable with the provided `project` function and merge
   /// its emitted values. Subscribe to at most `concurrent` sources.
   Observable<R> mergeMap<R>(Map1<T, Observable<R>> project,
-      {int concurrent = maxInteger}) {
-    RangeError.checkValidRange(1, null, concurrent, 'concurrent');
-    return MergeObservable<T, R>(this, project, concurrent);
-  }
+          {int concurrent = maxInteger}) =>
+      MergeObservable<T, R>(this, project, concurrent);
 }
 
 class MergeObservable<T, R> with Observable<R> {
-  MergeObservable(this.delegate, this.project, this.concurrent);
+  MergeObservable(this.delegate, this.project, this.concurrent) {
+    RangeError.checkValidRange(1, null, concurrent, 'concurrent');
+  }
 
   final Observable<T> delegate;
   final Map1<T, Observable<R>> project;
