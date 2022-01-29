@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 import '../disposables/composite.dart';
 import 'observer.dart';
 
-class Subscriber<T> extends CompositeDisposable with Observer<T> {
+class Subscriber<T> extends CompositeDisposable implements Observer<T> {
   Subscriber(this.destination) : super();
 
   @protected
