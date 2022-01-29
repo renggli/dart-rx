@@ -27,8 +27,7 @@ class Subject<T> with Observable<T>, Observer<T> {
     if (_hasStopped) {
       return;
     }
-    final observers = [..._observers];
-    for (final observer in observers) {
+    for (final observer in [..._observers]) {
       observer.next(value);
     }
   }
@@ -43,8 +42,7 @@ class Subject<T> with Observable<T>, Observer<T> {
     _hasError = true;
     _error = error;
     _stackTrace = stackTrace;
-    final observers = [..._observers];
-    for (final observer in observers) {
+    for (final observer in [..._observers]) {
       observer.error(error, stackTrace);
     }
     _observers.clear();
@@ -57,8 +55,7 @@ class Subject<T> with Observable<T>, Observer<T> {
       return;
     }
     _hasStopped = true;
-    final observers = [..._observers];
-    for (final observer in observers) {
+    for (final observer in [..._observers]) {
       observer.complete();
     }
     _observers.clear();
