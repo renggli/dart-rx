@@ -33,6 +33,7 @@ export 'src/operators/repeat.dart' show RepeatOperator;
 export 'src/operators/sample.dart' show SampleOperator;
 export 'src/operators/single.dart' show SingleOperator;
 export 'src/operators/skip.dart' show SkipOperator;
+export 'src/operators/skip_until.dart' show SkipUntilOperator;
 export 'src/operators/skip_while.dart' show SkipWhileOperator;
 export 'src/operators/switch.dart' show SwitchAllOperator, SwitchMapOperator;
 export 'src/operators/take.dart' show TakeOperator;
