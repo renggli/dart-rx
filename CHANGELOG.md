@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0
+
+- Dart 2.15 requirement.
+- Add a redux like store, and example.
+- Add `takeUntil` and `skipUntil` operators.
+- Move assertions earlier when possible.
+- Improved testing infrastructure, and test coverage.
+
 ## 0.1.3
 
 - Dart 2.14 requirement.
