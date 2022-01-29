@@ -11,7 +11,7 @@ class InnerObserver<T, S> with Observer<T> {
 
   final InnerEvents<T, S> _outer;
   final S _state;
-  late Disposable _disposable;
+  late final Disposable _disposable;
 
   @override
   void next(T value) => _outer.notifyNext(this, _state, value);
