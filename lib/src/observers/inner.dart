@@ -4,7 +4,7 @@ import '../disposables/disposable.dart';
 
 /// Observes an inner [Observable] and passes the events to an outer object
 /// with optional state.
-class InnerObserver<T, S> with Observer<T> implements Observer<T> {
+class InnerObserver<T, S> with Observer<T> {
   InnerObserver(this._outer, Observable<T> inner, this._state) {
     _disposable = inner.subscribe(this);
   }
