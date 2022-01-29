@@ -43,6 +43,7 @@ class TakeLastSubscriber<T> extends Subscriber<T> {
   @override
   void onComplete() {
     buffer.forEach(doNext);
+    buffer.clear();
     doComplete();
   }
 }
