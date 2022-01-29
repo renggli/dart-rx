@@ -31,25 +31,25 @@ class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
   final List<bool> hasValues = [];
   final List<T?> values = [];
 
-  late int active;
-  late int pending;
+  int active = 0;
+  int pending = 0;
 
   @override
   void onNext(Observable<T> value) {
     observables.add(value);
     hasValues.add(false);
     values.add(null);
+    active++;
+    pending++;
   }
 
   @override
   void onComplete() {
-    if (values.isEmpty) {
+    if (active == 0) {
       doComplete();
     } else {
-      active = observables.length;
-      pending = observables.length;
       for (var i = 0; i < observables.length; i++) {
-        add(InnerObserver(this, observables[i], i));
+        add(InnerObserver<T, int>(this, observables[i], i));
       }
     }
   }
@@ -62,8 +62,7 @@ class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
       hasValues[index] = true;
     }
     if (pending == 0) {
-      doNext(List<T>.generate(values.length, (index) => values[index]!,
-          growable: false));
+      doNext(values.cast<T>().toList(growable: false));
     }
   }
 
