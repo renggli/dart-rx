@@ -14,35 +14,35 @@ extension FoldOperator<T> on Observable<T> {
 }
 
 class FoldObservable<T, R> with Observable<R> {
-  FoldObservable(this.delegate, this.transform, this.seedValue);
+  FoldObservable(this.delegate, this.transform, this.initialValue);
 
   final Observable<T> delegate;
   final Map2<R, T, R> transform;
-  final R seedValue;
+  final R initialValue;
 
   @override
   Disposable subscribe(Observer<R> observer) {
-    final subscriber = FoldSubscriber<T, R>(observer, transform, seedValue);
+    final subscriber = FoldSubscriber<T, R>(observer, transform, initialValue);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
 }
 
 class FoldSubscriber<T, R> extends Subscriber<T> {
-  FoldSubscriber(Observer<R> destination, this.transform, this.seedValue)
+  FoldSubscriber(Observer<R> destination, this.transform, this.seed)
       : super(destination);
 
   final Map2<R, T, R> transform;
-  R seedValue;
+  R seed;
 
   @override
   void onNext(T value) {
-    final transformEvent = Event.map2(transform, seedValue, value);
+    final transformEvent = Event.map2(transform, seed, value);
     if (transformEvent.isError) {
       doError(transformEvent.error, transformEvent.stackTrace);
     } else {
-      seedValue = transformEvent.value;
+      seed = transformEvent.value;
     }
-    doNext(seedValue);
+    doNext(seed);
   }
 }

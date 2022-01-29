@@ -32,21 +32,21 @@ class ReduceSubscriber<T> extends Subscriber<T> {
 
   final Map2<T, T, T> transform;
   bool hasSeed = false;
-  late T seedValue;
+  late T seed;
 
   @override
   void onNext(T value) {
     if (hasSeed) {
-      final transformEvent = Event.map2(transform, seedValue, value);
+      final transformEvent = Event.map2(transform, seed, value);
       if (transformEvent.isError) {
         doError(transformEvent.error, transformEvent.stackTrace);
       } else {
-        seedValue = transformEvent.value;
+        seed = transformEvent.value;
       }
     } else {
-      seedValue = value;
+      seed = value;
       hasSeed = true;
     }
-    doNext(seedValue);
+    doNext(seed);
   }
 }
