@@ -1,37 +1,67 @@
+import 'package:more/collection.dart';
+
 import '../core/observable.dart';
 import '../core/observer.dart';
-import 'create.dart';
+import '../core/subscriber.dart';
+import '../disposables/disposable.dart';
+import '../observers/inner.dart';
 import 'empty.dart';
 
 /// Waits for all passed [Observable] to complete and then it will emit an
 /// list with last values from corresponding observables.
 Observable<List<T>> forkJoin<T>(List<Observable<T>> sources) => sources.isEmpty
-    ? empty()
-    : create<List<T>>((emitter) {
-        var completed = 0, emitted = 0;
-        final values = List<T?>.filled(sources.length, null, growable: false);
-        for (var i = 0; i < sources.length; i++) {
-          var hasValue = false;
-          emitter.add(sources[i].subscribe(Observer(
-            next: (value) {
-              if (!hasValue) {
-                hasValue = true;
-                emitted++;
-              }
-              values[i] = value;
-            },
-            error: (error, stackTrace) => emitter.error(error, stackTrace),
-            complete: () {
-              completed++;
-              if (completed == sources.length || !hasValue) {
-                if (emitted == sources.length) {
-                  emitter.next(List<T>.generate(
-                      values.length, (i) => values[i]!,
-                      growable: false));
-                }
-                emitter.complete();
-              }
-            },
-          )));
-        }
-      });
+    ? empty() as Observable<List<T>>
+    : ForkJoinObservable<T>(sources);
+
+class ForkJoinObservable<T> with Observable<List<T>> {
+  ForkJoinObservable(this.observables);
+
+  final List<Observable<T>> observables;
+
+  @override
+  Disposable subscribe(Observer<List<T>> observer) =>
+      ForkJoinSubscriber<T>(observer, observables);
+}
+
+class ForkJoinSubscriber<T> extends Subscriber<List<T>>
+    implements InnerEvents<T, int> {
+  ForkJoinSubscriber(
+      Observer<List<T>> observer, List<Observable<T>> observables)
+      : hasValue = BitList.filled(observables.length, false),
+        values = List.filled(observables.length, null, growable: false),
+        super(observer) {
+    for (var i = 0; i < observables.length; i++) {
+      add(InnerObserver<T, int>(this, observables[i], i));
+    }
+  }
+
+  final List<bool> hasValue;
+  final List<T?> values;
+  int emitted = 0;
+  int completed = 0;
+
+  @override
+  void notifyNext(Disposable disposable, int index, T object) {
+    if (!hasValue[index]) {
+      hasValue[index] = true;
+      emitted++;
+    }
+    values[index] = object;
+  }
+
+  @override
+  void notifyError(Disposable disposable, int index, Object error,
+          StackTrace stackTrace) =>
+      doError(error, stackTrace);
+
+  @override
+  void notifyComplete(Disposable disposable, int index) {
+    completed++;
+    if (values.length == completed || !hasValue[index]) {
+      if (values.length == emitted) {
+        doNext(values.cast<T>().toList(growable: false));
+      }
+      doComplete();
+    }
+  }
+}
