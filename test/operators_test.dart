@@ -2049,6 +2049,62 @@ void main() {
       expect(actual, scheduler.isObservable<String>('-------------#'));
     });
   });
+  group('takeUntil', () {
+    test('no value and trigger early', () {
+      final input = scheduler.cold<String>('---|');
+      final trigger = scheduler.cold<String>('-1|');
+      final actual = input.takeUntil(trigger);
+      expect(actual, scheduler.isObservable<String>('-|'));
+    });
+    test('no value and trigger late', () {
+      final input = scheduler.cold<String>('---|');
+      final trigger = scheduler.cold<String>('----1|');
+      final actual = input.takeUntil(trigger);
+      expect(actual, scheduler.isObservable<String>('---|'));
+    });
+    test('no value and trigger error', () {
+      final input = scheduler.cold<String>('---|');
+      final trigger = scheduler.cold<String>('-#');
+      final actual = input.takeUntil(trigger);
+      expect(actual, scheduler.isObservable<String>('-#'));
+    });
+    test('no value and trigger complete', () {
+      final input = scheduler.cold<String>('---|');
+      final trigger = scheduler.cold<String>('-|');
+      final actual = input.takeUntil(trigger);
+      expect(actual, scheduler.isObservable<String>('---|'));
+    });
+    test('values and trigger early', () {
+      final input = scheduler.cold<String>('-a-b-|');
+      final trigger = scheduler.cold<String>('--1|');
+      final actual = input.takeUntil(trigger);
+      expect(actual, scheduler.isObservable<String>('-a|'));
+    });
+    test('values and trigger late', () {
+      final input = scheduler.cold<String>('-a-b-|');
+      final trigger = scheduler.cold<String>('-------1|');
+      final actual = input.takeUntil(trigger);
+      expect(actual, scheduler.isObservable<String>('-a-b-|'));
+    });
+    test('values and trigger error', () {
+      final input = scheduler.cold<String>('-a-b-|');
+      final trigger = scheduler.cold<String>('--#');
+      final actual = input.takeUntil(trigger);
+      expect(actual, scheduler.isObservable<String>('-a#'));
+    });
+    test('values and trigger complete', () {
+      final input = scheduler.cold<String>('-a-b-|');
+      final trigger = scheduler.cold<String>('--|');
+      final actual = input.takeUntil(trigger);
+      expect(actual, scheduler.isObservable<String>('-a-b-|'));
+    });
+    test('values and error', () {
+      final input = scheduler.cold<String>('-a-#');
+      final trigger = scheduler.cold<String>('|');
+      final actual = input.takeUntil(trigger);
+      expect(actual, scheduler.isObservable<String>('-a-#'));
+    });
+  });
   group('takeWhile', () {
     test('no value and completion', () {
       final input = scheduler.cold<String>('--|');
