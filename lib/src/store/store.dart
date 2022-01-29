@@ -1,6 +1,6 @@
 import '../../core.dart';
-import '../../disposables.dart';
-import '../subjects/subject.dart';
+import 'stores/base.dart';
+import 'stores/validating.dart';
 import 'types.dart';
 
 /// A redux like store that manages state.
@@ -9,16 +9,17 @@ import 'types.dart';
 /// but instead can be updated synchronously with [update] or asynchronously
 /// by passing an observable and a reducer function to [addReducer].
 ///
-/// The current state can be accessed with the [state] accessor. Listeners to
-/// state changes are added by calling [addListener].
+/// The current state can be accessed with the [state] accessor. The store
+/// is an [Observable], changes can be transformed using rx operators and
+/// listened to by subscribing.
 ///
 /// The canonical example with the counter looks like this:
 ///
 ///    // Create a store with the initial value 0.
 ///    final store = Store<int>(0);
 ///
-///    // Add a listener that prints the state whenever updated to console.
-///    store.addListener((state) => print(state));
+///    // Subscribe to state changes and print the new state to the console.
+///    store.subscribe(Observer.next((state) => print(state)));
 ///
 ///    // Increment the value by one. In a more complicated example one
 ///    // could extract the function to be standalone, or generalize it to
@@ -27,75 +28,26 @@ import 'types.dart';
 ///
 ///    // Alternatively, one can subscribe to an observable and provide
 ///    // reducer functions for its events to update the state asynchronously.
-///    // The following line sets the state to a random value every 10 seconds.
+///    // The following lines set the state to a random value every 10 seconds.
 ///    final randomValue = timer(period: Duration(seconds: 10))
 ///       .map((_) => Random().nextInt(100));
 ///    store.addReducer(randomValue, next: (state, value) => value);
 ///
-class Store<S> implements Observable<S> {
-  /// Constructs the store with the given initial state.
-  Store(this._state);
-
-  /// Internal reference to the current state.
-  S _state;
-
-  /// Internal flag indicating whether an update is happening right now.
-  bool _isUpdating = false;
-
-  /// Internal observable keeping track of change listeners.
-  final Subject<S> _listeners = Subject<S>();
+abstract class Store<S> implements Observable<S> {
+  /// Constructs a store from an initial value.
+  factory Store(S initialValue) {
+    Store<S> store = BaseStore<S>(initialValue);
+    // If assertions are enabled, wrap it in a validating store.
+    assert(() {
+      store = ValidatingStore<S>(store);
+      return true;
+    }());
+    return store;
+  }
 
   /// Returns the current state.
-  S get state {
-    if (_isUpdating) {
-      throw StateError('You may not call Store.state while updating. '
-          'The update function has already received the state as an argument. '
-          'Pass it down the call chain instead of reading a possibly outdated '
-          'version from the store.');
-    }
-    return _state;
-  }
+  S get state;
 
-  /// Updates the state asynchronously with an [updater] function.
-  S update(Updater<S> updater) {
-    if (_isUpdating) {
-      throw StateError('You may not call Store.update while updating. '
-          'The update function has already received the state as an argument. '
-          'Pass it down the call chain to manipulate it.');
-    }
-    _isUpdating = true;
-    try {
-      _state = updater(_state);
-    } finally {
-      _isUpdating = false;
-    }
-    _listeners.next(_state);
-    return _state;
-  }
-
-  /// Adds an [observable] that contributes to the state through a set of
-  /// reducer functions: [next], [error] and [complete]. These functions receive
-  /// the current state and the events of the observer to produce a new state.
-  Disposable addReducer<T>(
-    Observable<T> observable, {
-    NextReducer<S, T>? next,
-    ErrorReducer<S>? error,
-    CompleteReducer<S>? complete,
-    bool ignoreErrors = false,
-  }) =>
-      observable.subscribe(Observer(
-        next: next == null
-            ? null
-            : (value) => update((state) => next(state, value)),
-        error: error == null
-            ? null
-            : (exception, stackTrace) =>
-                update((state) => error(state, exception, stackTrace)),
-        complete: complete == null ? null : () => update(complete),
-        ignoreErrors: ignoreErrors,
-      ));
-
-  /// Subscribes to state changes.
-  @override
-  Disposable subscribe(Observer<S> observer) => _listeners.subscribe(observer);
+  /// Updates the current state.
+  S update(Updater<S> updater);
 }

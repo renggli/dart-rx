@@ -18,7 +18,8 @@ void main() async {
   // Update the value every 10 seconds randomly.
   final randomValue = timer(period: Duration(seconds: 10))
       .map((_) => Random().nextInt(100) - 50);
-  store.addReducer(randomValue, next: (int state, int value) => state + value);
+  store.addObservable(randomValue,
+      next: (int state, int value) => state + value);
 
   // Manual increment and decrement the value.
   stdin.lineMode = stdin.echoMode = false;
