@@ -1,3 +1,4 @@
+import 'package:rx/src/core/observer.dart';
 import 'package:rx/store.dart';
 import 'package:rx/subjects.dart';
 import 'package:test/test.dart';
@@ -18,14 +19,14 @@ void main() {
     test('update & notify', () {
       final log = <int>[];
       final store = Store<int>(0);
-      store.addListener(log.add);
+      store.subscribe(Observer.next(log.add));
       store.update((state) => state + 1);
       expect(log, [1]);
     });
     test('disposed listener', () {
       final log = <int>[];
       final store = Store<int>(0);
-      final listener = store.addListener(log.add);
+      final listener = store.subscribe(Observer.next(log.add));
       listener.dispose();
       store.update((state) => state + 1);
       expect(log, []);

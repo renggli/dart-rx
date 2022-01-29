@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:rx/core.dart';
 import 'package:rx/store.dart';
 
 /// Struct of the application state.
@@ -42,7 +43,7 @@ void writeState(State state) {
 }
 
 /// The store of the application state.
-final store = Store<State>(readState())..addListener(writeState);
+final store = Store<State>(readState())..subscribe(Observer.next(writeState));
 
 void main() {
   // Test terminal capabilities.

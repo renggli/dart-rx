@@ -1,5 +1,3 @@
-typedef Listener<S> = void Function(S state);
-
 typedef Updater<S> = S Function(S state);
 
 typedef NextReducer<S, T> = S Function(S state, T value);

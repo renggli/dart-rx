@@ -1,5 +1,6 @@
 import '../../core.dart';
 import '../../disposables.dart';
+import '../subjects/subject.dart';
 import 'types.dart';
 
 /// A redux like store that manages state.
@@ -31,18 +32,18 @@ import 'types.dart';
 ///       .map((_) => Random().nextInt(100));
 ///    store.addReducer(randomValue, next: (state, value) => value);
 ///
-class Store<S> {
+class Store<S> implements Observable<S> {
   /// Constructs the store with the given initial state.
   Store(this._state);
 
-  /// Internal: reference to the current state.
+  /// Internal reference to the current state.
   S _state;
 
-  /// Internal: flag indicating whether an update is happening right now.
+  /// Internal flag indicating whether an update is happening right now.
   bool _isUpdating = false;
 
-  /// Internal: list of listeners to be called with state changes.
-  final List<Listener<S>> _listeners = [];
+  /// Internal observable keeping track of change listeners.
+  final Subject<S> _listeners = Subject<S>();
 
   /// Returns the current state.
   S get state {
@@ -68,9 +69,7 @@ class Store<S> {
     } finally {
       _isUpdating = false;
     }
-    for (var listener in [..._listeners]) {
-      listener(_state);
-    }
+    _listeners.next(_state);
     return _state;
   }
 
@@ -96,9 +95,7 @@ class Store<S> {
         ignoreErrors: ignoreErrors,
       ));
 
-  /// Adds a listener that gets called whenever the state changes.
-  Disposable addListener(Listener<S> listener) {
-    _listeners.add(listener);
-    return ActionDisposable(() => _listeners.remove(listener));
-  }
+  /// Subscribes to state changes.
+  @override
+  Disposable subscribe(Observer<S> observer) => _listeners.subscribe(observer);
 }
