@@ -13,7 +13,7 @@ extension FoldOperator<T> on Observable<T> {
       FoldObservable<T, R>(this, transform, initialValue);
 }
 
-class FoldObservable<T, R> with Observable<R> {
+class FoldObservable<T, R> implements Observable<R> {
   FoldObservable(this.delegate, this.transform, this.initialValue);
 
   final Observable<T> delegate;

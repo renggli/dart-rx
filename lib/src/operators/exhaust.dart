@@ -31,7 +31,7 @@ extension ExhaustMapOperator<T> on Observable<T> {
       ExhaustObservable<T, R>(this, project, concurrent);
 }
 
-class ExhaustObservable<T, R> with Observable<R> {
+class ExhaustObservable<T, R> implements Observable<R> {
   ExhaustObservable(this.delegate, this.project, this.concurrent) {
     RangeError.checkValidRange(1, null, concurrent, 'concurrent');
   }

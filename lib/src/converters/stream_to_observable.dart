@@ -10,7 +10,7 @@ extension StreamToObservable<T> on Stream<T> {
   Observable<T> toObservable() => StreamObservable<T>(this);
 }
 
-class StreamObservable<T> with Observable<T> {
+class StreamObservable<T> implements Observable<T> {
   StreamObservable(this.stream);
 
   final Stream<T> stream;

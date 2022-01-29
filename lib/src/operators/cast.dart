@@ -8,7 +8,7 @@ extension CastOperator<T> on Observable<T> {
   Observable<R> cast<R>() => CastObservable<T, R>(this);
 }
 
-class CastObservable<T, R> with Observable<R> {
+class CastObservable<T, R> implements Observable<R> {
   CastObservable(this.delegate);
 
   final Observable<T> delegate;

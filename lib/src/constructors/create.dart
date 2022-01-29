@@ -10,7 +10,7 @@ import '../disposables/disposable.dart';
 Observable<T> create<T>(Callback1<Subscriber<T>> callback) =>
     CreateObservable<T>(callback);
 
-class CreateObservable<T> with Observable<T> {
+class CreateObservable<T> implements Observable<T> {
   CreateObservable(this.callback);
 
   final Callback1<Subscriber<T>> callback;

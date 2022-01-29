@@ -13,7 +13,7 @@ import '../disposables/errors.dart';
 /// Every Subject is an [Observable] and an [Observer]. You can subscribe to a
 /// [Subject], and you can call `next` to feed values as well as `error` and
 /// `complete`.
-class Subject<T> with Observable<T>, Observer<T> {
+class Subject<T> implements Observable<T>, Observer<T> {
   final List<Observer<T>> _observers = [];
   bool _isClosed = false;
   bool _hasStopped = false;

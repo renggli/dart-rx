@@ -6,7 +6,7 @@ import 'test_event_sequence.dart';
 import 'test_scheduler.dart';
 import 'test_subscriber.dart';
 
-abstract class TestObservable<T> with Observable<T> {
+abstract class TestObservable<T> implements Observable<T> {
   TestObservable(this.scheduler, this.sequence);
 
   final TestScheduler scheduler;

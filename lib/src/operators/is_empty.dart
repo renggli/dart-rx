@@ -9,7 +9,7 @@ extension IsEmptyOperator<T> on Observable<T> {
   Observable<bool> isEmpty() => IsEmptyObservable<T>(this);
 }
 
-class IsEmptyObservable<T> with Observable<bool> {
+class IsEmptyObservable<T> implements Observable<bool> {
   IsEmptyObservable(this.delegate);
 
   final Observable<T> delegate;

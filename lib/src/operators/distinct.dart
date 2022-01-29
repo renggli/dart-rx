@@ -15,7 +15,7 @@ extension DistinctOperator<T> on Observable<T> {
       DistinctObservable<T>(this, equals, hashCode);
 }
 
-class DistinctObservable<T> with Observable<T> {
+class DistinctObservable<T> implements Observable<T> {
   DistinctObservable(this.delegate, this.equalsFunction, this.hashCodeFunction);
 
   final Observable<T> delegate;

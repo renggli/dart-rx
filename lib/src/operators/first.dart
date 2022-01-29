@@ -38,7 +38,7 @@ extension FirstOperator<T> on Observable<T> {
       FirstObservable<T>(this, predicate, callback);
 }
 
-class FirstObservable<T> with Observable<T> {
+class FirstObservable<T> implements Observable<T> {
   FirstObservable(this.delegate, this.predicate, this.callback);
 
   final Observable<T> delegate;

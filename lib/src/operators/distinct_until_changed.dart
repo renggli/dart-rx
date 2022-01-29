@@ -18,7 +18,7 @@ extension DistinctUntilChangedOperator<T> on Observable<T> {
       );
 }
 
-class DistinctUntilChangedObservable<T, K> with Observable<T> {
+class DistinctUntilChangedObservable<T, K> implements Observable<T> {
   DistinctUntilChangedObservable(this.delegate, this.key, this.compare);
 
   final Observable<T> delegate;

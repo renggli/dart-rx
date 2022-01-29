@@ -6,7 +6,7 @@ import '../disposables/disposed.dart';
 /// An [Observable] that emits no items and never completes.
 Observable<Never> never() => NeverObservable();
 
-class NeverObservable with Observable<Never> {
+class NeverObservable implements Observable<Never> {
   const NeverObservable();
 
   @override

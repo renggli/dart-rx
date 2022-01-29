@@ -13,7 +13,7 @@ Observable<List<T>> forkJoin<T>(List<Observable<T>> sources) => sources.isEmpty
     ? empty() as Observable<List<T>>
     : ForkJoinObservable<T>(sources);
 
-class ForkJoinObservable<T> with Observable<List<T>> {
+class ForkJoinObservable<T> implements Observable<List<T>> {
   ForkJoinObservable(this.observables);
 
   final List<Observable<T>> observables;

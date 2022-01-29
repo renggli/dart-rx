@@ -37,7 +37,7 @@ extension LastOperator<T> on Observable<T> {
       LastObservable<T>(this, predicate, callback);
 }
 
-class LastObservable<T> with Observable<T> {
+class LastObservable<T> implements Observable<T> {
   LastObservable(this.delegate, this.predicate, this.callback);
 
   final Observable<T> delegate;

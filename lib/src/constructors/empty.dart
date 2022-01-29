@@ -8,7 +8,7 @@ import '../schedulers/scheduler.dart';
 Observable<Never> empty({Scheduler? scheduler}) =>
     EmptyObservable(scheduler ?? const ImmediateScheduler());
 
-class EmptyObservable with Observable<Never> {
+class EmptyObservable implements Observable<Never> {
   const EmptyObservable(this.scheduler);
 
   final Scheduler scheduler;

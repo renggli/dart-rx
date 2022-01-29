@@ -13,7 +13,7 @@ extension WhereOperator<T> on Observable<T> {
       WhereObservable<T>(this, predicate);
 }
 
-class WhereObservable<T> with Observable<T> {
+class WhereObservable<T> implements Observable<T> {
   WhereObservable(this.delegate, this.predicate);
 
   final Observable<T> delegate;

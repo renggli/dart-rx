@@ -15,7 +15,7 @@ Observable<T> race<T>(Iterable<Observable<T>> sources) {
           : RaceObservable<T>(observables);
 }
 
-class RaceObservable<T> with Observable<T> {
+class RaceObservable<T> implements Observable<T> {
   RaceObservable(this.observables);
 
   final List<Observable<T>> observables;

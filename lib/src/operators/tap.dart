@@ -8,7 +8,7 @@ extension TapOperator<T> on Observable<T> {
   Observable<T> tap(Observer<T> handler) => TapObservable<T>(this, handler);
 }
 
-class TapObservable<T> with Observable<T> {
+class TapObservable<T> implements Observable<T> {
   TapObservable(this.delegate, this.handler);
 
   final Observable<T> delegate;

@@ -14,7 +14,7 @@ extension TimeoutOperator<T> on Observable<T> {
       TimeoutObservable<T>(this, scheduler ?? defaultScheduler, duration);
 }
 
-class TimeoutObservable<T> with Observable<T> {
+class TimeoutObservable<T> implements Observable<T> {
   TimeoutObservable(this.delegate, this.scheduler, this.duration);
 
   final Observable<T> delegate;

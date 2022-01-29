@@ -24,7 +24,7 @@ extension DelayOperator<T> on Observable<T> {
           constantFunction1(timer(delay: duration, scheduler: scheduler)));
 }
 
-class DelayObservable<T, R> with Observable<T> {
+class DelayObservable<T, R> implements Observable<T> {
   DelayObservable(this.delegate, this.durationSelector);
 
   final Observable<T> delegate;

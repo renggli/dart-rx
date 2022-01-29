@@ -32,7 +32,7 @@ extension SingleOperator<T> on Observable<T> {
       SingleObservable<T>(this, tooFew, tooMany);
 }
 
-class SingleObservable<T> with Observable<T> {
+class SingleObservable<T> implements Observable<T> {
   SingleObservable(this.delegate, this.tooFewCallback, this.tooManyCallback);
 
   final Observable<T> delegate;

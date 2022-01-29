@@ -8,7 +8,7 @@ import '../schedulers/scheduler.dart';
 Observable<T> just<T>(T value, {Scheduler? scheduler}) =>
     JustObservable<T>(value, scheduler ?? const ImmediateScheduler());
 
-class JustObservable<T> with Observable<T> {
+class JustObservable<T> implements Observable<T> {
   const JustObservable(this.value, this.scheduler);
 
   final T value;

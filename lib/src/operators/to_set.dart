@@ -11,7 +11,7 @@ extension ToSetOperator<T> on Observable<T> {
       ToSetObservable<T>(this, constructor ?? () => <T>{});
 }
 
-class ToSetObservable<T> with Observable<Set<T>> {
+class ToSetObservable<T> implements Observable<Set<T>> {
   ToSetObservable(this.delegate, this.constructor);
 
   final Observable<T> delegate;

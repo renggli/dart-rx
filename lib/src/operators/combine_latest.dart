@@ -10,7 +10,7 @@ extension CombineLatestOperator<T> on Observable<Observable<T>> {
   Observable<List<T>> combineLatest() => CombineLatestObservable<T>(this);
 }
 
-class CombineLatestObservable<T> with Observable<List<T>> {
+class CombineLatestObservable<T> implements Observable<List<T>> {
   CombineLatestObservable(this.delegate);
 
   final Observable<Observable<T>> delegate;

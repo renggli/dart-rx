@@ -24,7 +24,7 @@ extension DebounceOperator<T> on Observable<T> {
           constantFunction1(timer(delay: duration, scheduler: scheduler)));
 }
 
-class DebounceObservable<T, R> with Observable<T> {
+class DebounceObservable<T, R> implements Observable<T> {
   DebounceObservable(this.delegate, this.durationSelector);
 
   final Observable<T> delegate;

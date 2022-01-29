@@ -10,7 +10,7 @@ extension TakeLastOperator<T> on Observable<T> {
   Observable<T> takeLast([int count = 1]) => TakeLastObservable<T>(this, count);
 }
 
-class TakeLastObservable<T> with Observable<T> {
+class TakeLastObservable<T> implements Observable<T> {
   TakeLastObservable(this.delegate, this.count);
 
   final Observable<T> delegate;

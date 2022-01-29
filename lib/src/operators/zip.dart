@@ -12,7 +12,7 @@ extension ZipOperator<T> on Observable<Observable<T>> {
   Observable<List<T>> zip() => ZipObservable<T>(this);
 }
 
-class ZipObservable<T> with Observable<List<T>> {
+class ZipObservable<T> implements Observable<List<T>> {
   ZipObservable(this.delegate);
 
   final Observable<Observable<T>> delegate;

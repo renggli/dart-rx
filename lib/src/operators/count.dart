@@ -9,7 +9,7 @@ extension CountOperator<T> on Observable<T> {
   Observable<int> count() => CountObservable<T>(this);
 }
 
-class CountObservable<T> with Observable<int> {
+class CountObservable<T> implements Observable<int> {
   CountObservable(this.delegate);
 
   final Observable<T> delegate;

@@ -28,7 +28,7 @@ extension ThrottleOperator<T> on Observable<T> {
           trailing: trailing);
 }
 
-class ThrottleObservable<T, R> with Observable<T> {
+class ThrottleObservable<T, R> implements Observable<T> {
   ThrottleObservable(
       this.delegate, this.durationSelector, this.leading, this.trailing);
 

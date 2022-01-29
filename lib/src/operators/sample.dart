@@ -19,7 +19,7 @@ extension SampleOperator<T> on Observable<T> {
           timer(delay: duration, period: duration, scheduler: scheduler));
 }
 
-class SampleObservable<T, R> with Observable<T> {
+class SampleObservable<T, R> implements Observable<T> {
   SampleObservable(this.delegate, this.trigger);
 
   final Observable<T> delegate;

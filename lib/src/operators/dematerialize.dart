@@ -11,7 +11,7 @@ extension DematerializeOperator<T> on Observable<Event<T>> {
   Observable<T> dematerialize() => DematerializeObservable<T>(this);
 }
 
-class DematerializeObservable<T> with Observable<T> {
+class DematerializeObservable<T> implements Observable<T> {
   DematerializeObservable(this.delegate);
 
   final Observable<Event<T>> delegate;

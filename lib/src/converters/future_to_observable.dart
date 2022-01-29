@@ -10,7 +10,7 @@ extension FutureToObservable<T> on Future<T> {
   Observable<T> toObservable() => FutureObservable<T>(this);
 }
 
-class FutureObservable<T> with Observable<T> {
+class FutureObservable<T> implements Observable<T> {
   const FutureObservable(this.future);
 
   final Future<T> future;

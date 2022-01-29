@@ -9,7 +9,7 @@ extension MaterializeOperator<T> on Observable<T> {
   Observable<Event<T>> materialize() => MaterializeObservable<T>(this);
 }
 
-class MaterializeObservable<T> with Observable<Event<T>> {
+class MaterializeObservable<T> implements Observable<Event<T>> {
   MaterializeObservable(this.delegate);
 
   final Observable<T> delegate;

@@ -9,7 +9,7 @@ extension WhereTypeOperator<T> on Observable<T> {
   Observable<R> whereType<R>() => WhereTypeObserver<T, R>(this);
 }
 
-class WhereTypeObserver<T, R> with Observable<R> {
+class WhereTypeObserver<T, R> implements Observable<R> {
   WhereTypeObserver(this.delegate);
 
   final Observable<T> delegate;

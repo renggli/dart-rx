@@ -23,8 +23,7 @@ extension MulticastOperator<T> on Observable<T> {
 }
 
 class MulticastObservable<T>
-    with Observable<T>
-    implements ConnectableObservable<T> {
+    implements Observable<T>, ConnectableObservable<T> {
   MulticastObservable(this._source, this._factory);
 
   final Observable<T> _source;

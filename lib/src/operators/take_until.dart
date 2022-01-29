@@ -10,7 +10,7 @@ extension TakeUntilOperator<T> on Observable<T> {
       TakeUntilObservable<T, R>(this, trigger);
 }
 
-class TakeUntilObservable<T, R> with Observable<T> {
+class TakeUntilObservable<T, R> implements Observable<T> {
   TakeUntilObservable(this.delegate, this.trigger);
 
   final Observable<T> delegate;

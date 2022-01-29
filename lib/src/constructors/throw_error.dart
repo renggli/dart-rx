@@ -10,7 +10,7 @@ Observable<Never> throwError(Object error,
     ThrowErrorObservable(error, stackTrace ?? StackTrace.current,
         scheduler ?? const ImmediateScheduler());
 
-class ThrowErrorObservable with Observable<Never> {
+class ThrowErrorObservable implements Observable<Never> {
   const ThrowErrorObservable(this.error, this.stackTrace, this.scheduler);
 
   final Object error;

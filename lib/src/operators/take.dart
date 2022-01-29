@@ -8,7 +8,7 @@ extension TakeOperator<T> on Observable<T> {
   Observable<T> take([int count = 1]) => TakeObservable<T>(this, count);
 }
 
-class TakeObservable<T> with Observable<T> {
+class TakeObservable<T> implements Observable<T> {
   TakeObservable(this.delegate, this.count);
 
   final Observable<T> delegate;

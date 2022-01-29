@@ -32,7 +32,7 @@ extension MergeMapOperator<T> on Observable<T> {
       MergeObservable<T, R>(this, project, concurrent);
 }
 
-class MergeObservable<T, R> with Observable<R> {
+class MergeObservable<T, R> implements Observable<R> {
   MergeObservable(this.delegate, this.project, this.concurrent) {
     RangeError.checkValidRange(1, null, concurrent, 'concurrent');
   }

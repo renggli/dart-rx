@@ -10,7 +10,7 @@ extension SkipUntilOperator<T> on Observable<T> {
       SkipUntilObservable<T, R>(this, trigger);
 }
 
-class SkipUntilObservable<T, R> with Observable<T> {
+class SkipUntilObservable<T, R> implements Observable<T> {
   SkipUntilObservable(this.delegate, this.trigger);
 
   final Observable<T> delegate;

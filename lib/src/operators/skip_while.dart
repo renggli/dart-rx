@@ -12,7 +12,7 @@ extension SkipWhileOperator<T> on Observable<T> {
       SkipWhileObservable<T>(this, predicate);
 }
 
-class SkipWhileObservable<T> with Observable<T> {
+class SkipWhileObservable<T> implements Observable<T> {
   SkipWhileObservable(this.delegate, this.predicate);
 
   final Observable<T> delegate;

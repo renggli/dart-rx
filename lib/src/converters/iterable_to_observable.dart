@@ -10,7 +10,7 @@ extension IterableToObservable<T> on Iterable<T> {
       IterableObservable<T>(this, scheduler ?? defaultScheduler);
 }
 
-class IterableObservable<T> with Observable<T> {
+class IterableObservable<T> implements Observable<T> {
   IterableObservable(this.iterable, this.scheduler);
 
   final Iterable<T> iterable;

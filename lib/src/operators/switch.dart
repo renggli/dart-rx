@@ -26,7 +26,7 @@ extension SwitchMapOperator<T> on Observable<T> {
       SwitchObservable<T, R>(this, project);
 }
 
-class SwitchObservable<T, R> with Observable<R> {
+class SwitchObservable<T, R> implements Observable<R> {
   SwitchObservable(this.delegate, this.project);
 
   final Observable<T> delegate;

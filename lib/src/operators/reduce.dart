@@ -12,7 +12,7 @@ extension ReduceOperator<T> on Observable<T> {
       ReduceObservable<T>(this, transform);
 }
 
-class ReduceObservable<T> with Observable<T> {
+class ReduceObservable<T> implements Observable<T> {
   ReduceObservable(this.delegate, this.transform);
 
   final Observable<T> delegate;
