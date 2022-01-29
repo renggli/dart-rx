@@ -18,8 +18,8 @@ class Subject<T> with Observable<T>, Observer<T> {
   bool _isClosed = false;
   bool _hasStopped = false;
   bool _hasError = false;
-  late Object _error;
-  late StackTrace _stackTrace;
+  late final Object _error;
+  late final StackTrace _stackTrace;
 
   @override
   void next(T value) {
