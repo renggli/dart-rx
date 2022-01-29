@@ -8,6 +8,7 @@ export 'src/constructors/iff.dart' show iff;
 export 'src/constructors/just.dart' show just;
 export 'src/constructors/merge.dart' show merge;
 export 'src/constructors/never.dart' show never;
+export 'src/constructors/race.dart' show race;
 export 'src/constructors/throw_error.dart' show throwError;
 export 'src/constructors/timer.dart' show timer;
 export 'src/constructors/zip.dart' show zip;

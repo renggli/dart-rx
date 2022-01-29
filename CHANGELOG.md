@@ -4,6 +4,7 @@
 
 - Dart 2.15 requirement.
 - Add a redux like store, and example.
+- Add `race` constructor.
 - Add `takeUntil` and `skipUntil` operators.
 - Move assertions earlier when possible.
 - Improved testing infrastructure, and test coverage.

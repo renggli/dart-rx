@@ -337,6 +337,75 @@ void main() {
       expect(subscription.isDisposed, isTrue);
     });
   });
+  group('race', () {
+    test('no observables', () {
+      final actual = race<String>([]);
+      expect(actual, scheduler.isObservable<String>('|'));
+    });
+    test('single observable', () {
+      final actual = race<String>([
+        scheduler.cold<String>('-a-b-c-|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
+    });
+    test('two observables and early completion', () {
+      final actual = race<String>([
+        scheduler.cold<String>('-|'),
+        scheduler.cold<String>('--x-y-z-|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('-|'));
+    });
+    test('two observables and completion', () {
+      final actual = race<String>([
+        scheduler.cold<String>('-a-|'),
+        scheduler.cold<String>('--x-y-z-|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('-a-|'));
+    });
+    test('two observables and late completion', () {
+      final actual = race<String>([
+        scheduler.cold<String>('-a-b-|'),
+        scheduler.cold<String>('--x-y-z-|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('-a-b-|'));
+    });
+    test('two observables and early error', () {
+      final actual = race<String>([
+        scheduler.cold<String>('-#'),
+        scheduler.cold<String>('--x-y-z-|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('-#'));
+    });
+    test('two observables and error', () {
+      final actual = race<String>([
+        scheduler.cold<String>('-a-#'),
+        scheduler.cold<String>('--x-y-z-|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('-a-#'));
+    });
+    test('two observables and late error', () {
+      final actual = race<String>([
+        scheduler.cold<String>('-a-b-#'),
+        scheduler.cold<String>('--x-y-z-|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('-a-b-#'));
+    });
+    test('two observables and early completion', () {
+      final actual = race<String>([
+        scheduler.cold<String>('-|'),
+        scheduler.cold<String>('--x-y-z-|'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('-|'));
+    });
+    test('multiple observables and losers throw', () {
+      final actual = race<String>([
+        scheduler.cold<String>('---a-#'),
+        scheduler.cold<String>('-1-2-3-4-|'),
+        scheduler.cold<String>('--x-y-#'),
+      ]);
+      expect(actual, scheduler.isObservable<String>('-1-2-3-4-|'));
+    });
+  });
   group('throwError', () {
     test('immediately throws', () {
       final error = Exception('My Error');
