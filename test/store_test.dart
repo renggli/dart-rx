@@ -126,6 +126,13 @@ void main() {
       expect(store.canRedo, isFalse);
       expect(store.future, []);
     });
+    test('limit history', () {
+      final store = HistoryStore(DefaultStore<int>(0), limit: 5);
+      for (var i = 0; i <= 10; i++) {
+        store.update((state) => i);
+      }
+      expect(store.past, [5, 6, 7, 8, 9]);
+    });
   });
   group('addFuture', () {
     test('onValue', () async {
