@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:more/functional.dart';
 import 'package:rx/core.dart';
 import 'package:rx/store.dart';
 
@@ -20,6 +21,27 @@ class State {
 
   /// The active item in the list.
   final int index;
+}
+
+/// Struct of all operations.
+class Operation {
+  /// Default constructor of an operation
+  Operation(this.key, this.label, this.isEnabled, this.action);
+
+  /// The key to be pressed to trigger the action.
+  final String key;
+
+  /// The label of the action.
+  final String label;
+
+  /// Optional predicate telling if the action can be triggered.
+  final Predicate0 isEnabled;
+
+  /// The actual code executing the action.
+  final Callback0 action;
+
+  @override
+  String toString() => '[$key] ${label.padRight(10)}';
 }
 
 /// Standard filename to store todo lists.
@@ -43,7 +65,64 @@ void writeState(State state) {
 }
 
 /// The store of the application state.
-final store = Store<State>(readState())..subscribe(Observer.next(writeState));
+final store = HistoryStore<State>(Store(readState()))
+  ..subscribe(Observer.next(writeState));
+
+/// The supported operations.
+final operations = [
+  Operation(
+    'j',
+    'Up',
+    () => store.state.index > 0,
+    () => store.update((state) => state.copy(index: state.index - 1)),
+  ),
+  Operation(
+    'k',
+    'Down',
+    () => store.state.index < store.state.items.length - 1,
+    () => store.update((state) => state.copy(index: state.index + 1)),
+  ),
+  Operation(
+    'a',
+    'Add',
+    () => true,
+    () {
+      stdout.write('Add: ');
+      final item = stdin.readLineSync();
+      if (item != null) {
+        store.update((state) =>
+            state.copy(items: [...state.items]..insert(state.index, item)));
+      }
+    },
+  ),
+  Operation(
+    'x',
+    'Remove',
+    () => store.state.items.isNotEmpty,
+    () {
+      store.update((state) =>
+          state.copy(items: [...state.items]..removeAt(state.index)));
+    },
+  ),
+  Operation(
+    'u',
+    'Undo',
+    () => store.canUndo,
+    () => store.undo(),
+  ),
+  Operation(
+    'r',
+    'Redo',
+    () => store.canRedo,
+    () => store.redo(),
+  ),
+  Operation(
+    'q',
+    'Quit',
+    () => true,
+    () => exit(0),
+  ),
+];
 
 void main() {
   // Test terminal capabilities.
@@ -65,37 +144,20 @@ void main() {
       stdout.writeln('(no items)');
     }
     stdout.writeln();
-    stdout.writeln('[u]p [d]own [a]dd [r]emove [q]uit');
+    stdout.writeln(
+        operations.where((operation) => operation.isEnabled()).join(''));
 
-    // Read the command from the input.
+    // Read the operation from the input.
     stdin.lineMode = stdin.echoMode = false;
     final command = String.fromCharCode(stdin.readByteSync());
     stdin.lineMode = stdin.echoMode = true;
 
-    // Dispatch to the right command.
-    switch (command) {
-      case 'u':
-        store.update((state) => state.copy(index: state.index - 1));
+    // Dispatch to the right operation.
+    for (final operation in operations) {
+      if (operation.key == command && operation.isEnabled()) {
+        operation.action();
         break;
-      case 'd':
-        store.update((state) => state.copy(index: state.index + 1));
-        break;
-      case 'a':
-        stdout.write('Add: ');
-        final item = stdin.readLineSync();
-        if (item != null) {
-          store.update((state) =>
-              state.copy(items: [...state.items]..insert(state.index, item)));
-        }
-        break;
-      case 'r':
-        if (store.state.items.isNotEmpty) {
-          store.update((state) =>
-              state.copy(items: [...state.items]..removeAt(state.index)));
-        }
-        break;
-      case 'q':
-        exit(0);
+      }
     }
   }
 }
