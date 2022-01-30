@@ -3,11 +3,12 @@ import '../../disposables/disposable.dart';
 import '../store.dart';
 import '../types.dart';
 
-/// A store that validates and delegates to another store.
+/// A delegating store that validates state access and updates.
 class ValidatingStore<S> implements Store<S> {
+  /// Constructs a validating store.
   ValidatingStore(this.delegate);
 
-  /// The store to delegate to.
+  /// The store to delegate operations to.
   final Store<S> delegate;
 
   /// Flag indicating whether the store is currently being updated.
@@ -17,7 +18,7 @@ class ValidatingStore<S> implements Store<S> {
   S get state {
     if (isUpdating) {
       throw StateError(
-          'You may not call Store.state while updating. The update function '
+          'You may not call `Store.state` while updating. The update function '
           'has already received the state as an argument. Pass it down the '
           'call chain instead of reading a possibly outdated version from the '
           'store.');
@@ -29,7 +30,7 @@ class ValidatingStore<S> implements Store<S> {
   S update(Updater<S> updater) {
     if (isUpdating) {
       throw StateError(
-          'You may not call Store.update while updating. The update function '
+          'You may not call `Store.update` while updating. The update function '
           'has already received the state as an argument. Pass it down the '
           'call chain to manipulate it.');
     }

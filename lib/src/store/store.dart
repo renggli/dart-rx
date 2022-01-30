@@ -1,17 +1,17 @@
 import '../../core.dart';
-import 'stores/base.dart';
+import 'stores/default.dart';
 import 'stores/validating.dart';
 import 'types.dart';
 
 /// A redux like store that manages state.
 ///
 /// Contrary to the original design the store doesn't use configured actions,
-/// but instead can be updated synchronously with [update] or asynchronously
-/// by passing an observable and a reducer function to [addReducer].
+/// but instead uses a synchronous [update] callback. Furthermore, various
+/// extensions are provided to asynchronously let an [Observable] or [Future]
+/// manipulate the state.
 ///
-/// The current state can be accessed with the [state] accessor. The store
-/// is an [Observable], changes can be transformed using rx operators and
-/// listened to by subscribing.
+/// Middleware is provided by providing other implementations of the [Store]
+/// interface, and possibly wrapping and delegating to the [DefaultStore].
 ///
 /// The canonical example with the counter looks like this:
 ///
@@ -31,12 +31,12 @@ import 'types.dart';
 ///    // The following lines set the state to a random value every 10 seconds.
 ///    final randomValue = timer(period: Duration(seconds: 10))
 ///       .map((_) => Random().nextInt(100));
-///    store.addReducer(randomValue, next: (state, value) => value);
+///    store.addObservable(randomValue, next: (state, value) => value);
 ///
 abstract class Store<S> implements Observable<S> {
-  /// Constructs a store from an initial value.
-  factory Store(S initialValue) {
-    Store<S> store = BaseStore<S>(initialValue);
+  /// Constructs a standard store from an initial state.
+  factory Store(S initialState) {
+    Store<S> store = DefaultStore<S>(initialState);
     // If assertions are enabled, wrap it in a validating store.
     assert(() {
       store = ValidatingStore<S>(store);
