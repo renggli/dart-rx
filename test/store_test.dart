@@ -194,4 +194,44 @@ void main() {
       expect(store.state, ['Complete']);
     });
   });
+  group('addStream', () {
+    test('next', () async {
+      final store = Store<List<String>>([]);
+      final controller = StreamController<int>();
+      store.addStream(controller.stream,
+          onData: (state, value) => [...state, 'Value: $value']);
+      expect(store.state, []);
+      controller
+        ..add(42)
+        ..add(43)
+        ..close();
+      await controller.done;
+      expect(store.state, ['Value: 42', 'Value: 43']);
+    });
+    test('error', () async {
+      final store = Store<List<String>>([]);
+      final controller = StreamController<int>();
+      store.addStream(controller.stream,
+          onError: (state, error, stackTrace) => [...state, 'Error: $error']);
+      expect(store.state, []);
+      controller
+        ..add(42)
+        ..addError(StateError('Hello'), StackTrace.empty)
+        ..close();
+      await controller.done;
+      expect(store.state, ['Error: Bad state: Hello']);
+    });
+    test('complete', () async {
+      final store = Store<List<String>>([]);
+      final controller = StreamController<int>();
+      store.addStream(controller.stream,
+          onDone: (state) => [...state, 'Complete']);
+      expect(store.state, []);
+      controller
+        ..add(42)
+        ..close();
+      await controller.done;
+      expect(store.state, ['Complete']);
+    });
+  });
 }
