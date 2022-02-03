@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.2.0
+## 0.2.0 (unpublished)
 
-- Dart 2.15 requirement.
+- Dart 2.16 requirement.
 - Add a redux like store, and example.
 - Add `race` constructor.
 - Add `takeUntil` and `skipUntil` operators.
