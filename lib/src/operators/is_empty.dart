@@ -23,7 +23,7 @@ class IsEmptyObservable<T> implements Observable<bool> {
 }
 
 class IsEmptySubscriber<T> extends Subscriber<T> {
-  IsEmptySubscriber(Observer<bool> observer) : super(observer);
+  IsEmptySubscriber(Observer<bool> super.observer);
 
   @override
   void onNext(T value) {

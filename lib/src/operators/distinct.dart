@@ -32,10 +32,9 @@ class DistinctObservable<T> implements Observable<T> {
 }
 
 class DistinctSubscriber<T> extends Subscriber<T> {
-  DistinctSubscriber(Observer<T> observer, Predicate2<T, T>? equalsFunction,
-      Map1<T, int>? hashCodeFunction)
-      : values = HashSet(equals: equalsFunction, hashCode: hashCodeFunction),
-        super(observer);
+  DistinctSubscriber(Observer<T> super.observer,
+      Predicate2<T, T>? equalsFunction, Map1<T, int>? hashCodeFunction)
+      : values = HashSet(equals: equalsFunction, hashCode: hashCodeFunction);
 
   final Set<T> values;
 

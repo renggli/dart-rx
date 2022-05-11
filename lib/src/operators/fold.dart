@@ -29,8 +29,7 @@ class FoldObservable<T, R> implements Observable<R> {
 }
 
 class FoldSubscriber<T, R> extends Subscriber<T> {
-  FoldSubscriber(Observer<R> destination, this.transform, this.seed)
-      : super(destination);
+  FoldSubscriber(Observer<R> super.destination, this.transform, this.seed);
 
   final Map2<R, T, R> transform;
   R seed;

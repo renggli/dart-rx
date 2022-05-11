@@ -28,8 +28,7 @@ class ObserveOnObservable<T> implements Observable<T> {
 }
 
 class ObserveOnSubscriber<T> extends Subscriber<T> {
-  ObserveOnSubscriber(Observer<T> observer, this.scheduler, this.delay)
-      : super(observer);
+  ObserveOnSubscriber(Observer<T> super.observer, this.scheduler, this.delay);
 
   final Scheduler scheduler;
   final Duration? delay;

@@ -31,8 +31,7 @@ class TimeoutObservable<T> implements Observable<T> {
 
 class TimeoutSubscriber<T> extends Subscriber<T> {
   TimeoutSubscriber(
-      Observer<T> observer, Scheduler scheduler, Duration duration)
-      : super(observer) {
+      Observer<T> super.observer, Scheduler scheduler, Duration duration) {
     subscription = scheduler.scheduleRelative(duration, onTimeout);
   }
 

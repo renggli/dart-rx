@@ -25,7 +25,7 @@ class DematerializeObservable<T> implements Observable<T> {
 }
 
 class DematerializeSubscriber<T> extends Subscriber<Event<T>> {
-  DematerializeSubscriber(Observer<T> observer) : super(observer);
+  DematerializeSubscriber(Observer<T> super.observer);
 
   @override
   void onNext(Event<T> value) {

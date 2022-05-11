@@ -23,7 +23,7 @@ class SkipObservable<T> implements Observable<T> {
 }
 
 class SkipSubscriber<T> extends Subscriber<T> {
-  SkipSubscriber(Observer<T> observer, this.count) : super(observer);
+  SkipSubscriber(Observer<T> super.observer, this.count);
 
   int count;
 

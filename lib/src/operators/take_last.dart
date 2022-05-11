@@ -25,9 +25,8 @@ class TakeLastObservable<T> implements Observable<T> {
 }
 
 class TakeLastSubscriber<T> extends Subscriber<T> {
-  TakeLastSubscriber(Observer<T> destination, this.count)
-      : buffer = QueueList(count),
-        super(destination);
+  TakeLastSubscriber(Observer<T> super.destination, this.count)
+      : buffer = QueueList(count);
 
   final int count;
   final QueueList<T> buffer;

@@ -42,7 +42,7 @@ class SwitchObservable<T, R> implements Observable<R> {
 
 class SwitchSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  SwitchSubscriber(Observer<R> observer, this.project) : super(observer) {
+  SwitchSubscriber(Observer<R> super.observer, this.project) {
     add(subscription);
   }
 

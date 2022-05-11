@@ -26,7 +26,7 @@ class SkipUntilObservable<T, R> implements Observable<T> {
 
 class SkipUntilSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  SkipUntilSubscriber(Observer<T> observer, this.trigger) : super(observer) {
+  SkipUntilSubscriber(Observer<T> super.observer, this.trigger) {
     add(InnerObserver<R, void>(this, trigger, null));
   }
 

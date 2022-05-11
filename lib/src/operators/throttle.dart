@@ -48,9 +48,8 @@ class ThrottleObservable<T, R> implements Observable<T> {
 
 class ThrottleSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  ThrottleSubscriber(
-      Observer<T> observer, this.durationSelector, this.leading, this.trailing)
-      : super(observer);
+  ThrottleSubscriber(Observer<T> super.observer, this.durationSelector,
+      this.leading, this.trailing);
 
   final DurationSelector<T, R> durationSelector;
   final bool leading;

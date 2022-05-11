@@ -25,8 +25,7 @@ class DefaultIfEmptyObservable<T> implements Observable<T> {
 }
 
 class DefaultIfEmptySubscriber<T> extends Subscriber<T> {
-  DefaultIfEmptySubscriber(Observer<T> observer, this.defaultValue)
-      : super(observer);
+  DefaultIfEmptySubscriber(Observer<T> super.observer, this.defaultValue);
 
   final T defaultValue;
 

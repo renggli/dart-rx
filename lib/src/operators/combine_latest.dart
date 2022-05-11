@@ -25,7 +25,7 @@ class CombineLatestObservable<T> implements Observable<List<T>> {
 
 class CombineLatestSubscriber<T> extends Subscriber<Observable<T>>
     implements InnerEvents<T, int> {
-  CombineLatestSubscriber(Observer<List<T>> destination) : super(destination);
+  CombineLatestSubscriber(Observer<List<T>> super.destination);
 
   final List<Observable<T>> observables = [];
   final List<bool> hasValues = [];

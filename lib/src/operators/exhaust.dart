@@ -50,8 +50,7 @@ class ExhaustObservable<T, R> implements Observable<R> {
 
 class ExhaustSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  ExhaustSubscriber(Observer<R> observer, this.project, this.concurrent)
-      : super(observer);
+  ExhaustSubscriber(Observer<R> super.observer, this.project, this.concurrent);
 
   final Map1<T, Observable<R>> project;
   final int concurrent;

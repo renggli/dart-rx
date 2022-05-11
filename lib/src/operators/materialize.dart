@@ -23,7 +23,7 @@ class MaterializeObservable<T> implements Observable<Event<T>> {
 }
 
 class MaterializeSubscriber<T> extends Subscriber<T> {
-  MaterializeSubscriber(Observer<Event<T>> destination) : super(destination);
+  MaterializeSubscriber(Observer<Event<T>> super.destination);
 
   @override
   void onNext(T value) => doNext(Event<T>.next(value));

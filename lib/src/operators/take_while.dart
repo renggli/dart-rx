@@ -27,7 +27,7 @@ class TakeWhileObservable<T> implements Observable<T> {
 }
 
 class TakeWhileSubscriber<T> extends Subscriber<T> {
-  TakeWhileSubscriber(Observer<T> observer, this.predicate) : super(observer);
+  TakeWhileSubscriber(Observer<T> super.observer, this.predicate);
 
   final Predicate1<T> predicate;
 

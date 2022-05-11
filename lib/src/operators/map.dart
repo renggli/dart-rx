@@ -32,7 +32,7 @@ class MapObservable<T, R> implements Observable<R> {
 }
 
 class MapSubscriber<T, R> extends Subscriber<T> {
-  MapSubscriber(Observer<R> observer, this.transform) : super(observer);
+  MapSubscriber(Observer<R> super.observer, this.transform);
 
   final Map1<T, R> transform;
 

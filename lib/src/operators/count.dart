@@ -23,7 +23,7 @@ class CountObservable<T> implements Observable<int> {
 }
 
 class CountSubscriber<T> extends Subscriber<T> {
-  CountSubscriber(Observer<int> observer) : super(observer);
+  CountSubscriber(Observer<int> super.observer);
 
   int count = 0;
 

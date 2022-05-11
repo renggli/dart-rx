@@ -26,8 +26,7 @@ class RaceObservable<T> implements Observable<T> {
 }
 
 class RaceSubscriber<T> extends Subscriber<T> implements InnerEvents<T, void> {
-  RaceSubscriber(Observer<T> observer, List<Observable<T>> observables)
-      : super(observer) {
+  RaceSubscriber(Observer<T> super.observer, List<Observable<T>> observables) {
     for (final observable in observables) {
       final observer = InnerObserver<T, void>(this, observable, null);
       observers.add(observer);

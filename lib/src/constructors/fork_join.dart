@@ -26,10 +26,9 @@ class ForkJoinObservable<T> implements Observable<List<T>> {
 class ForkJoinSubscriber<T> extends Subscriber<List<T>>
     implements InnerEvents<T, int> {
   ForkJoinSubscriber(
-      Observer<List<T>> observer, List<Observable<T>> observables)
+      Observer<List<T>> super.observer, List<Observable<T>> observables)
       : hasValue = BitList.filled(observables.length, false),
-        values = List.filled(observables.length, null, growable: false),
-        super(observer) {
+        values = List.filled(observables.length, null, growable: false) {
     for (var i = 0; i < observables.length; i++) {
       add(InnerObserver<T, int>(this, observables[i], i));
     }

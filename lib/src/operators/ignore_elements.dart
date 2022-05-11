@@ -23,7 +23,7 @@ class IgnoreElementsObservable<T> implements Observable<T> {
 }
 
 class IgnoreElementsSubscriber<T> extends Subscriber<T> {
-  IgnoreElementsSubscriber(Observer<T> observer) : super(observer);
+  IgnoreElementsSubscriber(Observer<T> super.observer);
 
   @override
   void onNext(T value) {}

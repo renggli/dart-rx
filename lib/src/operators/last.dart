@@ -53,8 +53,7 @@ class LastObservable<T> implements Observable<T> {
 }
 
 class LastSubscriber<T> extends Subscriber<T> {
-  LastSubscriber(Observer<T> observer, this.predicate, this.callback)
-      : super(observer);
+  LastSubscriber(Observer<T> super.observer, this.predicate, this.callback);
 
   final Predicate1<T> predicate;
   final Map0<T> callback;

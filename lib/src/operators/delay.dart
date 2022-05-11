@@ -39,8 +39,7 @@ class DelayObservable<T, R> implements Observable<T> {
 }
 
 class DelaySubscriber<T, R> extends Subscriber<T> implements InnerEvents<R, T> {
-  DelaySubscriber(Observer<T> observer, this.durationSelector)
-      : super(observer) {
+  DelaySubscriber(Observer<T> super.observer, this.durationSelector) {
     add(pendingDisposables);
   }
 

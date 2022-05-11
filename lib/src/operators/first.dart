@@ -54,8 +54,7 @@ class FirstObservable<T> implements Observable<T> {
 }
 
 class FirstSubscriber<T> extends Subscriber<T> {
-  FirstSubscriber(Observer<T> observer, this.predicate, this.callback)
-      : super(observer);
+  FirstSubscriber(Observer<T> super.observer, this.predicate, this.callback);
 
   final Predicate1<T> predicate;
   final Map0<T> callback;

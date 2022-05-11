@@ -26,7 +26,7 @@ class TakeUntilObservable<T, R> implements Observable<T> {
 
 class TakeUntilSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  TakeUntilSubscriber(Observer<T> observer, this.trigger) : super(observer) {
+  TakeUntilSubscriber(Observer<T> super.observer, this.trigger) {
     add(InnerObserver<R, void>(this, trigger, null));
   }
 

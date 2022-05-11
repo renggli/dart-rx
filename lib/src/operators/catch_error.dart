@@ -35,7 +35,7 @@ class CatchErrorObservable<T, E> implements Observable<T> {
 
 class CatchErrorSubscriber<T, E> extends Subscriber<T>
     implements InnerEvents<T, void> {
-  CatchErrorSubscriber(Observer<T> observer, this.handler) : super(observer);
+  CatchErrorSubscriber(Observer<T> super.observer, this.handler);
 
   final ErrorHandler<T, E> handler;
 

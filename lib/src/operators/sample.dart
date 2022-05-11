@@ -35,8 +35,7 @@ class SampleObservable<T, R> implements Observable<T> {
 
 class SampleSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  SampleSubscriber(Observer<T> observer, Observable<R> trigger)
-      : super(observer) {
+  SampleSubscriber(Observer<T> super.observer, Observable<R> trigger) {
     add(InnerObserver<R, void>(this, trigger, null));
   }
 

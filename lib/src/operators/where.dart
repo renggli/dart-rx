@@ -28,7 +28,7 @@ class WhereObservable<T> implements Observable<T> {
 }
 
 class WhereSubscriber<T> extends Subscriber<T> {
-  WhereSubscriber(Observer<T> observer, this.predicate) : super(observer);
+  WhereSubscriber(Observer<T> super.observer, this.predicate);
 
   final Predicate1<T> predicate;
 

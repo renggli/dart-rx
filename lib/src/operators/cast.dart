@@ -22,7 +22,7 @@ class CastObservable<T, R> implements Observable<R> {
 }
 
 class CastSubscriber<T, R> extends Subscriber<T> {
-  CastSubscriber(Observer<R> observer) : super(observer);
+  CastSubscriber(Observer<R> super.observer);
 
   @override
   void onNext(T value) => doNext(value as R);

@@ -26,7 +26,7 @@ class ToListObservable<T> implements Observable<List<T>> {
 }
 
 class ToListSubscriber<T> extends Subscriber<T> {
-  ToListSubscriber(Observer<List<T>> observer, this.list) : super(observer);
+  ToListSubscriber(Observer<List<T>> super.observer, this.list);
 
   final List<T> list;
 

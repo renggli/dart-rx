@@ -27,8 +27,7 @@ class ReduceObservable<T> implements Observable<T> {
 }
 
 class ReduceSubscriber<T> extends Subscriber<T> {
-  ReduceSubscriber(Observer<T> destination, this.transform)
-      : super(destination);
+  ReduceSubscriber(Observer<T> super.destination, this.transform);
 
   final Map2<T, T, T> transform;
   bool hasSeed = false;

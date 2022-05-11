@@ -50,8 +50,7 @@ class SingleObservable<T> implements Observable<T> {
 
 class SingleSubscriber<T> extends Subscriber<T> {
   SingleSubscriber(
-      Observer<T> destination, this.tooFewCallback, this.tooManyCallback)
-      : super(destination);
+      Observer<T> super.destination, this.tooFewCallback, this.tooManyCallback);
 
   final Map0<T> tooFewCallback;
   final Map0<T> tooManyCallback;

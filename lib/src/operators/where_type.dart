@@ -23,7 +23,7 @@ class WhereTypeObserver<T, R> implements Observable<R> {
 }
 
 class WhereTypeSubscriber<T, R> extends Subscriber<T> {
-  WhereTypeSubscriber(Observer<R> observer) : super(observer);
+  WhereTypeSubscriber(Observer<R> super.observer);
 
   @override
   void onNext(T value) {

@@ -26,7 +26,7 @@ class ToSetObservable<T> implements Observable<Set<T>> {
 }
 
 class ToSetSubscriber<T> extends Subscriber<T> {
-  ToSetSubscriber(Observer<Set<T>> observer, this.set) : super(observer);
+  ToSetSubscriber(Observer<Set<T>> super.observer, this.set);
 
   final Set<T> set;
 

@@ -23,7 +23,7 @@ class TapObservable<T> implements Observable<T> {
 }
 
 class TapSubscriber<T> extends Subscriber<T> {
-  TapSubscriber(Observer<T> observer, this.handler) : super(observer);
+  TapSubscriber(Observer<T> super.observer, this.handler);
 
   final Observer<T> handler;
 

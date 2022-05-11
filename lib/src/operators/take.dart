@@ -23,7 +23,7 @@ class TakeObservable<T> implements Observable<T> {
 }
 
 class TakeSubscriber<T> extends Subscriber<T> {
-  TakeSubscriber(Observer<T> observer, this.count) : super(observer);
+  TakeSubscriber(Observer<T> super.observer, this.count);
 
   int count;
 

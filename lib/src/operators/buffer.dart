@@ -44,9 +44,8 @@ class BufferObservable<T, R> implements Observable<List<T>> {
 
 class BufferSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  BufferSubscriber(Observer<List<T>> observer, this.scheduler,
-      Observable<R>? trigger, this.maxLength, this.maxAge)
-      : super(observer) {
+  BufferSubscriber(Observer<List<T>> super.observer, this.scheduler,
+      Observable<R>? trigger, this.maxLength, this.maxAge) {
     reset();
     if (trigger != null) {
       add(InnerObserver<R, void>(this, trigger, null));
