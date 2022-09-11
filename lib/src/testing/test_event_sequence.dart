@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:more/collection.dart';
-import 'package:more/ordering.dart';
+import 'package:more/comparator.dart';
 
 import '../events/event.dart';
 import 'test_events.dart';
@@ -100,7 +100,7 @@ class TestEventSequence<T> {
   /// Converts back the event sequence to a marble string.
   String toMarbles() {
     final buffer = StringBuffer();
-    final lastEvent = Ordering.natural<num>()
+    final lastEvent = naturalComparator<num>()
         .onResultOf<TestEvent<T>>((event) => event.index)
         .maxOf(events);
     final lastIndex = lastEvent.index;

@@ -1,5 +1,5 @@
 import 'package:matcher/matcher.dart';
-import 'package:more/iterable.dart';
+import 'package:more/temporal.dart';
 
 import '../core/observable.dart';
 import '../core/observer.dart';
@@ -37,7 +37,7 @@ class TestScheduler extends AsyncScheduler {
     if (!_subscription.isDisposed) {
       throw StateError('$this is already set-up.');
     }
-    _currentTime = DateTime.now().truncate(period: Period.daily);
+    _currentTime = DateTime.now().truncateTo(TimeUnit.day);
     _subscription = replaceDefaultScheduler(this);
   }
 
