@@ -21,11 +21,11 @@ void main() {
       expect(
           () => DisposeError.checkList(errors),
           throwsA(
-            isA<DisposeError>()
-              .having((value) => value.errors, 'errors',
-                  [errors[0], ...innerErrors])
-              .having((value) => value.toString(), 'toString()',
-                  startsWith('DisposeError')),
+            isA<DisposeError>().having((value) => value.errors, 'errors', [
+              errors[0],
+              ...innerErrors
+            ]).having((value) => value.toString(), 'toString()',
+                startsWith('DisposeError')),
           ));
     });
   });
