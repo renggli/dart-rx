@@ -8,7 +8,7 @@ description: Reactive Extensions Library for Dart providing an API for asynchron
 environment:
   sdk: '>=2.17.0 <3.0.0'
 dependencies:
-  collection: ^1.16.0
+  collection: ^1.17.0
   matcher: ^0.12.0
   meta: ^1.8.0
   more: ^3.8.0

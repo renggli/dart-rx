@@ -22,9 +22,9 @@ void main() {
           () => DisposeError.checkList(errors),
           throwsA(
             isA<DisposeError>()
-              ..having((value) => value.errors, 'errors',
+              .having((value) => value.errors, 'errors',
                   [errors[0], ...innerErrors])
-              ..having((value) => value.toString(), 'toString()',
+              .having((value) => value.toString(), 'toString()',
                   startsWith('DisposeError')),
           ));
     });
