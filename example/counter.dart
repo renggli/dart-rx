@@ -16,7 +16,7 @@ void main() async {
       .subscribe(Observer.next(stdout.writeln));
 
   // Update the value every 10 seconds randomly.
-  final randomValue = timer(period: Duration(seconds: 10))
+  final randomValue = timer(period: const Duration(seconds: 10))
       .map((_) => Random().nextInt(100) - 50);
   store.addObservable(randomValue,
       next: (int state, int value) => state + value);

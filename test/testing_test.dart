@@ -25,13 +25,13 @@ void main() {
     }
 
     test('series of values', () {
-      expectParse('-------a---b', [
+      expectParse('-------a---b', const [
         TestEvent(7, Event.next('a')),
         TestEvent(11, Event.next('b')),
       ]);
     });
     test('series of values with custom mapping', () {
-      expectParse('-------a---b', [
+      expectParse('-------a---b', const [
         TestEvent(7, Event.next(1)),
         TestEvent(11, Event.next(2)),
       ], values: {
@@ -56,7 +56,7 @@ void main() {
       expect(result.toMarbles(), '-x-a-x');
     });
     test('series of values with completion', () {
-      expectParse<String>('-------a---b---|', [
+      expectParse<String>('-------a---b---|', const [
         TestEvent(7, Event.next('a')),
         TestEvent(11, Event.next('b')),
         TestEvent(15, Event.complete()),
@@ -64,8 +64,8 @@ void main() {
     });
     test('series of values with error', () {
       expectParse<String>('-------a---b---#', [
-        TestEvent(7, Event.next('a')),
-        TestEvent(11, Event.next('b')),
+        const TestEvent(7, Event.next('a')),
+        const TestEvent(11, Event.next('b')),
         TestEvent(15, Event.error('Error', StackTrace.current)),
       ]);
     });
@@ -74,16 +74,16 @@ void main() {
       expectParse<String>(
           '-------a---b---#',
           [
-            TestEvent(7, Event.next('a')),
-            TestEvent(11, Event.next('b')),
+            const TestEvent(7, Event.next('a')),
+            const TestEvent(11, Event.next('b')),
             TestEvent(15, Event.error(error, StackTrace.current)),
           ],
           error: error);
     });
     test('subscription and unsubscription', () {
-      final subscribe = SubscribeEvent<String>();
-      final unsubscribe = UnsubscribeEvent<String>();
-      expectParse<String>('---^---!', [
+      const subscribe = SubscribeEvent<String>();
+      const unsubscribe = UnsubscribeEvent<String>();
+      expectParse<String>('---^---!', const [
         TestEvent(3, subscribe),
         TestEvent(7, unsubscribe),
       ]);
@@ -101,7 +101,7 @@ void main() {
           throwsArgumentError);
     });
     test('grouped values', () {
-      expectParse('---(abc)', [
+      expectParse('---(abc)', const [
         TestEvent(3, Event.next('a')),
         TestEvent(3, Event.next('b')),
         TestEvent(3, Event.next('c')),
@@ -118,7 +118,7 @@ void main() {
     test('ignores whitespaces when parsing', () {
       expectParse<String>(
           '--- a\t---b---\n|',
-          [
+          const [
             TestEvent(3, Event.next('a')),
             TestEvent(7, Event.next('b')),
             TestEvent(11, Event.complete()),
@@ -126,8 +126,9 @@ void main() {
           toMarbles: false);
     });
     test('unknown test event', () {
-      final sequence = TestEventSequence(
-          [TestEvent<int>(0, TestEvent<int>(1, Event<int>.complete()))]);
+      final sequence = TestEventSequence(const [
+        TestEvent<int>(0, TestEvent<int>(1, Event<int>.complete())),
+      ]);
       expect(() => sequence.toString(), throwsArgumentError);
     });
   });

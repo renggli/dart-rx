@@ -88,7 +88,7 @@ void main() {
     });
     test('add inner disposed', () {
       final outer = CompositeDisposable();
-      final inner = DisposedDisposable();
+      const inner = DisposedDisposable();
       outer.add(inner);
       expect(outer.disposables, isEmpty);
       expect(outer.isDisposed, isFalse);

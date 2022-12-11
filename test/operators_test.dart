@@ -440,11 +440,11 @@ void main() {
   });
   group('dematerialize', () {
     final values = <String, Event<String>>{
-      'a': Event.next('a'),
-      'b': Event.next('b'),
-      'c': Event.complete(),
+      'a': const Event.next('a'),
+      'b': const Event.next('b'),
+      'c': const Event.complete(),
       'e': Event.error('Error', StackTrace.current),
-      'f': TestEvent(0, Event.next('a')),
+      'f': const TestEvent(0, Event.next('a')),
     };
     test('empty sequence', () {
       final input = scheduler.cold('-|', values: values);
@@ -1280,9 +1280,9 @@ void main() {
   });
   group('materialize', () {
     final values = <String, Event<String>>{
-      'a': Event.next('a'),
-      'b': Event.next('b'),
-      'c': Event.complete(),
+      'a': const Event.next('a'),
+      'b': const Event.next('b'),
+      'c': const Event.complete(),
       'e': Event.error('Error', StackTrace.current),
     };
     test('empty sequence', () {
@@ -1465,8 +1465,9 @@ void main() {
   });
   group('observeOn', () {
     test('plain sequence', () {
-      final actual =
-          scheduler.cold<String>('-a-b-c-|').observeOn(ImmediateScheduler());
+      final actual = scheduler
+          .cold<String>('-a-b-c-|')
+          .observeOn(const ImmediateScheduler());
       expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
     });
     test('sequence with delay', () {
@@ -1476,8 +1477,9 @@ void main() {
       expect(actual, scheduler.isObservable<String>('--a-b-c-|'));
     });
     test('error sequence', () {
-      final actual =
-          scheduler.cold<String>('-a-b-c-#').observeOn(ImmediateScheduler());
+      final actual = scheduler
+          .cold<String>('-a-b-c-#')
+          .observeOn(const ImmediateScheduler());
       expect(actual, scheduler.isObservable<String>('-a-b-c-#'));
     });
     test('error with delay', () {
@@ -1585,7 +1587,7 @@ void main() {
       final firstCollector = <int>[];
       final firstListener = actual.subscribe(Observer.next(firstCollector.add));
       expect(multicast.isConnected, isTrue);
-      expect(firstCollector, []);
+      expect(firstCollector, isEmpty);
       input.next(2);
       expect(firstCollector, [2]);
       // Add a second listener.
@@ -1593,7 +1595,7 @@ void main() {
       final secondListener =
           actual.subscribe(Observer.next(secondCollector.add));
       expect(multicast.isConnected, isTrue);
-      expect(secondCollector, []);
+      expect(secondCollector, isEmpty);
       input.next(3);
       expect(firstCollector, [2, 3]);
       expect(secondCollector, [3]);

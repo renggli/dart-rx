@@ -40,7 +40,7 @@ void main() {
   });
   group('Stream.toObservable', () {
     test('completes immediately', () {
-      final actual = Stream<String>.empty().toObservable();
+      final actual = const Stream<String>.empty().toObservable();
       final observed = <String>[];
       actual.subscribe(Observer(
         next: (value) => fail('No value expected'),
@@ -88,8 +88,9 @@ void main() {
       expect(actual, completion(42));
     });
     test('multiple values', () {
-      final actual =
-          [1, 2, 3].toObservable(scheduler: ImmediateScheduler()).toFuture();
+      final actual = [1, 2, 3]
+          .toObservable(scheduler: const ImmediateScheduler())
+          .toFuture();
       expect(actual, completion(1));
     });
     test('immediate error', () {

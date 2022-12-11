@@ -4,7 +4,7 @@ import 'event.dart';
 class UnexpectedEventError extends Error {
   UnexpectedEventError(this.event, [this.message = 'Unexpected event.']);
 
-  final Event event;
+  final Event<dynamic> event;
 
   final String message;
 

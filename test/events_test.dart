@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('next', () {
-    final event = Event<int>.next(42);
+    const event = Event<int>.next(42);
     test('testing', () {
       expect(event.isNext, isTrue);
       expect(event.isError, isFalse);
@@ -27,12 +27,12 @@ void main() {
       expect(seenValue, 42);
     });
     test('equals', () {
-      expect(event, Event.next(42));
-      expect(event, isNot(Event.next('Hello')));
+      expect(event, const Event.next(42));
+      expect(event, isNot(const Event.next('Hello')));
     });
     test('hashCode', () {
-      expect(event.hashCode, Event.next(42).hashCode);
-      expect(event.hashCode, isNot(Event.next('Hello').hashCode));
+      expect(event.hashCode, const Event.next(42).hashCode);
+      expect(event.hashCode, isNot(const Event.next('Hello').hashCode));
     });
     test('toString', () {
       expect(event.toString(), startsWith('NextEvent<int>'));
@@ -69,20 +69,21 @@ void main() {
       expect(seenStackTrace, eventStackTrace);
     });
     test('equals', () {
-      expect(event, Event.error(eventError, eventStackTrace));
-      expect(event, isNot(Event.error(Error(), StackTrace.empty)));
+      expect(event, Event<String>.error(eventError, eventStackTrace));
+      expect(event, isNot(Event<String>.error(Error(), StackTrace.empty)));
     });
     test('hashCode', () {
-      expect(event.hashCode, Event.error(eventError, eventStackTrace).hashCode);
       expect(event.hashCode,
-          isNot(Event.error(Error(), StackTrace.empty).hashCode));
+          Event<String>.error(eventError, eventStackTrace).hashCode);
+      expect(event.hashCode,
+          isNot(Event<String>.error(Error(), StackTrace.empty).hashCode));
     });
     test('toString', () {
       expect(event.toString(), startsWith('ErrorEvent<int>'));
     });
   });
   group('complete', () {
-    final event = Event<int>.complete();
+    const event = Event<int>.complete();
     test('testing', () {
       expect(event.isNext, isFalse);
       expect(event.isError, isFalse);
@@ -105,12 +106,12 @@ void main() {
       expect(seenComplete, isTrue);
     });
     test('equals', () {
-      expect(event, Event.complete());
-      expect(event, isNot(Event.next(42)));
+      expect(event, const Event<int>.complete());
+      expect(event, isNot(const Event<int>.next(42)));
     });
     test('hashCode', () {
-      expect(event.hashCode, Event.complete().hashCode);
-      expect(event.hashCode, isNot(Event.next(42).hashCode));
+      expect(event.hashCode, const Event<int>.complete().hashCode);
+      expect(event.hashCode, isNot(const Event.next(42).hashCode));
     });
     test('toString', () {
       expect(event.toString(), startsWith('CompleteEvent<int>'));

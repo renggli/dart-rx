@@ -22,8 +22,8 @@ class TestScheduler extends AsyncScheduler {
   DateTime _currentTime = DateTime.now();
   Disposable _subscription = const DisposedDisposable();
 
-  final List<TestObservable> observables = [];
-  final List<TestSubscriber> subscribers = [];
+  final List<TestObservable<dynamic>> observables = [];
+  final List<TestSubscriber<dynamic>> subscribers = [];
 
   /// Returns the current time.
   @override
@@ -101,11 +101,11 @@ class TestScheduler extends AsyncScheduler {
       {Map<String, T> values = const {}, Object error = 'Error'}) {
     final sequence =
         TestEventSequence<T>.fromString(marbles, values: values, error: error);
-    if (sequence.baseEvents.whereType<SubscribeEvent>().isNotEmpty) {
+    if (sequence.baseEvents.whereType<SubscribeEvent<T>>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
           'Cold observable cannot have subscription marker.');
     }
-    if (sequence.baseEvents.whereType<UnsubscribeEvent>().isNotEmpty) {
+    if (sequence.baseEvents.whereType<UnsubscribeEvent<T>>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
           'Cold observable cannot have un-subscription marker.');
     }
@@ -120,7 +120,7 @@ class TestScheduler extends AsyncScheduler {
       {Map<String, T> values = const {}, Object error = 'Error'}) {
     final sequence =
         TestEventSequence.fromString(marbles, values: values, error: error);
-    if (sequence.baseEvents.whereType<UnsubscribeEvent>().isNotEmpty) {
+    if (sequence.baseEvents.whereType<UnsubscribeEvent<T>>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
           'Hot observable cannot have un-subscription marker.');
     }

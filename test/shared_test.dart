@@ -11,8 +11,8 @@ void main() {
     tearDown(() => defaultScheduler = null);
     test('default', () {
       // The default error handler asynchronously triggers the error.
-      replaceDefaultScheduler(ImmediateScheduler());
-      final observer = Observer();
+      replaceDefaultScheduler(const ImmediateScheduler());
+      final observer = Observer<int>();
       expect(
           () => observer.error(error, stackTrace),
           throwsA(isA<UnhandledError>()
@@ -24,7 +24,7 @@ void main() {
     test('custom', () {
       Object? observedError;
       StackTrace? observedStackTrace;
-      void customErrorHandler(error, stackTrace) {
+      void customErrorHandler(Object error, StackTrace stackTrace) {
         observedError = error;
         observedStackTrace = stackTrace;
         throw error;
@@ -33,13 +33,14 @@ void main() {
       expect(defaultErrorHandler, isNot(customErrorHandler));
       defaultErrorHandler = customErrorHandler;
       expect(defaultErrorHandler, customErrorHandler);
-      final observer = Observer();
+      final observer = Observer<int>();
       expect(() => observer.error(error, stackTrace), throwsArgumentError);
       expect(observedError, error);
       expect(observedStackTrace, stackTrace);
     });
     test('replace', () {
-      void customErrorHandler(error, stackTrace) => throw error;
+      void customErrorHandler(Object error, StackTrace stackTrace) =>
+          throw error;
       expect(defaultErrorHandler, isNot(customErrorHandler));
       final subscription = replaceErrorHandler(customErrorHandler);
       expect(defaultErrorHandler, customErrorHandler);

@@ -7,8 +7,8 @@ import 'package:rx/schedulers.dart';
 import 'package:test/test.dart';
 
 final DateTime epoch = DateTime.fromMillisecondsSinceEpoch(0);
-final Duration offset = Duration(milliseconds: isJavaScript ? 200 : 100);
-final Duration accuracy = Duration(milliseconds: isJavaScript ? 50 : 25);
+const Duration offset = Duration(milliseconds: isJavaScript ? 200 : 100);
+const Duration accuracy = Duration(milliseconds: isJavaScript ? 50 : 25);
 
 void expectDateTime(DateTime actual, DateTime expected, Duration accuracy,
     {String prefix = ''}) {
@@ -104,8 +104,8 @@ void main() {
   });
   group('async', () {
     final scheduler = AsyncScheduler();
-    final tickScheduler = CurrentZoneScheduler();
-    final tickDuration = Duration(milliseconds: 1);
+    const tickScheduler = CurrentZoneScheduler();
+    const tickDuration = Duration(milliseconds: 1);
     late Disposable ticker;
     setUp(() => ticker = tickScheduler.schedulePeriodic(
         tickDuration, (disposable) => scheduler.flush()));

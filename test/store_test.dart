@@ -45,7 +45,7 @@ void sharedStoreTests(Store<T> Function<T>(T initialValue) createStore) {
     final listener = store.subscribe(Observer.next(log.add));
     listener.dispose();
     store.update((state) => state + 1);
-    expect(log, []);
+    expect(log, isEmpty);
   });
   test('multiple observer', () {
     final log = <String>[];
@@ -92,9 +92,9 @@ void main() {
     test('initial state', () {
       final store = createStore<int>(0);
       expect(store.canUndo, isFalse);
-      expect(store.past, []);
+      expect(store.past, isEmpty);
       expect(store.canRedo, isFalse);
-      expect(store.future, []);
+      expect(store.future, isEmpty);
     });
     test('after update', () {
       final store = createStore<int>(0);
@@ -103,14 +103,14 @@ void main() {
       expect(store.past, [0]);
       expect(store.state, 1);
       expect(store.canRedo, isFalse);
-      expect(store.future, []);
+      expect(store.future, isEmpty);
     });
     test('after undo', () {
       final store = createStore<int>(0);
       store.update((state) => state + 1);
       store.undo();
       expect(store.canUndo, isFalse);
-      expect(store.past, []);
+      expect(store.past, isEmpty);
       expect(store.state, 0);
       expect(store.canRedo, isTrue);
       expect(store.future, [1]);
@@ -124,7 +124,7 @@ void main() {
       expect(store.past, [0]);
       expect(store.state, 1);
       expect(store.canRedo, isFalse);
-      expect(store.future, []);
+      expect(store.future, isEmpty);
     });
     test('limit history', () {
       final store = HistoryStore(DefaultStore<int>(0), limit: 5);
@@ -140,7 +140,7 @@ void main() {
       final completer = Completer<int>();
       final future = store.addFuture(completer.future,
           onValue: (state, value) => [...state, 'Value: $value']);
-      expect(store.state, []);
+      expect(store.state, isEmpty);
       completer.complete(42);
       await future;
       expect(store.state, ['Value: 42']);
@@ -152,7 +152,7 @@ void main() {
         completer.future,
         onError: (state, error, stackTrace) => [...state, 'Error: $error'],
       );
-      expect(store.state, []);
+      expect(store.state, isEmpty);
       completer.completeError(StateError('Hello'), StackTrace.empty);
       await future;
       expect(store.state, ['Error: Bad state: Hello']);
@@ -164,7 +164,7 @@ void main() {
       final subject = Subject<int>();
       store.addObservable(subject,
           next: (state, value) => [...state, 'Value: $value']);
-      expect(store.state, []);
+      expect(store.state, isEmpty);
       subject
         ..next(42)
         ..next(43)
@@ -176,7 +176,7 @@ void main() {
       final subject = Subject<int>();
       store.addObservable<int>(subject,
           error: (state, error, stackTrace) => [...state, 'Error: $error']);
-      expect(store.state, []);
+      expect(store.state, isEmpty);
       subject
         ..next(42)
         ..error(StateError('Hello'), StackTrace.empty);
@@ -187,7 +187,7 @@ void main() {
       final subject = Subject<int>();
       store.addObservable<int>(subject,
           complete: (state) => [...state, 'Complete']);
-      expect(store.state, []);
+      expect(store.state, isEmpty);
       subject
         ..next(42)
         ..complete();
@@ -200,7 +200,7 @@ void main() {
       final controller = StreamController<int>();
       store.addStream(controller.stream,
           onData: (state, value) => [...state, 'Value: $value']);
-      expect(store.state, []);
+      expect(store.state, isEmpty);
       controller
         ..add(42)
         ..add(43)
@@ -213,7 +213,7 @@ void main() {
       final controller = StreamController<int>();
       store.addStream(controller.stream,
           onError: (state, error, stackTrace) => [...state, 'Error: $error']);
-      expect(store.state, []);
+      expect(store.state, isEmpty);
       controller
         ..add(42)
         ..addError(StateError('Hello'), StackTrace.empty)
@@ -226,7 +226,7 @@ void main() {
       final controller = StreamController<int>();
       store.addStream(controller.stream,
           onDone: (state) => [...state, 'Complete']);
-      expect(store.state, []);
+      expect(store.state, isEmpty);
       controller
         ..add(42)
         ..close();

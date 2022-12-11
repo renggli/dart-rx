@@ -18,6 +18,6 @@ class ThrowErrorObservable implements Observable<Never> {
   final Scheduler scheduler;
 
   @override
-  Disposable subscribe(Observer observer) =>
+  Disposable subscribe(Observer<dynamic> observer) =>
       scheduler.schedule(() => observer.error(error, stackTrace));
 }

@@ -14,7 +14,7 @@ extension FutureStoreExtension<S> on Store<S> {
             onValue == null ? state : update((state) => onValue(state, value)),
         onError: onError == null
             ? null
-            : (exception, stackTrace) =>
+            : (Object exception, StackTrace stackTrace) =>
                 update((state) => onError(state, exception, stackTrace)),
       );
 }

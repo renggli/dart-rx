@@ -19,7 +19,7 @@ extension StreamStoreExtension<S> on Store<S> {
               : (event) => update((state) => onData(state, event)),
           onError: onError == null
               ? null
-              : (error, stackTrace) =>
+              : (Object error, StackTrace stackTrace) =>
                   update((state) => onError(state, error, stackTrace)),
           onDone: onDone == null ? null : () => update(onDone),
           cancelOnError: cancelOnError);
