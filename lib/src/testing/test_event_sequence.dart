@@ -100,7 +100,7 @@ class TestEventSequence<T> {
   /// Converts back the event sequence to a marble string.
   String toMarbles() {
     final buffer = StringBuffer();
-    final lastEvent = naturalComparator<num>()
+    final lastEvent = naturalComparable<num>
         .onResultOf<TestEvent<T>>((event) => event.index)
         .maxOf(events);
     final lastIndex = lastEvent.index;
