@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:more/collection.dart';
 import 'package:more/feature.dart';
-import 'package:more/iterable.dart';
 import 'package:rx/disposables.dart';
 import 'package:rx/schedulers.dart';
 import 'package:test/test.dart';
