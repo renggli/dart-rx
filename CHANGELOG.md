@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (unpublished)
+## 0.2.0
 
 - Dart 2.17 requirement
 - Add a redux like store, and example.
