@@ -48,34 +48,30 @@ class TestEventSequence<T> {
           withinGroup = false;
           break;
         case subscribeMarker:
-          if (sequence
-              .where((element) => element.event is SubscribeEvent)
-              .isNotEmpty) {
+          if (sequence.whereType<SubscribeEvent<T>>().isNotEmpty) {
             throw ArgumentError.value(
                 marbles, 'marbles', 'Repeated subscription.');
           }
-          sequence.add(TestEvent(index, const SubscribeEvent()));
+          sequence.add(SubscribeEvent(index));
           break;
         case unsubscribeMarker:
-          if (sequence
-              .where((element) => element.event is UnsubscribeEvent)
-              .isNotEmpty) {
+          if (sequence.whereType<UnsubscribeEvent<T>>().isNotEmpty) {
             throw ArgumentError.value(
                 marbles, 'marbles', 'Repeated unsubscription.');
           }
-          sequence.add(TestEvent(index, const UnsubscribeEvent()));
+          sequence.add(UnsubscribeEvent(index));
           break;
         case completeMarker:
-          sequence.add(TestEvent(index, Event<T>.complete()));
+          sequence.add(WrappedEvent<T>(index, Event<T>.complete()));
           break;
         case errorMarker:
-          sequence
-              .add(TestEvent(index, Event<T>.error(error, StackTrace.current)));
+          sequence.add(WrappedEvent<T>(
+              index, Event<T>.error(error, StackTrace.current)));
           break;
         default:
           final marble = marbles[i];
           final value = values.containsKey(marble) ? values[marble] : marble;
-          sequence.add(TestEvent(index, Event<T>.next(value as T)));
+          sequence.add(WrappedEvent<T>(index, Event<T>.next(value as T)));
           break;
       }
       if (!withinGroup) {
@@ -91,8 +87,9 @@ class TestEventSequence<T> {
   /// Sequence of [TestEvent] instances.
   final List<TestEvent<T>> events;
 
-  /// Sequence of [Event] instances (unwrapping the test events).
-  Iterable<Event<T>> get baseEvents => events.map((value) => value.event);
+  /// Sequence of [Event] instances.
+  Iterable<Event<T>> get baseEvents =>
+      events.whereType<WrappedEvent<T>>().map((value) => value.event);
 
   /// Optional mapping from marble tokens to objects.
   final BiMap<String, T> values;
@@ -115,30 +112,27 @@ class TestEventSequence<T> {
           buffer.write(groupStartMarker);
         }
         for (final eventAtIndex in eventsAtIndex) {
-          final event = eventAtIndex.event;
-          if (event is SubscribeEvent) {
-            buffer.write(subscribeMarker);
-          } else if (event is UnsubscribeEvent) {
-            buffer.write(unsubscribeMarker);
-          } else if (event.isComplete) {
-            buffer.write(completeMarker);
-          } else if (event.isError) {
-            buffer.write(errorMarker);
-          } else if (event.isNext) {
-            final value = event.value;
-            if (values.containsValue(value)) {
-              buffer.write(values.inverse[value]);
-            } else {
-              final unusedCharacter = value is String && value.length == 1
-                  ? value
-                  : nextMarkers
-                      .toList()
-                      .firstWhere((char) => !values.containsKey(char));
-              values[unusedCharacter] = value;
-              buffer.write(unusedCharacter);
-            }
-          } else {
-            throw ArgumentError.value(event, 'event');
+          switch (eventAtIndex) {
+            case WrappedEvent<T>(event: NextEvent<T>(value: final value)):
+              if (values.containsValue(value)) {
+                buffer.write(values.inverse[value]);
+              } else {
+                final unusedCharacter = value is String && value.length == 1
+                    ? value
+                    : nextMarkers
+                        .toList()
+                        .firstWhere((char) => !values.containsKey(char));
+                values[unusedCharacter] = value;
+                buffer.write(unusedCharacter);
+              }
+            case WrappedEvent<T>(event: ErrorEvent<T>()):
+              buffer.write(errorMarker);
+            case WrappedEvent<T>(event: CompleteEvent<T>()):
+              buffer.write(completeMarker);
+            case SubscribeEvent<T>():
+              buffer.write(subscribeMarker);
+            case UnsubscribeEvent<T>():
+              buffer.write(unsubscribeMarker);
           }
         }
         if (eventsAtIndex.length > 1) {

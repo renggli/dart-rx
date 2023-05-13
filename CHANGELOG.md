@@ -1,8 +1,13 @@
 # Changelog
 
+## 0.3.0 (Unpublished)
+
+- Dart 3.0 requirement.
+- Make `Event` and `TestEvent` sealed classes.
+
 ## 0.2.0
 
-- Dart 2.17 requirement
+- Dart 2.17 requirement.
 - Add a redux like store, and example.
 - Add `race` constructor.
 - Add `takeUntil` and `skipUntil` operators.

@@ -3,8 +3,6 @@ import 'package:rx/schedulers.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
 
-import 'test_utils.dart';
-
 void main() {
   group('marbles', () {
     void expectParse<T>(String marbles, List<TestEvent<T>> events,
@@ -26,14 +24,14 @@ void main() {
 
     test('series of values', () {
       expectParse('-------a---b', const [
-        TestEvent(7, Event.next('a')),
-        TestEvent(11, Event.next('b')),
+        WrappedEvent(7, Event.next('a')),
+        WrappedEvent(11, Event.next('b')),
       ]);
     });
     test('series of values with custom mapping', () {
       expectParse('-------a---b', const [
-        TestEvent(7, Event.next(1)),
-        TestEvent(11, Event.next(2)),
+        WrappedEvent(7, Event.next(1)),
+        WrappedEvent(11, Event.next(2)),
       ], values: {
         'a': 1,
         'b': 2
@@ -41,32 +39,32 @@ void main() {
     });
     test('inferred character mapping', () {
       final result = TestEventSequence(const [
-        TestEvent(1, Event.next(1)),
-        TestEvent(3, Event.next(2)),
-        TestEvent(5, Event.next(1)),
+        WrappedEvent(1, Event.next(1)),
+        WrappedEvent(3, Event.next(2)),
+        WrappedEvent(5, Event.next(1)),
       ]);
       expect(result.toMarbles(), '-a-b-a');
     });
     test('inferred string character mapping', () {
       final result = TestEventSequence(const [
-        TestEvent(1, Event.next('x')),
-        TestEvent(3, Event.next('yy')),
-        TestEvent(5, Event.next('x')),
+        WrappedEvent(1, Event.next('x')),
+        WrappedEvent(3, Event.next('yy')),
+        WrappedEvent(5, Event.next('x')),
       ]);
       expect(result.toMarbles(), '-x-a-x');
     });
     test('series of values with completion', () {
       expectParse<String>('-------a---b---|', const [
-        TestEvent(7, Event.next('a')),
-        TestEvent(11, Event.next('b')),
-        TestEvent(15, Event.complete()),
+        WrappedEvent(7, Event.next('a')),
+        WrappedEvent(11, Event.next('b')),
+        WrappedEvent(15, Event.complete()),
       ]);
     });
     test('series of values with error', () {
       expectParse<String>('-------a---b---#', [
-        const TestEvent(7, Event.next('a')),
-        const TestEvent(11, Event.next('b')),
-        TestEvent(15, Event.error('Error', StackTrace.current)),
+        const WrappedEvent(7, Event.next('a')),
+        const WrappedEvent(11, Event.next('b')),
+        WrappedEvent(15, Event.error('Error', StackTrace.current)),
       ]);
     });
     test('series of values with custom error', () {
@@ -74,23 +72,18 @@ void main() {
       expectParse<String>(
           '-------a---b---#',
           [
-            const TestEvent(7, Event.next('a')),
-            const TestEvent(11, Event.next('b')),
-            TestEvent(15, Event.error(error, StackTrace.current)),
+            const WrappedEvent(7, Event.next('a')),
+            const WrappedEvent(11, Event.next('b')),
+            WrappedEvent(15, Event.error(error, StackTrace.current)),
           ],
           error: error);
     });
     test('subscription and unsubscription', () {
-      const subscribe = SubscribeEvent<String>();
-      const unsubscribe = UnsubscribeEvent<String>();
-      expectParse<String>('---^---!', const [
-        TestEvent(3, subscribe),
-        TestEvent(7, unsubscribe),
-      ]);
+      const subscribe = SubscribeEvent<String>(3);
+      const unsubscribe = UnsubscribeEvent<String>(7);
+      expectParse<String>('---^---!', const [subscribe, unsubscribe]);
       expect(subscribe.toString(), startsWith('SubscribeEvent<String>'));
-      subscribe.observe(createFailingObserver<String>());
       expect(unsubscribe.toString(), startsWith('UnsubscribeEvent<String>'));
-      unsubscribe.observe(createFailingObserver<String>());
       expect(subscribe, isNot(unsubscribe));
       expect(subscribe.hashCode, isNot(unsubscribe.hashCode));
     });
@@ -102,9 +95,9 @@ void main() {
     });
     test('grouped values', () {
       expectParse('---(abc)', const [
-        TestEvent(3, Event.next('a')),
-        TestEvent(3, Event.next('b')),
-        TestEvent(3, Event.next('c')),
+        WrappedEvent(3, Event.next('a')),
+        WrappedEvent(3, Event.next('b')),
+        WrappedEvent(3, Event.next('c')),
       ]);
     });
     test('invalid grouping', () {
@@ -119,17 +112,11 @@ void main() {
       expectParse<String>(
           '--- a\t---b---\n|',
           const [
-            TestEvent(3, Event.next('a')),
-            TestEvent(7, Event.next('b')),
-            TestEvent(11, Event.complete()),
+            WrappedEvent(3, Event.next('a')),
+            WrappedEvent(7, Event.next('b')),
+            WrappedEvent(11, Event.complete()),
           ],
           toMarbles: false);
-    });
-    test('unknown test event', () {
-      final sequence = TestEventSequence(const [
-        TestEvent<int>(0, TestEvent<int>(1, Event<int>.complete())),
-      ]);
-      expect(() => sequence.toString(), throwsArgumentError);
     });
   });
   group('scheduler', () {

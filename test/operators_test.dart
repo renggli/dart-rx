@@ -444,7 +444,6 @@ void main() {
       'b': const Event.next('b'),
       'c': const Event.complete(),
       'e': Event.error('Error', StackTrace.current),
-      'f': const TestEvent(0, Event.next('a')),
     };
     test('empty sequence', () {
       final input = scheduler.cold('-|', values: values);
@@ -465,14 +464,6 @@ void main() {
       final input = scheduler.cold('-a--b---e-|', values: values);
       final actual = input.dematerialize();
       expect(actual, scheduler.isObservable<String>('-a--b---#'));
-    });
-    test('invalid event', () {
-      final input = scheduler.cold('-a--b---f-|', values: values);
-      final actual = input.dematerialize();
-      expect(
-          actual,
-          scheduler.isObservable<String>('-a--b---#',
-              error: UnexpectedEventError(values['f']!)));
     });
   });
   group('distinct', () {

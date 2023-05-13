@@ -83,7 +83,7 @@ class TestScheduler extends AsyncScheduler {
       final events = <TestEvent<T>>[];
       final subscription = observable
           .materialize()
-          .map((event) => TestEvent(
+          .map((event) => WrappedEvent(
               now.difference(start).inMilliseconds ~/
                   stepDuration.inMilliseconds,
               event))
@@ -101,11 +101,11 @@ class TestScheduler extends AsyncScheduler {
       {Map<String, T> values = const {}, Object error = 'Error'}) {
     final sequence =
         TestEventSequence<T>.fromString(marbles, values: values, error: error);
-    if (sequence.baseEvents.whereType<SubscribeEvent<T>>().isNotEmpty) {
+    if (sequence.events.whereType<SubscribeEvent<T>>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
           'Cold observable cannot have subscription marker.');
     }
-    if (sequence.baseEvents.whereType<UnsubscribeEvent<T>>().isNotEmpty) {
+    if (sequence.events.whereType<UnsubscribeEvent<T>>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
           'Cold observable cannot have un-subscription marker.');
     }
@@ -120,7 +120,7 @@ class TestScheduler extends AsyncScheduler {
       {Map<String, T> values = const {}, Object error = 'Error'}) {
     final sequence =
         TestEventSequence.fromString(marbles, values: values, error: error);
-    if (sequence.baseEvents.whereType<UnsubscribeEvent<T>>().isNotEmpty) {
+    if (sequence.events.whereType<UnsubscribeEvent<T>>().isNotEmpty) {
       throw ArgumentError.value(marbles, 'marbles',
           'Hot observable cannot have un-subscription marker.');
     }

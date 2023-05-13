@@ -12,13 +12,13 @@ class HotObservable<T> extends TestObservable<T> {
   HotObservable(TestScheduler scheduler, TestEventSequence<T> sequence)
       : super(scheduler, sequence) {
     final subscriptionIndex = sequence.events
-        .where((element) => element.event is SubscribeEvent)
-        .map((element) => element.index)
+        .whereType<SubscribeEvent<T>>()
+        .map((event) => event.index)
         .firstWhere((index) => true, orElse: () => 0);
-    for (final event in sequence.events) {
+    for (final event in sequence.events.whereType<WrappedEvent<T>>()) {
       final timestamp = scheduler.now
           .add(scheduler.stepDuration * (event.index - subscriptionIndex));
-      scheduler.scheduleAbsolute(timestamp, () => event.observe(subject));
+      scheduler.scheduleAbsolute(timestamp, () => event.event.observe(subject));
     }
   }
 

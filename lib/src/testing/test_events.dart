@@ -1,24 +1,27 @@
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 
-import '../core/observer.dart';
 import '../events/event.dart';
 
 const _equality = DeepCollectionEquality();
 
-class TestEvent<T> extends Event<T> {
-  const TestEvent(this.index, this.event);
+@immutable
+sealed class TestEvent<T> {
+  const TestEvent(this.index);
 
   final int index;
-  final Event<T> event;
+}
 
-  @override
-  void observe(Observer<T> observer) => event.observe(observer);
+class WrappedEvent<T> extends TestEvent<T> {
+  const WrappedEvent(super.index, this.event);
+
+  final Event<T> event;
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
-    } else if (other is TestEvent && index == other.index) {
+    } else if (other is WrappedEvent && index == other.index) {
       if (event.isNext) {
         return other.event.isNext &&
             _equality.equals(event.value, other.event.value);
@@ -34,42 +37,38 @@ class TestEvent<T> extends Event<T> {
   }
 
   @override
-  int get hashCode => Object.hash(index.hashCode, event.hashCode);
+  int get hashCode => Object.hash(runtimeType, index, event);
 
   @override
-  String toString() => 'TestEvent{index: $index, event: $event}';
+  String toString() => 'WrappedEvent(index: $index, event: $event)';
 }
 
-class SubscribeEvent<T> extends Event<T> {
-  const SubscribeEvent();
-
-  @override
-  void observe(Observer<T> observer) {}
+class SubscribeEvent<T> extends TestEvent<T> {
+  const SubscribeEvent(super.index);
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is SubscribeEvent;
+      identical(this, other) ||
+      (other is SubscribeEvent && other.index == index);
 
   @override
-  int get hashCode => 36028;
+  int get hashCode => Object.hash(runtimeType, index);
 
   @override
-  String toString() => 'SubscribeEvent<$T>{}';
+  String toString() => 'SubscribeEvent<$T>(index: $index)';
 }
 
-class UnsubscribeEvent<T> extends Event<T> {
-  const UnsubscribeEvent();
-
-  @override
-  void observe(Observer<T> observer) {}
+class UnsubscribeEvent<T> extends TestEvent<T> {
+  const UnsubscribeEvent(super.index);
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is UnsubscribeEvent;
+      identical(this, other) ||
+      (other is UnsubscribeEvent && other.index == index);
 
   @override
-  int get hashCode => 84326;
+  int get hashCode => Object.hash(runtimeType, index);
 
   @override
-  String toString() => 'UnsubscribeEvent<$T>{}';
+  String toString() => 'UnsubscribeEvent<$T>(index: $index)';
 }
