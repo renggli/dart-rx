@@ -6,7 +6,7 @@ description: Reactive Extensions Library for Dart providing an API for asynchron
   with observable streams.
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: ^3.0.0
 dependencies:
   collection: ^1.17.0
   matcher: ^0.12.0
