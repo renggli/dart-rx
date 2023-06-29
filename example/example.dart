@@ -74,8 +74,12 @@ void main() {
   final throwError = rx.throwError(Exception('Hello World'));
   throwError.subscribe(printObserver('throw'));
 
+  // pairwise
+  final pairwise = [1, 2, 3, 4].toObservable().pairwise();
+  pairwise.subscribe(printObserver('pairwise'));
+
   // double subscription
-  final transformed = IntegerRange(0, 100)
+  final transformed = IntegerRange(100)
       .toObservable()
       .where((value) => value.isEven)
       .map((value) => '${value * value}')

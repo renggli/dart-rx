@@ -7,9 +7,8 @@ extension PairwiseOperator<T> on Observable<T> {
   /// Groups the items emitted by an Observable into [Pair] objects that
   /// represent the latest pair of items emitted by the source Observable.
   ///
-  /// ### Example
-  ///
-  ///    just([1, 2, 3, 4]).pairwise().subscribe(Observer.next(print)); // prints (1, 2), (2, 3), (3, 4)
+  /// For example `[1, 2, 3, 4].toObservable().pairwise()` yields `(1, 2)`,
+  /// `(2, 3)`, and `(3, 4)`.
   Observable<Pair<T>> pairwise() => PairwiseObservable<T>(this);
 }
 
