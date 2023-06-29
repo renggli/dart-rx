@@ -8,7 +8,7 @@ class BehaviorSubject<T> extends Subject<T> {
 
   T _value;
 
-  T get value = _value;
+  T get value => _value;
 
   @override
   void next(T value) => super.next(_value = value);
