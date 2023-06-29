@@ -1533,6 +1533,16 @@ void main() {
             'z': ('d', 'e'),
           }));
     });
+    test('nullable sequence', () {
+      final source = scheduler.cold<String?>('anb|', values: {'n': null});
+      final actual = source.pairwise();
+      expect(
+          actual,
+          scheduler.isObservable<(String?, String?)>('-xy|', values: {
+            'x': ('a', null),
+            'y': (null, 'b'),
+          }));
+    });
     test('error sequence', () {
       final source = scheduler.cold<String>('a#');
       final actual = source.pairwise();
