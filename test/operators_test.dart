@@ -1484,53 +1484,59 @@ void main() {
     test('empty sequence', () {
       final source = scheduler.cold<String>('|');
       final actual = source.pairwise();
-      expect(actual, scheduler.isObservable<Pair<String>>('|'));
+      expect(actual, scheduler.isObservable<(String, String)>('|'));
     });
     test('single value sequence', () {
       final source = scheduler.cold<String>('a|');
       final actual = source.pairwise();
-      expect(actual, scheduler.isObservable<Pair<String>>('-|'));
+      expect(actual, scheduler.isObservable<(String, String)>('-|'));
     });
     test('two value sequence', () {
       final source = scheduler.cold<String>('ab|');
       final actual = source.pairwise();
       expect(
           actual,
-          scheduler
-              .isObservable<Pair<String>>('-x|', values: {'x': ('a', 'b')}));
+          scheduler.isObservable<(String, String)>('-x|', values: {
+            'x': ('a', 'b'),
+          }));
     });
     test('three value sequence', () {
       final source = scheduler.cold<String>('abc|');
       final actual = source.pairwise();
       expect(
           actual,
-          scheduler.isObservable<Pair<String>>('-xy|',
-              values: {'x': ('a', 'b'), 'y': ('b', 'c')}));
+          scheduler.isObservable<(String, String)>('-xy|', values: {
+            'x': ('a', 'b'),
+            'y': ('b', 'c'),
+          }));
     });
     test('four value sequence', () {
       final source = scheduler.cold<String>('abcd|');
       final actual = source.pairwise();
       expect(
           actual,
-          scheduler.isObservable<Pair<String>>('-xyz|',
-              values: {'x': ('a', 'b'), 'y': ('b', 'c'), 'z': ('c', 'd')}));
+          scheduler.isObservable<(String, String)>('-xyz|', values: {
+            'x': ('a', 'b'),
+            'y': ('b', 'c'),
+            'z': ('c', 'd'),
+          }));
     });
     test('five value sequence', () {
       final source = scheduler.cold<String>('abcde|');
       final actual = source.pairwise();
       expect(
           actual,
-          scheduler.isObservable<Pair<String>>('-wxyz|', values: {
+          scheduler.isObservable<(String, String)>('-wxyz|', values: {
             'w': ('a', 'b'),
             'x': ('b', 'c'),
             'y': ('c', 'd'),
-            'z': ('d', 'e')
+            'z': ('d', 'e'),
           }));
     });
     test('error sequence', () {
       final source = scheduler.cold<String>('a#');
       final actual = source.pairwise();
-      expect(actual, scheduler.isObservable<Pair<String>>('-#'));
+      expect(actual, scheduler.isObservable<(String, String)>('-#'));
     });
   });
   group('publishBehavior', () {

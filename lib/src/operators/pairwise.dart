@@ -1,24 +1,22 @@
 import '../../core.dart';
 import '../../disposables.dart';
 
-typedef Pair<T> = (T first, T second);
-
 extension PairwiseOperator<T> on Observable<T> {
   /// Groups the items emitted by an Observable into [Pair] objects that
   /// represent the latest pair of items emitted by the source Observable.
   ///
   /// For example `[1, 2, 3, 4].toObservable().pairwise()` yields `(1, 2)`,
   /// `(2, 3)`, and `(3, 4)`.
-  Observable<Pair<T>> pairwise() => PairwiseObservable<T>(this);
+  Observable<(T, T)> pairwise() => PairwiseObservable<T>(this);
 }
 
-class PairwiseObservable<T> extends Observable<Pair<T>> {
+class PairwiseObservable<T> extends Observable<(T, T)> {
   PairwiseObservable(this.source);
 
   final Observable<T> source;
 
   @override
-  Disposable subscribe(Observer<Pair<T>> observer) {
+  Disposable subscribe(Observer<(T, T)> observer) {
     final subscriber = PairwiseSubscriber<T>(observer);
     subscriber.add(source.subscribe(subscriber));
     return subscriber;
@@ -26,7 +24,7 @@ class PairwiseObservable<T> extends Observable<Pair<T>> {
 }
 
 class PairwiseSubscriber<T> extends Subscriber<T> {
-  PairwiseSubscriber(Observer<Pair<T>> super.observer);
+  PairwiseSubscriber(Observer<(T, T)> super.observer);
 
   late T _previous;
   bool _hasPrevious = false;

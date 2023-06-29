@@ -26,7 +26,7 @@ export 'src/operators/materialize.dart' show MaterializeOperator;
 export 'src/operators/merge.dart' show MergeAllOperator, MergeMapOperator;
 export 'src/operators/multicast.dart' show MulticastOperator;
 export 'src/operators/observe_on.dart' show ObserveOnOperator;
-export 'src/operators/pairwise.dart' show PairwiseOperator, Pair;
+export 'src/operators/pairwise.dart' show PairwiseOperator;
 export 'src/operators/publish.dart' show PublishOperator;
 export 'src/operators/reduce.dart' show ReduceOperator;
 export 'src/operators/ref_count.dart' show RefCountOperator;
