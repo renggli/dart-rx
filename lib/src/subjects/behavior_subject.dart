@@ -8,6 +8,7 @@ class BehaviorSubject<T> extends Subject<T> {
 
   T _value;
 
+  /// Returns the current value.
   T get value => _value;
 
   @override

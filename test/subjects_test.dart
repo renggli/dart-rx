@@ -95,4 +95,12 @@ void main() {
       expect(() => subject.subscribe(Observer()), throwsDisposedError);
     });
   });
+  group('behavior', () {
+    test('value', () {
+      final subject = BehaviorSubject<int>(42);
+      expect(subject.value, 42);
+      subject.next(43);
+      expect(subject.value, 43);
+    });
+  });
 }
