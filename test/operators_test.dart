@@ -1497,19 +1497,16 @@ void main() {
       final actual = source.pairwise();
       expect(
           actual,
-          scheduler.isObservable<Pair<String>>('-x|', values: {
-            'x': Pair('a', 'b')
-          }));
+          scheduler.isObservable<Pair<String>>('-x|',
+              values: {'x': Pair('a', 'b')}));
     });
     test('three value sequence', () {
       final source = scheduler.cold<String>('abc|');
       final actual = source.pairwise();
       expect(
           actual,
-          scheduler.isObservable<Pair<String>>('-xy|', values: {
-            'x': Pair('a', 'b'),
-            'y': Pair('b', 'c')
-          }));
+          scheduler.isObservable<Pair<String>>('-xy|',
+              values: {'x': Pair('a', 'b'), 'y': Pair('b', 'c')}));
     });
     test('four value sequence', () {
       final source = scheduler.cold<String>('abcd|');
