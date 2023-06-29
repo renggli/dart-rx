@@ -5,6 +5,7 @@ import 'package:rx/core.dart';
 import 'package:rx/events.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/schedulers.dart';
+import 'package:rx/src/operators/pairwise.dart';
 import 'package:rx/subjects.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
@@ -1478,6 +1479,53 @@ void main() {
           .cold<String>('-a-b-c-#')
           .observeOn(scheduler, delay: scheduler.stepDuration);
       expect(actual, scheduler.isObservable<String>('--a-b-c-#'));
+    });
+  });
+  group('pairwise', () {
+    test('empty sequence', () {
+      final source = scheduler.cold<String>('|');
+      final actual = source.pairwise();
+      expect(actual, scheduler.isObservable<Pair<String>>('|'));
+    });
+    test('single value sequence', () {
+      final source = scheduler.cold<String>('a|');
+      final actual = source.pairwise();
+      expect(actual, scheduler.isObservable<Pair<String>>('-|'));
+    });
+    test('two value sequence', () {
+      final source = scheduler.cold<String>('ab|');
+      final actual = source.pairwise();
+      expect(
+          actual,
+          scheduler.isObservable<Pair<String>>('-x|', values: {
+            'x': Pair('a', 'b')
+          }));
+    });
+    test('three value sequence', () {
+      final source = scheduler.cold<String>('abc|');
+      final actual = source.pairwise();
+      expect(
+          actual,
+          scheduler.isObservable<Pair<String>>('-xy|', values: {
+            'x': Pair('a', 'b'),
+            'y': Pair('b', 'c')
+          }));
+    });
+    test('four value sequence', () {
+      final source = scheduler.cold<String>('abcd|');
+      final actual = source.pairwise();
+      expect(
+          actual,
+          scheduler.isObservable<Pair<String>>('-xyz|', values: {
+            'x': Pair('a', 'b'),
+            'y': Pair('b', 'c'),
+            'z': Pair('c', 'd')
+          }));
+    });
+    test('error sequence', () {
+      final source = scheduler.cold<String>('a#');
+      final actual = source.pairwise();
+      expect(actual, scheduler.isObservable<Pair<String>>('-#'));
     });
   });
   group('publishBehavior', () {
