@@ -1,6 +1,8 @@
 import '../../core.dart';
 import '../../disposables.dart';
 
+typedef Pair<T> = (T first, T second);
+
 extension PairwiseOperator<T> on Observable<T> {
   /// Groups the items emitted by an Observable into [Pair] objects that
   /// represent the latest pair of items emitted by the source Observable.
@@ -27,34 +29,15 @@ class PairwiseObservable<T> extends Observable<Pair<T>> {
 class PairwiseSubscriber<T> extends Subscriber<T> {
   PairwiseSubscriber(Observer<Pair<T>> super.observer);
 
-  T? previous;
+  late T _previous;
+  bool _hasPrevious = false;
 
   @override
   void onNext(T value) {
-    if (previous != null) {
-      doNext(Pair(previous as T, value));
+    if (_hasPrevious) {
+      doNext((_previous, value));
     }
-    previous = value;
+    _previous = value;
+    _hasPrevious = true;
   }
-}
-
-class Pair<T> {
-  Pair(this.first, this.second);
-
-  final T first;
-  final T second;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Pair &&
-          runtimeType == other.runtimeType &&
-          first == other.first &&
-          second == other.second;
-
-  @override
-  int get hashCode => first.hashCode ^ second.hashCode;
-
-  @override
-  String toString() => '($first, $second)';
 }

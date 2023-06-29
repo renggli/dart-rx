@@ -5,7 +5,6 @@ import 'package:rx/core.dart';
 import 'package:rx/events.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/schedulers.dart';
-import 'package:rx/src/operators/pairwise.dart';
 import 'package:rx/subjects.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
@@ -1498,7 +1497,7 @@ void main() {
       expect(
           actual,
           scheduler.isObservable<Pair<String>>('-x|',
-              values: {'x': Pair('a', 'b')}));
+              values: {'x': ('a', 'b')}));
     });
     test('three value sequence', () {
       final source = scheduler.cold<String>('abc|');
@@ -1506,7 +1505,7 @@ void main() {
       expect(
           actual,
           scheduler.isObservable<Pair<String>>('-xy|',
-              values: {'x': Pair('a', 'b'), 'y': Pair('b', 'c')}));
+              values: {'x': ('a', 'b'), 'y': ('b', 'c')}));
     });
     test('four value sequence', () {
       final source = scheduler.cold<String>('abcd|');
@@ -1514,9 +1513,9 @@ void main() {
       expect(
           actual,
           scheduler.isObservable<Pair<String>>('-xyz|', values: {
-            'x': Pair('a', 'b'),
-            'y': Pair('b', 'c'),
-            'z': Pair('c', 'd')
+            'x': ('a', 'b'),
+            'y': ('b', 'c'),
+            'z': ('c', 'd')
           }));
     });
     test('five value sequence', () {
@@ -1525,10 +1524,10 @@ void main() {
       expect(
           actual,
           scheduler.isObservable<Pair<String>>('-wxyz|', values: {
-            'w': Pair('a', 'b'),
-            'x': Pair('b', 'c'),
-            'y': Pair('c', 'd'),
-            'z': Pair('d', 'e')
+            'w': ('a', 'b'),
+            'x': ('b', 'c'),
+            'y': ('c', 'd'),
+            'z': ('d', 'e')
           }));
     });
     test('error sequence', () {
