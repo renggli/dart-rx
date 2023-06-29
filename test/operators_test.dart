@@ -1522,6 +1522,18 @@ void main() {
             'z': Pair('c', 'd')
           }));
     });
+    test('five value sequence', () {
+      final source = scheduler.cold<String>('abcde|');
+      final actual = source.pairwise();
+      expect(
+          actual,
+          scheduler.isObservable<Pair<String>>('-wxyz|', values: {
+            'w': Pair('a', 'b'),
+            'x': Pair('b', 'c'),
+            'y': Pair('c', 'd'),
+            'z': Pair('d', 'e')
+          }));
+    });
     test('error sequence', () {
       final source = scheduler.cold<String>('a#');
       final actual = source.pairwise();
