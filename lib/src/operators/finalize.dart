@@ -1,3 +1,4 @@
+import '../../core.dart';
 import '../core/observable.dart';
 import '../core/observer.dart';
 import '../disposables/action.dart';
@@ -13,40 +14,16 @@ extension FinalizeOperator<T> on Observable<T> {
 }
 
 class FinalizeObservable<T> implements Observable<T> {
-  FinalizeObservable(this.delegate, CompleteCallback finalize)
-      : finalize = _once(finalize);
-
+  FinalizeObservable(this.delegate, this.finalize);
+  
   final Observable<T> delegate;
   final CompleteCallback finalize;
 
   @override
-  Disposable subscribe(Observer<T> observer) => CompositeDisposable([
-        ActionDisposable(finalize),
-        delegate.subscribe(Observer(
-            next: observer.next,
-            error: (error, stackTrace) {
-              try {
-                observer.error(error, stackTrace);
-              } finally {
-                finalize();
-              }
-            },
-            complete: () {
-              try {
-                observer.complete();
-              } finally {
-                finalize();
-              }
-            })),
-      ]);
-}
-
-CompleteCallback _once(CompleteCallback callback) {
-  var called = false;
-  return () {
-    if (!called) {
-      called = true;
-      callback();
-    }
-  };
+  Disposable subscribe(Observer<T> observer) {
+    final subscriber = Subscriber<T>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    subscriber.add(ActionDisposable(finalize));
+    return subscriber;
+  }
 }
