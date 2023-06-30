@@ -1,8 +1,5 @@
 import '../../core.dart';
-import '../core/observable.dart';
-import '../core/observer.dart';
 import '../disposables/action.dart';
-import '../disposables/composite.dart';
 import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
@@ -15,7 +12,7 @@ extension FinalizeOperator<T> on Observable<T> {
 
 class FinalizeObservable<T> implements Observable<T> {
   FinalizeObservable(this.delegate, this.finalize);
-  
+
   final Observable<T> delegate;
   final CompleteCallback finalize;
 
