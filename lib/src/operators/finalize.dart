@@ -1,7 +1,5 @@
-import '../core/observable.dart';
-import '../core/observer.dart';
+import '../../core.dart';
 import '../disposables/action.dart';
-import '../disposables/composite.dart';
 import '../disposables/disposable.dart';
 import '../shared/functions.dart';
 
@@ -19,8 +17,10 @@ class FinalizeObservable<T> implements Observable<T> {
   final CompleteCallback finalize;
 
   @override
-  Disposable subscribe(Observer<T> observer) => CompositeDisposable([
-        ActionDisposable(finalize),
-        delegate.subscribe(observer),
-      ]);
+  Disposable subscribe(Observer<T> observer) {
+    final subscriber = Subscriber<T>(observer);
+    subscriber.add(delegate.subscribe(subscriber));
+    subscriber.add(ActionDisposable(finalize));
+    return subscriber;
+  }
 }
