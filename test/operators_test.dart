@@ -759,7 +759,7 @@ void main() {
         expect(seen, equals(1));
       }
     });
-    test('calls finalizer on subject unsubcribe only', () {
+    test('calls finalizer on subject unsubscribe only', () {
       for (final subject in [
         Subject<bool>(),
         BehaviorSubject<bool>(true),
