@@ -698,6 +698,34 @@ void main() {
     });
   });
   group('finalize', () {
+    test('ordering on completion', () {
+      final events = <String>[];
+      just(0)
+          .tap(Observer.complete(() => events.add('before')))
+          .finalize(() => events.add('finalize'))
+          .tap(Observer.complete(() => events.add('after')))
+          .subscribe(Observer.complete(() => events.add('subscribe')));
+      expect(events, ['before', 'after', 'subscribe', 'finalize']);
+    });
+    test('ordering on error', () {
+      final events = <String>[];
+      throwError(ArgumentError())
+          .tap(Observer.error((_, __) => events.add('before')))
+          .finalize(() => events.add('finalize'))
+          .tap(Observer.error((_, __) => events.add('after')))
+          .subscribe(Observer.error((_, __) => events.add('subscribe')));
+      expect(events, ['before', 'after', 'subscribe', 'finalize']);
+    });
+    test('ordering on disposal', () {
+      final events = <String>[];
+      never()
+          .tap(Observer.complete(() => events.add('before')))
+          .finalize(() => events.add('finalize'))
+          .tap(Observer.complete(() => events.add('after')))
+          .subscribe(Observer.complete(() => events.add('subscribe')))
+          .dispose();
+      expect(events, ['finalize']);
+    });
     test('calls finalizer on completion', () {
       final input = scheduler.cold<String>('-a--b-|');
       var seen = 0;
