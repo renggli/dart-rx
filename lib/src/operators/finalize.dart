@@ -13,7 +13,8 @@ extension FinalizeOperator<T> on Observable<T> {
 }
 
 class FinalizeObservable<T> implements Observable<T> {
-  FinalizeObservable(this.delegate, this.finalize);
+  FinalizeObservable(this.delegate, CompleteCallback finalize)
+      : finalize = _once(finalize);
 
   final Observable<T> delegate;
   final CompleteCallback finalize;
@@ -21,6 +22,31 @@ class FinalizeObservable<T> implements Observable<T> {
   @override
   Disposable subscribe(Observer<T> observer) => CompositeDisposable([
         ActionDisposable(finalize),
-        delegate.subscribe(observer),
+        delegate.subscribe(Observer(
+            next: observer.next,
+            error: (error, stackTrace) {
+              try {
+                observer.error(error, stackTrace);
+              } finally {
+                finalize();
+              }
+            },
+            complete: () {
+              try {
+                observer.complete();
+              } finally {
+                finalize();
+              }
+            })),
       ]);
+}
+
+CompleteCallback _once(CompleteCallback callback) {
+  var called = false;
+  return () {
+    if (!called) {
+      called = true;
+      callback();
+    }
+  };
 }

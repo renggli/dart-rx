@@ -1,4 +1,5 @@
 import 'package:more/collection.dart';
+import 'package:more/functional.dart';
 import 'package:rx/constructors.dart';
 import 'package:rx/converters.dart';
 import 'package:rx/core.dart';
@@ -699,19 +700,71 @@ void main() {
   group('finalize', () {
     test('calls finalizer on completion', () {
       final input = scheduler.cold<String>('-a--b-|');
-      var seen = false;
-      final actual = input.finalize(() => seen = true);
-      expect(seen, isFalse);
+      var seen = 0;
+      final actual = input.finalize(() => seen++);
+      expect(seen, isZero);
       expect(actual, scheduler.isObservable<String>('-a--b-|'));
-      expect(seen, isTrue);
+      expect(seen, equals(1));
     });
     test('calls finalizer on error', () {
       final input = scheduler.cold<String>('-a--b-#');
-      var seen = false;
-      final actual = input.finalize(() => seen = true);
-      expect(seen, isFalse);
+      var seen = 0;
+      final actual = input.finalize(() => seen++);
+      expect(seen, isZero);
       expect(actual, scheduler.isObservable<String>('-a--b-#'));
-      expect(seen, isTrue);
+      expect(seen, equals(1));
+    });
+    test('calls finalizer on subject completion only', () {
+      for (final subject in [
+        Subject<bool>(),
+        BehaviorSubject<bool>(true),
+        ReplaySubject<bool>(),
+        AsyncSubject<bool>(),
+      ]) {
+        var seen = 0;
+        final subs = subject.finalize(() => seen++).subscribe(Observer());
+        expect(seen, isZero);
+        subject.next(true);
+        subject.complete();
+        expect(seen, equals(1));
+        subs.dispose();
+        expect(seen, equals(1));
+      }
+    });
+    test('calls finalizer on subject unsubcribe only', () {
+      for (final subject in [
+        Subject<bool>(),
+        BehaviorSubject<bool>(true),
+        ReplaySubject<bool>(),
+        AsyncSubject<bool>(),
+      ]) {
+        var seen = 0;
+        final subs = subject.finalize(() => seen++).subscribe(Observer());
+        expect(seen, isZero);
+        subject.next(true);
+        subs.dispose();
+        expect(seen, equals(1));
+        subject.complete();
+        expect(seen, equals(1));
+      }
+    });
+    test('calls finalizer on subject error only', () {
+      for (final subject in [
+        Subject<bool>(),
+        BehaviorSubject<bool>(true),
+        ReplaySubject<bool>(),
+        AsyncSubject<bool>(),
+      ]) {
+        var seen = 0;
+        final subs = subject
+            .finalize(() => seen++)
+            .subscribe(Observer.error(emptyFunction2));
+        expect(seen, isZero);
+        subject.error(Exception('fail'), StackTrace.current);
+        expect(seen, equals(1));
+        subs.dispose();
+        expect(seen, equals(1));
+      }
     });
   });
   group('first', () {
