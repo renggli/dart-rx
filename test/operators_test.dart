@@ -2460,47 +2460,69 @@ void main() {
     });
   });
   group('timeout', () {
+    test('after first value', () {
+      final input = scheduler.cold<String>('--a---b|');
+      final actual = input.timeout(first: scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable<String>('--a---b|'));
+    });
+    test('before first value', () {
+      final input = scheduler.cold<String>('---a---b|');
+      final actual = input.timeout(first: scheduler.stepDuration * 3);
+      expect(actual,
+          scheduler.isObservable<String>('---#', error: TimeoutError()));
+    });
+    test('after each value', () {
+      final input = scheduler.cold<String>('---a--b--c--|');
+      final actual = input.timeout(between: scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable<String>('---a--b--c--|'));
+    });
+    test('before each value', () {
+      final input = scheduler.cold<String>('---a--b---c---|');
+      final actual = input.timeout(between: scheduler.stepDuration * 3);
+      expect(actual,
+          scheduler.isObservable<String>('---a--b--#', error: TimeoutError()));
+    });
     test('after immediate completion', () {
       final input = scheduler.cold<String>('--|');
-      final actual = input.timeout(scheduler.stepDuration * 3);
+      final actual = input.timeout(total: scheduler.stepDuration * 3);
       expect(actual, scheduler.isObservable<String>('--|'));
-    });
-    test('after immediate error', () {
-      final input = scheduler.cold<String>('--#');
-      final actual = input.timeout(scheduler.stepDuration * 3);
-      expect(actual, scheduler.isObservable<String>('--#'));
-    });
-    test('after emission and completion', () {
-      final input = scheduler.cold<String>('ab|');
-      final actual = input.timeout(scheduler.stepDuration * 3);
-      expect(actual, scheduler.isObservable<String>('ab|'));
-    });
-    test('after emission and error', () {
-      final input = scheduler.cold<String>('ab#');
-      final actual = input.timeout(scheduler.stepDuration * 3);
-      expect(actual, scheduler.isObservable<String>('ab#'));
     });
     test('before immediate completion', () {
       final input = scheduler.cold<String>('----|');
-      final actual = input.timeout(scheduler.stepDuration * 3);
+      final actual = input.timeout(total: scheduler.stepDuration * 3);
       expect(actual,
           scheduler.isObservable<String>('---#', error: TimeoutError()));
+    });
+    test('after immediate error', () {
+      final input = scheduler.cold<String>('--#');
+      final actual = input.timeout(total: scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable<String>('--#'));
     });
     test('before immediate error', () {
       final input = scheduler.cold<String>('----#');
-      final actual = input.timeout(scheduler.stepDuration * 3);
+      final actual = input.timeout(total: scheduler.stepDuration * 3);
       expect(actual,
           scheduler.isObservable<String>('---#', error: TimeoutError()));
     });
+    test('after emission and completion', () {
+      final input = scheduler.cold<String>('ab|');
+      final actual = input.timeout(total: scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable<String>('ab|'));
+    });
     test('before emission and completion', () {
       final input = scheduler.cold<String>('abcd|');
-      final actual = input.timeout(scheduler.stepDuration * 3);
+      final actual = input.timeout(total: scheduler.stepDuration * 3);
       expect(actual,
           scheduler.isObservable<String>('abc#', error: TimeoutError()));
     });
+    test('after emission and error', () {
+      final input = scheduler.cold<String>('ab#');
+      final actual = input.timeout(total: scheduler.stepDuration * 3);
+      expect(actual, scheduler.isObservable<String>('ab#'));
+    });
     test('before emission and error', () {
       final input = scheduler.cold<String>('abcd#');
-      final actual = input.timeout(scheduler.stepDuration * 3);
+      final actual = input.timeout(total: scheduler.stepDuration * 3);
       expect(actual,
           scheduler.isObservable<String>('abc#', error: TimeoutError()));
     });
