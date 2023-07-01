@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:rx/constructors.dart';
+import 'package:rx/converters.dart';
 import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/store.dart';
@@ -21,21 +22,17 @@ void main() async {
   store.addObservable(randomValue,
       next: (int state, int value) => state + value);
 
-  // Manual increment and decrement the value.
+  // Open an asynchronous reader.
   stdin.lineMode = stdin.echoMode = false;
-  final stream = stdin.asBroadcastStream();
-  while (true) {
-    final bytes = await stream.first;
-    final chars = String.fromCharCodes(bytes);
-    switch (chars) {
+  stdin
+      .toObservable()
+      .finalize(() => stdin.lineMode = stdin.echoMode = false)
+      .subscribe(Observer.next((bytes) {
+    switch (String.fromCharCodes(bytes)) {
       case '+':
         store.update((state) => state + 1);
-        break;
       case '-':
         store.update((state) => state - 1);
-        break;
-      default:
-        exit(0);
     }
-  }
+  }));
 }
