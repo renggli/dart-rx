@@ -1,3 +1,5 @@
+import 'package:more/functional.dart';
+
 import '../converters/iterable_to_observable.dart';
 import '../core/observable.dart';
 import '../operators/merge.dart';
@@ -9,4 +11,4 @@ Observable<T> concat<T>(Iterable<Observable<T>> observables,
         {Scheduler? scheduler}) =>
     observables
         .toObservable(scheduler: scheduler)
-        .mergeMap((observable) => observable, concurrent: 1);
+        .mergeMap(identityFunction, concurrent: 1);

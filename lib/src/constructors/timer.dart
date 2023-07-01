@@ -24,7 +24,7 @@ class TimerObservable implements Observable<int> {
   @override
   Disposable subscribe(Observer<int> observer) {
     final subscription = CompositeDisposable();
-    subscription.add(ActionDisposable(() => observer.complete()));
+    subscription.add(ActionDisposable(observer.complete));
     subscription.add(scheduler.scheduleRelative(delay, () {
       observer.next(0);
       if (period == null) {

@@ -15,5 +15,5 @@ class EmptyObservable implements Observable<Never> {
 
   @override
   Disposable subscribe(Observer<void> observer) =>
-      scheduler.schedule(() => observer.complete());
+      scheduler.schedule(observer.complete);
 }
