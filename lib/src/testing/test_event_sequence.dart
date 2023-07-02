@@ -40,39 +40,32 @@ class TestEventSequence<T> {
             throw ArgumentError.value(marbles, 'marbles', 'Invalid grouping.');
           }
           withinGroup = true;
-          break;
         case groupEndMarker:
           if (!withinGroup) {
             throw ArgumentError.value(marbles, 'marbles', 'Invalid grouping.');
           }
           withinGroup = false;
-          break;
         case subscribeMarker:
           if (sequence.whereType<SubscribeEvent<T>>().isNotEmpty) {
             throw ArgumentError.value(
                 marbles, 'marbles', 'Repeated subscription.');
           }
           sequence.add(SubscribeEvent(index));
-          break;
         case unsubscribeMarker:
           if (sequence.whereType<UnsubscribeEvent<T>>().isNotEmpty) {
             throw ArgumentError.value(
                 marbles, 'marbles', 'Repeated unsubscription.');
           }
           sequence.add(UnsubscribeEvent(index));
-          break;
         case completeMarker:
           sequence.add(WrappedEvent<T>(index, Event<T>.complete()));
-          break;
         case errorMarker:
           sequence.add(WrappedEvent<T>(
               index, Event<T>.error(error, StackTrace.current)));
-          break;
         default:
           final marble = marbles[i];
           final value = values.containsKey(marble) ? values[marble] : marble;
           sequence.add(WrappedEvent<T>(index, Event<T>.next(value as T)));
-          break;
       }
       if (!withinGroup) {
         index++;
