@@ -1,9 +1,11 @@
 # Changelog
 
-## 0.3.0 (Unpublished)
+## 0.3.0
 
 - Dart 3.0 requirement.
 - Make `Event` and `TestEvent` sealed classes.
+- Fix bug in finalize operator (thanks to [tsouza](https://github.com/tsouza)).
+- Add pairwise operator (thanks to [tsouza](https://github.com/tsouza)).
 
 ## 0.2.0
 
