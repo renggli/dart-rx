@@ -1,5 +1,6 @@
 import 'package:rx/constructors.dart';
 import 'package:rx/core.dart';
+import 'package:rx/disposables.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/testing.dart';
 import 'package:test/test.dart';
@@ -110,37 +111,36 @@ void main() {
   });
   group('create', () {
     test('complete sequence of values', () {
-      final actual = create<String>((emitter) {
-        emitter.next('a');
-        emitter.next('b');
-        emitter.complete();
+      final actual = create<String>((subscriber) {
+        subscriber.next('a');
+        subscriber.next('b');
+        subscriber.complete();
       });
       expect(actual, scheduler.isObservable<String>('(ab|)'));
     });
     test('error sequence of values', () {
-      final actual = create<String>((emitter) {
-        emitter.next('a');
-        emitter.next('b');
-        emitter.error('Error', StackTrace.current);
+      final actual = create<String>((subscriber) {
+        subscriber.next('a');
+        subscriber.next('b');
+        subscriber.error('Error', StackTrace.current);
       });
       expect(actual, scheduler.isObservable<String>('(ab#)'));
     });
     test('throws an error while creating values', () {
-      final actual = create<String>((emitter) {
-        emitter.next('a');
-        emitter.next('b');
+      final actual = create<String>((subscriber) {
+        subscriber.next('a');
+        subscriber.next('b');
         throw 'Error';
       });
       expect(actual, scheduler.isObservable<String>('(ab#)'));
     });
-    test('calls onDispose when unsubscribed', () {
+    test('calls disposable when unsubscribed', () {
       var disposed = false;
-      final actual = create<String>((emitter) {
-        emitter.next('a');
-        emitter.next('b');
-        return () => disposed = true;
+      final actual = create<String>((subscriber) {
+        subscriber.next('a');
+        subscriber.add(ActionDisposable(() => disposed = true));
       });
-      expect(actual, scheduler.isObservable<String>('(ab)'));
+      expect(actual, scheduler.isObservable<String>('a'));
       expect(disposed, isFalse);
       actual.subscribe(Observer()).dispose();
       expect(disposed, isTrue);
