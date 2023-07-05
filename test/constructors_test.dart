@@ -133,6 +133,19 @@ void main() {
       });
       expect(actual, scheduler.isObservable<String>('(ab#)'));
     });
+    test('calls onDispose when unsubscribed', () {
+      var disposed = false;
+      final actual = create<String>((emitter) {
+        emitter.next('a');
+        emitter.next('b');
+      }, onDisponse: () {
+        disposed = true;
+      });
+      expect(actual, scheduler.isObservable<String>('(ab)'));
+      expect(disposed, isFalse);
+      actual.subscribe(Observer()).dispose();
+      expect(disposed, isTrue);
+    });
   });
   group('defer', () {
     test('complete value', () {
