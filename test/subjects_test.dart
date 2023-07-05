@@ -94,6 +94,14 @@ void main() {
       expect(() => subject.complete(), throwsDisposedError);
       expect(() => subject.subscribe(Observer()), throwsDisposedError);
     });
+    test('observed', () {
+      final subject = Subject<int>();
+      expect(subject.isObserved, isFalse);
+      final subscription = subject.subscribe(Observer());
+      expect(subject.isObserved, isTrue);
+      subscription.dispose();
+      expect(subject.isObserved, isFalse);
+    });
   });
   group('behavior', () {
     test('value', () {
