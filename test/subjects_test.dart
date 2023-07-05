@@ -96,11 +96,11 @@ void main() {
     });
     test('observed', () {
       final subject = Subject<int>();
-      expect(subject.observed, isFalse);
+      expect(subject.isObserved, isFalse);
       final subscription = subject.subscribe(Observer());
-      expect(subject.observed, isTrue);
+      expect(subject.isObserved, isTrue);
       subscription.dispose();
-      expect(subject.observed, isFalse);
+      expect(subject.isObserved, isFalse);
     });
   });
   group('behavior', () {
