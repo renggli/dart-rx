@@ -138,8 +138,7 @@ void main() {
       final actual = create<String>((emitter) {
         emitter.next('a');
         emitter.next('b');
-      }, onDispose: () {
-        disposed = true;
+        return () => disposed = true;
       });
       expect(actual, scheduler.isObservable<String>('(ab)'));
       expect(disposed, isFalse);
