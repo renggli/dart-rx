@@ -95,6 +95,8 @@ class Subject<T> implements Observable<T>, Observer<T> {
   @override
   bool get isDisposed => _isClosed;
 
+  bool get observed => _observers.isNotEmpty;
+
   @override
   void dispose() {
     _isClosed = true;
