@@ -9,11 +9,11 @@ import '../disposables/disposable.dart';
 
 /// Creates an [Observable] that uses the provided `callback` to emit elements
 /// to the provided [Observer] on each subscribe.
-/// Optionally pass an [onDisponse] callback that will be called when the
+/// Optionally pass an [onDispose] callback that will be called when the
 /// subscription is cancelled.
 Observable<T> create<T>(Callback1<Subscriber<T>> callback,
-        {Callback0? onDisponse}) =>
-    CreateObservable<T>(callback, onDisponse);
+        {Callback0? onDispose}) =>
+    CreateObservable<T>(callback, onDispose);
 
 class CreateObservable<T> implements Observable<T> {
   CreateObservable(this.callback, this.dispose);
