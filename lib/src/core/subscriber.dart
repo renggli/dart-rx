@@ -13,9 +13,7 @@ class Subscriber<T> extends CompositeDisposable implements Observer<T> {
   @override
   @nonVirtual
   void next(T value) {
-    if (isDisposed) {
-      return;
-    }
+    if (isDisposed) return;
     onNext(value);
   }
 
@@ -32,9 +30,7 @@ class Subscriber<T> extends CompositeDisposable implements Observer<T> {
   @override
   @nonVirtual
   void error(Object error, StackTrace stackTrace) {
-    if (isDisposed) {
-      return;
-    }
+    if (isDisposed) return;
     onError(error, stackTrace);
   }
 
@@ -55,9 +51,7 @@ class Subscriber<T> extends CompositeDisposable implements Observer<T> {
   @override
   @nonVirtual
   void complete() {
-    if (isDisposed) {
-      return;
-    }
+    if (isDisposed) return;
     onComplete();
   }
 

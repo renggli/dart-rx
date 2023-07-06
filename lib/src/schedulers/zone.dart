@@ -36,9 +36,7 @@ abstract class ZoneScheduler extends Scheduler {
   }
 
   void _scheduleIterationExecute(Disposable subscription, Predicate0 callback) {
-    if (subscription.isDisposed) {
-      return;
-    }
+    if (subscription.isDisposed) return;
     if (callback()) {
       _scheduleIteration(subscription, callback);
     } else {

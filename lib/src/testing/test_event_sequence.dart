@@ -138,9 +138,7 @@ class TestEventSequence<T> {
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
+    if (identical(this, other)) return true;
     if (other is TestEventSequence<T> && events.length == other.events.length) {
       for (var i = 0; i < events.length; i++) {
         if (events[i] != other.events[i]) {

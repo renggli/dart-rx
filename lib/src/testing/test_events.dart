@@ -19,9 +19,8 @@ class WrappedEvent<T> extends TestEvent<T> {
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    } else if (other is WrappedEvent && index == other.index) {
+    if (identical(this, other)) return true;
+    if (other is WrappedEvent && index == other.index) {
       if (event.isNext) {
         return other.event.isNext &&
             _equality.equals(event.value, other.event.value);
@@ -31,9 +30,8 @@ class WrappedEvent<T> extends TestEvent<T> {
       } else {
         return event == other.event;
       }
-    } else {
-      return false;
     }
+    return false;
   }
 
   @override

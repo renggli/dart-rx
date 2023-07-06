@@ -23,16 +23,12 @@ class CompositeDisposable extends StatefulDisposable {
       disposable.dispose();
       return;
     }
-    if (disposable.isDisposed) {
-      return;
-    }
+    if (disposable.isDisposed) return;
     _disposables.add(disposable);
   }
 
   void remove(Disposable disposable) {
-    if (isDisposed) {
-      return;
-    }
+    if (isDisposed) return;
     if (_disposables.remove(disposable)) {
       disposable.dispose();
     }
@@ -40,10 +36,8 @@ class CompositeDisposable extends StatefulDisposable {
 
   @override
   void dispose() {
-    if (isDisposed) {
-      return;
-    }
-    final disposables = _disposables.toList();
+    if (isDisposed) return;
+    final disposables = [..._disposables];
     super.dispose();
     _disposables.clear();
     final errors = <Object>[];

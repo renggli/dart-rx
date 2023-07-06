@@ -29,17 +29,13 @@ class FutureDisposable<T> extends StatefulDisposable {
   final Observer<T> observer;
 
   void onValue(T value) {
-    if (isDisposed) {
-      return;
-    }
+    if (isDisposed) return;
     observer.next(value);
     observer.complete();
   }
 
   void onError(Object error, StackTrace stackTrace) {
-    if (isDisposed) {
-      return;
-    }
+    if (isDisposed) return;
     observer.error(error, stackTrace);
   }
 }

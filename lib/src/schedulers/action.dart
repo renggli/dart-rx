@@ -6,9 +6,7 @@ import '../disposables/stateful.dart';
 abstract class SchedulerAction extends StatefulDisposable {
   @nonVirtual
   void run() {
-    if (isDisposed) {
-      return;
-    }
+    if (isDisposed) return;
     doRun();
   }
 

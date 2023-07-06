@@ -24,9 +24,7 @@ class Subject<T> implements Observable<T>, Observer<T> {
   @override
   void next(T value) {
     DisposedError.checkNotDisposed(this);
-    if (_hasStopped) {
-      return;
-    }
+    if (_hasStopped) return;
     for (final observer in [..._observers]) {
       observer.next(value);
     }
@@ -35,9 +33,7 @@ class Subject<T> implements Observable<T>, Observer<T> {
   @override
   void error(Object error, StackTrace stackTrace) {
     DisposedError.checkNotDisposed(this);
-    if (_hasStopped) {
-      return;
-    }
+    if (_hasStopped) return;
     _hasStopped = true;
     _hasError = true;
     _error = error;
@@ -51,9 +47,7 @@ class Subject<T> implements Observable<T>, Observer<T> {
   @override
   void complete() {
     DisposedError.checkNotDisposed(this);
-    if (_hasStopped) {
-      return;
-    }
+    if (_hasStopped) return;
     _hasStopped = true;
     for (final observer in [..._observers]) {
       observer.complete();
