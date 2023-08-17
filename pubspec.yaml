@@ -4,6 +4,11 @@ version: 0.3.0
 homepage: https://github.com/renggli/dart-rx
 description: Reactive Extensions Library for Dart providing an API for asynchronous programming
   with observable streams.
+topics:
+  - async
+  - observable
+  - reactive
+  - streams
 
 environment:
   sdk: ^3.0.0
