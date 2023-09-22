@@ -53,12 +53,12 @@ void main() {
     });
     test('throwing disposable', () {
       final disposable = ActionDisposable(() => throw 'Error');
-      expect(() => disposable.dispose(), throwsDisposeError);
+      expect(disposable.dispose, throwsDisposeError);
       expect(disposable.isDisposed, isTrue);
     });
     test('double dispose throwing disposable', () {
       final disposable = ActionDisposable(() => throw 'Error');
-      expect(() => disposable.dispose(), throwsDisposeError);
+      expect(disposable.dispose, throwsDisposeError);
       disposable.dispose();
     });
   });
@@ -137,7 +137,7 @@ void main() {
       final inner2 = StatefulDisposable();
       outer.add(inner1);
       outer.add(inner2);
-      expect(() => outer.dispose(), throwsDisposeError);
+      expect(outer.dispose, throwsDisposeError);
       expect(outer.disposables, isEmpty);
       expect(outer.isDisposed, isTrue);
       expect(inner1.isDisposed, isTrue);
@@ -204,7 +204,7 @@ void main() {
       final outer = SequentialDisposable();
       final inner = ActionDisposable(() => throw 'Error');
       outer.current = inner;
-      expect(() => outer.dispose(), throwsDisposeError);
+      expect(outer.dispose, throwsDisposeError);
       expect(outer.isDisposed, isTrue);
       expect(inner.isDisposed, isTrue);
     });

@@ -52,7 +52,7 @@ void main() {
       final actual = Stream.fromIterable(['a', 'b', 'c']).toObservable();
       final observed = <String>[];
       actual.subscribe(Observer(
-        next: (value) => observed.add(value),
+        next: observed.add,
         error: (error, stackTrace) => fail('No error expected'),
         complete: () => expect(observed, ['a', 'b', 'c']),
       ));

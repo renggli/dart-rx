@@ -91,7 +91,7 @@ void main() {
       expect(() => subject.next(42), throwsDisposedError);
       expect(
           () => subject.error(Error(), StackTrace.empty), throwsDisposedError);
-      expect(() => subject.complete(), throwsDisposedError);
+      expect(subject.complete, throwsDisposedError);
       expect(() => subject.subscribe(Observer()), throwsDisposedError);
     });
     test('isObserved', () {

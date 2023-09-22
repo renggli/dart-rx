@@ -3,7 +3,7 @@ export 'src/operators/buffer.dart' show BufferOperator;
 export 'src/operators/cast.dart' show CastOperator;
 export 'src/operators/catch_error.dart' show CatchErrorOperator;
 export 'src/operators/combine_latest.dart' show CombineLatestOperator;
-export 'src/operators/compose.dart' show Transformer, ComposeOperator;
+export 'src/operators/compose.dart' show ComposeOperator, Transformer;
 export 'src/operators/concat.dart' show ConcatOperator;
 export 'src/operators/count.dart' show CountOperator;
 export 'src/operators/debounce.dart' show DebounceOperator;
@@ -16,7 +16,7 @@ export 'src/operators/distinct_until_changed.dart'
 export 'src/operators/exhaust.dart' show ExhaustAllOperator, ExhaustMapOperator;
 export 'src/operators/finalize.dart' show FinalizeOperator;
 export 'src/operators/first.dart' show FirstOperator;
-export 'src/operators/flat_map.dart' show FlattenObservable, FlatMapOperator;
+export 'src/operators/flat_map.dart' show FlatMapOperator, FlattenObservable;
 export 'src/operators/fold.dart' show FoldOperator;
 export 'src/operators/ignore_elements.dart' show IgnoreElementsOperator;
 export 'src/operators/is_empty.dart' show IsEmptyOperator;

@@ -125,9 +125,9 @@ void main() {
     tearDown(scheduler.tearDown);
 
     test('lifecycle', () {
-      expect(() => scheduler.setUp(), throwsStateError);
+      expect(scheduler.setUp, throwsStateError);
       scheduler.tearDown();
-      expect(() => scheduler.tearDown(), throwsStateError);
+      expect(scheduler.tearDown, throwsStateError);
       scheduler.setUp();
     });
     group('cold observable', () {

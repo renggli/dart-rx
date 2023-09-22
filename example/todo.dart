@@ -108,13 +108,13 @@ final operations = [
     'u',
     'Undo',
     () => store.canUndo,
-    () => store.undo(),
+    store.undo,
   ),
   Operation(
     'r',
     'Redo',
     () => store.canRedo,
-    () => store.redo(),
+    store.redo,
   ),
   Operation(
     'q',

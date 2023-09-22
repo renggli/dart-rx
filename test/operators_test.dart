@@ -1506,8 +1506,7 @@ void main() {
   });
   group('multicast', () {
     test('argument error', () {
-      expect(
-          () => never().multicast(subject: Subject(), factory: () => Subject()),
+      expect(() => never().multicast(subject: Subject(), factory: Subject.new),
           throwsArgumentError);
     });
     test('incomplete sequence', () {

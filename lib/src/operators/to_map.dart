@@ -26,7 +26,7 @@ extension ToMapOperator<T> on Observable<T> {
           Map1<T, V>? valueSelector}) =>
       ToMapObservable<T, ListMultimap<K, V>, K, V>(
           this,
-          constructor ?? () => ListMultimap<K, V>(),
+          constructor ?? ListMultimap<K, V>.new,
           keySelector ?? (value) => value as K,
           valueSelector ?? (value) => value as V,
           (map, key, value) => map.add(key, value));
@@ -38,7 +38,7 @@ extension ToMapOperator<T> on Observable<T> {
           Map1<T, V>? valueSelector}) =>
       ToMapObservable<T, SetMultimap<K, V>, K, V>(
           this,
-          constructor ?? () => SetMultimap<K, V>(),
+          constructor ?? SetMultimap<K, V>.new,
           keySelector ?? (value) => value as K,
           valueSelector ?? (value) => value as V,
           (map, key, value) => map.add(key, value));
