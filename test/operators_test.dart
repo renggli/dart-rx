@@ -2324,10 +2324,16 @@ void main() {
       final actual = input.takeWhile((value) => 'ab'.contains(value));
       expect(actual, scheduler.isObservable<String>('--a--#'));
     });
-    test('multiple values completion', () {
+    test('multiple values completion (non-inclusive)', () {
       final input = scheduler.cold<String>('-a--b---c----|');
       final actual = input.takeWhile((value) => 'ab'.contains(value));
       expect(actual, scheduler.isObservable<String>('-a--b---|'));
+    });
+    test('multiple values completion (inclusive)', () {
+      final input = scheduler.cold<String>('-a--b---c----|');
+      final actual =
+          input.takeWhile((value) => 'ab'.contains(value), inclusive: true);
+      expect(actual, scheduler.isObservable<String>('-a--b---(c|)'));
     });
     test('multiple values and error', () {
       final input = scheduler.cold<String>('-a--b---c----#');

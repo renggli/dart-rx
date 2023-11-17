@@ -8,28 +8,31 @@ import '../events/event.dart';
 
 extension TakeWhileOperator<T> on Observable<T> {
   /// Emits values while the [predicate] returns `true`.
-  Observable<T> takeWhile(Predicate1<T> predicate) =>
-      TakeWhileObservable<T>(this, predicate);
+  Observable<T> takeWhile(Predicate1<T> predicate, {bool inclusive = false}) =>
+      TakeWhileObservable<T>(this, predicate, inclusive);
 }
 
 class TakeWhileObservable<T> implements Observable<T> {
-  TakeWhileObservable(this.delegate, this.predicate);
+  TakeWhileObservable(this.delegate, this.predicate, this.inclusive);
 
   final Observable<T> delegate;
   final Predicate1<T> predicate;
+  final bool inclusive;
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    final subscriber = TakeWhileSubscriber<T>(observer, predicate);
+    final subscriber = TakeWhileSubscriber<T>(observer, predicate, inclusive);
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
 }
 
 class TakeWhileSubscriber<T> extends Subscriber<T> {
-  TakeWhileSubscriber(Observer<T> super.observer, this.predicate);
+  TakeWhileSubscriber(
+      Observer<T> super.observer, this.predicate, this.inclusive);
 
   final Predicate1<T> predicate;
+  final bool inclusive;
 
   @override
   void onNext(T value) {
@@ -39,6 +42,9 @@ class TakeWhileSubscriber<T> extends Subscriber<T> {
     } else if (predicateEvent.value) {
       doNext(value);
     } else {
+      if (inclusive) {
+        doNext(value);
+      }
       doComplete();
     }
   }
