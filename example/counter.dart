@@ -22,6 +22,11 @@ void main() async {
   store.addObservable(randomValue,
       next: (int state, int value) => state + value);
 
+  // Display help text.
+  stdout.writeln('Use [+] to increment and [-] to decrement the counter.');
+  stdout.writeln('Every 10sec the counter is updated randomly.');
+  stdout.writeln();
+
   // Open an asynchronous reader.
   stdin.lineMode = stdin.echoMode = false;
   stdin
