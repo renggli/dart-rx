@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+- Addg `Subject.isObserved` (thanks to [tsouza](https://github.com/tsouza)).
+- Add "inclusive" option to `Observable.takeWhile` (thanks to [tsouza](https://github.com/tsouza)).
+
 ## 0.3.0
 
 - Dart 3.0 requirement.
