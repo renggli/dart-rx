@@ -23,13 +23,13 @@ void main() {
     }
 
     test('series of values', () {
-      expectParse('-------a---b', const [
+      expectParse('-------a---b', const <TestEvent<String>>[
         WrappedEvent(7, Event.next('a')),
         WrappedEvent(11, Event.next('b')),
       ]);
     });
     test('series of values with custom mapping', () {
-      expectParse('-------a---b', const [
+      expectParse('-------a---b', const <TestEvent<int>>[
         WrappedEvent(7, Event.next(1)),
         WrappedEvent(11, Event.next(2)),
       ], values: {
@@ -38,7 +38,7 @@ void main() {
       });
     });
     test('inferred character mapping', () {
-      final result = TestEventSequence(const [
+      final result = TestEventSequence(const <TestEvent<int>>[
         WrappedEvent(1, Event.next(1)),
         WrappedEvent(3, Event.next(2)),
         WrappedEvent(5, Event.next(1)),
@@ -46,7 +46,7 @@ void main() {
       expect(result.toMarbles(), '-a-b-a');
     });
     test('inferred string character mapping', () {
-      final result = TestEventSequence(const [
+      final result = TestEventSequence(const <TestEvent<String>>[
         WrappedEvent(1, Event.next('x')),
         WrappedEvent(3, Event.next('yy')),
         WrappedEvent(5, Event.next('x')),
@@ -54,14 +54,14 @@ void main() {
       expect(result.toMarbles(), '-x-a-x');
     });
     test('series of values with completion', () {
-      expectParse<String>('-------a---b---|', const [
+      expectParse<String>('-------a---b---|', const <TestEvent<String>>[
         WrappedEvent(7, Event.next('a')),
         WrappedEvent(11, Event.next('b')),
         WrappedEvent(15, Event.complete()),
       ]);
     });
     test('series of values with error', () {
-      expectParse<String>('-------a---b---#', [
+      expectParse<String>('-------a---b---#', <TestEvent<String>>[
         const WrappedEvent(7, Event.next('a')),
         const WrappedEvent(11, Event.next('b')),
         WrappedEvent(15, Event.error('Error', StackTrace.current)),
@@ -71,7 +71,7 @@ void main() {
       final error = ArgumentError('Custom error');
       expectParse<String>(
           '-------a---b---#',
-          [
+          <TestEvent<String>>[
             const WrappedEvent(7, Event.next('a')),
             const WrappedEvent(11, Event.next('b')),
             WrappedEvent(15, Event.error(error, StackTrace.current)),
@@ -81,7 +81,10 @@ void main() {
     test('subscription and unsubscription', () {
       const subscribe = SubscribeEvent<String>(3);
       const unsubscribe = UnsubscribeEvent<String>(7);
-      expectParse<String>('---^---!', const [subscribe, unsubscribe]);
+      expectParse<String>('---^---!', const <TestEvent<String>>[
+        subscribe,
+        unsubscribe,
+      ]);
       expect(subscribe.toString(), startsWith('SubscribeEvent<String>'));
       expect(unsubscribe.toString(), startsWith('UnsubscribeEvent<String>'));
       expect(subscribe, isNot(unsubscribe));
@@ -94,7 +97,7 @@ void main() {
           throwsArgumentError);
     });
     test('grouped values', () {
-      expectParse('---(abc)', const [
+      expectParse('---(abc)', const <TestEvent<String>>[
         WrappedEvent(3, Event.next('a')),
         WrappedEvent(3, Event.next('b')),
         WrappedEvent(3, Event.next('c')),
@@ -111,7 +114,7 @@ void main() {
     test('ignores whitespaces when parsing', () {
       expectParse<String>(
           '--- a\t---b---\n|',
-          const [
+          const <TestEvent<String>>[
             WrappedEvent(3, Event.next('a')),
             WrappedEvent(7, Event.next('b')),
             WrappedEvent(11, Event.complete()),

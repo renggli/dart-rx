@@ -74,7 +74,7 @@ class TestEventSequence<T> {
     if (withinGroup) {
       throw ArgumentError.value(marbles, 'marbles', 'Invalid grouping.');
     }
-    return TestEventSequence(sequence, values: values);
+    return TestEventSequence<T>(sequence, values: values);
   }
 
   /// Sequence of [TestEvent] instances.

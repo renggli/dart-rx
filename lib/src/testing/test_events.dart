@@ -38,7 +38,7 @@ class WrappedEvent<T> extends TestEvent<T> {
   int get hashCode => Object.hash(runtimeType, index, event);
 
   @override
-  String toString() => 'WrappedEvent(index: $index, event: $event)';
+  String toString() => 'WrappedEvent<$T>(index: $index, event: $event)';
 }
 
 class SubscribeEvent<T> extends TestEvent<T> {
