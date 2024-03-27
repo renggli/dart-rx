@@ -62,6 +62,26 @@ void main() {
       disposable.dispose();
     });
   });
+  group('collection', () {
+    test('list', () {
+      final collection = <int>[];
+      final disposable = CollectionDisposable.forList(collection, 42);
+      expect(collection, [42]);
+      expect(disposable.isDisposed, isFalse);
+      disposable.dispose();
+      expect(collection, isEmpty);
+      expect(disposable.isDisposed, isTrue);
+    });
+    test('set', () {
+      final collection = <int>{};
+      final disposable = CollectionDisposable.forSet(collection, 42);
+      expect(collection, {42});
+      expect(disposable.isDisposed, isFalse);
+      disposable.dispose();
+      expect(collection, isEmpty);
+      expect(disposable.isDisposed, isTrue);
+    });
+  });
   group('composite', () {
     test('creation', () {
       final outer = CompositeDisposable();

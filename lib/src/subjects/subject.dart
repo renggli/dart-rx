@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 import '../core/observable.dart';
 import '../core/observer.dart';
-import '../disposables/action.dart';
+import '../disposables/collection.dart';
 import '../disposables/disposable.dart';
 import '../disposables/disposed.dart';
 import '../disposables/errors.dart';
@@ -68,10 +68,8 @@ class Subject<T> implements Observable<T>, Observer<T> {
   }
 
   @protected
-  Disposable subscribeToActive(Observer<T> observer) {
-    _observers.add(observer);
-    return ActionDisposable(() => _observers.remove(observer));
-  }
+  Disposable subscribeToActive(Observer<T> observer) =>
+      CollectionDisposable<Observer<T>>.forList(_observers, observer);
 
   @protected
   Disposable subscribeToError(
