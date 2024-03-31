@@ -5,6 +5,7 @@ import 'converters_test.dart' as converters_test;
 import 'disposables_test.dart' as disposables_test;
 import 'events_test.dart' as events_test;
 import 'operators_test.dart' as operators_test;
+import 'reactive_test.dart' as reactive_test;
 import 'schedulers_test.dart' as schedulers_test;
 import 'shared_test.dart' as shared_test;
 import 'store_test.dart' as store_test;
@@ -17,6 +18,7 @@ void main() {
   group('disposables', disposables_test.main);
   group('events', events_test.main);
   group('operators', operators_test.main);
+  group('reactive', reactive_test.main);
   group('schedulers', schedulers_test.main);
   group('shared', shared_test.main);
   group('store', store_test.main);

@@ -42,3 +42,13 @@ class TimeoutError extends Error {
   @override
   String toString() => 'TimeoutError{message: $message}';
 }
+
+/// An error thrown when there are circular dependencies.
+class CircularDependencyError extends Error {
+  CircularDependencyError([this.message = 'Circular dependencies detected.']);
+
+  final String message;
+
+  @override
+  String toString() => 'CircularDependencyError{message: $message}';
+}
