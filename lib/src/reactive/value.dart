@@ -5,7 +5,7 @@ import '../core/observer.dart';
 import '../disposables/collection.dart';
 import '../disposables/disposable.dart';
 
-/// Abstract reactive value
+/// Abstract reactive value.
 abstract class Value<T> implements Observable<T> {
   /// The currently held value.
   T get value;

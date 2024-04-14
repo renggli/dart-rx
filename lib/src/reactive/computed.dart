@@ -3,6 +3,7 @@ import 'package:more/functional.dart';
 import '../../core.dart';
 import 'value.dart';
 
+/// A computed reactive value.
 class Computed<T> extends Value<T> {
   Computed(this._callback) {
     _update();
