@@ -15,12 +15,13 @@ import '../disposables/disposable.dart';
 ///
 /// For example:
 ///
-///    final observable = create<String>((subscriber) {
-///      subscriber.next('a');
-///      /* ... */
-///      subscriber.add(ActionDisposable(() => /* free expensive resource */));
-///    });
-///
+/// ```dart
+/// final observable = create<String>((subscriber) {
+///   subscriber.next('a');
+///   /* ... */
+///   subscriber.add(ActionDisposable(() => /* free expensive resource */));
+/// });
+/// ```
 Observable<T> create<T>(Callback1<Subscriber<T>> callback) =>
     CreateObservable<T>(callback);
 
