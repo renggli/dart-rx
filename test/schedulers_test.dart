@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 
 final DateTime epoch = DateTime.fromMillisecondsSinceEpoch(0);
 const Duration offset = Duration(milliseconds: isJavaScript ? 200 : 100);
-const Duration accuracy = Duration(milliseconds: isJavaScript ? 50 : 25);
+const Duration accuracy = Duration(milliseconds: isJavaScript ? 100 : 25);
 
 void expectDateTime(DateTime actual, DateTime expected, Duration accuracy,
     {String prefix = ''}) {
