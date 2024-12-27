@@ -20,7 +20,7 @@ import 'types.dart';
 /// final store = Store<int>(0);
 ///
 /// // Subscribe to state changes and print the new state to the console.
-/// store.subscribe(Observer.next((state) => print(state)));
+/// store.subscribe(Observer.next(print));
 ///
 /// // Increment the value by one. In a more complicated example one
 /// // could extract the function to be standalone, or generalize it to
