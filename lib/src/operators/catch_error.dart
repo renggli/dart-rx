@@ -8,8 +8,8 @@ import '../observers/inner.dart';
 
 /// Handles errors of type [E], and returns a new [Observable] of type [T],
 /// or `null` if the [Observable] should be completed.
-typedef ErrorHandler<T, E> = Observable<T>? Function(
-    E error, StackTrace stackTrace);
+typedef ErrorHandler<T, E> =
+    Observable<T>? Function(E error, StackTrace stackTrace);
 
 extension CatchErrorOperator<T> on Observable<T> {
   /// Catches errors of type [E] thrown by this [Observable] and handles them
@@ -57,9 +57,12 @@ class CatchErrorSubscriber<T, E> extends Subscriber<T>
   void notifyNext(Disposable disposable, void state, T value) => doNext(value);
 
   @override
-  void notifyError(Disposable disposable, void state, Object error,
-          StackTrace stackTrace) =>
-      doError(error, stackTrace);
+  void notifyError(
+    Disposable disposable,
+    void state,
+    Object error,
+    StackTrace stackTrace,
+  ) => doError(error, stackTrace);
 
   @override
   void notifyComplete(Disposable disposable, void state) => doComplete();

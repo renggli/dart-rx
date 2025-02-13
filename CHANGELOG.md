@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+- Dart 3.7 requirement.
+
 ## 0.4.0
 
 - Add `Subject.isObserved` (thanks to [tsouza](https://github.com/tsouza)).

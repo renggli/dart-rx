@@ -11,8 +11,8 @@ Observable<T> race<T>(Iterable<Observable<T>> sources) {
   return observables.isEmpty
       ? empty()
       : observables.length == 1
-          ? observables.first
-          : RaceObservable<T>(observables);
+      ? observables.first
+      : RaceObservable<T>(observables);
 }
 
 class RaceObservable<T> implements Observable<T> {
@@ -51,9 +51,12 @@ class RaceSubscriber<T> extends Subscriber<T> implements InnerEvents<T, void> {
   }
 
   @override
-  void notifyError(Disposable disposable, void state, Object error,
-          StackTrace stackTrace) =>
-      doError(error, stackTrace);
+  void notifyError(
+    Disposable disposable,
+    void state,
+    Object error,
+    StackTrace stackTrace,
+  ) => doError(error, stackTrace);
 
   @override
   void notifyComplete(Disposable disposable, void state) => doComplete();

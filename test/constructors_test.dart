@@ -22,12 +22,16 @@ void main() {
         scheduler.cold('---c--|'),
       ]);
       expect(
-          actual,
-          scheduler.isObservable('---xyz|', values: {
+        actual,
+        scheduler.isObservable(
+          '---xyz|',
+          values: {
             'x': ['a', 'b', 'c'],
             'y': ['a', 'd', 'c'],
             'z': ['e', 'd', 'c'],
-          }));
+          },
+        ),
+      );
     });
     test('different length', () {
       final actual = combineLatest<String>([
@@ -36,12 +40,16 @@ void main() {
         scheduler.cold('---c|'),
       ]);
       expect(
-          actual,
-          scheduler.isObservable('---xyz|', values: {
+        actual,
+        scheduler.isObservable(
+          '---xyz|',
+          values: {
             'x': ['a', 'b', 'c'],
             'y': ['a', 'd', 'c'],
             'z': ['e', 'd', 'c'],
-          }));
+          },
+        ),
+      );
     });
     test('repeated values', () {
       final actual = combineLatest<String>([
@@ -50,11 +58,15 @@ void main() {
         scheduler.cold('-----ef-|'),
       ]);
       expect(
-          actual,
-          scheduler.isObservable('-----xy-|', values: {
+        actual,
+        scheduler.isObservable(
+          '-----xy-|',
+          values: {
             'x': ['b', 'd', 'e'],
             'y': ['b', 'd', 'f'],
-          }));
+          },
+        ),
+      );
     });
     test('early error', () {
       final actual = combineLatest<String>([
@@ -71,11 +83,15 @@ void main() {
         scheduler.cold('---c--|'),
       ]);
       expect(
-          actual,
-          scheduler.isObservable('---xy#', values: {
+        actual,
+        scheduler.isObservable(
+          '---xy#',
+          values: {
             'x': ['a', 'b', 'c'],
             'y': ['a', 'd', 'c'],
-          }));
+          },
+        ),
+      );
     });
   });
   group('concat', () {
@@ -206,20 +222,26 @@ void main() {
         scheduler.cold('--1--2--3--|'),
       ]);
       expect(
-          actual,
-          scheduler.isObservable('--------------(x|)', values: {
-            'x': ['d', 'b', '3']
-          }));
+        actual,
+        scheduler.isObservable(
+          '--------------(x|)',
+          values: {
+            'x': ['d', 'b', '3'],
+          },
+        ),
+      );
     });
     test('accepts a single observable', () {
-      final actual = forkJoin<String>([
-        scheduler.cold('---a---b---c---d---|'),
-      ]);
+      final actual = forkJoin<String>([scheduler.cold('---a---b---c---d---|')]);
       expect(
-          actual,
-          scheduler.isObservable('-------------------(x|)', values: {
-            'x': ['d']
-          }));
+        actual,
+        scheduler.isObservable(
+          '-------------------(x|)',
+          values: {
+            'x': ['d'],
+          },
+        ),
+      );
     });
     test('completes empty with empty observable', () {
       final actual = forkJoin<String>([
@@ -228,7 +250,9 @@ void main() {
         scheduler.cold('------------------|'),
       ]);
       expect(
-          actual, scheduler.isObservable<List<String>>('------------------|'));
+        actual,
+        scheduler.isObservable<List<String>>('------------------|'),
+      );
     });
     test('completes early with empty observable', () {
       final actual = forkJoin<String>([
@@ -341,11 +365,13 @@ void main() {
   group('never', () {
     test('immediately closed', () {
       final actual = never();
-      final subscription = actual.subscribe(Observer(
-        next: (value) => fail('No value expected'),
-        error: (error, stackTrace) => fail('No error expected'),
-        complete: () => fail('No completion expected'),
-      ));
+      final subscription = actual.subscribe(
+        Observer(
+          next: (value) => fail('No value expected'),
+          error: (error, stackTrace) => fail('No error expected'),
+          complete: () => fail('No completion expected'),
+        ),
+      );
       expect(subscription.isDisposed, isTrue);
     });
   });
@@ -355,9 +381,7 @@ void main() {
       expect(actual, scheduler.isObservable<String>('|'));
     });
     test('single observable', () {
-      final actual = race<String>([
-        scheduler.cold<String>('-a-b-c-|'),
-      ]);
+      final actual = race<String>([scheduler.cold<String>('-a-b-c-|')]);
       expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
     });
     test('two observables and early completion', () {
@@ -460,9 +484,9 @@ void main() {
     });
     test('delay & periodic', () {
       final actual = timer(
-              delay: scheduler.stepDuration * 3,
-              period: scheduler.stepDuration * 2)
-          .take(5);
+        delay: scheduler.stepDuration * 3,
+        period: scheduler.stepDuration * 2,
+      ).take(5);
       expect(actual, scheduler.isObservable('---0-1-2-3-(4|)', values: values));
     });
   });
@@ -478,10 +502,14 @@ void main() {
         scheduler.cold('---c--|'),
       ]);
       expect(
-          actual,
-          scheduler.isObservable('---x--|', values: {
+        actual,
+        scheduler.isObservable(
+          '---x--|',
+          values: {
             'x': ['a', 'b', 'c'],
-          }));
+          },
+        ),
+      );
     });
     test('different length', () {
       final actual = zip<String>([
@@ -490,10 +518,14 @@ void main() {
         scheduler.cold('---c-|'),
       ]);
       expect(
-          actual,
-          scheduler.isObservable('---x-|', values: {
+        actual,
+        scheduler.isObservable(
+          '---x-|',
+          values: {
             'x': ['a', 'b', 'c'],
-          }));
+          },
+        ),
+      );
     });
     test('repeated values', () {
       final actual = zip<String>([
@@ -502,11 +534,15 @@ void main() {
         scheduler.cold('-----ef-|'),
       ]);
       expect(
-          actual,
-          scheduler.isObservable('-----xy-|', values: {
+        actual,
+        scheduler.isObservable(
+          '-----xy-|',
+          values: {
             'x': ['a', 'c', 'e'],
             'y': ['b', 'd', 'f'],
-          }));
+          },
+        ),
+      );
     });
     test('early error', () {
       final actual = zip<String>([
@@ -523,11 +559,15 @@ void main() {
         scheduler.cold('---c--|'),
       ]);
       expect(
-          actual,
-          scheduler.isObservable('---x-#', values: {
+        actual,
+        scheduler.isObservable(
+          '---x-#',
+          values: {
             'x': ['a', 'b', 'c'],
             'y': ['a', 'd', 'c'],
-          }));
+          },
+        ),
+      );
     });
   });
 }

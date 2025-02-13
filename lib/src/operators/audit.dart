@@ -22,7 +22,8 @@ extension AuditOperator<T> on Observable<T> {
   /// emits the most recent source value, then repeats the process.
   Observable<T> auditTime(Duration duration, {Scheduler? scheduler}) =>
       audit<int>(
-          constantFunction1(timer(delay: duration, scheduler: scheduler)));
+        constantFunction1(timer(delay: duration, scheduler: scheduler)),
+      );
 }
 
 class AuditObservable<T, R> implements Observable<T> {
@@ -70,7 +71,11 @@ class AuditSubscriber<T, R> extends Subscriber<T>
 
   @override
   void notifyError(
-      Disposable disposable, void state, Object error, StackTrace stackTrace) {
+    Disposable disposable,
+    void state,
+    Object error,
+    StackTrace stackTrace,
+  ) {
     doError(error, stackTrace);
   }
 

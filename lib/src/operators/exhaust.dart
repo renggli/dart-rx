@@ -18,17 +18,19 @@ extension ExhaustMapOperator<T> on Observable<T> {
   /// Emits and completes values from single higher-order [Observable].
   /// Subscribes to at most `concurrent` sources, drops observables exceeding
   /// this threshold.
-  Observable<R> exhaustMapTo<R>(Observable<R> observable,
-          {int concurrent = 1}) =>
-      exhaustMap<R>(constantFunction1(observable), concurrent: concurrent);
+  Observable<R> exhaustMapTo<R>(
+    Observable<R> observable, {
+    int concurrent = 1,
+  }) => exhaustMap<R>(constantFunction1(observable), concurrent: concurrent);
 
   /// Emits and completes values from a higher-order [Observable] retrieved by
   /// projecting the values of the source to higher-order [Observable]s.
   /// Subscribes to at most `concurrent` sources, drops observables exceeding
   /// this threshold.
-  Observable<R> exhaustMap<R>(Map1<T, Observable<R>> project,
-          {int concurrent = 1}) =>
-      ExhaustObservable<T, R>(this, project, concurrent);
+  Observable<R> exhaustMap<R>(
+    Map1<T, Observable<R>> project, {
+    int concurrent = 1,
+  }) => ExhaustObservable<T, R>(this, project, concurrent);
 }
 
 class ExhaustObservable<T, R> implements Observable<R> {
@@ -83,9 +85,12 @@ class ExhaustSubscriber<T, R> extends Subscriber<T>
   void notifyNext(Disposable disposable, void state, R value) => doNext(value);
 
   @override
-  void notifyError(Disposable disposable, void state, Object error,
-          StackTrace stackTrace) =>
-      doError(error, stackTrace);
+  void notifyError(
+    Disposable disposable,
+    void state,
+    Object error,
+    StackTrace stackTrace,
+  ) => doError(error, stackTrace);
 
   @override
   void notifyComplete(Disposable disposable, void state) {

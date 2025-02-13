@@ -10,14 +10,15 @@ import 'test_scheduler.dart';
 
 class HotObservable<T> extends TestObservable<T> {
   HotObservable(TestScheduler scheduler, TestEventSequence<T> sequence)
-      : super(scheduler, sequence) {
+    : super(scheduler, sequence) {
     final subscriptionIndex = sequence.events
         .whereType<SubscribeEvent<T>>()
         .map((event) => event.index)
         .firstWhere((index) => true, orElse: () => 0);
     for (final event in sequence.events.whereType<WrappedEvent<T>>()) {
-      final timestamp = scheduler.now
-          .add(scheduler.stepDuration * (event.index - subscriptionIndex));
+      final timestamp = scheduler.now.add(
+        scheduler.stepDuration * (event.index - subscriptionIndex),
+      );
       scheduler.scheduleAbsolute(timestamp, () => event.event.observe(subject));
     }
   }

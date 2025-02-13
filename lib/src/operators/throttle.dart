@@ -15,22 +15,32 @@ extension ThrottleOperator<T> on Observable<T> {
   /// Emits a value from this [Observable], then ignores values for the duration
   /// until the [Observable] returned by `durationSelector` triggers a value or
   /// completes.
-  Observable<T> throttle<R>(DurationSelector<T, R> durationSelector,
-          {bool leading = true, bool trailing = true}) =>
-      ThrottleObservable<T, R>(this, durationSelector, leading, trailing);
+  Observable<T> throttle<R>(
+    DurationSelector<T, R> durationSelector, {
+    bool leading = true,
+    bool trailing = true,
+  }) => ThrottleObservable<T, R>(this, durationSelector, leading, trailing);
 
   /// Emits a value from this [Observable], then ignores values for `duration`.
-  Observable<T> throttleTime(Duration duration,
-          {bool leading = true, bool trailing = true, Scheduler? scheduler}) =>
-      throttle<int>(
-          constantFunction1(timer(delay: duration, scheduler: scheduler)),
-          leading: leading,
-          trailing: trailing);
+  Observable<T> throttleTime(
+    Duration duration, {
+    bool leading = true,
+    bool trailing = true,
+    Scheduler? scheduler,
+  }) => throttle<int>(
+    constantFunction1(timer(delay: duration, scheduler: scheduler)),
+    leading: leading,
+    trailing: trailing,
+  );
 }
 
 class ThrottleObservable<T, R> implements Observable<T> {
   ThrottleObservable(
-      this.delegate, this.durationSelector, this.leading, this.trailing);
+    this.delegate,
+    this.durationSelector,
+    this.leading,
+    this.trailing,
+  );
 
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
@@ -39,8 +49,12 @@ class ThrottleObservable<T, R> implements Observable<T> {
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    final subscriber =
-        ThrottleSubscriber<T, R>(observer, durationSelector, leading, trailing);
+    final subscriber = ThrottleSubscriber<T, R>(
+      observer,
+      durationSelector,
+      leading,
+      trailing,
+    );
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
@@ -48,8 +62,12 @@ class ThrottleObservable<T, R> implements Observable<T> {
 
 class ThrottleSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  ThrottleSubscriber(Observer<T> super.observer, this.durationSelector,
-      this.leading, this.trailing);
+  ThrottleSubscriber(
+    Observer<T> super.observer,
+    this.durationSelector,
+    this.leading,
+    this.trailing,
+  );
 
   final DurationSelector<T, R> durationSelector;
   final bool leading;
@@ -97,7 +115,11 @@ class ThrottleSubscriber<T, R> extends Subscriber<T>
 
   @override
   void notifyError(
-      Disposable disposable, void state, Object error, StackTrace stackTrace) {
+    Disposable disposable,
+    void state,
+    Object error,
+    StackTrace stackTrace,
+  ) {
     doError(error, stackTrace);
   }
 

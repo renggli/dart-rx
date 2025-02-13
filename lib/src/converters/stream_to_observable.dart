@@ -17,8 +17,11 @@ class StreamObservable<T> implements Observable<T> {
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    final subscription = stream.listen(observer.next,
-        onError: observer.error, onDone: observer.complete);
+    final subscription = stream.listen(
+      observer.next,
+      onError: observer.error,
+      onDone: observer.complete,
+    );
     return ActionDisposable(subscription.cancel);
   }
 }

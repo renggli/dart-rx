@@ -57,13 +57,17 @@ class AsyncScheduler extends Scheduler {
 
   @override
   Disposable schedulePeriodic(
-          Duration duration, Callback1<Disposable> callback) =>
-      _scheduleAt(now.add(duration), SchedulerActionCallback1((action) {
-        callback(action);
-        if (!action.isDisposed) {
-          _scheduleAt(now.add(duration), action);
-        }
-      }));
+    Duration duration,
+    Callback1<Disposable> callback,
+  ) => _scheduleAt(
+    now.add(duration),
+    SchedulerActionCallback1((action) {
+      callback(action);
+      if (!action.isDisposed) {
+        _scheduleAt(now.add(duration), action);
+      }
+    }),
+  );
 
   SchedulerAction _scheduleAt(DateTime dateTime, SchedulerAction action) {
     final actions = scheduled.putIfAbsent(dateTime, () => <SchedulerAction>[]);

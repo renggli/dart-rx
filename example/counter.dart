@@ -17,10 +17,13 @@ void main() async {
       .subscribe(Observer.next(stdout.writeln));
 
   // Update the value every 10 seconds randomly.
-  final randomValue = timer(period: const Duration(seconds: 10))
-      .map((_) => Random().nextInt(100) - 50);
-  store.addObservable(randomValue,
-      next: (int state, int value) => state + value);
+  final randomValue = timer(
+    period: const Duration(seconds: 10),
+  ).map((_) => Random().nextInt(100) - 50);
+  store.addObservable(
+    randomValue,
+    next: (int state, int value) => state + value,
+  );
 
   // Display help text.
   stdout.writeln('Use [+] to increment and [-] to decrement the counter.');
@@ -32,12 +35,14 @@ void main() async {
   stdin
       .toObservable()
       .finalize(() => stdin.lineMode = stdin.echoMode = false)
-      .subscribe(Observer.next((bytes) {
-    switch (String.fromCharCodes(bytes)) {
-      case '+':
-        store.update((state) => state + 1);
-      case '-':
-        store.update((state) => state - 1);
-    }
-  }));
+      .subscribe(
+        Observer.next((bytes) {
+          switch (String.fromCharCodes(bytes)) {
+            case '+':
+              store.update((state) => state + 1);
+            case '-':
+              store.update((state) => state - 1);
+          }
+        }),
+      );
 }

@@ -21,7 +21,8 @@ extension DebounceOperator<T> on Observable<T> {
   /// has passed without another emission.
   Observable<T> debounceTime(Duration duration, {Scheduler? scheduler}) =>
       debounce<int>(
-          constantFunction1(timer(delay: duration, scheduler: scheduler)));
+        constantFunction1(timer(delay: duration, scheduler: scheduler)),
+      );
 }
 
 class DebounceObservable<T, R> implements Observable<T> {
@@ -71,7 +72,11 @@ class DebounceSubscriber<T, R> extends Subscriber<T>
 
   @override
   void notifyError(
-      Disposable disposable, void state, Object error, StackTrace stackTrace) {
+    Disposable disposable,
+    void state,
+    Object error,
+    StackTrace stackTrace,
+  ) {
     doError(error, stackTrace);
   }
 

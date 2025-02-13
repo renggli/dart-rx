@@ -25,54 +25,66 @@ void main() {
   group('Future.toObservable', () {
     test('completes with value', () {
       final actual = Future.value('a').toObservable();
-      actual.subscribe(Observer(
-        next: (value) => expect(value, 'a'),
-        error: (error, stackTrace) => fail('No error expected'),
-      ));
+      actual.subscribe(
+        Observer(
+          next: (value) => expect(value, 'a'),
+          error: (error, stackTrace) => fail('No error expected'),
+        ),
+      );
     });
     test('completes with error', () {
       final actual = Future<String>.error('Error').toObservable();
-      actual.subscribe(Observer(
-        next: (value) => fail('No value expected'),
-        error: (error, stackTrace) => expect(error, 'Error'),
-      ));
+      actual.subscribe(
+        Observer(
+          next: (value) => fail('No value expected'),
+          error: (error, stackTrace) => expect(error, 'Error'),
+        ),
+      );
     });
   });
   group('Stream.toObservable', () {
     test('completes immediately', () {
       final actual = const Stream<String>.empty().toObservable();
       final observed = <String>[];
-      actual.subscribe(Observer(
-        next: (value) => fail('No value expected'),
-        error: (error, stackTrace) => fail('No error expected'),
-        complete: () => expect(observed, <String>[]),
-      ));
+      actual.subscribe(
+        Observer(
+          next: (value) => fail('No value expected'),
+          error: (error, stackTrace) => fail('No error expected'),
+          complete: () => expect(observed, <String>[]),
+        ),
+      );
     });
     test('completes with values', () {
       final actual = Stream.fromIterable(['a', 'b', 'c']).toObservable();
       final observed = <String>[];
-      actual.subscribe(Observer(
-        next: observed.add,
-        error: (error, stackTrace) => fail('No error expected'),
-        complete: () => expect(observed, ['a', 'b', 'c']),
-      ));
+      actual.subscribe(
+        Observer(
+          next: observed.add,
+          error: (error, stackTrace) => fail('No error expected'),
+          complete: () => expect(observed, ['a', 'b', 'c']),
+        ),
+      );
     });
     test('completes with error', () {
       final actual =
           Stream.fromFuture(Future<String>.error('Error')).toObservable();
-      actual.subscribe(Observer(
-        next: (value) => fail('No value expected'),
-        error: (error, stackTrace) => expect(error, 'Error'),
-        complete: () => fail('No completion expected'),
-      ));
+      actual.subscribe(
+        Observer(
+          next: (value) => fail('No value expected'),
+          error: (error, stackTrace) => expect(error, 'Error'),
+          complete: () => fail('No completion expected'),
+        ),
+      );
     });
     test('subscription', () {
       final actual = Stream.fromIterable([1, 2, 3]).toObservable();
-      final subscription = actual.subscribe(Observer(
-        next: (value) => fail('No value expected'),
-        error: (error, stackTrace) => expect(error, 'Error'),
-        complete: () => fail('No completion expected'),
-      ));
+      final subscription = actual.subscribe(
+        Observer(
+          next: (value) => fail('No value expected'),
+          error: (error, stackTrace) => expect(error, 'Error'),
+          complete: () => fail('No completion expected'),
+        ),
+      );
       expect(subscription.isDisposed, isFalse);
       subscription.dispose();
       expect(subscription.isDisposed, isTrue);
@@ -88,9 +100,12 @@ void main() {
       expect(actual, completion(42));
     });
     test('multiple values', () {
-      final actual = [1, 2, 3]
-          .toObservable(scheduler: const ImmediateScheduler())
-          .toFuture();
+      final actual =
+          [
+            1,
+            2,
+            3,
+          ].toObservable(scheduler: const ImmediateScheduler()).toFuture();
       expect(actual, completion(1));
     });
     test('immediate error', () {
@@ -108,9 +123,12 @@ void main() {
       expect(actual, emitsInOrder(<int>[42]));
     });
     test('multiple values', () {
-      final actual = [1, 2, 3]
-          .toObservable(scheduler: const ImmediateScheduler())
-          .toStream();
+      final actual =
+          [
+            1,
+            2,
+            3,
+          ].toObservable(scheduler: const ImmediateScheduler()).toStream();
       expect(actual, emitsInOrder(<int>[1, 2, 3]));
     });
     test('immediate error', () {

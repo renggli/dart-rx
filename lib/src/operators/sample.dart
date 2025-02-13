@@ -16,7 +16,8 @@ extension SampleOperator<T> on Observable<T> {
   /// periodic time intervals.
   Observable<T> sampleTime(Duration duration, {Scheduler? scheduler}) =>
       sample<int>(
-          timer(delay: duration, period: duration, scheduler: scheduler));
+        timer(delay: duration, period: duration, scheduler: scheduler),
+      );
 }
 
 class SampleObservable<T, R> implements Observable<T> {
@@ -52,9 +53,12 @@ class SampleSubscriber<T, R> extends Subscriber<T>
   void notifyNext(Disposable disposable, void state, R value) => emitValue();
 
   @override
-  void notifyError(Disposable disposable, void state, Object error,
-          StackTrace stackTrace) =>
-      doError(error, stackTrace);
+  void notifyError(
+    Disposable disposable,
+    void state,
+    Object error,
+    StackTrace stackTrace,
+  ) => doError(error, stackTrace);
 
   @override
   void notifyComplete(Disposable disposable, void state) => emitValue();

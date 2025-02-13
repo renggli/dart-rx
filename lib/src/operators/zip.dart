@@ -53,14 +53,23 @@ class ZipSubscriber<T> extends Subscriber<Observable<T>>
   void notifyNext(Disposable disposable, int index, T value) {
     pending[index].addLast(value);
     if (pending.every((each) => each.isNotEmpty)) {
-      doNext(List.generate(pending.length, (i) => pending[i].removeFirst(),
-          growable: false));
+      doNext(
+        List.generate(
+          pending.length,
+          (i) => pending[i].removeFirst(),
+          growable: false,
+        ),
+      );
     }
   }
 
   @override
   void notifyError(
-      Disposable disposable, int index, Object error, StackTrace stackTrace) {
+    Disposable disposable,
+    int index,
+    Object error,
+    StackTrace stackTrace,
+  ) {
     doError(error, stackTrace);
   }
 

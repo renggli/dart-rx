@@ -52,12 +52,7 @@ class Computed<T> extends Value<T> {
   }
 }
 
-enum State {
-  initializing,
-  computing,
-  computed,
-  errored;
-}
+enum State { initializing, computing, computed, errored }
 
 class ComputedObserver<T> implements Observer<Never> {
   ComputedObserver(this._computed);

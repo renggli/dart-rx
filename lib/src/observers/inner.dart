@@ -35,7 +35,11 @@ abstract class InnerEvents<T, S> {
   void notifyNext(Disposable disposable, S state, T value);
 
   void notifyError(
-      Disposable disposable, S state, Object error, StackTrace stackTrace);
+    Disposable disposable,
+    S state,
+    Object error,
+    StackTrace stackTrace,
+  );
 
   void notifyComplete(Disposable disposable, S state);
 }

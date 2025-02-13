@@ -11,11 +11,16 @@ import '../subjects/subject.dart';
 
 extension MulticastOperator<T> on Observable<T> {
   /// Returns an multicast observable that shares the underlying stream.
-  ConnectableObservable<T> multicast(
-      {Subject<T>? subject, Map0<Subject<T>>? factory}) {
+  ConnectableObservable<T> multicast({
+    Subject<T>? subject,
+    Map0<Subject<T>>? factory,
+  }) {
     if (subject != null && factory != null) {
       throw ArgumentError.value(
-          subject, 'subject', 'Subject and factory cannot both be given.');
+        subject,
+        'subject',
+        'Subject and factory cannot both be given.',
+      );
     }
     factory ??= () => subject ?? Subject<T>();
     return MulticastObservable<T>(this, factory);

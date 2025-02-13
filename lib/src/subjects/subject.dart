@@ -73,7 +73,10 @@ class Subject<T> implements Observable<T>, Observer<T> {
 
   @protected
   Disposable subscribeToError(
-      Observer<T> observer, Object error, StackTrace stackTrace) {
+    Observer<T> observer,
+    Object error,
+    StackTrace stackTrace,
+  ) {
     observer.error(error, stackTrace);
     return const DisposedDisposable();
   }

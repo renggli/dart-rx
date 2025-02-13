@@ -5,19 +5,28 @@ import 'package:test/test.dart';
 
 void main() {
   group('marbles', () {
-    void expectParse<T>(String marbles, List<TestEvent<T>> events,
-        {Map<String, T> values = const {},
-        Object error = 'Error',
-        bool toMarbles = true}) {
-      final result = TestEventSequence<T>.fromString(marbles,
-          values: values, error: error);
+    void expectParse<T>(
+      String marbles,
+      List<TestEvent<T>> events, {
+      Map<String, T> values = const {},
+      Object error = 'Error',
+      bool toMarbles = true,
+    }) {
+      final result = TestEventSequence<T>.fromString(
+        marbles,
+        values: values,
+        error: error,
+      );
       expect(result.events, events);
       if (toMarbles) {
         expect(result.toMarbles(), marbles);
         expect(result.toString(), 'TestEventSequence<$T>{$marbles}');
       }
-      final other = TestEventSequence<T>.fromString(marbles,
-          values: values, error: error);
+      final other = TestEventSequence<T>.fromString(
+        marbles,
+        values: values,
+        error: error,
+      );
       expect(result, other);
       expect(result.hashCode, other.hashCode);
     }
@@ -29,13 +38,14 @@ void main() {
       ]);
     });
     test('series of values with custom mapping', () {
-      expectParse('-------a---b', const <TestEvent<int>>[
-        WrappedEvent(7, Event.next(1)),
-        WrappedEvent(11, Event.next(2)),
-      ], values: {
-        'a': 1,
-        'b': 2
-      });
+      expectParse(
+        '-------a---b',
+        const <TestEvent<int>>[
+          WrappedEvent(7, Event.next(1)),
+          WrappedEvent(11, Event.next(2)),
+        ],
+        values: {'a': 1, 'b': 2},
+      );
     });
     test('inferred character mapping', () {
       final result = TestEventSequence(const <TestEvent<int>>[
@@ -69,14 +79,11 @@ void main() {
     });
     test('series of values with custom error', () {
       final error = ArgumentError('Custom error');
-      expectParse<String>(
-          '-------a---b---#',
-          <TestEvent<String>>[
-            const WrappedEvent(7, Event.next('a')),
-            const WrappedEvent(11, Event.next('b')),
-            WrappedEvent(15, Event.error(error, StackTrace.current)),
-          ],
-          error: error);
+      expectParse<String>('-------a---b---#', <TestEvent<String>>[
+        const WrappedEvent(7, Event.next('a')),
+        const WrappedEvent(11, Event.next('b')),
+        WrappedEvent(15, Event.error(error, StackTrace.current)),
+      ], error: error);
     });
     test('subscription and unsubscription', () {
       const subscribe = SubscribeEvent<String>(3);
@@ -91,10 +98,14 @@ void main() {
       expect(subscribe.hashCode, isNot(unsubscribe.hashCode));
     });
     test('invalid subscription and unsubscription', () {
-      expect(() => TestEventSequence<String>.fromString('^^'),
-          throwsArgumentError);
-      expect(() => TestEventSequence<String>.fromString('!!'),
-          throwsArgumentError);
+      expect(
+        () => TestEventSequence<String>.fromString('^^'),
+        throwsArgumentError,
+      );
+      expect(
+        () => TestEventSequence<String>.fromString('!!'),
+        throwsArgumentError,
+      );
     });
     test('grouped values', () {
       expectParse('---(abc)', const <TestEvent<String>>[
@@ -104,22 +115,25 @@ void main() {
       ]);
     });
     test('invalid grouping', () {
-      expect(() => TestEventSequence<String>.fromString('(('),
-          throwsArgumentError);
-      expect(() => TestEventSequence<String>.fromString('(a'),
-          throwsArgumentError);
-      expect(() => TestEventSequence<String>.fromString(')a'),
-          throwsArgumentError);
+      expect(
+        () => TestEventSequence<String>.fromString('(('),
+        throwsArgumentError,
+      );
+      expect(
+        () => TestEventSequence<String>.fromString('(a'),
+        throwsArgumentError,
+      );
+      expect(
+        () => TestEventSequence<String>.fromString(')a'),
+        throwsArgumentError,
+      );
     });
     test('ignores whitespaces when parsing', () {
-      expectParse<String>(
-          '--- a\t---b---\n|',
-          const <TestEvent<String>>[
-            WrappedEvent(3, Event.next('a')),
-            WrappedEvent(7, Event.next('b')),
-            WrappedEvent(11, Event.complete()),
-          ],
-          toMarbles: false);
+      expectParse<String>('--- a\t---b---\n|', const <TestEvent<String>>[
+        WrappedEvent(3, Event.next('a')),
+        WrappedEvent(7, Event.next('b')),
+        WrappedEvent(11, Event.complete()),
+      ], toMarbles: false);
     });
   });
   group('scheduler', () {
@@ -143,14 +157,20 @@ void main() {
         expect(scheduler.subscribers, hasLength(2));
         final firstSubscriber = scheduler.subscribers.first;
         expect(firstSubscriber.isDisposed, isTrue);
-        expect(firstSubscriber.subscriptionTimestamp,
-            scheduler.now.subtract(scheduler.stepDuration * 6));
-        expect(firstSubscriber.unsubscriptionTimestamp,
-            scheduler.now.subtract(scheduler.stepDuration * 3));
+        expect(
+          firstSubscriber.subscriptionTimestamp,
+          scheduler.now.subtract(scheduler.stepDuration * 6),
+        );
+        expect(
+          firstSubscriber.unsubscriptionTimestamp,
+          scheduler.now.subtract(scheduler.stepDuration * 3),
+        );
         final secondSubscriber = scheduler.subscribers.last;
         expect(secondSubscriber.isDisposed, isTrue);
-        expect(secondSubscriber.subscriptionTimestamp,
-            scheduler.now.subtract(scheduler.stepDuration * 3));
+        expect(
+          secondSubscriber.subscriptionTimestamp,
+          scheduler.now.subtract(scheduler.stepDuration * 3),
+        );
         expect(secondSubscriber.unsubscriptionTimestamp, scheduler.now);
       });
       test('subscribe event not allowed', () {
@@ -174,8 +194,10 @@ void main() {
         expect(scheduler.subscribers, hasLength(2));
         final firstSubscriber = scheduler.subscribers.first;
         expect(firstSubscriber.isDisposed, isTrue);
-        expect(firstSubscriber.subscriptionTimestamp,
-            scheduler.now.subtract(scheduler.stepDuration * 3));
+        expect(
+          firstSubscriber.subscriptionTimestamp,
+          scheduler.now.subtract(scheduler.stepDuration * 3),
+        );
         expect(firstSubscriber.unsubscriptionTimestamp, scheduler.now);
         final secondSubscriber = scheduler.subscribers.last;
         expect(secondSubscriber.isDisposed, isTrue);
@@ -192,8 +214,10 @@ void main() {
         expect(scheduler.subscribers, hasLength(1));
         final subscriber = scheduler.subscribers.first;
         expect(subscriber.isDisposed, isFalse);
-        expect(subscriber.subscriptionTimestamp,
-            scheduler.now.subtract(scheduler.stepDuration));
+        expect(
+          subscriber.subscriptionTimestamp,
+          scheduler.now.subtract(scheduler.stepDuration),
+        );
         expect(() => subscriber.unsubscriptionTimestamp, throwsStateError);
       });
     });

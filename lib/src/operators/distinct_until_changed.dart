@@ -9,13 +9,14 @@ import '../events/event.dart';
 extension DistinctUntilChangedOperator<T> on Observable<T> {
   /// Emits all items emitted by this [Observable] that are different from the
   /// previous one.
-  Observable<T> distinctUntilChanged<K>(
-          {Map1<T, K>? key, Predicate2<K, K>? compare}) =>
-      DistinctUntilChangedObservable<T, K>(
-        this,
-        key ?? (value) => value as K,
-        compare ?? (a, b) => a == b,
-      );
+  Observable<T> distinctUntilChanged<K>({
+    Map1<T, K>? key,
+    Predicate2<K, K>? compare,
+  }) => DistinctUntilChangedObservable<T, K>(
+    this,
+    key ?? (value) => value as K,
+    compare ?? (a, b) => a == b,
+  );
 }
 
 class DistinctUntilChangedObservable<T, K> implements Observable<T> {
@@ -27,8 +28,11 @@ class DistinctUntilChangedObservable<T, K> implements Observable<T> {
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    final subscriber =
-        DistinctUntilChangedSubscriber<T, K>(observer, key, compare);
+    final subscriber = DistinctUntilChangedSubscriber<T, K>(
+      observer,
+      key,
+      compare,
+    );
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
@@ -36,7 +40,10 @@ class DistinctUntilChangedObservable<T, K> implements Observable<T> {
 
 class DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
   DistinctUntilChangedSubscriber(
-      Observer<T> super.observer, this.key, this.compare);
+    Observer<T> super.observer,
+    this.key,
+    this.compare,
+  );
 
   final Map1<T, K> key;
   final Predicate2<K, K> compare;

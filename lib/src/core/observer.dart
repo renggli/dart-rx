@@ -21,19 +21,22 @@ abstract class Observer<T> implements Disposable {
     ErrorCallback? error,
     CompleteCallback? complete,
     bool ignoreErrors = false,
-  }) =>
-      BaseObserver<T>(
-          next ?? emptyFunction1,
-          error ?? (ignoreErrors ? emptyFunction2 : defaultErrorHandler),
-          complete ?? emptyFunction0);
+  }) => BaseObserver<T>(
+    next ?? emptyFunction1,
+    error ?? (ignoreErrors ? emptyFunction2 : defaultErrorHandler),
+    complete ?? emptyFunction0,
+  );
 
   /// An observer that is only interested in values.
   ///
   /// By default errors are passed to the [defaultErrorHandler], unless
   /// [ignoreErrors] is set to `true`.
   factory Observer.next(NextCallback<T> next, {bool ignoreErrors = false}) =>
-      BaseObserver<T>(next, ignoreErrors ? emptyFunction2 : defaultErrorHandler,
-          emptyFunction0);
+      BaseObserver<T>(
+        next,
+        ignoreErrors ? emptyFunction2 : defaultErrorHandler,
+        emptyFunction0,
+      );
 
   /// An observer that is only interested in errors.
   factory Observer.error(ErrorCallback error) =>
@@ -43,10 +46,14 @@ abstract class Observer<T> implements Disposable {
   ///
   /// By default all errors are passed to the [defaultErrorHandler], unless
   /// [ignoreErrors] is set to `true`.
-  factory Observer.complete(CompleteCallback complete,
-          {bool ignoreErrors = false}) =>
-      BaseObserver<T>(emptyFunction1,
-          ignoreErrors ? emptyFunction2 : defaultErrorHandler, complete);
+  factory Observer.complete(
+    CompleteCallback complete, {
+    bool ignoreErrors = false,
+  }) => BaseObserver<T>(
+    emptyFunction1,
+    ignoreErrors ? emptyFunction2 : defaultErrorHandler,
+    complete,
+  );
 
   /// Pass a value to the observer.
   void next(T value);

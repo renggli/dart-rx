@@ -71,8 +71,9 @@ void main() {
       test('dynamic dependency', () {
         final depBool = Mutable(false);
         final depTrue = Mutable(1), depFalse = Mutable(2);
-        final ref =
-            Computed(() => depBool.value ? depTrue.value : depFalse.value);
+        final ref = Computed(
+          () => depBool.value ? depTrue.value : depFalse.value,
+        );
         final log = <int>[];
         ref.subscribe(Observer.next(log.add));
         expect(ref.value, 2);
@@ -85,28 +86,43 @@ void main() {
       test('no dependencies', () {
         final ref = Computed(() => throw StateError('Failure'));
         expect(
-            () => ref.value,
-            throwsA(isA<UnhandledError>().having(
-                (err) => err.error,
-                'error',
-                isA<StateError>()
-                    .having((err) => err.message, 'message', 'Failure'))));
+          () => ref.value,
+          throwsA(
+            isA<UnhandledError>().having(
+              (err) => err.error,
+              'error',
+              isA<StateError>().having(
+                (err) => err.message,
+                'message',
+                'Failure',
+              ),
+            ),
+          ),
+        );
       });
       test('single dependency', () {
         final dep = Mutable(1);
-        final ref = Computed(() =>
-            dep.value.isNegative ? throw StateError('Failure') : dep.value);
+        final ref = Computed(
+          () => dep.value.isNegative ? throw StateError('Failure') : dep.value,
+        );
         final log = <int>[];
         ref.subscribe(Observer.next(log.add));
         expect(ref.value, 1);
         dep.value = -1;
         expect(
-            () => ref.value,
-            throwsA(isA<UnhandledError>().having(
-                (err) => err.error,
-                'error',
-                isA<StateError>()
-                    .having((err) => err.message, 'message', 'Failure'))));
+          () => ref.value,
+          throwsA(
+            isA<UnhandledError>().having(
+              (err) => err.error,
+              'error',
+              isA<StateError>().having(
+                (err) => err.message,
+                'message',
+                'Failure',
+              ),
+            ),
+          ),
+        );
         dep.value = 2;
         expect(ref.value, 2);
         expect(log, [2]);

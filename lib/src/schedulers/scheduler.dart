@@ -24,5 +24,7 @@ abstract class Scheduler {
 
   /// Schedules a `callback` to be executed periodically every `duration`.
   Disposable schedulePeriodic(
-      Duration duration, Callback1<Disposable> callback);
+    Duration duration,
+    Callback1<Disposable> callback,
+  );
 }

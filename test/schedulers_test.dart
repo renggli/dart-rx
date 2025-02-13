@@ -10,10 +10,15 @@ final DateTime epoch = DateTime.fromMillisecondsSinceEpoch(0);
 const Duration offset = Duration(milliseconds: isJavaScript ? 200 : 100);
 const Duration accuracy = Duration(milliseconds: isJavaScript ? 100 : 25);
 
-void expectDateTime(DateTime actual, DateTime expected, Duration accuracy,
-    {String prefix = ''}) {
+void expectDateTime(
+  DateTime actual,
+  DateTime expected,
+  Duration accuracy, {
+  String prefix = '',
+}) {
   final duration = actual.difference(expected).abs();
-  final reason = '$prefix\n'
+  final reason =
+      '$prefix\n'
       'Expected: $expected\n'
       '  Actual: $actual\n'
       'Expected: $accuracy\n'
@@ -22,11 +27,18 @@ void expectDateTime(DateTime actual, DateTime expected, Duration accuracy,
 }
 
 void expectDateTimeList(
-    List<DateTime> actual, List<DateTime> expected, Duration accuracy) {
+  List<DateTime> actual,
+  List<DateTime> expected,
+  Duration accuracy,
+) {
   expect(actual.length, expected.length);
   for (var i = 0; i < actual.length; i++) {
-    expectDateTime(actual[i], expected[i], accuracy * (i + 1),
-        prefix: 'Index $i\n');
+    expectDateTime(
+      actual[i],
+      expected[i],
+      accuracy * (i + 1),
+      prefix: 'Index $i\n',
+    );
   }
 }
 
@@ -107,8 +119,13 @@ void main() {
     const tickScheduler = CurrentZoneScheduler();
     const tickDuration = Duration(milliseconds: 1);
     late Disposable ticker;
-    setUp(() => ticker = tickScheduler.schedulePeriodic(
-        tickDuration, (disposable) => scheduler.flush()));
+    setUp(
+      () =>
+          ticker = tickScheduler.schedulePeriodic(
+            tickDuration,
+            (disposable) => scheduler.flush(),
+          ),
+    );
     tearDown(() => ticker.dispose());
     testScheduler(scheduler);
   });
@@ -155,7 +172,9 @@ void testScheduler(Scheduler scheduler) {
     final completer = Completer<DateTime>();
     final expected = scheduler.now.add(offset);
     final subscription = scheduler.scheduleAbsolute(
-        expected, () => completer.complete(scheduler.now));
+      expected,
+      () => completer.complete(scheduler.now),
+    );
     expect(subscription.isDisposed, isFalse);
     final actual = await completer.future;
     expectDateTime(actual, expected, accuracy);
@@ -164,7 +183,9 @@ void testScheduler(Scheduler scheduler) {
     final completer = Completer<DateTime>();
     final expected = scheduler.now.add(offset);
     final subscription = scheduler.scheduleRelative(
-        offset, () => completer.complete(scheduler.now));
+      offset,
+      () => completer.complete(scheduler.now),
+    );
     expect(subscription.isDisposed, isFalse);
     final actual = await completer.future;
     expectDateTime(actual, expected, accuracy);

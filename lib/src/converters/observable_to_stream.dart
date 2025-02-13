@@ -11,11 +11,13 @@ extension ObservableToStream<T> on Observable<T> {
     final disposable = SequentialDisposable();
     final controller = StreamController<T>();
     controller.onListen = () {
-      disposable.current = subscribe(Observer<T>(
-        next: controller.add,
-        error: controller.addError,
-        complete: controller.close,
-      ));
+      disposable.current = subscribe(
+        Observer<T>(
+          next: controller.add,
+          error: controller.addError,
+          complete: controller.close,
+        ),
+      );
     };
     controller.onCancel = disposable.dispose;
     return controller.stream;

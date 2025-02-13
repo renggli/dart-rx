@@ -12,8 +12,8 @@ import 'package:rx/store.dart';
 class State {
   /// Default constructor of the application state.
   State({List<String>? items, int? index})
-      : items = items ?? [],
-        index = max(0, min((items ?? []).length - 1, index ?? 0));
+    : items = items ?? [],
+      index = max(0, min((items ?? []).length - 1, index ?? 0));
 
   /// Copies and modifies the application state.
   State copy({List<String>? items, int? index}) =>
@@ -30,10 +30,14 @@ class State {
 @immutable
 class Operation {
   /// Default constructor of an operation
-  Operation(this.key, this.label, this.action,
-      {Predicate0? isEnabled, Predicate0? isMenu})
-      : isEnabled = isEnabled ?? constantFunction0(true),
-        isMenu = isMenu ?? constantFunction0(true);
+  Operation(
+    this.key,
+    this.label,
+    this.action, {
+    Predicate0? isEnabled,
+    Predicate0? isMenu,
+  }) : isEnabled = isEnabled ?? constantFunction0(true),
+       isMenu = isMenu ?? constantFunction0(true);
 
   /// The key to be pressed to trigger the action.
   final String key;
@@ -61,10 +65,12 @@ final file = File('example/todo.txt');
 State readState() {
   final state = State();
   if (file.existsSync()) {
-    state.items.addAll(file
-        .readAsLinesSync()
-        .map((each) => each.trim())
-        .where((each) => each.isNotEmpty));
+    state.items.addAll(
+      file
+          .readAsLinesSync()
+          .map((each) => each.trim())
+          .where((each) => each.isNotEmpty),
+    );
   }
   return state;
 }
@@ -95,59 +101,45 @@ final operations = [
   Operation(
     'J',
     'Move Up',
-    () => store.update((state) => state.copy(
+    () => store.update(
+      (state) => state.copy(
         items: [...state.items]..swap(state.index, state.index - 1),
-        index: state.index - 1)),
+        index: state.index - 1,
+      ),
+    ),
     isEnabled: () => store.state.index > 0,
     isMenu: constantFunction0(false),
   ),
   Operation(
     'K',
     'Move Down',
-    () => store.update((state) => state.copy(
+    () => store.update(
+      (state) => state.copy(
         items: [...state.items]..swap(state.index, state.index + 1),
-        index: state.index + 1)),
+        index: state.index + 1,
+      ),
+    ),
     isEnabled: () => store.state.index < store.state.items.length - 1,
     isMenu: constantFunction0(false),
   ),
-  Operation(
-    'a',
-    'Add',
-    () {
-      stdout.write('Add: ');
-      final item = stdin.readLineSync();
-      if (item != null) {
-        store.update((state) =>
-            state.copy(items: [...state.items]..insert(state.index, item)));
-      }
-    },
-  ),
-  Operation(
-    'x',
-    'Remove',
-    () {
-      store.update((state) =>
-          state.copy(items: [...state.items]..removeAt(state.index)));
-    },
-    isEnabled: () => store.state.items.isNotEmpty,
-  ),
-  Operation(
-    'u',
-    'Undo',
-    store.undo,
-    isEnabled: () => store.canUndo,
-  ),
-  Operation(
-    'r',
-    'Redo',
-    store.redo,
-    isEnabled: () => store.canRedo,
-  ),
-  Operation(
-    'q',
-    'Quit',
-    () => exit(0),
-  ),
+  Operation('a', 'Add', () {
+    stdout.write('Add: ');
+    final item = stdin.readLineSync();
+    if (item != null) {
+      store.update(
+        (state) =>
+            state.copy(items: [...state.items]..insert(state.index, item)),
+      );
+    }
+  }),
+  Operation('x', 'Remove', () {
+    store.update(
+      (state) => state.copy(items: [...state.items]..removeAt(state.index)),
+    );
+  }, isEnabled: () => store.state.items.isNotEmpty),
+  Operation('u', 'Undo', store.undo, isEnabled: () => store.canUndo),
+  Operation('r', 'Redo', store.redo, isEnabled: () => store.canRedo),
+  Operation('q', 'Quit', () => exit(0)),
 ];
 
 void main() {
@@ -164,15 +156,18 @@ void main() {
     if (store.state.items.isNotEmpty) {
       for (var i = 0; i < store.state.items.length; i++) {
         stdout.writeln(
-            '${store.state.index == i ? '>' : ' '} ${store.state.items[i]}');
+          '${store.state.index == i ? '>' : ' '} ${store.state.items[i]}',
+        );
       }
     } else {
       stdout.writeln('(no items)');
     }
     stdout.writeln();
-    stdout.writeln(operations
-        .where((operation) => operation.isEnabled() && operation.isMenu())
-        .join(''));
+    stdout.writeln(
+      operations
+          .where((operation) => operation.isEnabled() && operation.isMenu())
+          .join(''),
+    );
 
     // Read the operation from the input.
     stdin.lineMode = stdin.echoMode = false;

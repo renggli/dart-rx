@@ -5,10 +5,15 @@ import '../schedulers/immediate.dart';
 import '../schedulers/scheduler.dart';
 
 /// An [Observable] that emits no items and immediately throws an error.
-Observable<Never> throwError(Object error,
-        {StackTrace? stackTrace, Scheduler? scheduler}) =>
-    ThrowErrorObservable(error, stackTrace ?? StackTrace.current,
-        scheduler ?? const ImmediateScheduler());
+Observable<Never> throwError(
+  Object error, {
+  StackTrace? stackTrace,
+  Scheduler? scheduler,
+}) => ThrowErrorObservable(
+  error,
+  stackTrace ?? StackTrace.current,
+  scheduler ?? const ImmediateScheduler(),
+);
 
 class ThrowErrorObservable implements Observable<Never> {
   const ThrowErrorObservable(this.error, this.stackTrace, this.scheduler);

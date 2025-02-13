@@ -24,17 +24,22 @@ class DistinctObservable<T> implements Observable<T> {
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    final subscriber =
-        DistinctSubscriber<T>(observer, equalsFunction, hashCodeFunction);
+    final subscriber = DistinctSubscriber<T>(
+      observer,
+      equalsFunction,
+      hashCodeFunction,
+    );
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
 }
 
 class DistinctSubscriber<T> extends Subscriber<T> {
-  DistinctSubscriber(Observer<T> super.observer,
-      Predicate2<T, T>? equalsFunction, Map1<T, int>? hashCodeFunction)
-      : values = HashSet(equals: equalsFunction, hashCode: hashCodeFunction);
+  DistinctSubscriber(
+    Observer<T> super.observer,
+    Predicate2<T, T>? equalsFunction,
+    Map1<T, int>? hashCodeFunction,
+  ) : values = HashSet(equals: equalsFunction, hashCode: hashCodeFunction);
 
   final Set<T> values;
 

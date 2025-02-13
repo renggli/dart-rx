@@ -42,7 +42,10 @@ sealed class Event<T> {
   /// Maps the evaluation of the 2-argument callback to an event.
   // ignore: prefer_constructors_over_static_methods
   static Event<R> map2<R, T1, T2>(
-      Map2<T1, T2, R> callback, T1 value1, T2 value2) {
+    Map2<T1, T2, R> callback,
+    T1 value1,
+    T2 value2,
+  ) {
     try {
       return Event<R>.next(callback(value1, value2));
     } catch (error, stackTrace) {

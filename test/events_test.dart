@@ -19,11 +19,13 @@ void main() {
     });
     test('observe', () {
       late final int seenValue;
-      event.observe(Observer(
-        next: (value) => seenValue = value,
-        error: (error, stackTrace) => fail('unexpected error'),
-        complete: () => fail('unexpected complete'),
-      ));
+      event.observe(
+        Observer(
+          next: (value) => seenValue = value,
+          error: (error, stackTrace) => fail('unexpected error'),
+          complete: () => fail('unexpected complete'),
+        ),
+      );
       expect(seenValue, 42);
     });
     test('equals', () {
@@ -57,14 +59,16 @@ void main() {
     test('observe', () {
       late final Object seenError;
       late final StackTrace seenStackTrace;
-      event.observe(Observer(
-        next: (value) => fail('unexpected next'),
-        error: (error, stackTrace) {
-          seenError = error;
-          seenStackTrace = stackTrace;
-        },
-        complete: () => fail('unexpected complete'),
-      ));
+      event.observe(
+        Observer(
+          next: (value) => fail('unexpected next'),
+          error: (error, stackTrace) {
+            seenError = error;
+            seenStackTrace = stackTrace;
+          },
+          complete: () => fail('unexpected complete'),
+        ),
+      );
       expect(seenError, eventError);
       expect(seenStackTrace, eventStackTrace);
     });
@@ -73,10 +77,14 @@ void main() {
       expect(event, isNot(Event<String>.error(Error(), StackTrace.empty)));
     });
     test('hashCode', () {
-      expect(event.hashCode,
-          Event<String>.error(eventError, eventStackTrace).hashCode);
-      expect(event.hashCode,
-          isNot(Event<String>.error(Error(), StackTrace.empty).hashCode));
+      expect(
+        event.hashCode,
+        Event<String>.error(eventError, eventStackTrace).hashCode,
+      );
+      expect(
+        event.hashCode,
+        isNot(Event<String>.error(Error(), StackTrace.empty).hashCode),
+      );
     });
     test('toString', () {
       expect(event.toString(), startsWith('ErrorEvent<int>'));
@@ -98,11 +106,13 @@ void main() {
     });
     test('observe', () {
       late final bool seenComplete;
-      event.observe(Observer(
-        next: (value) => fail('unexpected next'),
-        error: (error, stackTrace) => fail('unexpected error'),
-        complete: () => seenComplete = true,
-      ));
+      event.observe(
+        Observer(
+          next: (value) => fail('unexpected next'),
+          error: (error, stackTrace) => fail('unexpected error'),
+          complete: () => seenComplete = true,
+        ),
+      );
       expect(seenComplete, isTrue);
     });
     test('equals', () {

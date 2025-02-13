@@ -18,10 +18,11 @@ class ValidatingStore<S> implements Store<S> {
   S get state {
     if (isUpdating) {
       throw StateError(
-          'You may not call `Store.state` while updating. The update function '
-          'has already received the state as an argument. Pass it down the '
-          'call chain instead of reading a possibly outdated version from the '
-          'store.');
+        'You may not call `Store.state` while updating. The update function '
+        'has already received the state as an argument. Pass it down the '
+        'call chain instead of reading a possibly outdated version from the '
+        'store.',
+      );
     }
     return delegate.state;
   }
@@ -30,9 +31,10 @@ class ValidatingStore<S> implements Store<S> {
   S update(Updater<S> updater) {
     if (isUpdating) {
       throw StateError(
-          'You may not call `Store.update` while updating. The update function '
-          'has already received the state as an argument. Pass it down the '
-          'call chain to manipulate it.');
+        'You may not call `Store.update` while updating. The update function '
+        'has already received the state as an argument. Pass it down the '
+        'call chain to manipulate it.',
+      );
     }
     isUpdating = true;
     try {

@@ -36,9 +36,12 @@ class TakeUntilSubscriber<T, R> extends Subscriber<T>
   void notifyNext(Disposable disposable, void state, R value) => doComplete();
 
   @override
-  void notifyError(Disposable disposable, void state, Object error,
-          StackTrace stackTrace) =>
-      doError(error, stackTrace);
+  void notifyError(
+    Disposable disposable,
+    void state,
+    Object error,
+    StackTrace stackTrace,
+  ) => doError(error, stackTrace);
 
   @override
   void notifyComplete(Disposable disposable, void state) {}

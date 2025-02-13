@@ -34,7 +34,9 @@ class ImmediateScheduler extends Scheduler {
 
   @override
   Disposable schedulePeriodic(
-      Duration duration, Callback1<Disposable> callback) {
+    Duration duration,
+    Callback1<Disposable> callback,
+  ) {
     final subscription = StatefulDisposable();
     do {
       _busyWaitUntil(now.add(duration));

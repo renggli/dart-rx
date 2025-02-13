@@ -68,20 +68,20 @@ class HistoryStore<S> implements Store<S> {
 
   @override
   S update(Updater<S> updater) => delegate.update((state) {
-        // Only remember the current state if it is not filtered.
-        if (filter == null || !filter!(state)) {
-          _past.addLast(state);
-          // Limit the number of history items to remember.
-          if (limit != null) {
-            while (limit! < _past.length) {
-              _past.removeFirst();
-            }
-          }
+    // Only remember the current state if it is not filtered.
+    if (filter == null || !filter!(state)) {
+      _past.addLast(state);
+      // Limit the number of history items to remember.
+      if (limit != null) {
+        while (limit! < _past.length) {
+          _past.removeFirst();
         }
-        // Erase all future states.
-        _future.clear();
-        return updater(state);
-      });
+      }
+    }
+    // Erase all future states.
+    _future.clear();
+    return updater(state);
+  });
 
   @override
   Disposable subscribe(Observer<S> observer) => delegate.subscribe(observer);

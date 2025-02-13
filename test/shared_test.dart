@@ -14,12 +14,18 @@ void main() {
       replaceDefaultScheduler(const ImmediateScheduler());
       final observer = Observer<int>();
       expect(
-          () => observer.error(error, stackTrace),
-          throwsA(isA<UnhandledError>()
+        () => observer.error(error, stackTrace),
+        throwsA(
+          isA<UnhandledError>()
               .having((value) => value.error, 'error', error)
               .having((value) => value.stackTrace, 'stackTrace', stackTrace)
-              .having((value) => value.toString(), 'toString',
-                  startsWith('UnhandledError'))));
+              .having(
+                (value) => value.toString(),
+                'toString',
+                startsWith('UnhandledError'),
+              ),
+        ),
+      );
     });
     test('custom', () {
       Object? observedError;

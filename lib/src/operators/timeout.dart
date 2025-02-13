@@ -19,14 +19,23 @@ extension TimeoutOperator<T> on Observable<T> {
     Duration? between,
     Duration? total,
     Scheduler? scheduler,
-  }) =>
-      TimeoutObservable<T>(
-          this, first, between, total, scheduler ?? defaultScheduler);
+  }) => TimeoutObservable<T>(
+    this,
+    first,
+    between,
+    total,
+    scheduler ?? defaultScheduler,
+  );
 }
 
 class TimeoutObservable<T> implements Observable<T> {
   TimeoutObservable(
-      this.delegate, this.first, this.between, this.total, this.scheduler);
+    this.delegate,
+    this.first,
+    this.between,
+    this.total,
+    this.scheduler,
+  );
 
   final Observable<T> delegate;
   final Duration? first, between, total;
@@ -34,16 +43,26 @@ class TimeoutObservable<T> implements Observable<T> {
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    final subscriber =
-        TimeoutSubscriber<T>(observer, first, between, total, scheduler);
+    final subscriber = TimeoutSubscriber<T>(
+      observer,
+      first,
+      between,
+      total,
+      scheduler,
+    );
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
 }
 
 class TimeoutSubscriber<T> extends Subscriber<T> {
-  TimeoutSubscriber(Observer<T> super.observer, this.first, this.between,
-      this.total, this.scheduler) {
+  TimeoutSubscriber(
+    Observer<T> super.observer,
+    this.first,
+    this.between,
+    this.total,
+    this.scheduler,
+  ) {
     if (first != null) {
       nextTimer = scheduler.scheduleRelative(first!, onTimeout);
     }

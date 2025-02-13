@@ -33,7 +33,7 @@ class RefCountObservable<T> implements Observable<T> {
           subscription.dispose();
           subscription = const DisposedDisposable();
         }
-      })
+      }),
     ]);
   }
 }

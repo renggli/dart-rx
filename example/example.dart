@@ -7,16 +7,16 @@ import 'package:rx/core.dart';
 import 'package:rx/operators.dart';
 
 Observer<T> printObserver<T>(String name) => Observer(
-      next: (value) => stdout.writeln('$name.next($value)'),
-      error: (error, stackTrace) => stdout.writeln('$name.error($error)'),
-      complete: () => stdout.writeln('$name.complete()'),
-    );
+  next: (value) => stdout.writeln('$name.next($value)'),
+  error: (error, stackTrace) => stdout.writeln('$name.error($error)'),
+  complete: () => stdout.writeln('$name.complete()'),
+);
 
 void main() {
   // concat
   final concat = rx.concat([
     [1, 2].toObservable(),
-    rx.just(3)
+    rx.just(3),
   ]);
   concat.subscribe(printObserver('concat'));
 
@@ -55,7 +55,7 @@ void main() {
   // merge
   final merge = rx.merge([
     rx.just(1),
-    [2, 3].toObservable()
+    [2, 3].toObservable(),
   ]);
   merge.subscribe(printObserver('merge'));
 
@@ -95,8 +95,9 @@ void main() {
 
   // timer
   final obs = rx.timer(
-      delay: const Duration(seconds: 2),
-      period: const Duration(milliseconds: 500));
+    delay: const Duration(seconds: 2),
+    period: const Duration(milliseconds: 500),
+  );
   final subs1 = obs.subscribe(printObserver('first'));
   final subs2 = obs.subscribe(printObserver('second'));
   rx

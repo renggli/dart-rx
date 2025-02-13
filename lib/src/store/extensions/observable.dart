@@ -13,16 +13,19 @@ extension ObservableStoreExtension<S> on Store<S> {
     S Function(S state, Object error, StackTrace stackTrace)? error,
     S Function(S state)? complete,
     bool ignoreErrors = false,
-  }) =>
-      observable.subscribe(Observer(
-        next: next == null
-            ? null
-            : (value) => update((state) => next(state, value)),
-        error: error == null
-            ? null
-            : (exception, stackTrace) =>
-                update((state) => error(state, exception, stackTrace)),
-        complete: complete == null ? null : () => update(complete),
-        ignoreErrors: ignoreErrors,
-      ));
+  }) => observable.subscribe(
+    Observer(
+      next:
+          next == null
+              ? null
+              : (value) => update((state) => next(state, value)),
+      error:
+          error == null
+              ? null
+              : (exception, stackTrace) =>
+                  update((state) => error(state, exception, stackTrace)),
+      complete: complete == null ? null : () => update(complete),
+      ignoreErrors: ignoreErrors,
+    ),
+  );
 }

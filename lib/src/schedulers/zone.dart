@@ -32,7 +32,8 @@ abstract class ZoneScheduler extends Scheduler {
 
   void _scheduleIteration(Disposable subscription, Predicate0 callback) {
     zone.scheduleMicrotask(
-        () => _scheduleIterationExecute(subscription, callback));
+      () => _scheduleIterationExecute(subscription, callback),
+    );
   }
 
   void _scheduleIterationExecute(Disposable subscription, Predicate0 callback) {
@@ -54,10 +55,13 @@ abstract class ZoneScheduler extends Scheduler {
 
   @override
   Disposable schedulePeriodic(
-      Duration duration, Callback1<Disposable> callback) {
+    Duration duration,
+    Callback1<Disposable> callback,
+  ) {
     late TimerDisposable subscription;
     return subscription = TimerDisposable(
-        zone.createPeriodicTimer(duration, (timer) => callback(subscription)));
+      zone.createPeriodicTimer(duration, (timer) => callback(subscription)),
+    );
   }
 }
 

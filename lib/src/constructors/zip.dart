@@ -6,8 +6,10 @@ import '../schedulers/scheduler.dart';
 
 /// Combines a list of [Observable] to an [Observable] whose values are
 /// calculated from the next value of each of its inputs.
-Observable<List<T>> zip<T>(Iterable<Observable<T>> iterable,
-        {Scheduler? scheduler}) =>
+Observable<List<T>> zip<T>(
+  Iterable<Observable<T>> iterable, {
+  Scheduler? scheduler,
+}) =>
     iterable
         .toObservable(scheduler: scheduler ?? const ImmediateScheduler())
         .zip();

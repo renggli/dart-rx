@@ -10,23 +10,35 @@ void main() {
       DisposedError.checkNotDisposed(disposable);
       disposable.dispose();
       expect(
-          () => DisposedError.checkNotDisposed(disposable),
-          throwsA(isA<DisposedError>().having(
-              (value) => value.toString(), 'toString', 'DisposedError')));
+        () => DisposedError.checkNotDisposed(disposable),
+        throwsA(
+          isA<DisposedError>().having(
+            (value) => value.toString(),
+            'toString',
+            'DisposedError',
+          ),
+        ),
+      );
     });
     test('DisposeError', () {
       DisposeError.checkList([]);
       final innerErrors = [ArgumentError(), UnimplementedError()];
       final errors = [Error(), DisposeError(innerErrors)];
       expect(
-          () => DisposeError.checkList(errors),
-          throwsA(
-            isA<DisposeError>().having((value) => value.errors, 'errors', [
-              errors[0],
-              ...innerErrors
-            ]).having((value) => value.toString(), 'toString()',
-                startsWith('DisposeError')),
-          ));
+        () => DisposeError.checkList(errors),
+        throwsA(
+          isA<DisposeError>()
+              .having((value) => value.errors, 'errors', [
+                errors[0],
+                ...innerErrors,
+              ])
+              .having(
+                (value) => value.toString(),
+                'toString()',
+                startsWith('DisposeError'),
+              ),
+        ),
+      );
     });
   });
   group('action', () {
@@ -90,10 +102,7 @@ void main() {
     });
     test('initialization', () {
       final inner = StatefulDisposable();
-      final outer = CompositeDisposable([
-        inner,
-        const DisposedDisposable(),
-      ]);
+      final outer = CompositeDisposable([inner, const DisposedDisposable()]);
       expect(outer.disposables, [inner]);
       expect(outer.isDisposed, isFalse);
       expect(inner.isDisposed, isFalse);

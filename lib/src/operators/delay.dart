@@ -21,7 +21,8 @@ extension DelayOperator<T> on Observable<T> {
   /// Delays the emission of items from this [Observable] by a given timeout.
   Observable<T> delayTime(Duration duration, {Scheduler? scheduler}) =>
       delay<int>(
-          constantFunction1(timer(delay: duration, scheduler: scheduler)));
+        constantFunction1(timer(delay: duration, scheduler: scheduler)),
+      );
 }
 
 class DelayObservable<T, R> implements Observable<T> {
@@ -71,7 +72,11 @@ class DelaySubscriber<T, R> extends Subscriber<T> implements InnerEvents<R, T> {
 
   @override
   void notifyError(
-      Disposable disposable, T state, Object error, StackTrace stackTrace) {
+    Disposable disposable,
+    T state,
+    Object error,
+    StackTrace stackTrace,
+  ) {
     doError(error, stackTrace);
   }
 

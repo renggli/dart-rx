@@ -14,18 +14,28 @@ extension BufferOperator<T> on Observable<T> {
   /// - the buffer reaches [maxLength], or
   /// - the buffer reaches [maxAge].
   ///
-  Observable<List<T>> buffer<R>(
-          {Scheduler? scheduler,
-          Observable<R>? trigger,
-          int? maxLength,
-          Duration? maxAge}) =>
-      BufferObservable<T, R>(
-          this, scheduler ?? defaultScheduler, trigger, maxLength, maxAge);
+  Observable<List<T>> buffer<R>({
+    Scheduler? scheduler,
+    Observable<R>? trigger,
+    int? maxLength,
+    Duration? maxAge,
+  }) => BufferObservable<T, R>(
+    this,
+    scheduler ?? defaultScheduler,
+    trigger,
+    maxLength,
+    maxAge,
+  );
 }
 
 class BufferObservable<T, R> implements Observable<List<T>> {
   BufferObservable(
-      this.delegate, this.scheduler, this.trigger, this.maxLength, this.maxAge);
+    this.delegate,
+    this.scheduler,
+    this.trigger,
+    this.maxLength,
+    this.maxAge,
+  );
 
   final Observable<T> delegate;
   final Scheduler scheduler;
@@ -35,8 +45,13 @@ class BufferObservable<T, R> implements Observable<List<T>> {
 
   @override
   Disposable subscribe(Observer<List<T>> observer) {
-    final subscriber =
-        BufferSubscriber<T, R>(observer, scheduler, trigger, maxLength, maxAge);
+    final subscriber = BufferSubscriber<T, R>(
+      observer,
+      scheduler,
+      trigger,
+      maxLength,
+      maxAge,
+    );
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
@@ -44,8 +59,13 @@ class BufferObservable<T, R> implements Observable<List<T>> {
 
 class BufferSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  BufferSubscriber(Observer<List<T>> super.observer, this.scheduler,
-      Observable<R>? trigger, this.maxLength, this.maxAge) {
+  BufferSubscriber(
+    Observer<List<T>> super.observer,
+    this.scheduler,
+    Observable<R>? trigger,
+    this.maxLength,
+    this.maxAge,
+  ) {
     reset();
     if (trigger != null) {
       add(InnerObserver<R, void>(this, trigger, null));
@@ -78,9 +98,12 @@ class BufferSubscriber<T, R> extends Subscriber<T>
   void notifyNext(Disposable disposable, void state, R value) => flush();
 
   @override
-  void notifyError(Disposable disposable, void state, Object error,
-          StackTrace stackTrace) =>
-      doError(error, stackTrace);
+  void notifyError(
+    Disposable disposable,
+    void state,
+    Object error,
+    StackTrace stackTrace,
+  ) => doError(error, stackTrace);
 
   @override
   void notifyComplete(Disposable disposable, void state) {}

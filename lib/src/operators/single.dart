@@ -12,9 +12,9 @@ extension SingleOperator<T> on Observable<T> {
   /// there was no element, or emits [TooManyError] if there was more than 1
   /// element.
   Observable<T> single() => singleOrElse(
-        tooFew: throwFunction0(TooFewError()),
-        tooMany: throwFunction0(TooManyError()),
-      );
+    tooFew: throwFunction0(TooFewError()),
+    tooMany: throwFunction0(TooManyError()),
+  );
 
   /// Emits the single element of this [Observable], or emits `tooFew` if there
   /// was no element, or emits `tooMany` if there was more than 1 element.
@@ -27,9 +27,10 @@ extension SingleOperator<T> on Observable<T> {
   /// Emits the single element of this [Observable], or evaluates the `tooFew`
   /// callback if there was no element, or evaluates the `tooMany` callback if
   /// there was more than 1 element.
-  Observable<T> singleOrElse(
-          {required Map0<T> tooFew, required Map0<T> tooMany}) =>
-      SingleObservable<T>(this, tooFew, tooMany);
+  Observable<T> singleOrElse({
+    required Map0<T> tooFew,
+    required Map0<T> tooMany,
+  }) => SingleObservable<T>(this, tooFew, tooMany);
 }
 
 class SingleObservable<T> implements Observable<T> {
@@ -41,8 +42,11 @@ class SingleObservable<T> implements Observable<T> {
 
   @override
   Disposable subscribe(Observer<T> observer) {
-    final subscriber =
-        SingleSubscriber<T>(observer, tooFewCallback, tooManyCallback);
+    final subscriber = SingleSubscriber<T>(
+      observer,
+      tooFewCallback,
+      tooManyCallback,
+    );
     subscriber.add(delegate.subscribe(subscriber));
     return subscriber;
   }
@@ -50,7 +54,10 @@ class SingleObservable<T> implements Observable<T> {
 
 class SingleSubscriber<T> extends Subscriber<T> {
   SingleSubscriber(
-      Observer<T> super.destination, this.tooFewCallback, this.tooManyCallback);
+    Observer<T> super.destination,
+    this.tooFewCallback,
+    this.tooManyCallback,
+  );
 
   final Map0<T> tooFewCallback;
   final Map0<T> tooManyCallback;

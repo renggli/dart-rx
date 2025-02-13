@@ -16,7 +16,7 @@ class JustObservable<T> implements Observable<T> {
 
   @override
   Disposable subscribe(Observer<T> observer) => scheduler.schedule(() {
-        observer.next(value);
-        observer.complete();
-      });
+    observer.next(value);
+    observer.complete();
+  });
 }

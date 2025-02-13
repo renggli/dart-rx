@@ -9,9 +9,10 @@ import 'empty.dart';
 
 /// Waits for all passed [Observable] to complete and then it will emit an
 /// list with last values from corresponding observables.
-Observable<List<T>> forkJoin<T>(List<Observable<T>> sources) => sources.isEmpty
-    ? empty() as Observable<List<T>>
-    : ForkJoinObservable<T>(sources);
+Observable<List<T>> forkJoin<T>(List<Observable<T>> sources) =>
+    sources.isEmpty
+        ? empty() as Observable<List<T>>
+        : ForkJoinObservable<T>(sources);
 
 class ForkJoinObservable<T> implements Observable<List<T>> {
   ForkJoinObservable(this.observables);
@@ -26,9 +27,10 @@ class ForkJoinObservable<T> implements Observable<List<T>> {
 class ForkJoinSubscriber<T> extends Subscriber<List<T>>
     implements InnerEvents<T, int> {
   ForkJoinSubscriber(
-      Observer<List<T>> super.observer, List<Observable<T>> observables)
-      : hasValue = BitList.filled(observables.length, false),
-        values = List.filled(observables.length, null, growable: false) {
+    Observer<List<T>> super.observer,
+    List<Observable<T>> observables,
+  ) : hasValue = BitList.filled(observables.length, false),
+      values = List.filled(observables.length, null, growable: false) {
     for (var i = 0; i < observables.length; i++) {
       add(InnerObserver<T, int>(this, observables[i], i));
     }
@@ -49,9 +51,12 @@ class ForkJoinSubscriber<T> extends Subscriber<List<T>>
   }
 
   @override
-  void notifyError(Disposable disposable, int index, Object error,
-          StackTrace stackTrace) =>
-      doError(error, stackTrace);
+  void notifyError(
+    Disposable disposable,
+    int index,
+    Object error,
+    StackTrace stackTrace,
+  ) => doError(error, stackTrace);
 
   @override
   void notifyComplete(Disposable disposable, int index) {

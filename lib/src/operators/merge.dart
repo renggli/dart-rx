@@ -20,16 +20,18 @@ extension MergeAllOperator<T> on Observable<Observable<T>> {
 extension MergeMapOperator<T> on Observable<T> {
   /// For each value of this [Observable], merge all values from the single
   /// higher-order `observable`. Subscribe to at most `concurrent` sources.
-  Observable<R> mergeMapTo<R>(Observable<R> observable,
-          {int concurrent = maxInteger}) =>
-      mergeMap<R>(constantFunction1(observable), concurrent: concurrent);
+  Observable<R> mergeMapTo<R>(
+    Observable<R> observable, {
+    int concurrent = maxInteger,
+  }) => mergeMap<R>(constantFunction1(observable), concurrent: concurrent);
 
   /// For each value of this [Observable], transform that value to a
   /// higher-order observable with the provided `project` function and merge
   /// its emitted values. Subscribe to at most `concurrent` sources.
-  Observable<R> mergeMap<R>(Map1<T, Observable<R>> project,
-          {int concurrent = maxInteger}) =>
-      MergeObservable<T, R>(this, project, concurrent);
+  Observable<R> mergeMap<R>(
+    Map1<T, Observable<R>> project, {
+    int concurrent = maxInteger,
+  }) => MergeObservable<T, R>(this, project, concurrent);
 }
 
 class MergeObservable<T, R> implements Observable<R> {
@@ -87,9 +89,12 @@ class MergeSubscriber<T, R> extends Subscriber<T>
   void notifyNext(Disposable disposable, void state, R value) => doNext(value);
 
   @override
-  void notifyError(Disposable disposable, void state, Object error,
-          StackTrace stackTrace) =>
-      doError(error, stackTrace);
+  void notifyError(
+    Disposable disposable,
+    void state,
+    Object error,
+    StackTrace stackTrace,
+  ) => doError(error, stackTrace);
 
   @override
   void notifyComplete(Disposable disposable, void state) {

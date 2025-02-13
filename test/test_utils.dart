@@ -22,7 +22,7 @@ final Matcher throwsUnhandledError = throwsA(isA<UnhandledError>());
 
 /// Observer that fails all calls.
 Observer<T> createFailingObserver<T>() => Observer<T>(
-      next: (value) => fail('Unepxected next: $value.'),
-      error: (error, stackTrace) => fail('Unepxected error: $error.'),
-      complete: () => fail('Unexpected complete.'),
-    );
+  next: (value) => fail('Unepxected next: $value.'),
+  error: (error, stackTrace) => fail('Unepxected error: $error.'),
+  complete: () => fail('Unexpected complete.'),
+);

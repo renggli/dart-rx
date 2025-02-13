@@ -13,10 +13,13 @@ void sharedStoreTests(Store<T> Function<T>(T initialValue) createStore) {
   });
   test('single update', () {
     final store = createStore<int>(0);
-    expect(store.update((state) {
-      expect(state, 0);
-      return state + 1;
-    }), 1);
+    expect(
+      store.update((state) {
+        expect(state, 0);
+        return state + 1;
+      }),
+      1,
+    );
   });
   test('multiple updates', () {
     final store = createStore<int>(0);
@@ -138,8 +141,10 @@ void main() {
     test('onValue', () async {
       final store = Store<List<String>>([]);
       final completer = Completer<int>();
-      final future = store.addFuture(completer.future,
-          onValue: (state, value) => [...state, 'Value: $value']);
+      final future = store.addFuture(
+        completer.future,
+        onValue: (state, value) => [...state, 'Value: $value'],
+      );
       expect(store.state, isEmpty);
       completer.complete(42);
       await future;
@@ -162,8 +167,10 @@ void main() {
     test('next', () {
       final store = Store<List<String>>([]);
       final subject = Subject<int>();
-      store.addObservable(subject,
-          next: (state, value) => [...state, 'Value: $value']);
+      store.addObservable(
+        subject,
+        next: (state, value) => [...state, 'Value: $value'],
+      );
       expect(store.state, isEmpty);
       subject
         ..next(42)
@@ -174,8 +181,10 @@ void main() {
     test('error', () {
       final store = Store<List<String>>([]);
       final subject = Subject<int>();
-      store.addObservable<int>(subject,
-          error: (state, error, stackTrace) => [...state, 'Error: $error']);
+      store.addObservable<int>(
+        subject,
+        error: (state, error, stackTrace) => [...state, 'Error: $error'],
+      );
       expect(store.state, isEmpty);
       subject
         ..next(42)
@@ -185,8 +194,10 @@ void main() {
     test('complete', () {
       final store = Store<List<String>>([]);
       final subject = Subject<int>();
-      store.addObservable<int>(subject,
-          complete: (state) => [...state, 'Complete']);
+      store.addObservable<int>(
+        subject,
+        complete: (state) => [...state, 'Complete'],
+      );
       expect(store.state, isEmpty);
       subject
         ..next(42)
@@ -198,8 +209,10 @@ void main() {
     test('next', () async {
       final store = Store<List<String>>([]);
       final controller = StreamController<int>();
-      store.addStream(controller.stream,
-          onData: (state, value) => [...state, 'Value: $value']);
+      store.addStream(
+        controller.stream,
+        onData: (state, value) => [...state, 'Value: $value'],
+      );
       expect(store.state, isEmpty);
       controller
         ..add(42)
@@ -211,8 +224,10 @@ void main() {
     test('error', () async {
       final store = Store<List<String>>([]);
       final controller = StreamController<int>();
-      store.addStream(controller.stream,
-          onError: (state, error, stackTrace) => [...state, 'Error: $error']);
+      store.addStream(
+        controller.stream,
+        onError: (state, error, stackTrace) => [...state, 'Error: $error'],
+      );
       expect(store.state, isEmpty);
       controller
         ..add(42)
@@ -224,8 +239,10 @@ void main() {
     test('complete', () async {
       final store = Store<List<String>>([]);
       final controller = StreamController<int>();
-      store.addStream(controller.stream,
-          onDone: (state) => [...state, 'Complete']);
+      store.addStream(
+        controller.stream,
+        onDone: (state) => [...state, 'Complete'],
+      );
       expect(store.state, isEmpty);
       controller
         ..add(42)

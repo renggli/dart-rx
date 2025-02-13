@@ -17,9 +17,9 @@ class DisposedError extends Error {
 /// resources.
 class DisposeError extends Error {
   DisposeError(List<Object> errors)
-      : errors = errors
-            .expand((error) => error is DisposeError ? error.errors : [error])
-            .toList(growable: false);
+    : errors = errors
+          .expand((error) => error is DisposeError ? error.errors : [error])
+          .toList(growable: false);
 
   static void checkList(List<Object> errors) {
     if (errors.isNotEmpty) {

@@ -12,7 +12,9 @@ class ColdObservable<T> extends TestObservable<T> {
     for (final event in sequence.events.whereType<WrappedEvent<T>>()) {
       final timestamp = scheduler.now.add(scheduler.stepDuration * event.index);
       scheduler.scheduleAbsolute(
-          timestamp, () => event.event.observe(subscriber));
+        timestamp,
+        () => event.event.observe(subscriber),
+      );
     }
     return subscriber;
   }
