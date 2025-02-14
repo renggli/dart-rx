@@ -808,10 +808,10 @@ void main() {
     test('ordering on error', () {
       final events = <String>[];
       throwError(ArgumentError())
-          .tap(Observer.error((_, __) => events.add('before')))
+          .tap(Observer.error((_, _) => events.add('before')))
           .finalize(() => events.add('finalize'))
-          .tap(Observer.error((_, __) => events.add('after')))
-          .subscribe(Observer.error((_, __) => events.add('subscribe')));
+          .tap(Observer.error((_, _) => events.add('after')))
+          .subscribe(Observer.error((_, _) => events.add('subscribe')));
       expect(events, ['before', 'after', 'subscribe', 'finalize']);
     });
     test('ordering on disposal', () {
