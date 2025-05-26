@@ -66,8 +66,9 @@ void main() {
       );
     });
     test('completes with error', () {
-      final actual =
-          Stream.fromFuture(Future<String>.error('Error')).toObservable();
+      final actual = Stream.fromFuture(
+        Future<String>.error('Error'),
+      ).toObservable();
       actual.subscribe(
         Observer(
           next: (value) => fail('No value expected'),
@@ -100,12 +101,11 @@ void main() {
       expect(actual, completion(42));
     });
     test('multiple values', () {
-      final actual =
-          [
-            1,
-            2,
-            3,
-          ].toObservable(scheduler: const ImmediateScheduler()).toFuture();
+      final actual = [
+        1,
+        2,
+        3,
+      ].toObservable(scheduler: const ImmediateScheduler()).toFuture();
       expect(actual, completion(1));
     });
     test('immediate error', () {
@@ -123,12 +123,11 @@ void main() {
       expect(actual, emitsInOrder(<int>[42]));
     });
     test('multiple values', () {
-      final actual =
-          [
-            1,
-            2,
-            3,
-          ].toObservable(scheduler: const ImmediateScheduler()).toStream();
+      final actual = [
+        1,
+        2,
+        3,
+      ].toObservable(scheduler: const ImmediateScheduler()).toStream();
       expect(actual, emitsInOrder(<int>[1, 2, 3]));
     });
     test('immediate error', () {

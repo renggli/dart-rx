@@ -15,15 +15,13 @@ extension ObservableStoreExtension<S> on Store<S> {
     bool ignoreErrors = false,
   }) => observable.subscribe(
     Observer(
-      next:
-          next == null
-              ? null
-              : (value) => update((state) => next(state, value)),
-      error:
-          error == null
-              ? null
-              : (exception, stackTrace) =>
-                  update((state) => error(state, exception, stackTrace)),
+      next: next == null
+          ? null
+          : (value) => update((state) => next(state, value)),
+      error: error == null
+          ? null
+          : (exception, stackTrace) =>
+                update((state) => error(state, exception, stackTrace)),
       complete: complete == null ? null : () => update(complete),
       ignoreErrors: ignoreErrors,
     ),

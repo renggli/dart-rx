@@ -18,8 +18,7 @@ class TestSubscriber<T> extends Subscriber<T> {
   DateTime get subscriptionTimestamp => _subscriptionTimestamp;
 
   /// Timestamp when the observable was unsubscribed from.
-  DateTime get unsubscriptionTimestamp =>
-      _unsubscriptionTimestamp == null
-          ? throw StateError('Subscriber is not disposed')
-          : _unsubscriptionTimestamp!;
+  DateTime get unsubscriptionTimestamp => _unsubscriptionTimestamp == null
+      ? throw StateError('Subscriber is not disposed')
+      : _unsubscriptionTimestamp!;
 }

@@ -14,11 +14,10 @@ extension StreamStoreExtension<S> on Store<S> {
     bool? cancelOnError,
   }) => stream.listen(
     onData == null ? null : (event) => update((state) => onData(state, event)),
-    onError:
-        onError == null
-            ? null
-            : (Object error, StackTrace stackTrace) =>
-                update((state) => onError(state, error, stackTrace)),
+    onError: onError == null
+        ? null
+        : (Object error, StackTrace stackTrace) =>
+              update((state) => onError(state, error, stackTrace)),
     onDone: onDone == null ? null : () => update(onDone),
     cancelOnError: cancelOnError,
   );

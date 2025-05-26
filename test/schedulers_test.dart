@@ -109,8 +109,10 @@ void main() {
         }
       });
       expect(subscription.isDisposed, isTrue);
-      final expected =
-          iterate<DateTime>(start, (prev) => prev.add(offset)).take(5).toList();
+      final expected = iterate<DateTime>(
+        start,
+        (prev) => prev.add(offset),
+      ).take(5).toList();
       expectDateTimeList(expected, actual, accuracy);
     });
   });
@@ -120,11 +122,10 @@ void main() {
     const tickDuration = Duration(milliseconds: 1);
     late Disposable ticker;
     setUp(
-      () =>
-          ticker = tickScheduler.schedulePeriodic(
-            tickDuration,
-            (disposable) => scheduler.flush(),
-          ),
+      () => ticker = tickScheduler.schedulePeriodic(
+        tickDuration,
+        (disposable) => scheduler.flush(),
+      ),
     );
     tearDown(() => ticker.dispose());
     testScheduler(scheduler);
@@ -203,8 +204,10 @@ void testScheduler(Scheduler scheduler) {
     });
     expect(subscription.isDisposed, isFalse);
     await completer.future;
-    final expected =
-        iterate<DateTime>(start, (prev) => prev.add(offset)).take(5).toList();
+    final expected = iterate<DateTime>(
+      start,
+      (prev) => prev.add(offset),
+    ).take(5).toList();
     expectDateTimeList(expected, actual, accuracy);
     expect(subscription.isDisposed, isTrue);
   });

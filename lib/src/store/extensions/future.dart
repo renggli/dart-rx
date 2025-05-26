@@ -11,10 +11,9 @@ extension FutureStoreExtension<S> on Store<S> {
   }) => future.then(
     (value) =>
         onValue == null ? state : update((state) => onValue(state, value)),
-    onError:
-        onError == null
-            ? null
-            : (Object exception, StackTrace stackTrace) =>
-                update((state) => onError(state, exception, stackTrace)),
+    onError: onError == null
+        ? null
+        : (Object exception, StackTrace stackTrace) =>
+              update((state) => onError(state, exception, stackTrace)),
   );
 }

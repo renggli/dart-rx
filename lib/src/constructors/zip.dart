@@ -9,7 +9,6 @@ import '../schedulers/scheduler.dart';
 Observable<List<T>> zip<T>(
   Iterable<Observable<T>> iterable, {
   Scheduler? scheduler,
-}) =>
-    iterable
-        .toObservable(scheduler: scheduler ?? const ImmediateScheduler())
-        .zip();
+}) => iterable
+    .toObservable(scheduler: scheduler ?? const ImmediateScheduler())
+    .zip();

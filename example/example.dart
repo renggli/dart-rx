@@ -88,8 +88,11 @@ void main() {
   transformed.subscribe(printObserver('two'));
 
   // subject subscription
-  final subject =
-      IntegerRange(0, 100, 25).toObservable().publishReplay().refCount();
+  final subject = IntegerRange(
+    0,
+    100,
+    25,
+  ).toObservable().publishReplay().refCount();
   subject.subscribe(printObserver('subject1'));
   subject.subscribe(printObserver('subject2'));
 

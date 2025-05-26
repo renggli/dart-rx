@@ -9,10 +9,9 @@ import 'empty.dart';
 
 /// Waits for all passed [Observable] to complete and then it will emit an
 /// list with last values from corresponding observables.
-Observable<List<T>> forkJoin<T>(List<Observable<T>> sources) =>
-    sources.isEmpty
-        ? empty() as Observable<List<T>>
-        : ForkJoinObservable<T>(sources);
+Observable<List<T>> forkJoin<T>(List<Observable<T>> sources) => sources.isEmpty
+    ? empty() as Observable<List<T>>
+    : ForkJoinObservable<T>(sources);
 
 class ForkJoinObservable<T> implements Observable<List<T>> {
   ForkJoinObservable(this.observables);

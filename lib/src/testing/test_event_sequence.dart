@@ -123,12 +123,11 @@ class TestEventSequence<T> {
               if (values.containsValue(value)) {
                 buffer.write(values.inverse[value]);
               } else {
-                final unusedCharacter =
-                    value is String && value.length == 1
-                        ? value
-                        : nextMarkers.toList().firstWhere(
-                          (char) => !values.containsKey(char),
-                        );
+                final unusedCharacter = value is String && value.length == 1
+                    ? value
+                    : nextMarkers.toList().firstWhere(
+                        (char) => !values.containsKey(char),
+                      );
                 values[unusedCharacter] = value;
                 buffer.write(unusedCharacter);
               }

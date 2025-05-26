@@ -619,70 +619,65 @@ void main() {
   });
   group('exhaustAll', () {
     test('inner is shorter', () {
-      final actual =
-          scheduler
-              .cold(
-                '-a--b--c--|',
-                values: {
-                  'a': scheduler.cold<String>('x|'),
-                  'b': scheduler.cold<String>('y|'),
-                  'c': scheduler.cold<String>('z|'),
-                },
-              )
-              .exhaustAll();
+      final actual = scheduler
+          .cold(
+            '-a--b--c--|',
+            values: {
+              'a': scheduler.cold<String>('x|'),
+              'b': scheduler.cold<String>('y|'),
+              'c': scheduler.cold<String>('z|'),
+            },
+          )
+          .exhaustAll();
       expect(actual, scheduler.isObservable<String>('-x--y--z--|'));
     });
     test('outer is shorter', () {
-      final actual =
-          scheduler
-              .cold(
-                '-a--b--c|',
-                values: {
-                  'a': scheduler.cold<String>('x-|'),
-                  'b': scheduler.cold<String>('y-|'),
-                  'c': scheduler.cold<String>('z-|'),
-                },
-              )
-              .exhaustAll();
+      final actual = scheduler
+          .cold(
+            '-a--b--c|',
+            values: {
+              'a': scheduler.cold<String>('x-|'),
+              'b': scheduler.cold<String>('y-|'),
+              'c': scheduler.cold<String>('z-|'),
+            },
+          )
+          .exhaustAll();
       expect(actual, scheduler.isObservable<String>('-x--y--z-|'));
     });
     test('inner throws', () {
-      final actual =
-          scheduler
-              .cold(
-                '-a--b--|',
-                values: {
-                  'a': scheduler.cold<String>('x#'),
-                  'b': scheduler.cold<String>('y-|'),
-                },
-              )
-              .exhaustAll();
+      final actual = scheduler
+          .cold(
+            '-a--b--|',
+            values: {
+              'a': scheduler.cold<String>('x#'),
+              'b': scheduler.cold<String>('y-|'),
+            },
+          )
+          .exhaustAll();
       expect(actual, scheduler.isObservable<String>('-x#'));
     });
     test('outer throws', () {
-      final actual =
-          scheduler
-              .cold(
-                '-a#-b--|',
-                values: {
-                  'a': scheduler.cold<String>('x-|'),
-                  'b': scheduler.cold<String>('y-|'),
-                },
-              )
-              .exhaustAll();
+      final actual = scheduler
+          .cold(
+            '-a#-b--|',
+            values: {
+              'a': scheduler.cold<String>('x-|'),
+              'b': scheduler.cold<String>('y-|'),
+            },
+          )
+          .exhaustAll();
       expect(actual, scheduler.isObservable<String>('-x#'));
     });
     test('overlapping', () {
-      final actual =
-          scheduler
-              .cold(
-                '-a-b---ba-|',
-                values: {
-                  'a': scheduler.cold<String>('1-2-3|'),
-                  'b': scheduler.cold<String>('45|'),
-                },
-              )
-              .exhaustAll();
+      final actual = scheduler
+          .cold(
+            '-a-b---ba-|',
+            values: {
+              'a': scheduler.cold<String>('1-2-3|'),
+              'b': scheduler.cold<String>('45|'),
+            },
+          )
+          .exhaustAll();
       expect(actual, scheduler.isObservable<String>('-1-2-3-45-|'));
     });
     test('limit concurrent', () {
@@ -1070,45 +1065,42 @@ void main() {
   group('flatMap', () {
     group('flatten', () {
       test('inner with dynamic outputs', () {
-        final actual =
-            scheduler
-                .cold(
-                  '-a--b---c---a--|',
-                  values: {
-                    'a': scheduler.cold<String>('x-|'),
-                    'b': scheduler.cold<String>('yy-|'),
-                    'c': scheduler.cold<String>('zzz-|'),
-                  },
-                )
-                .flatten();
+        final actual = scheduler
+            .cold(
+              '-a--b---c---a--|',
+              values: {
+                'a': scheduler.cold<String>('x-|'),
+                'b': scheduler.cold<String>('yy-|'),
+                'c': scheduler.cold<String>('zzz-|'),
+              },
+            )
+            .flatten();
         expect(actual, scheduler.isObservable<String>('-x--yy--zzz-x--|'));
       });
       test('inner with error', () {
-        final actual =
-            scheduler
-                .cold(
-                  '-a--b---c---a--|',
-                  values: {
-                    'a': scheduler.cold<String>('x-|'),
-                    'b': scheduler.cold<String>('yy-|'),
-                    'c': scheduler.cold<String>('zz#'),
-                  },
-                )
-                .flatten();
+        final actual = scheduler
+            .cold(
+              '-a--b---c---a--|',
+              values: {
+                'a': scheduler.cold<String>('x-|'),
+                'b': scheduler.cold<String>('yy-|'),
+                'c': scheduler.cold<String>('zz#'),
+              },
+            )
+            .flatten();
         expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
       });
       test('outer with error', () {
-        final actual =
-            scheduler
-                .cold(
-                  '-a--b---c-#',
-                  values: {
-                    'a': scheduler.cold<String>('x-|'),
-                    'b': scheduler.cold<String>('yy-|'),
-                    'c': scheduler.cold<String>('zz#'),
-                  },
-                )
-                .flatten();
+        final actual = scheduler
+            .cold(
+              '-a--b---c-#',
+              values: {
+                'a': scheduler.cold<String>('x-|'),
+                'b': scheduler.cold<String>('yy-|'),
+                'c': scheduler.cold<String>('zz#'),
+              },
+            )
+            .flatten();
         expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
       });
       test('limit concurrent', () {
@@ -1530,45 +1522,42 @@ void main() {
   });
   group('mergeAll', () {
     test('inner with dynamic outputs', () {
-      final actual =
-          scheduler
-              .cold(
-                '-a--b---c---a--|',
-                values: {
-                  'a': scheduler.cold<String>('x-|'),
-                  'b': scheduler.cold<String>('yy-|'),
-                  'c': scheduler.cold<String>('zzz-|'),
-                },
-              )
-              .mergeAll();
+      final actual = scheduler
+          .cold(
+            '-a--b---c---a--|',
+            values: {
+              'a': scheduler.cold<String>('x-|'),
+              'b': scheduler.cold<String>('yy-|'),
+              'c': scheduler.cold<String>('zzz-|'),
+            },
+          )
+          .mergeAll();
       expect(actual, scheduler.isObservable<String>('-x--yy--zzz-x--|'));
     });
     test('inner with error', () {
-      final actual =
-          scheduler
-              .cold(
-                '-a--b---c---a--|',
-                values: {
-                  'a': scheduler.cold<String>('x-|'),
-                  'b': scheduler.cold<String>('yy-|'),
-                  'c': scheduler.cold<String>('zz#'),
-                },
-              )
-              .mergeAll();
+      final actual = scheduler
+          .cold(
+            '-a--b---c---a--|',
+            values: {
+              'a': scheduler.cold<String>('x-|'),
+              'b': scheduler.cold<String>('yy-|'),
+              'c': scheduler.cold<String>('zz#'),
+            },
+          )
+          .mergeAll();
       expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
     });
     test('outer with error', () {
-      final actual =
-          scheduler
-              .cold(
-                '-a--b---c-#',
-                values: {
-                  'a': scheduler.cold<String>('x-|'),
-                  'b': scheduler.cold<String>('yy-|'),
-                  'c': scheduler.cold<String>('zz#'),
-                },
-              )
-              .mergeAll();
+      final actual = scheduler
+          .cold(
+            '-a--b---c-#',
+            values: {
+              'a': scheduler.cold<String>('x-|'),
+              'b': scheduler.cold<String>('yy-|'),
+              'c': scheduler.cold<String>('zz#'),
+            },
+          )
+          .mergeAll();
       expect(actual, scheduler.isObservable<String>('-x--yy--zz#'));
     });
     test('limit concurrent', () {

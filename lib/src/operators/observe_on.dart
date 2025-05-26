@@ -33,10 +33,9 @@ class ObserveOnSubscriber<T> extends Subscriber<T> {
   final Scheduler scheduler;
   final Duration? delay;
 
-  void _schedule(Callback0 callback) =>
-      delay == null
-          ? scheduler.schedule(callback)
-          : scheduler.scheduleRelative(delay!, callback);
+  void _schedule(Callback0 callback) => delay == null
+      ? scheduler.schedule(callback)
+      : scheduler.scheduleRelative(delay!, callback);
 
   @override
   void onNext(T value) => _schedule(() => doNext(value));
