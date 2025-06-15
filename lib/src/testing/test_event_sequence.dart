@@ -102,7 +102,7 @@ class TestEventSequence<T> {
   String toMarbles() {
     final buffer = StringBuffer();
     final lastEvent = naturalComparable<num>
-        .onResultOf<TestEvent<T>>((event) => event.index)
+        .keyOf<TestEvent<T>>((event) => event.index)
         .maxOf(events);
     final lastIndex = lastEvent.index;
     final eventsByIndex = ListMultimap<int, TestEvent<T>>.fromIterables(
