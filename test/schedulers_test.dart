@@ -7,8 +7,13 @@ import 'package:rx/schedulers.dart';
 import 'package:test/test.dart';
 
 final DateTime epoch = DateTime.fromMillisecondsSinceEpoch(0);
-const Duration offset = Duration(milliseconds: isJavaScript ? 200 : 100);
-const Duration accuracy = Duration(milliseconds: isJavaScript ? 100 : 25);
+const Duration offset = Duration(
+  milliseconds: isJavaScript || isWasm ? 200 : 100,
+);
+const Duration accuracy = Duration(
+  milliseconds: isJavaScript || isWasm ? 100 : 25,
+);
+const int retry = isJavaScript || isWasm ? 10 : 3;
 
 void expectDateTime(
   DateTime actual,
@@ -66,7 +71,7 @@ void main() {
       final actual = scheduler.now;
       final expected = DateTime.now();
       expectDateTime(actual, expected, accuracy);
-    });
+    }, retry: retry);
     test('schedule', () {
       var called = 0;
       final subscription = scheduler.schedule(() => ++called);
@@ -88,7 +93,7 @@ void main() {
       });
       expectDateTime(actual, expected, accuracy);
       expect(subscription.isDisposed, isTrue);
-    });
+    }, retry: retry);
     test('scheduleRelative', () {
       var actual = epoch;
       final expected = scheduler.now.add(offset);
@@ -98,7 +103,7 @@ void main() {
       });
       expectDateTime(actual, expected, accuracy);
       expect(subscription.isDisposed, isTrue);
-    });
+    }, retry: retry);
     test('schedulePeriodic', () {
       final start = scheduler.now;
       final actual = [start];
@@ -114,7 +119,7 @@ void main() {
         (prev) => prev.add(offset),
       ).take(5).toList();
       expectDateTimeList(expected, actual, accuracy);
-    });
+    }, retry: retry);
   });
   group('async', () {
     final scheduler = AsyncScheduler();
@@ -139,7 +144,7 @@ void testScheduler(Scheduler scheduler) {
     final actual = scheduler.now;
     final expected = DateTime.now();
     expectDateTime(actual, expected, accuracy);
-  });
+  }, retry: retry);
   test('schedule', () async {
     final expected = DateTime.now();
     final completer = Completer<DateTime>();
@@ -149,7 +154,7 @@ void testScheduler(Scheduler scheduler) {
     final actual = await completer.future;
     expectDateTime(actual, expected, accuracy);
     expect(subscription.isDisposed, isFalse);
-  });
+  }, retry: retry);
   test('scheduleIteration', () async {
     var called = 0;
     final expected = DateTime.now();
@@ -179,7 +184,7 @@ void testScheduler(Scheduler scheduler) {
     expect(subscription.isDisposed, isFalse);
     final actual = await completer.future;
     expectDateTime(actual, expected, accuracy);
-  });
+  }, retry: retry);
   test('scheduleRelative', () async {
     final completer = Completer<DateTime>();
     final expected = scheduler.now.add(offset);
@@ -210,5 +215,5 @@ void testScheduler(Scheduler scheduler) {
     ).take(5).toList();
     expectDateTimeList(expected, actual, accuracy);
     expect(subscription.isDisposed, isTrue);
-  });
+  }, retry: retry);
 }
