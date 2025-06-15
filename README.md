@@ -1,5 +1,4 @@
-Reactive Dart
-=============
+# Reactive Dart
 
 [![Pub Package](https://img.shields.io/pub/v/rx.svg)](https://pub.dev/packages/rx)
 [![Build Status](https://github.com/renggli/dart-rx/actions/workflows/dart.yml/badge.svg?branch=main)](https://github.com/renggli/dart-rx/actions/workflows/dart.yml)
