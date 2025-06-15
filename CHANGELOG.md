@@ -2,7 +2,9 @@
 
 ## 0.5.0
 
-- Dart 3.7 requirement.
+- Dart 3.8 requirement.
+- Add experimental support for reactive values.
+- Fix bugs, documentation and compatibility issues.
 
 ## 0.4.0
 
