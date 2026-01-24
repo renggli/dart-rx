@@ -8,6 +8,14 @@ import '../events/event.dart';
 
 extension ReduceOperator<T> on Observable<T> {
   /// Combines a sequence of values by repeatedly applying [transform].
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .reduce((a, b) => a + b)
+  ///     .subscribe(Observer(next: print)); // prints 1, 3, 6
+  /// ```
   Observable<T> reduce(Map2<T, T, T> transform) =>
       ReduceObservable<T>(this, transform);
 }

@@ -6,6 +6,17 @@ import '../observers/inner.dart';
 
 extension SkipUntilOperator<T> on Observable<T> {
   /// Skips over all values until an [Observable] emits a first value.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// merge([
+  ///   just(1),
+  ///   timer(delay: Duration(seconds: 1)).mapTo(2),
+  /// ])
+  ///   .skipUntil(timer(delay: Duration(milliseconds: 500)))
+  ///   .subscribe(Observer(next: print)); // prints 2
+  /// ```
   Observable<T> skipUntil<R>(Observable<R> trigger) =>
       SkipUntilObservable<T, R>(this, trigger);
 }

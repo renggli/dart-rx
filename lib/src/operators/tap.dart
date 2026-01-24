@@ -5,6 +5,14 @@ import '../disposables/disposable.dart';
 
 extension TapOperator<T> on Observable<T> {
   /// Perform a side effect for every emission on the source.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1)
+  ///   .tap(Observer(next: (i) => print('tapped $i')))
+  ///   .subscribe(Observer(next: print)); // prints 'tapped 1', 1
+  /// ```
   Observable<T> tap(Observer<T> handler) => TapObservable<T>(this, handler);
 }
 

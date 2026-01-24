@@ -4,6 +4,16 @@ import '../disposables/disposed.dart';
 import 'subject.dart';
 
 /// A [Subject] that emits its last value to all its subscribers on completion.
+///
+/// For example:
+///
+/// ```dart
+/// final subject = AsyncSubject<int>();
+/// subject.next(1);
+/// subject.next(2);
+/// subject.subscribe(Observer(next: print)); // prints nothing
+/// subject.complete(); // prints 2
+/// ```
 class AsyncSubject<T> extends Subject<T> {
   late T _value;
   bool _hasValue = false;

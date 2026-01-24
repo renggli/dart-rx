@@ -12,6 +12,14 @@ import '../observers/inner.dart';
 extension SwitchAllOperator<T> on Observable<Observable<T>> {
   /// Emits values only from the most recently received higher-order
   /// [Observable].
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(just(1))
+  ///   .switchAll()
+  ///   .subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<T> switchAll() => switchMap<T>(identityFunction);
 }
 
@@ -22,6 +30,14 @@ extension SwitchMapOperator<T> on Observable<T> {
 
   /// Emits values from the most recent higher-order [Observable] retrieved by
   /// projecting the values of the source to higher-order [Observable]s.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1)
+  ///   .switchMap((i) => just(i + 1))
+  ///   .subscribe(Observer(next: print)); // prints 2
+  /// ```
   Observable<R> switchMap<R>(Map1<T, Observable<R>> project) =>
       SwitchObservable<T, R>(this, project);
 }

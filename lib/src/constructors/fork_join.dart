@@ -7,8 +7,17 @@ import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 import 'empty.dart';
 
-/// Waits for all passed [Observable] to complete and then it will emit an
+/// Waits for all passed [Observable] to complete and then it will emit a
 /// list with last values from corresponding observables.
+///
+/// For example:
+///
+/// ```dart
+/// forkJoin([
+///   just('a'),
+///   just('b'),
+/// ]).subscribe(Observer(next: print)); // prints ['a', 'b']
+/// ```
 Observable<List<T>> forkJoin<T>(List<Observable<T>> sources) => sources.isEmpty
     ? empty() as Observable<List<T>>
     : ForkJoinObservable<T>(sources);

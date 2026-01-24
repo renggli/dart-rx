@@ -10,6 +10,14 @@ import '../observers/inner.dart';
 extension ExhaustAllOperator<T> on Observable<Observable<T>> {
   /// Emits and completes higher-order [Observable]. Subscribes to at most
   /// `concurrent` sources, and drops observables exceeding this threshold.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(just(1))
+  ///   .exhaustAll()
+  ///   .subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<T> exhaustAll({int concurrent = 1}) =>
       exhaustMap<T>(identityFunction, concurrent: concurrent);
 }
@@ -27,6 +35,14 @@ extension ExhaustMapOperator<T> on Observable<T> {
   /// projecting the values of the source to higher-order [Observable]s.
   /// Subscribes to at most `concurrent` sources, drops observables exceeding
   /// this threshold.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1)
+  ///   .exhaustMap((i) => just(i + 1))
+  ///   .subscribe(Observer(next: print)); // prints 2
+  /// ```
   Observable<R> exhaustMap<R>(
     Map1<T, Observable<R>> project, {
     int concurrent = 1,

@@ -11,6 +11,14 @@ extension SingleOperator<T> on Observable<T> {
   /// Emits the single element of this [Observable], or emits [TooFewError] if
   /// there was no element, or emits [TooManyError] if there was more than 1
   /// element.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1)
+  ///   .single()
+  ///   .subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<T> single() => singleOrElse(
     tooFew: throwFunction0(TooFewError()),
     tooMany: throwFunction0(TooManyError()),
@@ -18,6 +26,14 @@ extension SingleOperator<T> on Observable<T> {
 
   /// Emits the single element of this [Observable], or emits `tooFew` if there
   /// was no element, or emits `tooMany` if there was more than 1 element.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// empty()
+  ///   .singleOrDefault(tooFew: 1, tooMany: 2)
+  ///   .subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<T> singleOrDefault({required T tooFew, required T tooMany}) =>
       singleOrElse(
         tooFew: constantFunction0(tooFew),

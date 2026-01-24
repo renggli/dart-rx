@@ -8,8 +8,14 @@ import '../disposables/disposable.dart';
 import '../events/event.dart';
 
 extension FirstOperator<T> on Observable<T> {
-  /// Emits the first item of this [Observable], or emits an [TooFewError]
+  /// Emits the first item of this [Observable], or emits a [TooFewError]
   /// otherwise.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1).first().subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<T> first() => firstOrElse(throwFunction0(TooFewError()));
 
   /// Emits the first item of this [Observable], or the provided default
@@ -17,13 +23,13 @@ extension FirstOperator<T> on Observable<T> {
   Observable<T> firstOrDefault(T value) =>
       firstOrElse(constantFunction0(value));
 
-  /// Emits the first item of this [Observable], or evaluate the provided
+  /// Emits the first item of this [Observable], or evaluates the provided
   /// [callback] otherwise.
   Observable<T> firstOrElse(Map0<T> callback) =>
       findFirstOrElse(constantFunction1(true), callback);
 
   /// Emits the first item of this [Observable] sequence matching the
-  /// [predicate], or emits an [TooFewError] otherwise.
+  /// [predicate], or emits a [TooFewError] otherwise.
   Observable<T> findFirst(Predicate1<T> predicate) =>
       findFirstOrElse(predicate, throwFunction0(TooFewError()));
 
@@ -33,7 +39,7 @@ extension FirstOperator<T> on Observable<T> {
       findFirstOrElse(predicate, constantFunction0(value));
 
   /// Emits the first item of this [Observable] sequence matching the
-  /// [predicate], or evaluate the provided [callback] otherwise.
+  /// [predicate], or evaluates the provided [callback] otherwise.
   Observable<T> findFirstOrElse(Predicate1<T> predicate, Map0<T> callback) =>
       FirstObservable<T>(this, predicate, callback);
 }

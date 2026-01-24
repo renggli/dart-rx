@@ -8,12 +8,19 @@ import '../schedulers/scheduler.dart';
 import '../schedulers/settings.dart';
 
 extension TimeoutOperator<T> on Observable<T> {
-  /// totals with a [TimeoutError], if the observable fails to emit a value
+  /// Completes with a [TimeoutError] if the observable fails to emit a value
   /// in the given time span.
   ///
-  /// - `first` specifies the  max duration until the first value must be emitted.
+  /// - `first` specifies the max duration until the first value must be emitted.
   /// - `between` specifies the max duration between values (or completion).
   /// - `total` specifies the max duration until completion.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// never().timeout(first: Duration(milliseconds: 10))
+  ///   .subscribe(Observer(next: print, error: (e, s) => print(e))); // prints TimeoutError after 10ms
+  /// ```
   Observable<T> timeout({
     Duration? first,
     Duration? between,

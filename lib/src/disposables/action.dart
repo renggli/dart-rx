@@ -4,6 +4,13 @@ import 'disposable.dart';
 import 'reference.dart';
 
 /// A [Disposable] with a callback that is called exactly once on disposal.
+///
+/// For example:
+///
+/// ```dart
+/// final disposable = ActionDisposable(() => print('Disposed'));
+/// disposable.dispose(); // prints 'Disposed'
+/// ```
 class ActionDisposable extends ReferenceDisposable<Callback0> {
   ActionDisposable(super.callback);
 

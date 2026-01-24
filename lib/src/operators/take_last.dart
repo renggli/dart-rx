@@ -7,6 +7,14 @@ import '../disposables/disposable.dart';
 
 extension TakeLastOperator<T> on Observable<T> {
   /// Emits the last [count] values emitted by the source.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .takeLast(2)
+  ///     .subscribe(Observer(next: print)); // prints 2, 3
+  /// ```
   Observable<T> takeLast([int count = 1]) => TakeLastObservable<T>(this, count);
 }
 

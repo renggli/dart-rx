@@ -8,6 +8,14 @@ import '../events/event.dart';
 
 extension SkipWhileOperator<T> on Observable<T> {
   /// Skips over the values while the [predicate] is `true`.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .skipWhile((value) => value < 3)
+  ///     .subscribe(Observer(next: print)); // prints 3
+  /// ```
   Observable<T> skipWhile(Predicate1<T> predicate) =>
       SkipWhileObservable<T>(this, predicate);
 }

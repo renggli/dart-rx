@@ -6,6 +6,15 @@ import '../observers/inner.dart';
 import 'empty.dart';
 
 /// Creates an [Observable] that mirrors the first source to emit an item.
+///
+/// For example:
+///
+/// ```dart
+/// race([
+///   timer(delay: Duration(days: 1)),
+///   just(2),
+/// ]).subscribe(Observer(next: print)); // prints 2
+/// ```
 Observable<T> race<T>(Iterable<Observable<T>> sources) {
   final observables = sources.toList(growable: false);
   return observables.isEmpty

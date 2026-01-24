@@ -5,6 +5,12 @@ import '../disposables/disposable.dart';
 
 extension CastOperator<T> on Observable<T> {
   /// Casts the values from this [Observable] to [R].
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just<Object>(1).cast<int>().subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<R> cast<R>() => CastObservable<T, R>(this);
 }
 

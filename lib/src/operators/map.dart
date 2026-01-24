@@ -9,10 +9,22 @@ import '../events/event.dart';
 extension MapOperator<T> on Observable<T> {
   /// Applies the given projection function `transform` to each value emitted by
   /// this [Observable], and emits the resulting value.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1).map((i) => i + 1).subscribe(Observer(next: print)); // prints 2
+  /// ```
   Observable<R> map<R>(Map1<T, R> transform) =>
       MapObservable<T, R>(this, transform);
 
   /// Emits a constant `value` for each value emitted by this [Observable].
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1).mapTo(2).subscribe(Observer(next: print)); // prints 2
+  /// ```
   Observable<R> mapTo<R>(R value) =>
       MapObservable<T, R>(this, constantFunction1(value));
 }

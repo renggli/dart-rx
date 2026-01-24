@@ -9,6 +9,15 @@ import '../observers/inner.dart';
 extension ZipOperator<T> on Observable<Observable<T>> {
   /// Combines multiple Observables to create an Observable whose values are
   /// calculated from the next value of each of its input Observables.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [
+  ///   ['a', 'b'].toObservable(),
+  ///   [1, 2, 3].toObservable(),
+  /// ].toObservable().zip().subscribe(Observer(next: print)); // prints ['a', 1], ['b', 2]
+  /// ```
   Observable<List<T>> zip() => ZipObservable<T>(this);
 }
 

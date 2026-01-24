@@ -8,6 +8,14 @@ import '../events/event.dart';
 
 extension TakeWhileOperator<T> on Observable<T> {
   /// Emits values while the [predicate] returns `true`.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///   .takeWhile((i) => i < 3)
+  ///   .subscribe(Observer(next: print)); // prints 1, 2
+  /// ```
   Observable<T> takeWhile(Predicate1<T> predicate, {bool inclusive = false}) =>
       TakeWhileObservable<T>(this, predicate, inclusive);
 }

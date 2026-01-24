@@ -11,6 +11,14 @@ import '../events/event.dart';
 extension DistinctOperator<T> on Observable<T> {
   /// Emits all items emitted by this [Observable] that are distinct from
   /// the previous ones.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 2, 3, 1].toObservable()
+  ///     .distinct()
+  ///     .subscribe(Observer(next: print)); // prints 1, 2, 3
+  /// ```
   Observable<T> distinct({Predicate2<T, T>? equals, Map1<T, int>? hashCode}) =>
       DistinctObservable<T>(this, equals, hashCode);
 }

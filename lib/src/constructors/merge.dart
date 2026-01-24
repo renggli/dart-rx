@@ -5,6 +5,15 @@ import '../shared/constants.dart';
 
 /// Creates an [Observable] which concurrently emits all values from every
 /// source [Observable].
+///
+/// For example:
+///
+/// ```dart
+/// merge([
+///   just('a'),
+///   just('b'),
+/// ]).subscribe(Observer(next: print)); // prints 'a', 'b'
+/// ```
 Observable<T> merge<T>(
   Iterable<Observable<T>> observables, {
   int concurrent = maxInteger,

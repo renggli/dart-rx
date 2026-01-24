@@ -49,3 +49,4 @@ export 'src/operators/to_map.dart' show ToMapOperator;
 export 'src/operators/to_set.dart' show ToSetOperator;
 export 'src/operators/where.dart' show WhereOperator;
 export 'src/operators/where_type.dart' show WhereTypeOperator;
+export 'src/operators/zip.dart' show ZipOperator;

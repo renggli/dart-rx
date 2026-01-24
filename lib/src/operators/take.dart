@@ -5,6 +5,14 @@ import '../disposables/disposable.dart';
 
 extension TakeOperator<T> on Observable<T> {
   /// Emits the first [count] values before completing.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .take(2)
+  ///     .subscribe(Observer(next: print)); // prints 1, 2
+  /// ```
   Observable<T> take([int count = 1]) => TakeObservable<T>(this, count);
 }
 

@@ -7,6 +7,14 @@ import '../shared/constants.dart';
 
 extension RepeatOperator<T> on Observable<T> {
   /// Resubscribes on this observable [count] times.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1)
+  ///   .repeat(3)
+  ///   .subscribe(Observer(next: print)); // prints 1, 1, 1
+  /// ```
   Observable<T> repeat([int count = maxInteger]) => count <= 0
       ? empty()
       : count == 1

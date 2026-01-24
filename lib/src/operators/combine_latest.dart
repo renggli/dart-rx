@@ -5,8 +5,18 @@ import '../disposables/disposable.dart';
 import '../observers/inner.dart';
 
 extension CombineLatestOperator<T> on Observable<Observable<T>> {
-  /// Combines multiple source to create an [Observable] whose values are
+  /// Combines multiple sources to create an [Observable] whose values are
   /// calculated from the latest values of each of its inputs.
+  ///
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [
+  ///   just('a'),
+  ///   just('b'),
+  /// ].toObservable().combineLatest().subscribe(Observer(next: print)); // prints ['a', 'b']
+  /// ```
   Observable<List<T>> combineLatest() => CombineLatestObservable<T>(this);
 }
 

@@ -6,7 +6,16 @@ import '../operators/merge.dart';
 import '../schedulers/scheduler.dart';
 
 /// Subscribe to the list of [Observable] in order, and when the previous one
-/// complete then subscribe to the next one.
+/// completes, subscribe to the next one.
+///
+/// For example:
+///
+/// ```dart
+/// concat([
+///   just(1),
+///   just(2),
+/// ]).subscribe(Observer(next: print)); // prints 1, 2
+/// ```
 Observable<T> concat<T>(
   Iterable<Observable<T>> observables, {
   Scheduler? scheduler,

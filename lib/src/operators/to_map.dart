@@ -8,6 +8,14 @@ import '../disposables/disposable.dart';
 
 extension ToMapOperator<T> on Observable<T> {
   /// Returns a [Map] from an observable sequence.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .toMap(keySelector: (i) => i, valueSelector: (i) => i * 2)
+  ///     .subscribe(Observer(next: print)); // prints {1: 2, 2: 4, 3: 6}
+  /// ```
   Observable<Map<K, V>> toMap<K, V>({
     Map0<Map<K, V>>? constructor,
     Map1<T, K>? keySelector,
@@ -21,6 +29,14 @@ extension ToMapOperator<T> on Observable<T> {
   );
 
   /// Returns a [ListMultimap] from an observable sequence.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .toListMultimap(keySelector: (i) => i.isEven)
+  ///     .subscribe(Observer(next: print)); // prints {false: [1, 3], true: [2]}
+  /// ```
   Observable<ListMultimap<K, V>> toListMultimap<K, V>({
     Map0<ListMultimap<K, V>>? constructor,
     Map1<T, K>? keySelector,
@@ -34,6 +50,14 @@ extension ToMapOperator<T> on Observable<T> {
   );
 
   /// Returns a [SetMultimap] from an observable sequence.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .toSetMultimap(keySelector: (i) => i.isEven)
+  ///     .subscribe(Observer(next: print)); // prints {false: {1, 3}, true: {2}}
+  /// ```
   Observable<SetMultimap<K, V>> toSetMultimap<K, V>({
     Map0<SetMultimap<K, V>>? constructor,
     Map1<T, K>? keySelector,

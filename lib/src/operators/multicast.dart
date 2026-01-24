@@ -10,7 +10,15 @@ import '../observables/connectable.dart';
 import '../subjects/subject.dart';
 
 extension MulticastOperator<T> on Observable<T> {
-  /// Returns an multicast observable that shares the underlying stream.
+  /// Returns a multicast observable that shares the underlying stream.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// final observable = just(1).multicast(subject: BehaviorSubject());
+  /// observable.connect();
+  /// observable.subscribe(Observer(next: print)); // prints 1
+  /// ```
   ConnectableObservable<T> multicast({
     Subject<T>? subject,
     Map0<Subject<T>>? factory,

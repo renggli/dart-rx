@@ -1,13 +1,19 @@
 import '../core/observable.dart';
 import '../core/observer.dart';
-import '../disposables/action.dart';
 import '../disposables/composite.dart';
 import '../disposables/disposable.dart';
 import '../schedulers/scheduler.dart';
 import '../schedulers/settings.dart';
 
 /// An [Observable] that starts emitting after `delay` and that emits an ever
-/// increasing numbers after each `period` thereafter.
+/// increasing number after each `period` thereafter.
+///
+/// For example:
+///
+/// ```dart
+/// timer(delay: const Duration(seconds: 1), period: const Duration(seconds: 2))
+///   .subscribe(Observer(next: print)); // prints 0, 1, 2, ...
+/// ```
 Observable<int> timer({
   Duration delay = Duration.zero,
   Duration? period,
@@ -24,11 +30,11 @@ class TimerObservable implements Observable<int> {
   @override
   Disposable subscribe(Observer<int> observer) {
     final subscription = CompositeDisposable();
-    subscription.add(ActionDisposable(observer.complete));
     subscription.add(
       scheduler.scheduleRelative(delay, () {
         observer.next(0);
         if (period == null) {
+          observer.complete();
           subscription.dispose();
         } else {
           var counter = 0;

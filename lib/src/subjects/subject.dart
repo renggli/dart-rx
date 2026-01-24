@@ -10,6 +10,15 @@ import '../disposables/errors.dart';
 /// A Subject is a special type of [Observable] that allows values to be
 /// multicast to many [Observer].
 ///
+/// For example:
+///
+/// ```dart
+/// final subject = Subject<int>();
+/// subject.subscribe(Observer(next: print));
+/// subject.next(1); // prints 1
+/// subject.next(2); // prints 2
+/// ```
+///
 /// Every Subject is an [Observable] and an [Observer]. You can subscribe to a
 /// [Subject], and you can call `next` to feed values as well as `error` and
 /// `complete`.

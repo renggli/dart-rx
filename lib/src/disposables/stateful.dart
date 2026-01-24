@@ -1,6 +1,15 @@
 import 'disposable.dart';
 
 /// A stateful [Disposable] that remembers if it has been disposed.
+///
+/// For example:
+///
+/// ```dart
+/// final stateful = StatefulDisposable();
+/// print(stateful.isDisposed); // false
+/// stateful.dispose();
+/// print(stateful.isDisposed); // true
+/// ```
 class StatefulDisposable implements Disposable {
   StatefulDisposable();
 

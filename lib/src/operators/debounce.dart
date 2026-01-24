@@ -14,6 +14,14 @@ typedef DurationSelector<T, R> = Observable<R> Function(T value);
 extension DebounceOperator<T> on Observable<T> {
   /// Emits a value from this [Observable] only after a particular time span
   /// determined by another [Observable] has passed without another emission.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .debounceTime(const Duration(seconds: 1))
+  ///     .subscribe(Observer(next: print)); // prints 3
+  /// ```
   Observable<T> debounce<R>(DurationSelector<T, R> durationSelector) =>
       DebounceObservable<T, R>(this, durationSelector);
 

@@ -6,8 +6,16 @@ import '../events/errors.dart';
 import '../events/event.dart';
 
 extension DematerializeOperator<T> on Observable<Event<T>> {
-  /// Dematerialize events of this [Observable] into from a sequence of
+  /// Dematerializes events of this [Observable] from a sequence of
   /// [Event] objects.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(Event.next(1))
+  ///   .dematerialize()
+  ///   .subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<T> dematerialize() => DematerializeObservable<T>(this);
 }
 

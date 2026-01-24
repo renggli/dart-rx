@@ -8,6 +8,12 @@ import '../disposables/composite.dart';
 extension ObservableToFuture<T> on Observable<T> {
   /// Returns a [Future] that completes with the first value of this
   /// [Observable].
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1).toFuture().then(print); // prints 1
+  /// ```
   Future<T> toFuture() {
     final disposable = CompositeDisposable();
     final completer = Completer<T>();

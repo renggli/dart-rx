@@ -5,6 +5,12 @@ import '../schedulers/immediate.dart';
 import '../schedulers/scheduler.dart';
 
 /// An [Observable] with a single element.
+///
+/// For example:
+///
+/// ```dart
+/// just(42).subscribe(Observer(next: print)); // prints 42
+/// ```
 Observable<T> just<T>(T value, {Scheduler? scheduler}) =>
     JustObservable<T>(value, scheduler ?? const ImmediateScheduler());
 

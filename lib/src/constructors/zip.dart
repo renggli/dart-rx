@@ -6,6 +6,15 @@ import '../schedulers/scheduler.dart';
 
 /// Combines a list of [Observable] to an [Observable] whose values are
 /// calculated from the next value of each of its inputs.
+///
+/// For example:
+///
+/// ```dart
+/// zip([
+///   just('a'),
+///   just('b'),
+/// ]).subscribe(Observer(next: print)); // prints ['a', 'b']
+/// ```
 Observable<List<T>> zip<T>(
   Iterable<Observable<T>> iterable, {
   Scheduler? scheduler,

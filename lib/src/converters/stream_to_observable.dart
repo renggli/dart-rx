@@ -7,6 +7,12 @@ import '../disposables/disposable.dart';
 
 extension StreamToObservable<T> on Stream<T> {
   /// Returns an [Observable] that listens to this [Stream].
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// Stream.value(1).toObservable().subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<T> toObservable() => StreamObservable<T>(this);
 }
 

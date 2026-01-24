@@ -5,6 +5,15 @@ import '../disposables/disposable.dart';
 import 'subject.dart';
 
 /// A [Subject] that replays all its previous values to new subscribers.
+///
+/// For example:
+///
+/// ```dart
+/// final subject = ReplaySubject<int>();
+/// subject.next(1);
+/// subject.next(2);
+/// subject.subscribe(Observer(next: print)); // prints 1, 2
+/// ```
 class ReplaySubject<T> extends Subject<T> {
   ReplaySubject({this.bufferSize}) : _buffer = QueueList(bufferSize);
 

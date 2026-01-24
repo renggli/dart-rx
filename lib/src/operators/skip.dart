@@ -5,6 +5,14 @@ import '../disposables/disposable.dart';
 
 extension SkipOperator<T> on Observable<T> {
   /// Skips over the first [count] values before starting to emit.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .skip(2)
+  ///     .subscribe(Observer(next: print)); // prints 3
+  /// ```
   Observable<T> skip([int count = 1]) => SkipObservable<T>(this, count);
 }
 

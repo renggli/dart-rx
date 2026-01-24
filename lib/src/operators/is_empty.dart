@@ -6,6 +6,12 @@ import '../disposables/disposable.dart';
 extension IsEmptyOperator<T> on Observable<T> {
   /// Emits `true` if this [Observable] completes without emitting any values,
   /// otherwise emits `false`.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// empty().isEmpty().subscribe(Observer(next: print)); // prints true
+  /// ```
   Observable<bool> isEmpty() => IsEmptyObservable<T>(this);
 }
 

@@ -15,6 +15,14 @@ typedef DurationSelector<T, R> = Observable<R> Function(T value);
 extension DelayOperator<T> on Observable<T> {
   /// Delays the emission of items from this [Observable] until the Observable
   /// returned from [durationSelector] triggers.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1)
+  ///     .delayTime(const Duration(seconds: 1))
+  ///     .subscribe(Observer(next: print)); // prints 1 after 1 second
+  /// ```
   Observable<T> delay<R>(DurationSelector<T, R> durationSelector) =>
       DelayObservable<T, R>(this, durationSelector);
 

@@ -8,6 +8,14 @@ import '../schedulers/scheduler.dart';
 
 extension ObserveOnOperator<T> on Observable<T> {
   /// Re-emits all notifications from this [Observable] with a custom scheduler.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1)
+  ///   .observeOn(ZoneScheduler.current)
+  ///   .subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<T> observeOn(Scheduler scheduler, {Duration? delay}) =>
       ObserveOnObservable<T>(this, scheduler, delay);
 }

@@ -3,6 +3,14 @@ import '../disposables/disposable.dart';
 import 'subject.dart';
 
 /// A [Subject] that emits its initial or last seen value to its subscribers.
+///
+/// For example:
+///
+/// ```dart
+/// final subject = BehaviorSubject<int>(1);
+/// subject.subscribe(Observer(next: print)); // prints 1
+/// subject.next(2); // prints 2
+/// ```
 class BehaviorSubject<T> extends Subject<T> {
   BehaviorSubject(this._value);
 

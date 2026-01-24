@@ -9,6 +9,14 @@ import '../events/event.dart';
 extension DistinctUntilChangedOperator<T> on Observable<T> {
   /// Emits all items emitted by this [Observable] that are different from the
   /// previous one.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 2, 3, 1].toObservable()
+  ///     .distinctUntilChanged()
+  ///     .subscribe(Observer(next: print)); // prints 1, 2, 3, 1
+  /// ```
   Observable<T> distinctUntilChanged<K>({
     Map1<T, K>? key,
     Predicate2<K, K>? compare,

@@ -7,6 +7,12 @@ import '../disposables/sequential.dart';
 extension ObservableToStream<T> on Observable<T> {
   /// Returns a [Stream] that subscribes to and emits the values of this
   /// [Observable].
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1).toStream().listen(print); // prints 1
+  /// ```
   Stream<T> toStream() {
     final disposable = SequentialDisposable();
     final controller = StreamController<T>();

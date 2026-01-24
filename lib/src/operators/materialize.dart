@@ -6,6 +6,12 @@ import '../events/event.dart';
 
 extension MaterializeOperator<T> on Observable<T> {
   /// Materializes the events of this [Observable] as [Event] objects.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1).materialize().subscribe(Observer(next: print)); // prints Event.next(1), Event.complete()
+  /// ```
   Observable<Event<T>> materialize() => MaterializeObservable<T>(this);
 }
 

@@ -14,6 +14,15 @@ extension BufferOperator<T> on Observable<T> {
   /// - the buffer reaches [maxLength], or
   /// - the buffer reaches [maxAge].
   ///
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [0, 1, 2, 3, 4, 5].toObservable()
+  ///     .buffer(maxLength: 3)
+  ///     .subscribe(Observer(next: print)); // prints [0, 1, 2], [3, 4, 5]
+  /// ```
+  ///
   Observable<List<T>> buffer<R>({
     Scheduler? scheduler,
     Observable<R>? trigger,

@@ -5,6 +5,15 @@ import '../schedulers/immediate.dart';
 import '../schedulers/scheduler.dart';
 
 /// An [Observable] that emits no items and immediately completes.
+///
+/// For example:
+///
+/// ```dart
+/// empty().subscribe(Observer(
+///   next: print,
+///   complete: () => print('done'),
+/// )); // prints 'done'
+/// ```
 Observable<Never> empty({Scheduler? scheduler}) =>
     EmptyObservable(scheduler ?? const ImmediateScheduler());
 

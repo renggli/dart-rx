@@ -15,6 +15,14 @@ extension ThrottleOperator<T> on Observable<T> {
   /// Emits a value from this [Observable], then ignores values for the duration
   /// until the [Observable] returned by `durationSelector` triggers a value or
   /// completes.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// timer(period: Duration(seconds: 1))
+  ///   .throttle((_) => timer(delay: Duration(milliseconds: 500)))
+  ///   .subscribe(Observer(next: print)); // prints 0, 1, 2
+  /// ```
   Observable<T> throttle<R>(
     DurationSelector<T, R> durationSelector, {
     bool leading = true,
@@ -22,6 +30,14 @@ extension ThrottleOperator<T> on Observable<T> {
   }) => ThrottleObservable<T, R>(this, durationSelector, leading, trailing);
 
   /// Emits a value from this [Observable], then ignores values for `duration`.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// timer(period: Duration(seconds: 1))
+  ///   .throttleTime(Duration(milliseconds: 500))
+  ///   .subscribe(Observer(next: print)); // prints 0, 1, 2
+  /// ```
   Observable<T> throttleTime(
     Duration duration, {
     bool leading = true,

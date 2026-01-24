@@ -16,6 +16,6 @@ This library is open source and well tested. Development happens on [GitHub](htt
 
 The package is hosted on [dart packages](https://pub.dev/packages/rx). Up-to-date [class documentation](https://pub.dev/documentation/rx/latest/) is created with every release.
 
-### License
+## License
 
 The MIT License, see [LICENSE](https://github.com/renggli/dart-rx/raw/main/LICENSE).

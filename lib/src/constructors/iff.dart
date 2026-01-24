@@ -6,6 +6,16 @@ import 'empty.dart';
 
 /// Decides at subscription time which [Observable] will actually be
 /// subscribed to.
+///
+/// For example:
+///
+/// ```dart
+/// iff(
+///   () => true,
+///   just('a'),
+///   just('b'),
+/// ).subscribe(Observer(next: print)); // prints 'a'
+/// ```
 Observable<T> iff<T>(
   Predicate0 condition, [
   Observable<T>? trueBranch,

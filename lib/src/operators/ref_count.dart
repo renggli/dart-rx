@@ -8,6 +8,13 @@ import '../disposables/disposed.dart';
 
 extension RefCountOperator<T> on ConnectableObservable<T> {
   /// Connects to the source only if there is more than one subscriber.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// final observable = just(1).publishReplay().refCount();
+  /// observable.subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<T> refCount() => RefCountObservable<T>(this);
 }
 

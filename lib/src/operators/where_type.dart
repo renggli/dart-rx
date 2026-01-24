@@ -6,6 +6,14 @@ import '../disposables/disposable.dart';
 extension WhereTypeOperator<T> on Observable<T> {
   /// Filter items emitted by the source Observable by only emitting those that
   /// are of the specified type.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 'a', 2].toObservable()
+  ///     .whereType<int>()
+  ///     .subscribe(Observer(next: print)); // prints 1, 2
+  /// ```
   Observable<R> whereType<R>() => WhereTypeObserver<T, R>(this);
 }
 

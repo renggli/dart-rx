@@ -5,6 +5,13 @@ import '../schedulers/immediate.dart';
 import '../schedulers/scheduler.dart';
 
 /// An [Observable] that emits no items and immediately throws an error.
+///
+/// For example:
+///
+/// ```dart
+/// throwError(Exception('Oh no!'))
+///   .subscribe(Observer(error: (e, s) => print(e))); // prints 'Exception: Oh no!'
+/// ```
 Observable<Never> throwError(
   Object error, {
   StackTrace? stackTrace,

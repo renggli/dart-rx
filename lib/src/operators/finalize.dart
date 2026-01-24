@@ -6,6 +6,14 @@ import '../shared/functions.dart';
 extension FinalizeOperator<T> on Observable<T> {
   /// Return an [Observable] that mirrors this [Observable], but will call
   /// a specified function when the source terminates on completion or error.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1)
+  ///   .finalize(() => print('Done!'))
+  ///   .subscribe(Observer(next: print)); // prints 1, then 'Done!'
+  /// ```
   Observable<T> finalize(CompleteCallback finalize) =>
       FinalizeObservable<T>(this, finalize);
 }

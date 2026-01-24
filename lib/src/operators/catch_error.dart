@@ -15,6 +15,16 @@ extension CatchErrorOperator<T> on Observable<T> {
   /// Catches errors of type [E] thrown by this [Observable] and handles them
   /// by either returning a new [Observable] of type [T], throwing the same or
   /// a different error, or returning `null` to complete the [Observable].
+  ///
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// throwError(Exception('Oh no!'))
+  ///     .cast<String>()
+  ///     .catchError<Exception>((error, stackTrace) => just('Recovered'))
+  ///     .subscribe(Observer(next: print)); // prints 'Recovered'
+  /// ```
   Observable<T> catchError<E>(ErrorHandler<T, E> handler) =>
       CatchErrorObservable<T, E>(this, handler);
 }

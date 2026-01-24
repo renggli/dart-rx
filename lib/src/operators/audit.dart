@@ -15,6 +15,15 @@ extension AuditOperator<T> on Observable<T> {
   /// Ignores values from this [Observable] for a duration determined by the
   /// [Observable] returned from `durationSelector`, then emits the most recent
   /// source value, then repeats the process.
+  ///
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// timer(period: const Duration(milliseconds: 10))
+  ///     .audit((_) => timer(delay: const Duration(milliseconds: 25)))
+  ///     .subscribe(Observer(next: print)); // prints 2, 5, 8, ...
+  /// ```
   Observable<T> audit<R>(DurationSelector<T, R> durationSelector) =>
       AuditObservable<T, R>(this, durationSelector);
 

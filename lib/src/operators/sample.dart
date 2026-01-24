@@ -8,12 +8,27 @@ import '../schedulers/scheduler.dart';
 
 extension SampleOperator<T> on Observable<T> {
   /// Emits the most recently emitted value from this [Observable] whenever the
-  /// `trigger` emits.
+  /// [trigger] emits.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .sample(timer(delay: const Duration(seconds: 1)))
+  ///     .subscribe(Observer(next: print)); // prints 3
+  /// ```
   Observable<T> sample<R>(Observable<R> trigger) =>
       SampleObservable<T, R>(this, trigger);
 
-  /// Emits the most recently emitted value from this [Observable] within
-  /// periodic time intervals.
+  /// Samples the source [Observable] at periodic `duration` intervals.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .sampleTime(const Duration(seconds: 1))
+  ///     .subscribe(Observer(next: print)); // prints 3
+  /// ```
   Observable<T> sampleTime(Duration duration, {Scheduler? scheduler}) =>
       sample<int>(
         timer(delay: duration, period: duration, scheduler: scheduler),

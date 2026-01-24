@@ -17,6 +17,25 @@ import 'test_observable.dart';
 import 'test_subscriber.dart';
 
 class TestScheduler extends AsyncScheduler {
+  /// Constructs a test scheduler.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// void main() {
+  ///   late TestScheduler scheduler;
+  ///
+  ///   setUp(() => scheduler = TestScheduler()..setUp());
+  ///   tearDown(() => scheduler.tearDown());
+  ///
+  ///   test('emits values', () {
+  ///     expect(
+  ///       scheduler.cold('a-b-c|'),
+  ///       scheduler.isObservable('a-b-c|'),
+  ///     );
+  ///   });
+  /// }
+  /// ```
   TestScheduler();
 
   DateTime _currentTime = DateTime.now();

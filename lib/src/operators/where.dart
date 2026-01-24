@@ -9,6 +9,14 @@ import '../events/event.dart';
 extension WhereOperator<T> on Observable<T> {
   /// Filter items emitted by the source Observable by only emitting those that
   /// satisfy a specified predicate.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .where((i) => i.isEven)
+  ///     .subscribe(Observer(next: print)); // prints 2
+  /// ```
   Observable<T> where(Predicate1<T> predicate) =>
       WhereObservable<T>(this, predicate);
 }

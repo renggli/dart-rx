@@ -5,6 +5,15 @@ import '../schedulers/scheduler.dart';
 
 /// Combines a list of [Observable] to an [Observable] whose values are
 /// calculated from the latest values of each of its inputs.
+///
+/// For example:
+///
+/// ```dart
+/// combineLatest([
+///   just('a'),
+///   just('b'),
+/// ]).subscribe(Observer(next: print)); // prints ['a', 'b']
+/// ```
 Observable<List<T>> combineLatest<T>(
   Iterable<Observable<T>> iterable, {
   Scheduler? scheduler,

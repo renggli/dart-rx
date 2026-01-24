@@ -8,21 +8,27 @@ import '../disposables/disposable.dart';
 import '../events/event.dart';
 
 extension LastOperator<T> on Observable<T> {
-  /// Emits the last item of this [Observable], or emits an [TooFewError]
+  /// Emits the last item of this [Observable], or emits a [TooFewError]
   /// otherwise.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// just(1).last().subscribe(Observer(next: print)); // prints 1
+  /// ```
   Observable<T> last() => lastOrElse(throwFunction0(TooFewError()));
 
   /// Emits the last item of this [Observable], or the provided default [value]
   /// otherwise.
   Observable<T> lastOrDefault(T value) => lastOrElse(constantFunction0(value));
 
-  /// Emits the last item of this [Observable], or evaluate the provided
+  /// Emits the last item of this [Observable], or evaluates the provided
   /// [callback] otherwise.
   Observable<T> lastOrElse(Map0<T> callback) =>
       findLastOrElse(constantFunction1(true), callback);
 
   /// Emits the last item of this [Observable] matching the [predicate], or
-  /// emits an [TooFewError] otherwise.
+  /// emits a [TooFewError] otherwise.
   Observable<T> findLast(Predicate1<T> predicate) =>
       findLastOrElse(predicate, throwFunction0(TooFewError()));
 
@@ -32,7 +38,7 @@ extension LastOperator<T> on Observable<T> {
       findLastOrElse(predicate, constantFunction0(value));
 
   /// Emits the last item of this [Observable] matching the [predicate], or
-  /// evaluate the provided [callback] otherwise.
+  /// evaluates the provided [callback] otherwise.
   Observable<T> findLastOrElse(Predicate1<T> predicate, Map0<T> callback) =>
       LastObservable<T>(this, predicate, callback);
 }

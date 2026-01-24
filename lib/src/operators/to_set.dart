@@ -7,6 +7,14 @@ import '../disposables/disposable.dart';
 
 extension ToSetOperator<T> on Observable<T> {
   /// Returns a [Set] from an observable sequence.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 1].toObservable()
+  ///     .toSet()
+  ///     .subscribe(Observer(next: print)); // prints {1, 2}
+  /// ```
   Observable<Set<T>> toSet([Map0<Set<T>>? constructor]) =>
       ToSetObservable<T>(this, constructor ?? () => <T>{});
 }

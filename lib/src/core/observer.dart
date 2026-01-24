@@ -16,6 +16,16 @@ abstract class Observer<T> implements Disposable {
   ///   [ignoreErrors] is set to `true`.
   /// - [complete] is a callback that is called when the observer successfully
   ///   terminates.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// Observer(
+  ///   next: (x) => print('Next: $x'),
+  ///   error: (e, s) => print('Error: $e'),
+  ///   complete: () => print('Complete'),
+  /// );
+  /// ```
   factory Observer({
     NextCallback<T>? next,
     ErrorCallback? error,

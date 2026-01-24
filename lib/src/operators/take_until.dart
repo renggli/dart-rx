@@ -6,6 +6,14 @@ import '../observers/inner.dart';
 
 extension TakeUntilOperator<T> on Observable<T> {
   /// Emits values until an [Observable] emits a first value.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// timer(period: Duration(milliseconds: 100))
+  ///   .takeUntil(timer(delay: Duration(milliseconds: 250)))
+  ///   .subscribe(Observer(next: print)); // prints 0, 1
+  /// ```
   Observable<T> takeUntil<R>(Observable<R> trigger) =>
       TakeUntilObservable<T, R>(this, trigger);
 }

@@ -7,6 +7,14 @@ import '../disposables/disposable.dart';
 
 extension ToListOperator<T> on Observable<T> {
   /// Returns a [List] from an observable sequence.
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .toList()
+  ///     .subscribe(Observer(next: print)); // prints [1, 2, 3]
+  /// ```
   Observable<List<T>> toList([Map0<List<T>>? constructor]) =>
       ToListObservable<T>(this, constructor ?? () => <T>[]);
 }

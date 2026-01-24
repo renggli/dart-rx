@@ -3,6 +3,15 @@ import 'errors.dart';
 import 'stateful.dart';
 
 /// A [Disposable] container that holds other disposables.
+///
+/// For example:
+///
+/// ```dart
+/// final composite = CompositeDisposable();
+/// composite.add(ActionDisposable(() => print('A')));
+/// composite.add(ActionDisposable(() => print('B')));
+/// composite.dispose(); // prints 'A', 'B'
+/// ```
 class CompositeDisposable extends StatefulDisposable {
   CompositeDisposable([Iterable<Disposable>? disposables]) : super() {
     if (disposables != null) {

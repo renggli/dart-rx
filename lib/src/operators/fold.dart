@@ -9,6 +9,14 @@ import '../events/event.dart';
 extension FoldOperator<T> on Observable<T> {
   /// Combines a sequence of values by repeatedly applying [transform], starting
   /// with the provided [initialValue].
+  ///
+  /// For example:
+  ///
+  /// ```dart
+  /// [1, 2, 3].toObservable()
+  ///     .fold(0, (a, b) => a + b)
+  ///     .subscribe(Observer(next: print)); // prints 1, 3, 6
+  /// ```
   Observable<R> fold<R>(R initialValue, Map2<R, T, R> transform) =>
       FoldObservable<T, R>(this, transform, initialValue);
 }
