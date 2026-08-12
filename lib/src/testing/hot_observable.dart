@@ -9,7 +9,7 @@ import 'test_observable.dart';
 import 'test_scheduler.dart';
 
 class HotObservable<T> extends TestObservable<T> {
-  HotObservable(TestScheduler scheduler, TestEventSequence<T> sequence)
+  new(TestScheduler scheduler, TestEventSequence<T> sequence)
     : super(scheduler, sequence) {
     final subscriptionIndex = sequence.events
         .whereType<SubscribeEvent<T>>()

@@ -3,7 +3,7 @@ import 'value.dart';
 
 /// A mutable reactive value.
 class Mutable<T> extends Value<T> {
-  Mutable(this._value);
+  new(this._value);
 
   T _value;
 

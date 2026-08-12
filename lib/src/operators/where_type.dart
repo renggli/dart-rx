@@ -18,7 +18,7 @@ extension WhereTypeOperator<T> on Observable<T> {
 }
 
 class WhereTypeObserver<T, R> implements Observable<R> {
-  WhereTypeObserver(this.delegate);
+  new(this.delegate);
 
   final Observable<T> delegate;
 
@@ -31,7 +31,7 @@ class WhereTypeObserver<T, R> implements Observable<R> {
 }
 
 class WhereTypeSubscriber<T, R> extends Subscriber<T> {
-  WhereTypeSubscriber(Observer<R> super.observer);
+  new(Observer<R> super.observer);
 
   @override
   void onNext(T value) {

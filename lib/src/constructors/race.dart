@@ -25,7 +25,7 @@ Observable<T> race<T>(Iterable<Observable<T>> sources) {
 }
 
 class RaceObservable<T> implements Observable<T> {
-  RaceObservable(this.observables);
+  new(this.observables);
 
   final List<Observable<T>> observables;
 
@@ -35,7 +35,7 @@ class RaceObservable<T> implements Observable<T> {
 }
 
 class RaceSubscriber<T> extends Subscriber<T> implements InnerEvents<T, void> {
-  RaceSubscriber(Observer<T> super.observer, List<Observable<T>> observables) {
+  new(Observer<T> super.observer, List<Observable<T>> observables) {
     for (final observable in observables) {
       final observer = InnerObserver<T, void>(this, observable, null);
       observers.add(observer);

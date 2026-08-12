@@ -7,7 +7,7 @@ import '../types.dart';
 /// A canonical redux-like store object with listeners.
 class DefaultStore<S> implements Store<S> {
   /// Constructs a default store from the provided state.
-  DefaultStore(this._state);
+  new(this._state);
 
   /// Internal field keeping a reference to the current state.
   S _state;

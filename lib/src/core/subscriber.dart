@@ -4,7 +4,7 @@ import '../disposables/composite.dart';
 import 'observer.dart';
 
 class Subscriber<T> extends CompositeDisposable implements Observer<T> {
-  Subscriber(this.destination) : super();
+  new(this.destination) : super();
 
   @protected
   final Observer<dynamic> destination;

@@ -21,7 +21,7 @@ extension TakeWhileOperator<T> on Observable<T> {
 }
 
 class TakeWhileObservable<T> implements Observable<T> {
-  TakeWhileObservable(this.delegate, this.predicate, this.inclusive);
+  new(this.delegate, this.predicate, this.inclusive);
 
   final Observable<T> delegate;
   final Predicate1<T> predicate;
@@ -36,11 +36,7 @@ class TakeWhileObservable<T> implements Observable<T> {
 }
 
 class TakeWhileSubscriber<T> extends Subscriber<T> {
-  TakeWhileSubscriber(
-    Observer<T> super.observer,
-    this.predicate,
-    this.inclusive,
-  );
+  new(Observer<T> super.observer, this.predicate, this.inclusive);
 
   final Predicate1<T> predicate;
   final bool inclusive;

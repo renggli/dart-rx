@@ -18,7 +18,7 @@ extension CountOperator<T> on Observable<T> {
 }
 
 class CountObservable<T> implements Observable<int> {
-  CountObservable(this.delegate);
+  new(this.delegate);
 
   final Observable<T> delegate;
 
@@ -31,7 +31,7 @@ class CountObservable<T> implements Observable<int> {
 }
 
 class CountSubscriber<T> extends Subscriber<T> {
-  CountSubscriber(Observer<int> super.observer);
+  new(Observer<int> super.observer);
 
   int count = 0;
 

@@ -36,7 +36,7 @@ import 'types.dart';
 /// ```
 abstract class Store<S> implements Observable<S> {
   /// Constructs a standard store from an initial state.
-  factory Store(S initialState) {
+  factory(S initialState) {
     Store<S> store = DefaultStore<S>(initialState);
     // If assertions are enabled, wrap it in a validating store.
     assert(() {

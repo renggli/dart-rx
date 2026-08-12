@@ -23,7 +23,7 @@ Observable<List<T>> forkJoin<T>(List<Observable<T>> sources) => sources.isEmpty
     : ForkJoinObservable<T>(sources);
 
 class ForkJoinObservable<T> implements Observable<List<T>> {
-  ForkJoinObservable(this.observables);
+  new(this.observables);
 
   final List<Observable<T>> observables;
 
@@ -34,10 +34,8 @@ class ForkJoinObservable<T> implements Observable<List<T>> {
 
 class ForkJoinSubscriber<T> extends Subscriber<List<T>>
     implements InnerEvents<T, int> {
-  ForkJoinSubscriber(
-    Observer<List<T>> super.observer,
-    List<Observable<T>> observables,
-  ) : hasValue = BitList.filled(observables.length, false),
+  new(Observer<List<T>> super.observer, List<Observable<T>> observables)
+    : hasValue = BitList.filled(observables.length, false),
       values = List.filled(observables.length, null, growable: false) {
     for (var i = 0; i < observables.length; i++) {
       add(InnerObserver<T, int>(this, observables[i], i));

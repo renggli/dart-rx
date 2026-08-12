@@ -44,7 +44,7 @@ extension LastOperator<T> on Observable<T> {
 }
 
 class LastObservable<T> implements Observable<T> {
-  LastObservable(this.delegate, this.predicate, this.callback);
+  new(this.delegate, this.predicate, this.callback);
 
   final Observable<T> delegate;
   final Predicate1<T> predicate;
@@ -59,7 +59,7 @@ class LastObservable<T> implements Observable<T> {
 }
 
 class LastSubscriber<T> extends Subscriber<T> {
-  LastSubscriber(Observer<T> super.observer, this.predicate, this.callback);
+  new(Observer<T> super.observer, this.predicate, this.callback);
 
   final Predicate1<T> predicate;
   final Map0<T> callback;

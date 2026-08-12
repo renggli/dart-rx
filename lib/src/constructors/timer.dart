@@ -21,7 +21,7 @@ Observable<int> timer({
 }) => TimerObservable(delay, period, scheduler ?? defaultScheduler);
 
 class TimerObservable implements Observable<int> {
-  const TimerObservable(this.delay, this.period, this.scheduler);
+  const new(this.delay, this.period, this.scheduler);
 
   final Duration delay;
   final Duration? period;

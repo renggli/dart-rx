@@ -13,7 +13,7 @@ import 'stateful.dart';
 /// composite.dispose(); // prints 'A', 'B'
 /// ```
 class CompositeDisposable extends StatefulDisposable {
-  CompositeDisposable([Iterable<Disposable>? disposables]) : super() {
+  new([Iterable<Disposable>? disposables]) : super() {
     if (disposables != null) {
       disposables.forEach(add);
     }

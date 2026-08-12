@@ -19,7 +19,7 @@ extension TakeUntilOperator<T> on Observable<T> {
 }
 
 class TakeUntilObservable<T, R> implements Observable<T> {
-  TakeUntilObservable(this.delegate, this.trigger);
+  new(this.delegate, this.trigger);
 
   final Observable<T> delegate;
   final Observable<R> trigger;
@@ -34,7 +34,7 @@ class TakeUntilObservable<T, R> implements Observable<T> {
 
 class TakeUntilSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  TakeUntilSubscriber(Observer<T> super.observer, this.trigger) {
+  new(Observer<T> super.observer, this.trigger) {
     add(InnerObserver<R, void>(this, trigger, null));
   }
 

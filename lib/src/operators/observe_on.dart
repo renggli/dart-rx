@@ -21,7 +21,7 @@ extension ObserveOnOperator<T> on Observable<T> {
 }
 
 class ObserveOnObservable<T> implements Observable<T> {
-  ObserveOnObservable(this.delegate, this.scheduler, this.delay);
+  new(this.delegate, this.scheduler, this.delay);
 
   final Observable<T> delegate;
   final Scheduler scheduler;
@@ -36,7 +36,7 @@ class ObserveOnObservable<T> implements Observable<T> {
 }
 
 class ObserveOnSubscriber<T> extends Subscriber<T> {
-  ObserveOnSubscriber(Observer<T> super.observer, this.scheduler, this.delay);
+  new(Observer<T> super.observer, this.scheduler, this.delay);
 
   final Scheduler scheduler;
   final Duration? delay;

@@ -23,7 +23,7 @@ extension RepeatOperator<T> on Observable<T> {
 }
 
 class RepeatObservable<T> implements Observable<T> {
-  RepeatObservable(this.delegate, this.count);
+  new(this.delegate, this.count);
 
   final Observable<T> delegate;
   final int count;
@@ -34,8 +34,7 @@ class RepeatObservable<T> implements Observable<T> {
 }
 
 class RepeatSubscriber<T> extends Subscriber<T> {
-  RepeatSubscriber(this.delegate, Observer<T> observer, this.count)
-    : super(observer) {
+  new(this.delegate, Observer<T> observer, this.count) : super(observer) {
     restart();
   }
 

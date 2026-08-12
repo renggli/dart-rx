@@ -34,7 +34,7 @@ extension DelayOperator<T> on Observable<T> {
 }
 
 class DelayObservable<T, R> implements Observable<T> {
-  DelayObservable(this.delegate, this.durationSelector);
+  new(this.delegate, this.durationSelector);
 
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
@@ -48,7 +48,7 @@ class DelayObservable<T, R> implements Observable<T> {
 }
 
 class DelaySubscriber<T, R> extends Subscriber<T> implements InnerEvents<R, T> {
-  DelaySubscriber(Observer<T> super.observer, this.durationSelector) {
+  new(Observer<T> super.observer, this.durationSelector) {
     add(pendingDisposables);
   }
 

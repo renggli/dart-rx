@@ -7,7 +7,7 @@ import 'scheduler.dart';
 
 /// Synchronous scheduler, that executes actions in the current thread.
 class ImmediateScheduler extends Scheduler {
-  const ImmediateScheduler();
+  const new();
 
   @override
   Disposable schedule(Callback0 callback) {

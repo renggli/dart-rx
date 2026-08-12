@@ -17,7 +17,7 @@ extension FutureToObservable<T> on Future<T> {
 }
 
 class FutureObservable<T> implements Observable<T> {
-  const FutureObservable(this.future);
+  const new(this.future);
 
   final Future<T> future;
 
@@ -27,7 +27,7 @@ class FutureObservable<T> implements Observable<T> {
 }
 
 class FutureDisposable<T> extends StatefulDisposable {
-  FutureDisposable(this.future, this.observer) {
+  new(this.future, this.observer) {
     future.then(onValue, onError: onError);
   }
 

@@ -5,7 +5,7 @@ import '../disposables/disposable.dart';
 /// Abstract scheduler implementation.
 abstract class Scheduler {
   /// Default constructor of the scheduler.
-  const Scheduler();
+  const new();
 
   /// Returns the current time.
   DateTime get now => DateTime.now();

@@ -47,7 +47,7 @@ extension MergeMapOperator<T> on Observable<T> {
 }
 
 class MergeObservable<T, R> implements Observable<R> {
-  MergeObservable(this.delegate, this.project, this.concurrent) {
+  new(this.delegate, this.project, this.concurrent) {
     RangeError.checkValidRange(1, null, concurrent, 'concurrent');
   }
 
@@ -65,7 +65,7 @@ class MergeObservable<T, R> implements Observable<R> {
 
 class MergeSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  MergeSubscriber(Observer<R> super.observer, this.project, this.concurrent);
+  new(Observer<R> super.observer, this.project, this.concurrent);
 
   final Map1<T, Observable<R>> project;
   final int concurrent;

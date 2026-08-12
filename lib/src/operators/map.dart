@@ -30,7 +30,7 @@ extension MapOperator<T> on Observable<T> {
 }
 
 class MapObservable<T, R> implements Observable<R> {
-  MapObservable(this.delegate, this.transform);
+  new(this.delegate, this.transform);
 
   final Observable<T> delegate;
   final Map1<T, R> transform;
@@ -44,7 +44,7 @@ class MapObservable<T, R> implements Observable<R> {
 }
 
 class MapSubscriber<T, R> extends Subscriber<T> {
-  MapSubscriber(Observer<R> super.observer, this.transform);
+  new(Observer<R> super.observer, this.transform);
 
   final Map1<T, R> transform;
 

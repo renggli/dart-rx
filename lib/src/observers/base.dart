@@ -4,7 +4,7 @@ import '../core/observer.dart';
 import '../shared/functions.dart';
 
 class BaseObserver<T> implements Observer<T> {
-  BaseObserver(this._next, this._error, this._complete);
+  new(this._next, this._error, this._complete);
 
   final NextCallback<T> _next;
   final ErrorCallback _error;

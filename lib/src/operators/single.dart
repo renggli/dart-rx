@@ -50,7 +50,7 @@ extension SingleOperator<T> on Observable<T> {
 }
 
 class SingleObservable<T> implements Observable<T> {
-  SingleObservable(this.delegate, this.tooFewCallback, this.tooManyCallback);
+  new(this.delegate, this.tooFewCallback, this.tooManyCallback);
 
   final Observable<T> delegate;
   final Map0<T> tooFewCallback;
@@ -69,11 +69,7 @@ class SingleObservable<T> implements Observable<T> {
 }
 
 class SingleSubscriber<T> extends Subscriber<T> {
-  SingleSubscriber(
-    Observer<T> super.destination,
-    this.tooFewCallback,
-    this.tooManyCallback,
-  );
+  new(Observer<T> super.destination, this.tooFewCallback, this.tooManyCallback);
 
   final Map0<T> tooFewCallback;
   final Map0<T> tooManyCallback;

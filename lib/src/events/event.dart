@@ -7,17 +7,16 @@ import '../core/observer.dart';
 @immutable
 sealed class Event<T> {
   /// Default constructor for events.
-  const Event();
+  const new();
 
   /// Creates a next event.
-  const factory Event.next(T value) = NextEvent<T>;
+  const factory next(T value) = NextEvent<T>;
 
   /// Creates an error event.
-  const factory Event.error(Object object, StackTrace stackTrace) =
-      ErrorEvent<T>;
+  const factory error(Object object, StackTrace stackTrace) = ErrorEvent<T>;
 
   /// Creates a completion event.
-  const factory Event.complete() = CompleteEvent<T>;
+  const factory complete() = CompleteEvent<T>;
 
   /// Maps the evaluation of the 0-argument callback to an event.
   // ignore: prefer_constructors_over_static_methods
@@ -79,7 +78,7 @@ sealed class Event<T> {
 
 /// Event with value of type `T`.
 class NextEvent<T> extends Event<T> {
-  const NextEvent(this.value);
+  const new(this.value);
 
   @override
   bool get isNext => true;
@@ -103,7 +102,7 @@ class NextEvent<T> extends Event<T> {
 
 /// Event of an error with optional stack trace of a sequence of type `T`.
 class ErrorEvent<T> extends Event<T> {
-  const ErrorEvent(this.error, this.stackTrace);
+  const new(this.error, this.stackTrace);
 
   @override
   bool get isError => true;
@@ -130,7 +129,7 @@ class ErrorEvent<T> extends Event<T> {
 
 /// Event of the completion of a sequence of type `T`.
 class CompleteEvent<T> extends Event<T> {
-  const CompleteEvent();
+  const new();
 
   @override
   bool get isComplete => true;

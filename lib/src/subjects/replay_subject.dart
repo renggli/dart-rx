@@ -15,7 +15,7 @@ import 'subject.dart';
 /// subject.subscribe(Observer(next: print)); // prints 1, 2
 /// ```
 class ReplaySubject<T> extends Subject<T> {
-  ReplaySubject({this.bufferSize}) : _buffer = QueueList(bufferSize);
+  new({this.bufferSize}) : _buffer = QueueList(bufferSize);
 
   final int? bufferSize;
   final QueueList<T> _buffer;

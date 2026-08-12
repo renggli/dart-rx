@@ -16,7 +16,7 @@ class DisposedError extends Error {
 /// An error thrown when one or more errors have occurred during the disposal of
 /// resources.
 class DisposeError extends Error {
-  DisposeError(List<Object> errors)
+  new(List<Object> errors)
     : errors = errors
           .expand((error) => error is DisposeError ? error.errors : [error])
           .toList(growable: false);

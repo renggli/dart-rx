@@ -12,7 +12,7 @@ import 'reference.dart';
 /// disposable.dispose(); // prints 'Disposed'
 /// ```
 class ActionDisposable extends ReferenceDisposable<Callback0> {
-  ActionDisposable(super.callback);
+  new(super.callback);
 
   @override
   void onDispose(Callback0 value) => value();

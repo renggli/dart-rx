@@ -11,7 +11,7 @@ import 'package:rx/store.dart';
 @immutable
 class State {
   /// Default constructor of the application state.
-  State({List<String>? items, int? index})
+  new({List<String>? items, int? index})
     : items = items ?? [],
       index = max(0, min((items ?? []).length - 1, index ?? 0));
 
@@ -30,7 +30,7 @@ class State {
 @immutable
 class Operation {
   /// Default constructor of an operation
-  Operation(
+  new(
     this.key,
     this.label,
     this.action, {

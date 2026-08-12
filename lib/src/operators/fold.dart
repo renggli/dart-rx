@@ -22,7 +22,7 @@ extension FoldOperator<T> on Observable<T> {
 }
 
 class FoldObservable<T, R> implements Observable<R> {
-  FoldObservable(this.delegate, this.transform, this.initialValue);
+  new(this.delegate, this.transform, this.initialValue);
 
   final Observable<T> delegate;
   final Map2<R, T, R> transform;
@@ -37,7 +37,7 @@ class FoldObservable<T, R> implements Observable<R> {
 }
 
 class FoldSubscriber<T, R> extends Subscriber<T> {
-  FoldSubscriber(Observer<R> super.destination, this.transform, this.seed);
+  new(Observer<R> super.destination, this.transform, this.seed);
 
   final Map2<R, T, R> transform;
   R seed;

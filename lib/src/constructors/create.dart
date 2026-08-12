@@ -26,7 +26,7 @@ Observable<T> create<T>(Callback1<Subscriber<T>> callback) =>
     CreateObservable<T>(callback);
 
 class CreateObservable<T> implements Observable<T> {
-  CreateObservable(this.callback);
+  new(this.callback);
 
   final Callback1<Subscriber<T>> callback;
 

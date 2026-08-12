@@ -21,7 +21,7 @@ extension ReduceOperator<T> on Observable<T> {
 }
 
 class ReduceObservable<T> implements Observable<T> {
-  ReduceObservable(this.delegate, this.transform);
+  new(this.delegate, this.transform);
 
   final Observable<T> delegate;
   final Map2<T, T, T> transform;
@@ -35,7 +35,7 @@ class ReduceObservable<T> implements Observable<T> {
 }
 
 class ReduceSubscriber<T> extends Subscriber<T> {
-  ReduceSubscriber(Observer<T> super.destination, this.transform);
+  new(Observer<T> super.destination, this.transform);
 
   final Map2<T, T, T> transform;
   bool hasSeed = false;

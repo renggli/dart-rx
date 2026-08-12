@@ -18,7 +18,7 @@ extension IgnoreElementsOperator<T> on Observable<T> {
 }
 
 class IgnoreElementsObservable<T> implements Observable<T> {
-  IgnoreElementsObservable(this.delegate);
+  new(this.delegate);
 
   final Observable<T> delegate;
 
@@ -31,7 +31,7 @@ class IgnoreElementsObservable<T> implements Observable<T> {
 }
 
 class IgnoreElementsSubscriber<T> extends Subscriber<T> {
-  IgnoreElementsSubscriber(Observer<T> super.observer);
+  new(Observer<T> super.observer);
 
   @override
   void onNext(T value) {}

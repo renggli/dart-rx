@@ -38,13 +38,7 @@ extension BufferOperator<T> on Observable<T> {
 }
 
 class BufferObservable<T, R> implements Observable<List<T>> {
-  BufferObservable(
-    this.delegate,
-    this.scheduler,
-    this.trigger,
-    this.maxLength,
-    this.maxAge,
-  );
+  new(this.delegate, this.scheduler, this.trigger, this.maxLength, this.maxAge);
 
   final Observable<T> delegate;
   final Scheduler scheduler;
@@ -68,7 +62,7 @@ class BufferObservable<T, R> implements Observable<List<T>> {
 
 class BufferSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  BufferSubscriber(
+  new(
     Observer<List<T>> super.observer,
     this.scheduler,
     Observable<R>? trigger,

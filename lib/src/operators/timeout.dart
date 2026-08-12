@@ -36,13 +36,7 @@ extension TimeoutOperator<T> on Observable<T> {
 }
 
 class TimeoutObservable<T> implements Observable<T> {
-  TimeoutObservable(
-    this.delegate,
-    this.first,
-    this.between,
-    this.total,
-    this.scheduler,
-  );
+  new(this.delegate, this.first, this.between, this.total, this.scheduler);
 
   final Observable<T> delegate;
   final Duration? first, between, total;
@@ -63,7 +57,7 @@ class TimeoutObservable<T> implements Observable<T> {
 }
 
 class TimeoutSubscriber<T> extends Subscriber<T> {
-  TimeoutSubscriber(
+  new(
     Observer<T> super.observer,
     this.first,
     this.between,

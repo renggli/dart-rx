@@ -11,7 +11,7 @@ import 'disposable.dart';
 /// print(stateful.isDisposed); // true
 /// ```
 class StatefulDisposable implements Disposable {
-  StatefulDisposable();
+  new();
 
   bool _isDisposed = false;
 

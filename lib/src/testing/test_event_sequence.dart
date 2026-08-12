@@ -21,11 +21,11 @@ const unsubscribeMarker = '!';
 @immutable
 class TestEventSequence<T> {
   /// Constructor of a list of events to an event sequence.
-  TestEventSequence(this.events, {Map<String, T> values = const {}})
+  new(this.events, {Map<String, T> values = const {}})
     : values = BiMap.from(values);
 
   /// Converts a string of marbles to an event sequence.
-  factory TestEventSequence.fromString(
+  factory fromString(
     String marbles, {
     Map<String, T> values = const {},
     Object error = 'Error',

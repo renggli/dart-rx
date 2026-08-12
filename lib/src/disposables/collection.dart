@@ -14,7 +14,7 @@ abstract class CollectionDisposable<T> implements Disposable {
   /// disposable.dispose();
   /// print(list); // []
   /// ```
-  factory CollectionDisposable.forList(List<T> list, T value) = _ListDisposable;
+  factory forList(List<T> list, T value) = _ListDisposable;
 
   /// Adds [value] to [set] and returns a [Disposable] that removes the value
   /// again on disposal.
@@ -28,9 +28,9 @@ abstract class CollectionDisposable<T> implements Disposable {
   /// disposable.dispose();
   /// print(set); // {}
   /// ```
-  factory CollectionDisposable.forSet(Set<T> set, T value) = _SetDisposable;
+  factory forSet(Set<T> set, T value) = _SetDisposable;
 
-  CollectionDisposable(this._value);
+  new(this._value);
 
   Iterable<T> get _collection;
 
@@ -41,7 +41,7 @@ abstract class CollectionDisposable<T> implements Disposable {
 }
 
 class _ListDisposable<T> extends CollectionDisposable<T> {
-  _ListDisposable(this._collection, super._value) {
+  new(this._collection, super._value) {
     _collection.add(_value);
   }
 
@@ -53,7 +53,7 @@ class _ListDisposable<T> extends CollectionDisposable<T> {
 }
 
 class _SetDisposable<T> extends CollectionDisposable<T> {
-  _SetDisposable(this._collection, super._value) {
+  new(this._collection, super._value) {
     _collection.add(_value);
   }
 

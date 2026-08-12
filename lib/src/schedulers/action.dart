@@ -15,7 +15,7 @@ abstract class SchedulerAction extends StatefulDisposable {
 }
 
 class SchedulerActionCallback0 extends SchedulerAction {
-  SchedulerActionCallback0(this.callback);
+  new(this.callback);
 
   final Callback0 callback;
 
@@ -24,7 +24,7 @@ class SchedulerActionCallback0 extends SchedulerAction {
 }
 
 class SchedulerActionCallback1 extends SchedulerAction {
-  SchedulerActionCallback1(this.callback);
+  new(this.callback);
 
   final Callback1<SchedulerAction> callback;
 

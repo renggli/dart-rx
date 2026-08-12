@@ -16,7 +16,7 @@ extension IsEmptyOperator<T> on Observable<T> {
 }
 
 class IsEmptyObservable<T> implements Observable<bool> {
-  IsEmptyObservable(this.delegate);
+  new(this.delegate);
 
   final Observable<T> delegate;
 
@@ -29,7 +29,7 @@ class IsEmptyObservable<T> implements Observable<bool> {
 }
 
 class IsEmptySubscriber<T> extends Subscriber<T> {
-  IsEmptySubscriber(Observer<bool> super.observer);
+  new(Observer<bool> super.observer);
 
   @override
   void onNext(T value) {

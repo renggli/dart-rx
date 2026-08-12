@@ -13,7 +13,7 @@ import '../disposables/disposed.dart';
 Observable<Never> never() => const NeverObservable();
 
 class NeverObservable implements Observable<Never> {
-  const NeverObservable();
+  const new();
 
   @override
   Disposable subscribe(Observer<Never> observer) => const DisposedDisposable();

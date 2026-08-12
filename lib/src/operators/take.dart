@@ -17,7 +17,7 @@ extension TakeOperator<T> on Observable<T> {
 }
 
 class TakeObservable<T> implements Observable<T> {
-  TakeObservable(this.delegate, this.count);
+  new(this.delegate, this.count);
 
   final Observable<T> delegate;
   final int count;
@@ -31,7 +31,7 @@ class TakeObservable<T> implements Observable<T> {
 }
 
 class TakeSubscriber<T> extends Subscriber<T> {
-  TakeSubscriber(Observer<T> super.observer, this.count);
+  new(Observer<T> super.observer, this.count);
 
   int count;
 

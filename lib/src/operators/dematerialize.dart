@@ -20,7 +20,7 @@ extension DematerializeOperator<T> on Observable<Event<T>> {
 }
 
 class DematerializeObservable<T> implements Observable<T> {
-  DematerializeObservable(this.delegate);
+  new(this.delegate);
 
   final Observable<Event<T>> delegate;
 
@@ -33,7 +33,7 @@ class DematerializeObservable<T> implements Observable<T> {
 }
 
 class DematerializeSubscriber<T> extends Subscriber<Event<T>> {
-  DematerializeSubscriber(Observer<T> super.observer);
+  new(Observer<T> super.observer);
 
   @override
   void onNext(Event<T> value) {

@@ -24,7 +24,7 @@ extension DistinctOperator<T> on Observable<T> {
 }
 
 class DistinctObservable<T> implements Observable<T> {
-  DistinctObservable(this.delegate, this.equalsFunction, this.hashCodeFunction);
+  new(this.delegate, this.equalsFunction, this.hashCodeFunction);
 
   final Observable<T> delegate;
   final Predicate2<T, T>? equalsFunction;
@@ -43,7 +43,7 @@ class DistinctObservable<T> implements Observable<T> {
 }
 
 class DistinctSubscriber<T> extends Subscriber<T> {
-  DistinctSubscriber(
+  new(
     Observer<T> super.observer,
     Predicate2<T, T>? equalsFunction,
     Map1<T, int>? hashCodeFunction,

@@ -17,7 +17,7 @@ extension PairwiseOperator<T> on Observable<T> {
 }
 
 class PairwiseObservable<T> extends Observable<(T, T)> {
-  PairwiseObservable(this.source);
+  new(this.source);
 
   final Observable<T> source;
 
@@ -30,7 +30,7 @@ class PairwiseObservable<T> extends Observable<(T, T)> {
 }
 
 class PairwiseSubscriber<T> extends Subscriber<T> {
-  PairwiseSubscriber(Observer<(T, T)> super.observer);
+  new(Observer<(T, T)> super.observer);
 
   late T _previous;
   bool _hasPrevious = false;

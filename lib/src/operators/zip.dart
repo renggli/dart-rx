@@ -22,7 +22,7 @@ extension ZipOperator<T> on Observable<Observable<T>> {
 }
 
 class ZipObservable<T> implements Observable<List<T>> {
-  ZipObservable(this.delegate);
+  new(this.delegate);
 
   final Observable<Observable<T>> delegate;
 
@@ -36,7 +36,7 @@ class ZipObservable<T> implements Observable<List<T>> {
 
 class ZipSubscriber<T> extends Subscriber<Observable<T>>
     implements InnerEvents<T, int> {
-  ZipSubscriber(Observer<List<T>> super.observer);
+  new(Observer<List<T>> super.observer);
 
   final List<Observable<T>> observables = [];
   final List<ListQueue<T>> pending = [];

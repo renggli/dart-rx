@@ -16,7 +16,7 @@ extension MaterializeOperator<T> on Observable<T> {
 }
 
 class MaterializeObservable<T> implements Observable<Event<T>> {
-  MaterializeObservable(this.delegate);
+  new(this.delegate);
 
   final Observable<T> delegate;
 
@@ -29,7 +29,7 @@ class MaterializeObservable<T> implements Observable<Event<T>> {
 }
 
 class MaterializeSubscriber<T> extends Subscriber<T> {
-  MaterializeSubscriber(Observer<Event<T>> super.destination);
+  new(Observer<Event<T>> super.destination);
 
   @override
   void onNext(T value) => doNext(Event<T>.next(value));

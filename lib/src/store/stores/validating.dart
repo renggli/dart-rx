@@ -6,7 +6,7 @@ import '../types.dart';
 /// A delegating store that validates state access and updates.
 class ValidatingStore<S> implements Store<S> {
   /// Constructs a validating store.
-  ValidatingStore(this.delegate);
+  new(this.delegate);
 
   /// The store to delegate operations to.
   final Store<S> delegate;

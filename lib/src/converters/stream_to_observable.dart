@@ -17,7 +17,7 @@ extension StreamToObservable<T> on Stream<T> {
 }
 
 class StreamObservable<T> implements Observable<T> {
-  StreamObservable(this.stream);
+  new(this.stream);
 
   final Stream<T> stream;
 

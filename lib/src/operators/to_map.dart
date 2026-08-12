@@ -72,7 +72,7 @@ extension ToMapOperator<T> on Observable<T> {
 }
 
 class ToMapObservable<T, M, K, V> implements Observable<M> {
-  ToMapObservable(
+  new(
     this.delegate,
     this.constructor,
     this.keySelector,
@@ -101,7 +101,7 @@ class ToMapObservable<T, M, K, V> implements Observable<M> {
 }
 
 class ToMapSubscriber<T, M, K, V> extends Subscriber<T> {
-  ToMapSubscriber(
+  new(
     Observer<M> super.observer,
     this.map,
     this.keySelector,

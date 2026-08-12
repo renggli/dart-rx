@@ -45,7 +45,7 @@ extension FirstOperator<T> on Observable<T> {
 }
 
 class FirstObservable<T> implements Observable<T> {
-  FirstObservable(this.delegate, this.predicate, this.callback);
+  new(this.delegate, this.predicate, this.callback);
 
   final Observable<T> delegate;
   final Predicate1<T> predicate;
@@ -60,7 +60,7 @@ class FirstObservable<T> implements Observable<T> {
 }
 
 class FirstSubscriber<T> extends Subscriber<T> {
-  FirstSubscriber(Observer<T> super.observer, this.predicate, this.callback);
+  new(Observer<T> super.observer, this.predicate, this.callback);
 
   final Predicate1<T> predicate;
   final Map0<T> callback;

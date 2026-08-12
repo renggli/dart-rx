@@ -7,7 +7,7 @@ import 'test_scheduler.dart';
 import 'test_subscriber.dart';
 
 abstract class TestObservable<T> implements Observable<T> {
-  TestObservable(this.scheduler, this.sequence);
+  new(this.scheduler, this.sequence);
 
   final TestScheduler scheduler;
 

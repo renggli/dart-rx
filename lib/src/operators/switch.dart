@@ -43,7 +43,7 @@ extension SwitchMapOperator<T> on Observable<T> {
 }
 
 class SwitchObservable<T, R> implements Observable<R> {
-  SwitchObservable(this.delegate, this.project);
+  new(this.delegate, this.project);
 
   final Observable<T> delegate;
   final Map1<T, Observable<R>> project;
@@ -58,7 +58,7 @@ class SwitchObservable<T, R> implements Observable<R> {
 
 class SwitchSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  SwitchSubscriber(Observer<R> super.observer, this.project) {
+  new(Observer<R> super.observer, this.project) {
     add(subscription);
   }
 

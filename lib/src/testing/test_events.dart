@@ -7,13 +7,13 @@ const _equality = DeepCollectionEquality();
 
 @immutable
 sealed class TestEvent<T> {
-  const TestEvent(this.index);
+  const new(this.index);
 
   final int index;
 }
 
 class WrappedEvent<T> extends TestEvent<T> {
-  const WrappedEvent(super.index, this.event);
+  const new(super.index, this.event);
 
   final Event<T> event;
 
@@ -42,7 +42,7 @@ class WrappedEvent<T> extends TestEvent<T> {
 }
 
 class SubscribeEvent<T> extends TestEvent<T> {
-  const SubscribeEvent(super.index);
+  const new(super.index);
 
   @override
   bool operator ==(Object other) =>
@@ -57,7 +57,7 @@ class SubscribeEvent<T> extends TestEvent<T> {
 }
 
 class UnsubscribeEvent<T> extends TestEvent<T> {
-  const UnsubscribeEvent(super.index);
+  const new(super.index);
 
   @override
   bool operator ==(Object other) =>

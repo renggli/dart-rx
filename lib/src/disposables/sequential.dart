@@ -14,7 +14,7 @@ import 'stateful.dart';
 /// sequential.dispose(); // prints 'B'
 /// ```
 class SequentialDisposable extends StatefulDisposable {
-  SequentialDisposable();
+  new();
 
   Disposable _current = const DisposedDisposable();
 

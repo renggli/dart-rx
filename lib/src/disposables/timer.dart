@@ -3,7 +3,7 @@ import 'dart:async';
 import 'reference.dart';
 
 class TimerDisposable extends ReferenceDisposable<Timer> {
-  TimerDisposable(super.value);
+  new(super.value);
 
   @override
   void onDispose(Timer value) => value.cancel();

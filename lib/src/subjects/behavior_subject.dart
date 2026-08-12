@@ -12,7 +12,7 @@ import 'subject.dart';
 /// subject.next(2); // prints 2
 /// ```
 class BehaviorSubject<T> extends Subject<T> {
-  BehaviorSubject(this._value);
+  new(this._value);
 
   T _value;
 

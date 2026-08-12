@@ -20,7 +20,7 @@ extension ToListOperator<T> on Observable<T> {
 }
 
 class ToListObservable<T> implements Observable<List<T>> {
-  ToListObservable(this.delegate, this.constructor);
+  new(this.delegate, this.constructor);
 
   final Observable<T> delegate;
   final Map0<List<T>> constructor;
@@ -34,7 +34,7 @@ class ToListObservable<T> implements Observable<List<T>> {
 }
 
 class ToListSubscriber<T> extends Subscriber<T> {
-  ToListSubscriber(Observer<List<T>> super.observer, this.list);
+  new(Observer<List<T>> super.observer, this.list);
 
   final List<T> list;
 

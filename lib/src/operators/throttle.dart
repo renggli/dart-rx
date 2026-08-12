@@ -51,12 +51,7 @@ extension ThrottleOperator<T> on Observable<T> {
 }
 
 class ThrottleObservable<T, R> implements Observable<T> {
-  ThrottleObservable(
-    this.delegate,
-    this.durationSelector,
-    this.leading,
-    this.trailing,
-  );
+  new(this.delegate, this.durationSelector, this.leading, this.trailing);
 
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
@@ -78,7 +73,7 @@ class ThrottleObservable<T, R> implements Observable<T> {
 
 class ThrottleSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  ThrottleSubscriber(
+  new(
     Observer<T> super.observer,
     this.durationSelector,
     this.leading,

@@ -28,7 +28,7 @@ extension DistinctUntilChangedOperator<T> on Observable<T> {
 }
 
 class DistinctUntilChangedObservable<T, K> implements Observable<T> {
-  DistinctUntilChangedObservable(this.delegate, this.key, this.compare);
+  new(this.delegate, this.key, this.compare);
 
   final Observable<T> delegate;
   final Map1<T, K> key;
@@ -47,11 +47,7 @@ class DistinctUntilChangedObservable<T, K> implements Observable<T> {
 }
 
 class DistinctUntilChangedSubscriber<T, K> extends Subscriber<T> {
-  DistinctUntilChangedSubscriber(
-    Observer<T> super.observer,
-    this.key,
-    this.compare,
-  );
+  new(Observer<T> super.observer, this.key, this.compare);
 
   final Map1<T, K> key;
   final Predicate2<K, K> compare;

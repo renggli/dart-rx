@@ -66,9 +66,8 @@ void main() {
       );
     });
     test('completes with error', () {
-      final actual = Stream.fromFuture(
-        Future<String>.error('Error'),
-      ).toObservable();
+      final actual = Stream.fromFuture(Future<String>.error('Error'))
+          .toObservable();
       actual.subscribe(
         Observer(
           next: (value) => fail('No value expected'),

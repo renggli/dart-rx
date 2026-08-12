@@ -2,7 +2,7 @@ import 'observable.dart';
 
 /// An error thrown when an error was not handled.
 class UnhandledError extends Error {
-  UnhandledError(this.error, this.stackTrace);
+  new(this.error, this.stackTrace);
 
   final Object error;
 
@@ -15,7 +15,7 @@ class UnhandledError extends Error {
 
 /// An error thrown when an [Observable] was queried with too few elements.
 class TooFewError extends Error {
-  TooFewError([this.message = 'Too few elements in sequence.']);
+  new([this.message = 'Too few elements in sequence.']);
 
   final String message;
 
@@ -25,7 +25,7 @@ class TooFewError extends Error {
 
 /// An error throw when an [Observable] was queried with too many elements.
 class TooManyError extends Error {
-  TooManyError([this.message = 'Too many elements in sequence.']);
+  new([this.message = 'Too many elements in sequence.']);
 
   final String message;
 
@@ -35,7 +35,7 @@ class TooManyError extends Error {
 
 /// An error thrown when due time elapses.
 class TimeoutError extends Error {
-  TimeoutError([this.message = 'Timeout has occurred.']);
+  new([this.message = 'Timeout has occurred.']);
 
   final String message;
 
@@ -45,7 +45,7 @@ class TimeoutError extends Error {
 
 /// An error thrown when there are circular dependencies.
 class CircularDependencyError extends Error {
-  CircularDependencyError([this.message = 'Circular dependencies detected.']);
+  new([this.message = 'Circular dependencies detected.']);
 
   final String message;
 

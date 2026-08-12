@@ -36,7 +36,7 @@ class TestScheduler extends AsyncScheduler {
   ///   });
   /// }
   /// ```
-  TestScheduler();
+  new();
 
   DateTime _currentTime = DateTime.now();
   Disposable _subscription = const DisposedDisposable();

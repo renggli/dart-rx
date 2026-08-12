@@ -34,7 +34,7 @@ extension DebounceOperator<T> on Observable<T> {
 }
 
 class DebounceObservable<T, R> implements Observable<T> {
-  DebounceObservable(this.delegate, this.durationSelector);
+  new(this.delegate, this.durationSelector);
 
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
@@ -49,7 +49,7 @@ class DebounceObservable<T, R> implements Observable<T> {
 
 class DebounceSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  DebounceSubscriber(Observer<T> super.observer, this.durationSelector);
+  new(Observer<T> super.observer, this.durationSelector);
 
   final DurationSelector<T, R> durationSelector;
 

@@ -19,7 +19,7 @@ extension TakeLastOperator<T> on Observable<T> {
 }
 
 class TakeLastObservable<T> implements Observable<T> {
-  TakeLastObservable(this.delegate, this.count);
+  new(this.delegate, this.count);
 
   final Observable<T> delegate;
   final int count;
@@ -33,8 +33,7 @@ class TakeLastObservable<T> implements Observable<T> {
 }
 
 class TakeLastSubscriber<T> extends Subscriber<T> {
-  TakeLastSubscriber(Observer<T> super.destination, this.count)
-    : buffer = QueueList(count);
+  new(Observer<T> super.destination, this.count) : buffer = QueueList(count);
 
   final int count;
   final QueueList<T> buffer;

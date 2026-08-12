@@ -18,7 +18,7 @@ Observable<Never> empty({Scheduler? scheduler}) =>
     EmptyObservable(scheduler ?? const ImmediateScheduler());
 
 class EmptyObservable implements Observable<Never> {
-  const EmptyObservable(this.scheduler);
+  const new(this.scheduler);
 
   final Scheduler scheduler;
 

@@ -10,7 +10,7 @@ import '../types.dart';
 /// A store that captures the history and enables undo and redo operations.
 class HistoryStore<S> implements Store<S> {
   /// Constructs a history store.
-  HistoryStore(this.delegate, {this.filter, this.limit});
+  new(this.delegate, {this.filter, this.limit});
 
   /// The store that manages the current state.
   final Store<S> delegate;

@@ -26,7 +26,7 @@ abstract class Observer<T> implements Disposable {
   ///   complete: () => print('Complete'),
   /// );
   /// ```
-  factory Observer({
+  factory({
     NextCallback<T>? next,
     ErrorCallback? error,
     CompleteCallback? complete,
@@ -41,7 +41,7 @@ abstract class Observer<T> implements Disposable {
   ///
   /// By default errors are passed to the [defaultErrorHandler], unless
   /// [ignoreErrors] is set to `true`.
-  factory Observer.next(NextCallback<T> next, {bool ignoreErrors = false}) =>
+  factory next(NextCallback<T> next, {bool ignoreErrors = false}) =>
       BaseObserver<T>(
         next,
         ignoreErrors ? emptyFunction2 : defaultErrorHandler,
@@ -49,21 +49,19 @@ abstract class Observer<T> implements Disposable {
       );
 
   /// An observer that is only interested in errors.
-  factory Observer.error(ErrorCallback error) =>
+  factory error(ErrorCallback error) =>
       BaseObserver<T>(emptyFunction1, error, emptyFunction0);
 
   /// An observer that is only interested in completions.
   ///
   /// By default all errors are passed to the [defaultErrorHandler], unless
   /// [ignoreErrors] is set to `true`.
-  factory Observer.complete(
-    CompleteCallback complete, {
-    bool ignoreErrors = false,
-  }) => BaseObserver<T>(
-    emptyFunction1,
-    ignoreErrors ? emptyFunction2 : defaultErrorHandler,
-    complete,
-  );
+  factory complete(CompleteCallback complete, {bool ignoreErrors = false}) =>
+      BaseObserver<T>(
+        emptyFunction1,
+        ignoreErrors ? emptyFunction2 : defaultErrorHandler,
+        complete,
+      );
 
   /// Pass a value to the observer.
   void next(T value);

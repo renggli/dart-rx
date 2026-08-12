@@ -11,7 +11,7 @@ import 'scheduler.dart';
 
 /// Abstract asynchronous scheduler that executes actions in a specific zone.
 abstract class ZoneScheduler extends Scheduler {
-  const ZoneScheduler();
+  const new();
 
   @protected
   Zone get zone;
@@ -67,7 +67,7 @@ abstract class ZoneScheduler extends Scheduler {
 
 /// Asynchronous scheduler that executes actions in [Zone.root].
 class RootZoneScheduler extends ZoneScheduler {
-  const RootZoneScheduler();
+  const new();
 
   @override
   Zone get zone => Zone.root;
@@ -75,7 +75,7 @@ class RootZoneScheduler extends ZoneScheduler {
 
 /// Asynchronous scheduler that executes actions in [Zone.current].
 class CurrentZoneScheduler extends ZoneScheduler {
-  const CurrentZoneScheduler();
+  const new();
 
   @override
   Zone get zone => Zone.current;

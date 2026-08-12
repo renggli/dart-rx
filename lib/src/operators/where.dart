@@ -22,7 +22,7 @@ extension WhereOperator<T> on Observable<T> {
 }
 
 class WhereObservable<T> implements Observable<T> {
-  WhereObservable(this.delegate, this.predicate);
+  new(this.delegate, this.predicate);
 
   final Observable<T> delegate;
   final Predicate1<T> predicate;
@@ -36,7 +36,7 @@ class WhereObservable<T> implements Observable<T> {
 }
 
 class WhereSubscriber<T> extends Subscriber<T> {
-  WhereSubscriber(Observer<T> super.observer, this.predicate);
+  new(Observer<T> super.observer, this.predicate);
 
   final Predicate1<T> predicate;
 

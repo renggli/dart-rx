@@ -15,7 +15,7 @@ Observable<T> just<T>(T value, {Scheduler? scheduler}) =>
     JustObservable<T>(value, scheduler ?? const ImmediateScheduler());
 
 class JustObservable<T> implements Observable<T> {
-  const JustObservable(this.value, this.scheduler);
+  const new(this.value, this.scheduler);
 
   final T value;
   final Scheduler scheduler;

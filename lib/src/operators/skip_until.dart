@@ -22,7 +22,7 @@ extension SkipUntilOperator<T> on Observable<T> {
 }
 
 class SkipUntilObservable<T, R> implements Observable<T> {
-  SkipUntilObservable(this.delegate, this.trigger);
+  new(this.delegate, this.trigger);
 
   final Observable<T> delegate;
   final Observable<R> trigger;
@@ -37,7 +37,7 @@ class SkipUntilObservable<T, R> implements Observable<T> {
 
 class SkipUntilSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  SkipUntilSubscriber(Observer<T> super.observer, this.trigger) {
+  new(Observer<T> super.observer, this.trigger) {
     add(InnerObserver<R, void>(this, trigger, null));
   }
 

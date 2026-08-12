@@ -19,7 +19,7 @@ extension DefaultIfEmptyOperator<T> on Observable<T> {
 }
 
 class DefaultIfEmptyObservable<T> implements Observable<T> {
-  DefaultIfEmptyObservable(this.delegate, this.defaultValue);
+  new(this.delegate, this.defaultValue);
 
   final Observable<T> delegate;
   final T defaultValue;
@@ -33,7 +33,7 @@ class DefaultIfEmptyObservable<T> implements Observable<T> {
 }
 
 class DefaultIfEmptySubscriber<T> extends Subscriber<T> {
-  DefaultIfEmptySubscriber(Observer<T> super.observer, this.defaultValue);
+  new(Observer<T> super.observer, this.defaultValue);
 
   final T defaultValue;
 

@@ -19,7 +19,7 @@ extension FinalizeOperator<T> on Observable<T> {
 }
 
 class FinalizeObservable<T> implements Observable<T> {
-  FinalizeObservable(this.delegate, this.finalize);
+  new(this.delegate, this.finalize);
 
   final Observable<T> delegate;
   final CompleteCallback finalize;

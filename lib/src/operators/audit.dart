@@ -36,7 +36,7 @@ extension AuditOperator<T> on Observable<T> {
 }
 
 class AuditObservable<T, R> implements Observable<T> {
-  AuditObservable(this.delegate, this.durationSelector);
+  new(this.delegate, this.durationSelector);
 
   final Observable<T> delegate;
   final DurationSelector<T, R> durationSelector;
@@ -51,7 +51,7 @@ class AuditObservable<T, R> implements Observable<T> {
 
 class AuditSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  AuditSubscriber(Observer<T> super.observer, this.durationSelector);
+  new(Observer<T> super.observer, this.durationSelector);
 
   final DurationSelector<T, R> durationSelector;
 

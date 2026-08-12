@@ -23,7 +23,7 @@ Observable<Never> throwError(
 );
 
 class ThrowErrorObservable implements Observable<Never> {
-  const ThrowErrorObservable(this.error, this.stackTrace, this.scheduler);
+  const new(this.error, this.stackTrace, this.scheduler);
 
   final Object error;
   final StackTrace stackTrace;

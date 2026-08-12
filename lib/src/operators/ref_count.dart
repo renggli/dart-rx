@@ -19,7 +19,7 @@ extension RefCountOperator<T> on ConnectableObservable<T> {
 }
 
 class RefCountObservable<T> implements Observable<T> {
-  RefCountObservable(this.observable);
+  new(this.observable);
 
   final ConnectableObservable<T> observable;
 

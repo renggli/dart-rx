@@ -4,7 +4,7 @@ import '../disposables/action.dart';
 import 'test_scheduler.dart';
 
 class TestSubscriber<T> extends Subscriber<T> {
-  TestSubscriber(this.scheduler, Observer<T> destination)
+  new(this.scheduler, Observer<T> destination)
     : _subscriptionTimestamp = scheduler.now,
       super(destination) {
     add(ActionDisposable(() => _unsubscriptionTimestamp = scheduler.now));

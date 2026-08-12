@@ -9,7 +9,7 @@ import 'scheduler.dart';
 
 /// Asynchronous scheduler that keeps track of pending actions manually.
 class AsyncScheduler extends Scheduler {
-  AsyncScheduler();
+  new();
 
   /// Sorted list of pending actions.
   @protected

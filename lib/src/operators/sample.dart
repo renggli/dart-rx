@@ -36,7 +36,7 @@ extension SampleOperator<T> on Observable<T> {
 }
 
 class SampleObservable<T, R> implements Observable<T> {
-  SampleObservable(this.delegate, this.trigger);
+  new(this.delegate, this.trigger);
 
   final Observable<T> delegate;
   final Observable<R> trigger;
@@ -51,7 +51,7 @@ class SampleObservable<T, R> implements Observable<T> {
 
 class SampleSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  SampleSubscriber(Observer<T> super.observer, Observable<R> trigger) {
+  new(Observer<T> super.observer, Observable<R> trigger) {
     add(InnerObserver<R, void>(this, trigger, null));
   }
 

@@ -5,7 +5,7 @@ import 'value.dart';
 
 /// A computed reactive value.
 class Computed<T> extends Value<T> {
-  Computed(this._callback) {
+  new(this._callback) {
     _update();
   }
 
@@ -55,7 +55,7 @@ class Computed<T> extends Value<T> {
 enum State { initializing, computing, computed, errored }
 
 class ComputedObserver<T> implements Observer<Never> {
-  ComputedObserver(this._computed);
+  new(this._computed);
 
   final Computed<T> _computed;
 

@@ -20,7 +20,7 @@ extension ToSetOperator<T> on Observable<T> {
 }
 
 class ToSetObservable<T> implements Observable<Set<T>> {
-  ToSetObservable(this.delegate, this.constructor);
+  new(this.delegate, this.constructor);
 
   final Observable<T> delegate;
   final Map0<Set<T>> constructor;
@@ -34,7 +34,7 @@ class ToSetObservable<T> implements Observable<Set<T>> {
 }
 
 class ToSetSubscriber<T> extends Subscriber<T> {
-  ToSetSubscriber(Observer<Set<T>> super.observer, this.set);
+  new(Observer<Set<T>> super.observer, this.set);
 
   final Set<T> set;
 

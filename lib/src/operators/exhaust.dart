@@ -50,7 +50,7 @@ extension ExhaustMapOperator<T> on Observable<T> {
 }
 
 class ExhaustObservable<T, R> implements Observable<R> {
-  ExhaustObservable(this.delegate, this.project, this.concurrent) {
+  new(this.delegate, this.project, this.concurrent) {
     RangeError.checkValidRange(1, null, concurrent, 'concurrent');
   }
 
@@ -68,7 +68,7 @@ class ExhaustObservable<T, R> implements Observable<R> {
 
 class ExhaustSubscriber<T, R> extends Subscriber<T>
     implements InnerEvents<R, void> {
-  ExhaustSubscriber(Observer<R> super.observer, this.project, this.concurrent);
+  new(Observer<R> super.observer, this.project, this.concurrent);
 
   final Map1<T, Observable<R>> project;
   final int concurrent;

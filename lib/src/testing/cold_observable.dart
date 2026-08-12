@@ -4,7 +4,7 @@ import 'test_events.dart';
 import 'test_observable.dart';
 
 class ColdObservable<T> extends TestObservable<T> {
-  ColdObservable(super.scheduler, super.sequence);
+  new(super.scheduler, super.sequence);
 
   @override
   Disposable subscribe(Observer<T> observer) {
