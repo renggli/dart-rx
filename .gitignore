@@ -1,8 +1,10 @@
-*.iml
-.DS_Store
+.agents/
+.config/
 .dart_tool/
-.pub/
+.DS_Store
 .idea/
-.vscode/
 .packages
+.pub/
+.opencode/
+*.iml
 pubspec.lock
