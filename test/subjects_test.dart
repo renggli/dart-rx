@@ -1,6 +1,7 @@
+import 'package:checks/checks.dart' hide Subject;
 import 'package:rx/core.dart';
 import 'package:rx/subjects.dart';
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
 
 import 'test_utils.dart';
 
@@ -18,9 +19,10 @@ void main() {
       );
       for (var i = 0; i < 10; i++) {
         subject.next(i);
-        expect(seenValue, i);
+        check(seenValue).equals(i);
       }
     });
+
     test('error', () {
       final subject = Subject<int>();
       final error = Error();
@@ -38,12 +40,13 @@ void main() {
         ),
       );
       subject.error(error, stackTrace);
-      expect(seenError, error);
-      expect(seenStackTrace, stackTrace);
+      check(seenError).equals(error);
+      check(seenStackTrace).equals(stackTrace);
       subject.next(42);
       subject.error(error, stackTrace);
       subject.complete();
     });
+
     test('subscribe to error', () {
       final subject = Subject<int>();
       final error = Error();
@@ -61,9 +64,10 @@ void main() {
           complete: () => fail('unexpected complete'),
         ),
       );
-      expect(seenError, error);
-      expect(seenStackTrace, stackTrace);
+      check(seenError).equals(error);
+      check(seenStackTrace).equals(stackTrace);
     });
+
     test('complete', () {
       final subject = Subject<int>();
       late final bool seenComplete;
@@ -75,11 +79,12 @@ void main() {
         ),
       );
       subject.complete();
-      expect(seenComplete, isTrue);
+      check(seenComplete).isTrue();
       subject.next(42);
       subject.error(Error(), StackTrace.current);
       subject.complete();
     });
+
     test('subscribe to complete', () {
       final subject = Subject<int>();
       late final bool seenComplete;
@@ -91,36 +96,37 @@ void main() {
           complete: () => seenComplete = true,
         ),
       );
-      expect(seenComplete, isTrue);
+      check(seenComplete).isTrue();
     });
+
     test('disposed', () {
       final subject = Subject<int>();
-      expect(subject.isDisposed, isFalse);
+      check(subject.isDisposed).isFalse();
       subject.dispose();
-      expect(subject.isDisposed, isTrue);
-      expect(() => subject.next(42), throwsDisposedError);
-      expect(
-        () => subject.error(Error(), StackTrace.empty),
-        throwsDisposedError,
-      );
-      expect(subject.complete, throwsDisposedError);
-      expect(() => subject.subscribe(Observer()), throwsDisposedError);
+      check(subject.isDisposed).isTrue();
+      check(() => subject.next(42)).throwsDisposedError();
+      check(() => subject.error(Error(), StackTrace.empty))
+          .throwsDisposedError();
+      check(subject.complete).throwsDisposedError();
+      check(() => subject.subscribe(Observer())).throwsDisposedError();
     });
+
     test('isObserved', () {
       final subject = Subject<int>();
-      expect(subject.isObserved, isFalse);
+      check(subject.isObserved).isFalse();
       final subscription = subject.subscribe(Observer());
-      expect(subject.isObserved, isTrue);
+      check(subject.isObserved).isTrue();
       subscription.dispose();
-      expect(subject.isObserved, isFalse);
+      check(subject.isObserved).isFalse();
     });
   });
+
   group('behavior', () {
     test('value', () {
       final subject = BehaviorSubject<int>(42);
-      expect(subject.value, 42);
+      check(subject.value).equals(42);
       subject.next(43);
-      expect(subject.value, 43);
+      check(subject.value).equals(43);
     });
   });
 }

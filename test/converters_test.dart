@@ -1,9 +1,10 @@
+import 'package:checks/checks.dart';
 import 'package:rx/constructors.dart';
 import 'package:rx/converters.dart';
 import 'package:rx/core.dart';
 import 'package:rx/schedulers.dart';
 import 'package:rx/testing.dart';
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
 
 import 'test_utils.dart';
 
@@ -15,33 +16,37 @@ void main() {
   group('Iterable.toObservable', () {
     test('completes on empty collection', () {
       final actual = <String>[].toObservable();
-      expect(actual, scheduler.isObservable<String>('|'));
+      check(actual).matches(scheduler.isObservable<String>('|'));
     });
+
     test('emits all the values', () {
       final actual = ['a', 'b', 'c'].toObservable();
-      expect(actual, scheduler.isObservable<String>('(abc|)'));
+      check(actual).matches(scheduler.isObservable<String>('(abc|)'));
     });
   });
+
   group('Future.toObservable', () {
     test('completes with value', () {
       final actual = Future.value('a').toObservable();
       actual.subscribe(
         Observer(
-          next: (value) => expect(value, 'a'),
+          next: (value) => check(value).equals('a'),
           error: (error, stackTrace) => fail('No error expected'),
         ),
       );
     });
+
     test('completes with error', () {
       final actual = Future<String>.error('Error').toObservable();
       actual.subscribe(
         Observer(
           next: (value) => fail('No value expected'),
-          error: (error, stackTrace) => expect(error, 'Error'),
+          error: (error, stackTrace) => check(error).equals('Error'),
         ),
       );
     });
   });
+
   group('Stream.toObservable', () {
     test('completes immediately', () {
       final actual = const Stream<String>.empty().toObservable();
@@ -50,10 +55,11 @@ void main() {
         Observer(
           next: (value) => fail('No value expected'),
           error: (error, stackTrace) => fail('No error expected'),
-          complete: () => expect(observed, <String>[]),
+          complete: () => check(observed).isEmpty(),
         ),
       );
     });
+
     test('completes with values', () {
       final actual = Stream.fromIterable(['a', 'b', 'c']).toObservable();
       final observed = <String>[];
@@ -61,77 +67,87 @@ void main() {
         Observer(
           next: observed.add,
           error: (error, stackTrace) => fail('No error expected'),
-          complete: () => expect(observed, ['a', 'b', 'c']),
+          complete: () => check(observed).deepEquals(['a', 'b', 'c']),
         ),
       );
     });
+
     test('completes with error', () {
       final actual = Stream.fromFuture(Future<String>.error('Error'))
           .toObservable();
       actual.subscribe(
         Observer(
           next: (value) => fail('No value expected'),
-          error: (error, stackTrace) => expect(error, 'Error'),
+          error: (error, stackTrace) => check(error).equals('Error'),
           complete: () => fail('No completion expected'),
         ),
       );
     });
+
     test('subscription', () {
       final actual = Stream.fromIterable([1, 2, 3]).toObservable();
       final subscription = actual.subscribe(
         Observer(
           next: (value) => fail('No value expected'),
-          error: (error, stackTrace) => expect(error, 'Error'),
+          error: (error, stackTrace) => check(error).equals('Error'),
           complete: () => fail('No completion expected'),
         ),
       );
-      expect(subscription.isDisposed, isFalse);
+      check(subscription).isDisposed.isFalse();
       subscription.dispose();
-      expect(subscription.isDisposed, isTrue);
+      check(subscription).isDisposed.isTrue();
     });
   });
+
   group('Observable.toFuture', () {
-    test('empty observable', () {
+    test('empty observable', () async {
       final actual = empty().toFuture();
-      expect(actual, throwsTooFewError);
+      await check(actual).throws<TooFewError>();
     });
-    test('single value', () {
+
+    test('single value', () async {
       final actual = just(42).toFuture();
-      expect(actual, completion(42));
+      await check(actual).completes((it) => it.equals(42));
     });
-    test('multiple values', () {
+
+    test('multiple values', () async {
       final actual = [
         1,
         2,
         3,
       ].toObservable(scheduler: const ImmediateScheduler()).toFuture();
-      expect(actual, completion(1));
+      await check(actual).completes((it) => it.equals(1));
     });
-    test('immediate error', () {
+
+    test('immediate error', () async {
       final actual = throwError(TooManyError()).toFuture();
-      expect(actual, throwsTooManyError);
+      await check(actual).throws<TooManyError>();
     });
   });
+
   group('Observable.toStream', () {
-    test('empty observable', () {
+    test('empty observable', () async {
       final actual = empty().toStream();
-      expect(actual, emitsDone);
+      await check(actual).withQueue.isDone();
     });
-    test('single value', () {
+
+    test('single value', () async {
       final actual = just(42).toStream();
-      expect(actual, emitsInOrder(<int>[42]));
+      check(await actual.toList()).deepEquals([42]);
     });
-    test('multiple values', () {
+
+    test('multiple values', () async {
       final actual = [
         1,
         2,
         3,
       ].toObservable(scheduler: const ImmediateScheduler()).toStream();
-      expect(actual, emitsInOrder(<int>[1, 2, 3]));
+      check(await actual.toList()).deepEquals([1, 2, 3]);
     });
-    test('immediate error', () {
+
+    test('immediate error', () async {
       final actual = throwError(TooManyError()).toStream();
-      expect(actual, emitsError(const TypeMatcher<TooManyError>()));
+      await check(actual).withQueue.emitsError<TooManyError>();
     });
   });
 }

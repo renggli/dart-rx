@@ -1,9 +1,12 @@
+import 'package:checks/checks.dart';
 import 'package:rx/constructors.dart';
 import 'package:rx/core.dart';
 import 'package:rx/disposables.dart';
 import 'package:rx/operators.dart';
 import 'package:rx/testing.dart';
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
+
+import 'test_utils.dart';
 
 void main() {
   final scheduler = TestScheduler();
@@ -13,7 +16,7 @@ void main() {
   group('combine latest', () {
     test('empty sequence', () {
       final actual = combineLatest<String>([]);
-      expect(actual, scheduler.isObservable<List<String>>('|'));
+      check(actual).matches(scheduler.isObservable<List<String>>('|'));
     });
     test('basic sequence', () {
       final actual = combineLatest<String>([
@@ -21,8 +24,7 @@ void main() {
         scheduler.cold('--b-d-|'),
         scheduler.cold('---c--|'),
       ]);
-      expect(
-        actual,
+      check(actual).matches(
         scheduler.isObservable(
           '---xyz|',
           values: {
@@ -39,8 +41,7 @@ void main() {
         scheduler.cold('--b-d|'),
         scheduler.cold('---c|'),
       ]);
-      expect(
-        actual,
+      check(actual).matches(
         scheduler.isObservable(
           '---xyz|',
           values: {
@@ -57,8 +58,7 @@ void main() {
         scheduler.cold('---cd---|'),
         scheduler.cold('-----ef-|'),
       ]);
-      expect(
-        actual,
+      check(actual).matches(
         scheduler.isObservable(
           '-----xy-|',
           values: {
@@ -74,7 +74,7 @@ void main() {
         scheduler.cold('--#'),
         scheduler.cold('---c--|'),
       ]);
-      expect(actual, scheduler.isObservable<List<String>>('--#'));
+      check(actual).matches(scheduler.isObservable<List<String>>('--#'));
     });
     test('late error', () {
       final actual = combineLatest<String>([
@@ -82,8 +82,7 @@ void main() {
         scheduler.cold('--b-d-|'),
         scheduler.cold('---c--|'),
       ]);
-      expect(
-        actual,
+      check(actual).matches(
         scheduler.isObservable(
           '---xy#',
           values: {
@@ -101,12 +100,14 @@ void main() {
         scheduler.cold<String>('-0-1-|'),
         scheduler.cold<String>('-w-x-y-z-|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('-a-b-c--0-1--w-x-y-z-|'));
+      check(actual)
+          .matches(scheduler.isObservable<String>('-a-b-c--0-1--w-x-y-z-|'));
     });
     test('elements from 3 same sources', () {
       final source = scheduler.cold<String>('--i-j-|');
       final actual = concat<String>([source, source, source]);
-      expect(actual, scheduler.isObservable<String>('--i-j---i-j---i-j-|'));
+      check(actual)
+          .matches(scheduler.isObservable<String>('--i-j---i-j---i-j-|'));
     });
     test('no elements from empty sources', () {
       final actual = concat<String>([
@@ -114,7 +115,7 @@ void main() {
         scheduler.cold<String>('---|'),
         scheduler.cold<String>('-|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('------|'));
+      check(actual).matches(scheduler.isObservable<String>('------|'));
     });
     test('no elements after error', () {
       final actual = concat<String>([
@@ -122,7 +123,7 @@ void main() {
         scheduler.cold<String>('-#'),
         scheduler.cold<String>('-b-|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('-a--#'));
+      check(actual).matches(scheduler.isObservable<String>('-a--#'));
     });
   });
   group('create', () {
@@ -132,7 +133,7 @@ void main() {
         subscriber.next('b');
         subscriber.complete();
       });
-      expect(actual, scheduler.isObservable<String>('(ab|)'));
+      check(actual).matches(scheduler.isObservable<String>('(ab|)'));
     });
     test('error sequence of values', () {
       final actual = create<String>((subscriber) {
@@ -140,7 +141,7 @@ void main() {
         subscriber.next('b');
         subscriber.error('Error', StackTrace.current);
       });
-      expect(actual, scheduler.isObservable<String>('(ab#)'));
+      check(actual).matches(scheduler.isObservable<String>('(ab#)'));
     });
     test('throws an error while creating values', () {
       final actual = create<String>((subscriber) {
@@ -148,7 +149,7 @@ void main() {
         subscriber.next('b');
         throw 'Error';
       });
-      expect(actual, scheduler.isObservable<String>('(ab#)'));
+      check(actual).matches(scheduler.isObservable<String>('(ab#)'));
     });
     test('calls disposable when unsubscribed', () {
       var disposed = false;
@@ -156,10 +157,10 @@ void main() {
         subscriber.next('a');
         subscriber.add(ActionDisposable(() => disposed = true));
       });
-      expect(actual, scheduler.isObservable<String>('a'));
-      expect(disposed, isFalse);
+      check(actual).matches(scheduler.isObservable<String>('a'));
+      check(disposed).isFalse();
       actual.subscribe(Observer()).dispose();
-      expect(disposed, isTrue);
+      check(disposed).isTrue();
     });
   });
   group('defer', () {
@@ -169,9 +170,9 @@ void main() {
         seen = true;
         return just('a');
       });
-      expect(seen, isFalse);
-      expect(actual, scheduler.isObservable<String>('(a|)'));
-      expect(seen, isTrue);
+      check(seen).isFalse();
+      check(actual).matches(scheduler.isObservable<String>('(a|)'));
+      check(seen).isTrue();
     });
     test('throws error', () {
       var seen = false;
@@ -179,9 +180,9 @@ void main() {
         seen = true;
         throw 'Error';
       });
-      expect(seen, isFalse);
-      expect(actual, scheduler.isObservable<String>('#'));
-      expect(seen, isTrue);
+      check(seen).isFalse();
+      check(actual).matches(scheduler.isObservable<String>('#'));
+      check(seen).isTrue();
     });
     test('does not return', () {
       var seen = false;
@@ -189,29 +190,29 @@ void main() {
         seen = true;
         return empty();
       });
-      expect(seen, isFalse);
-      expect(actual, scheduler.isObservable<String>('|'));
-      expect(seen, isTrue);
+      check(seen).isFalse();
+      check(actual).matches(scheduler.isObservable<String>('|'));
+      check(seen).isTrue();
     });
   });
   group('empty', () {
     test('immediately completes', () {
       final actual = empty();
-      expect(actual, scheduler.isObservable<Never>('|'));
+      check(actual).matches(scheduler.isObservable<Never>('|'));
     });
     test('synchronous by default', () {
       final actual = empty();
       var seen = false;
       actual.subscribe(Observer.complete(() => seen = true));
-      expect(seen, isTrue);
+      check(seen).isTrue();
     });
     test('asynchronous with custom scheduler', () {
       final actual = empty(scheduler: scheduler);
       var seen = false;
       actual.subscribe(Observer.complete(() => seen = true));
-      expect(seen, isFalse);
+      check(seen).isFalse();
       scheduler.flush();
-      expect(seen, isTrue);
+      check(seen).isTrue();
     });
   });
   group('forkJoin', () {
@@ -221,8 +222,7 @@ void main() {
         scheduler.cold('(b|)'),
         scheduler.cold('--1--2--3--|'),
       ]);
-      expect(
-        actual,
+      check(actual).matches(
         scheduler.isObservable(
           '--------------(x|)',
           values: {
@@ -233,8 +233,7 @@ void main() {
     });
     test('accepts a single observable', () {
       final actual = forkJoin<String>([scheduler.cold('---a---b---c---d---|')]);
-      expect(
-        actual,
+      check(actual).matches(
         scheduler.isObservable(
           '-------------------(x|)',
           values: {
@@ -249,10 +248,8 @@ void main() {
         scheduler.cold('(b|)'),
         scheduler.cold('------------------|'),
       ]);
-      expect(
-        actual,
-        scheduler.isObservable<List<String>>('------------------|'),
-      );
+      check(actual)
+          .matches(scheduler.isObservable<List<String>>('------------------|'));
     });
     test('completes early with empty observable', () {
       final actual = forkJoin<String>([
@@ -260,7 +257,7 @@ void main() {
         scheduler.cold('(b|)'),
         scheduler.cold('-----|'),
       ]);
-      expect(actual, scheduler.isObservable<List<String>>('-----|'));
+      check(actual).matches(scheduler.isObservable<List<String>>('-----|'));
     });
     test('completes when all sources are empty', () {
       final actual = forkJoin<String>([
@@ -268,18 +265,18 @@ void main() {
         scheduler.cold('---------------|'),
         scheduler.cold('-----|'),
       ]);
-      expect(actual, scheduler.isObservable<List<String>>('-----|'));
+      check(actual).matches(scheduler.isObservable<List<String>>('-----|'));
     });
     test('completes when one never completes, but another is empty', () {
       final actual = forkJoin<String>([
         scheduler.cold('--------------'),
         scheduler.cold('--|'),
       ]);
-      expect(actual, scheduler.isObservable<List<String>>('--|'));
+      check(actual).matches(scheduler.isObservable<List<String>>('--|'));
     });
     test('completes immediately when empty', () {
       final actual = forkJoin<String>([]);
-      expect(actual, scheduler.isObservable<List<String>>('|'));
+      check(actual).matches(scheduler.isObservable<List<String>>('|'));
     });
     test('raises error when any of the sources raises error', () {
       final actual = forkJoin<String>([
@@ -287,7 +284,7 @@ void main() {
         scheduler.cold('(b|)'),
         scheduler.cold('--1--2-#'),
       ]);
-      expect(actual, scheduler.isObservable<List<String>>('-------#'));
+      check(actual).matches(scheduler.isObservable<List<String>>('-------#'));
     });
   });
   group('iff', () {
@@ -297,7 +294,7 @@ void main() {
         scheduler.cold<String>('-t--|'),
         scheduler.cold<String>('--f-|'),
       );
-      expect(actual, scheduler.isObservable<String>('-t--|'));
+      check(actual).matches(scheduler.isObservable<String>('-t--|'));
     });
     test('false branch', () {
       final actual = iff<String>(
@@ -305,27 +302,27 @@ void main() {
         scheduler.cold('-t--|'),
         scheduler.cold('--f-|'),
       );
-      expect(actual, scheduler.isObservable<String>('--f-|'));
+      check(actual).matches(scheduler.isObservable<String>('--f-|'));
     });
   });
   group('just', () {
     test('immediately emits value', () {
       final actual = just('a');
-      expect(actual, scheduler.isObservable<String>('(a|)'));
+      check(actual).matches(scheduler.isObservable<String>('(a|)'));
     });
     test('synchronous by default', () {
       final actual = just('a');
       late String seen;
       actual.subscribe(Observer.next((value) => seen = value));
-      expect(seen, 'a');
+      check(seen).equals('a');
     });
     test('asynchronous with custom scheduler', () {
       final actual = just('a', scheduler: scheduler);
       String? seen;
       actual.subscribe(Observer.next((value) => seen = value));
-      expect(seen, isNull);
+      check(seen).isNull();
       scheduler.flush();
-      expect(seen, 'a');
+      check(seen).equals('a');
     });
   });
   group('merge', () {
@@ -334,21 +331,23 @@ void main() {
         scheduler.cold<String>('--a-----b-----c----|'),
         scheduler.cold<String>('-----x-----y-----z---|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('--a--x--b--y--c--z---|'));
+      check(actual)
+          .matches(scheduler.isObservable<String>('--a--x--b--y--c--z---|'));
     });
     test('merges two overlapping sequences', () {
       final actual = merge([
         scheduler.cold<String>('--a--b--c--|'),
         scheduler.cold<String>('--x--y--z--|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('--(ax)--(by)--(cz)--|'));
+      check(actual)
+          .matches(scheduler.isObservable<String>('--(ax)--(by)--(cz)--|'));
     });
     test('merges throwing sequence', () {
       final actual = merge([
         scheduler.cold<String>('--a--#'),
         scheduler.cold<String>('--x-----y--|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('--(ax)--#'));
+      check(actual).matches(scheduler.isObservable<String>('--(ax)--#'));
     });
     test('merges many sequences', () {
       final actual = merge([
@@ -359,7 +358,7 @@ void main() {
         scheduler.cold<String>('----e--|'),
         scheduler.cold<String>('-----f--|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('abcdef--|'));
+      check(actual).matches(scheduler.isObservable<String>('abcdef--|'));
     });
   });
   group('never', () {
@@ -372,66 +371,66 @@ void main() {
           complete: () => fail('No completion expected'),
         ),
       );
-      expect(subscription.isDisposed, isTrue);
+      check(subscription.isDisposed).isTrue();
     });
   });
   group('race', () {
     test('no observables', () {
       final actual = race<String>([]);
-      expect(actual, scheduler.isObservable<String>('|'));
+      check(actual).matches(scheduler.isObservable<String>('|'));
     });
     test('single observable', () {
       final actual = race<String>([scheduler.cold<String>('-a-b-c-|')]);
-      expect(actual, scheduler.isObservable<String>('-a-b-c-|'));
+      check(actual).matches(scheduler.isObservable<String>('-a-b-c-|'));
     });
     test('two observables and early completion', () {
       final actual = race<String>([
         scheduler.cold<String>('-|'),
         scheduler.cold<String>('--x-y-z-|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('-|'));
+      check(actual).matches(scheduler.isObservable<String>('-|'));
     });
     test('two observables and completion', () {
       final actual = race<String>([
         scheduler.cold<String>('-a-|'),
         scheduler.cold<String>('--x-y-z-|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('-a-|'));
+      check(actual).matches(scheduler.isObservable<String>('-a-|'));
     });
     test('two observables and late completion', () {
       final actual = race<String>([
         scheduler.cold<String>('-a-b-|'),
         scheduler.cold<String>('--x-y-z-|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('-a-b-|'));
+      check(actual).matches(scheduler.isObservable<String>('-a-b-|'));
     });
     test('two observables and early error', () {
       final actual = race<String>([
         scheduler.cold<String>('-#'),
         scheduler.cold<String>('--x-y-z-|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('-#'));
+      check(actual).matches(scheduler.isObservable<String>('-#'));
     });
     test('two observables and error', () {
       final actual = race<String>([
         scheduler.cold<String>('-a-#'),
         scheduler.cold<String>('--x-y-z-|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('-a-#'));
+      check(actual).matches(scheduler.isObservable<String>('-a-#'));
     });
     test('two observables and late error', () {
       final actual = race<String>([
         scheduler.cold<String>('-a-b-#'),
         scheduler.cold<String>('--x-y-z-|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('-a-b-#'));
+      check(actual).matches(scheduler.isObservable<String>('-a-b-#'));
     });
     test('two observables and early completion', () {
       final actual = race<String>([
         scheduler.cold<String>('-|'),
         scheduler.cold<String>('--x-y-z-|'),
       ]);
-      expect(actual, scheduler.isObservable<String>('-|'));
+      check(actual).matches(scheduler.isObservable<String>('-|'));
     });
     test('multiple observables and losers throw', () {
       final actual = race<String>([
@@ -439,30 +438,30 @@ void main() {
         scheduler.cold<String>('-1-2-3-4-|'),
         scheduler.cold<String>('--x-y-#'),
       ]);
-      expect(actual, scheduler.isObservable<String>('-1-2-3-4-|'));
+      check(actual).matches(scheduler.isObservable<String>('-1-2-3-4-|'));
     });
   });
   group('throwError', () {
     test('immediately throws', () {
       final error = Exception('My Error');
       final actual = throwError(error);
-      expect(actual, scheduler.isObservable<String>('#', error: error));
+      check(actual).matches(scheduler.isObservable<String>('#', error: error));
     });
     test('synchronous by default', () {
       final error = Exception('My Error');
       final actual = throwError(error);
       late Object seen;
       actual.subscribe(Observer.error((error, stackTrace) => seen = error));
-      expect(seen, error);
+      check(seen).equals(error);
     });
     test('asynchronous with custom scheduler', () {
       final error = Exception('My Error');
       final actual = throwError(error, scheduler: scheduler);
       Object? seen;
       actual.subscribe(Observer.error((error, stackTrace) => seen = error));
-      expect(seen, isNull);
+      check(seen).isNull();
       scheduler.flush();
-      expect(seen, error);
+      check(seen).equals(error);
     });
   });
   group('timer', () {
@@ -472,28 +471,31 @@ void main() {
     );
     test('no delay', () {
       final actual = timer();
-      expect(actual, scheduler.isObservable('(0|)', values: values));
+      check(actual).matches(scheduler.isObservable('(0|)', values: values));
     });
     test('delay', () {
       final actual = timer(delay: scheduler.stepDuration * 5);
-      expect(actual, scheduler.isObservable('-----(0|)', values: values));
+      check(actual)
+          .matches(scheduler.isObservable('-----(0|)', values: values));
     });
     test('periodic', () {
       final actual = timer(period: scheduler.stepDuration * 2).take(5);
-      expect(actual, scheduler.isObservable('0-1-2-3-(4|)', values: values));
+      check(actual)
+          .matches(scheduler.isObservable('0-1-2-3-(4|)', values: values));
     });
     test('delay & periodic', () {
       final actual = timer(
         delay: scheduler.stepDuration * 3,
         period: scheduler.stepDuration * 2,
       ).take(5);
-      expect(actual, scheduler.isObservable('---0-1-2-3-(4|)', values: values));
+      check(actual)
+          .matches(scheduler.isObservable('---0-1-2-3-(4|)', values: values));
     });
   });
   group('zip', () {
     test('empty sequence', () {
       final actual = zip<String>([]);
-      expect(actual, scheduler.isObservable<List<String>>('|'));
+      check(actual).matches(scheduler.isObservable<List<String>>('|'));
     });
     test('basic sequence', () {
       final actual = zip<String>([
@@ -501,8 +503,7 @@ void main() {
         scheduler.cold('--b-d-|'),
         scheduler.cold('---c--|'),
       ]);
-      expect(
-        actual,
+      check(actual).matches(
         scheduler.isObservable(
           '---x--|',
           values: {
@@ -517,8 +518,7 @@ void main() {
         scheduler.cold('--b-d-|'),
         scheduler.cold('---c-|'),
       ]);
-      expect(
-        actual,
+      check(actual).matches(
         scheduler.isObservable(
           '---x-|',
           values: {
@@ -533,8 +533,7 @@ void main() {
         scheduler.cold('---cd---|'),
         scheduler.cold('-----ef-|'),
       ]);
-      expect(
-        actual,
+      check(actual).matches(
         scheduler.isObservable(
           '-----xy-|',
           values: {
@@ -550,7 +549,7 @@ void main() {
         scheduler.cold('--#'),
         scheduler.cold('---c--|'),
       ]);
-      expect(actual, scheduler.isObservable<List<String>>('--#'));
+      check(actual).matches(scheduler.isObservable<List<String>>('--#'));
     });
     test('late error', () {
       final actual = zip<String>([
@@ -558,8 +557,7 @@ void main() {
         scheduler.cold('--b-d-|'),
         scheduler.cold('---c--|'),
       ]);
-      expect(
-        actual,
+      check(actual).matches(
         scheduler.isObservable(
           '---x-#',
           values: {

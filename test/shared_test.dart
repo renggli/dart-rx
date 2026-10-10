@@ -1,7 +1,10 @@
+import 'package:checks/checks.dart';
 import 'package:rx/core.dart';
 import 'package:rx/schedulers.dart';
 import 'package:rx/shared.dart';
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
+
+import 'test_utils.dart';
 
 void main() {
   group('error handler', () {
@@ -13,19 +16,10 @@ void main() {
       // The default error handler asynchronously triggers the error.
       replaceDefaultScheduler(const ImmediateScheduler());
       final observer = Observer<int>();
-      expect(
-        () => observer.error(error, stackTrace),
-        throwsA(
-          isA<UnhandledError>()
-              .having((value) => value.error, 'error', error)
-              .having((value) => value.stackTrace, 'stackTrace', stackTrace)
-              .having(
-                (value) => value.toString(),
-                'toString',
-                startsWith('UnhandledError'),
-              ),
-        ),
-      );
+      check(() => observer.error(error, stackTrace)).throws<UnhandledError>()
+        ..error.equals(error)
+        ..stackTrace.equals(stackTrace)
+        ..has((v) => v.toString(), 'toString').startsWith('UnhandledError');
     });
     test('custom', () {
       Object? observedError;
@@ -36,22 +30,22 @@ void main() {
         throw error;
       }
 
-      expect(defaultErrorHandler, isNot(customErrorHandler));
+      check(defaultErrorHandler).not((it) => it.equals(customErrorHandler));
       defaultErrorHandler = customErrorHandler;
-      expect(defaultErrorHandler, customErrorHandler);
+      check(defaultErrorHandler).equals(customErrorHandler);
       final observer = Observer<int>();
-      expect(() => observer.error(error, stackTrace), throwsArgumentError);
-      expect(observedError, error);
-      expect(observedStackTrace, stackTrace);
+      check(() => observer.error(error, stackTrace)).throws<ArgumentError>();
+      check(observedError).equals(error);
+      check(observedStackTrace).equals(stackTrace);
     });
     test('replace', () {
       void customErrorHandler(Object error, StackTrace stackTrace) =>
           throw error;
-      expect(defaultErrorHandler, isNot(customErrorHandler));
+      check(defaultErrorHandler).not((it) => it.equals(customErrorHandler));
       final subscription = replaceErrorHandler(customErrorHandler);
-      expect(defaultErrorHandler, customErrorHandler);
+      check(defaultErrorHandler).equals(customErrorHandler);
       subscription.dispose();
-      expect(defaultErrorHandler, isNot(customErrorHandler));
+      check(defaultErrorHandler).not((it) => it.equals(customErrorHandler));
     });
   });
 }

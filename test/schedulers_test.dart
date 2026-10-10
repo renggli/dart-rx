@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:checks/checks.dart';
 import 'package:more/collection.dart';
 import 'package:more/feature.dart';
 import 'package:rx/disposables.dart';
 import 'package:rx/schedulers.dart';
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
+
+import 'test_utils.dart';
 
 final DateTime epoch = DateTime.fromMillisecondsSinceEpoch(0);
 const Duration offset = Duration(
@@ -15,7 +18,7 @@ const Duration accuracy = Duration(
 );
 const int retry = isJavaScript || isWasm ? 10 : 3;
 
-void expectDateTime(
+void checkDateTime(
   DateTime actual,
   DateTime expected,
   Duration accuracy, {
@@ -28,17 +31,17 @@ void expectDateTime(
       '  Actual: $actual\n'
       'Expected: $accuracy\n'
       '   Delta: $duration';
-  expect(duration.compareTo(accuracy) <= 0, isTrue, reason: reason);
+  check(because: reason, duration.compareTo(accuracy) <= 0).isTrue();
 }
 
-void expectDateTimeList(
+void checkDateTimeList(
   List<DateTime> actual,
   List<DateTime> expected,
   Duration accuracy,
 ) {
-  expect(actual.length, expected.length);
+  check(actual.length).equals(expected.length);
   for (var i = 0; i < actual.length; i++) {
-    expectDateTime(
+    checkDateTime(
       actual[i],
       expected[i],
       accuracy * (i + 1),
@@ -52,58 +55,64 @@ void main() {
     tearDown(() => defaultScheduler = null);
     test('default', () {
       const scheduler = ImmediateScheduler();
-      expect(defaultScheduler, isNot(scheduler));
+      check(defaultScheduler != scheduler).isTrue();
       defaultScheduler = scheduler;
-      expect(defaultScheduler, scheduler);
+      check(defaultScheduler).equals(scheduler);
     });
     test('replace', () {
       const scheduler = ImmediateScheduler();
-      expect(defaultScheduler, isNot(scheduler));
+      check(defaultScheduler != scheduler).isTrue();
       final subscription = replaceDefaultScheduler(scheduler);
-      expect(defaultScheduler, scheduler);
+      check(defaultScheduler).equals(scheduler);
       subscription.dispose();
-      expect(defaultScheduler, isNot(scheduler));
+      check(defaultScheduler != scheduler).isTrue();
     });
   });
+
   group('immediate', () {
     const scheduler = ImmediateScheduler();
     test('now', () {
       final actual = scheduler.now;
       final expected = DateTime.now();
-      expectDateTime(actual, expected, accuracy);
+      checkDateTime(actual, expected, accuracy);
     }, retry: retry);
+
     test('schedule', () {
       var called = 0;
       final subscription = scheduler.schedule(() => ++called);
-      expect(called, 1);
-      expect(subscription.isDisposed, isTrue);
+      check(called).equals(1);
+      check(subscription).isDisposed.isTrue();
     });
+
     test('scheduleIteration', () {
       var called = 0;
       final subscription = scheduler.scheduleIteration(() => ++called < 10);
-      expect(called, 10);
-      expect(subscription.isDisposed, isTrue);
+      check(called).equals(10);
+      check(subscription).isDisposed.isTrue();
     });
+
     test('scheduleAbsolute', () {
       var actual = epoch;
       final expected = scheduler.now.add(offset);
       final subscription = scheduler.scheduleAbsolute(expected, () {
-        expect(actual, epoch);
+        check(actual).equals(epoch);
         actual = scheduler.now;
       });
-      expectDateTime(actual, expected, accuracy);
-      expect(subscription.isDisposed, isTrue);
+      checkDateTime(actual, expected, accuracy);
+      check(subscription).isDisposed.isTrue();
     }, retry: retry);
+
     test('scheduleRelative', () {
       var actual = epoch;
       final expected = scheduler.now.add(offset);
       final subscription = scheduler.scheduleRelative(offset, () {
-        expect(actual, epoch);
+        check(actual).equals(epoch);
         actual = scheduler.now;
       });
-      expectDateTime(actual, expected, accuracy);
-      expect(subscription.isDisposed, isTrue);
+      checkDateTime(actual, expected, accuracy);
+      check(subscription).isDisposed.isTrue();
     }, retry: retry);
+
     test('schedulePeriodic', () {
       final start = scheduler.now;
       final actual = [start];
@@ -113,14 +122,15 @@ void main() {
           subscription.dispose();
         }
       });
-      expect(subscription.isDisposed, isTrue);
+      check(subscription).isDisposed.isTrue();
       final expected = iterate<DateTime>(
         start,
         (prev) => prev.add(offset),
       ).take(5).toList();
-      expectDateTimeList(expected, actual, accuracy);
+      checkDateTimeList(expected, actual, accuracy);
     }, retry: retry);
   });
+
   group('async', () {
     final scheduler = AsyncScheduler();
     const tickScheduler = CurrentZoneScheduler();
@@ -135,6 +145,7 @@ void main() {
     tearDown(() => ticker.dispose());
     testScheduler(scheduler);
   });
+
   group('root zone', () => testScheduler(const RootZoneScheduler()));
   group('current zone', () => testScheduler(const CurrentZoneScheduler()));
 }
@@ -143,8 +154,9 @@ void testScheduler(Scheduler scheduler) {
   test('now', () {
     final actual = scheduler.now;
     final expected = DateTime.now();
-    expectDateTime(actual, expected, accuracy);
+    checkDateTime(actual, expected, accuracy);
   }, retry: retry);
+
   test('schedule', () async {
     final expected = DateTime.now();
     final completer = Completer<DateTime>();
@@ -152,9 +164,10 @@ void testScheduler(Scheduler scheduler) {
       completer.complete(scheduler.now);
     });
     final actual = await completer.future;
-    expectDateTime(actual, expected, accuracy);
-    expect(subscription.isDisposed, isFalse);
+    checkDateTime(actual, expected, accuracy);
+    check(subscription).isDisposed.isFalse();
   }, retry: retry);
+
   test('scheduleIteration', () async {
     var called = 0;
     final expected = DateTime.now();
@@ -168,12 +181,13 @@ void testScheduler(Scheduler scheduler) {
         return false;
       }
     });
-    expect(subscription.isDisposed, isFalse);
+    check(subscription).isDisposed.isFalse();
     final actual = await completer.future;
-    expectDateTime(actual, expected, accuracy);
-    expect(subscription.isDisposed, isTrue);
-    expect(called, 10);
+    checkDateTime(actual, expected, accuracy);
+    check(subscription).isDisposed.isTrue();
+    check(called).equals(10);
   });
+
   test('scheduleAbsolute', () async {
     final completer = Completer<DateTime>();
     final expected = scheduler.now.add(offset);
@@ -181,10 +195,11 @@ void testScheduler(Scheduler scheduler) {
       expected,
       () => completer.complete(scheduler.now),
     );
-    expect(subscription.isDisposed, isFalse);
+    check(subscription).isDisposed.isFalse();
     final actual = await completer.future;
-    expectDateTime(actual, expected, accuracy);
+    checkDateTime(actual, expected, accuracy);
   }, retry: retry);
+
   test('scheduleRelative', () async {
     final completer = Completer<DateTime>();
     final expected = scheduler.now.add(offset);
@@ -192,10 +207,11 @@ void testScheduler(Scheduler scheduler) {
       offset,
       () => completer.complete(scheduler.now),
     );
-    expect(subscription.isDisposed, isFalse);
+    check(subscription).isDisposed.isFalse();
     final actual = await completer.future;
-    expectDateTime(actual, expected, accuracy);
+    checkDateTime(actual, expected, accuracy);
   });
+
   test('schedulePeriodic', () async {
     final completer = Completer<void>();
     final start = scheduler.now;
@@ -207,13 +223,13 @@ void testScheduler(Scheduler scheduler) {
         subscription.dispose();
       }
     });
-    expect(subscription.isDisposed, isFalse);
+    check(subscription).isDisposed.isFalse();
     await completer.future;
     final expected = iterate<DateTime>(
       start,
       (prev) => prev.add(offset),
     ).take(5).toList();
-    expectDateTimeList(expected, actual, accuracy);
-    expect(subscription.isDisposed, isTrue);
+    checkDateTimeList(expected, actual, accuracy);
+    check(subscription).isDisposed.isTrue();
   }, retry: retry);
 }

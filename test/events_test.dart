@@ -1,21 +1,25 @@
+import 'package:checks/checks.dart';
 import 'package:rx/core.dart';
 import 'package:rx/events.dart';
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
+
+import 'test_utils.dart';
 
 void main() {
   group('next', () {
     const event = Event<int>.next(42);
     test('testing', () {
-      expect(event.isNext, isTrue);
-      expect(event.isError, isFalse);
-      expect(event.isComplete, isFalse);
+      check(event)
+        ..isNext.isTrue()
+        ..isError.isFalse()
+        ..isComplete.isFalse();
     });
     test('value', () {
-      expect(event.value, 42);
+      check(event).value.equals(42);
     });
     test('error', () {
-      expect(() => event.error, throwsUnimplementedError);
-      expect(() => event.stackTrace, throwsUnimplementedError);
+      check(() => event.error).throws<UnimplementedError>();
+      check(() => event.stackTrace).throws<UnimplementedError>();
     });
     test('observe', () {
       late final int seenValue;
@@ -26,35 +30,39 @@ void main() {
           complete: () => fail('unexpected complete'),
         ),
       );
-      expect(seenValue, 42);
+      check(seenValue).equals(42);
     });
     test('equals', () {
-      expect(event, const Event.next(42));
-      expect(event, isNot(const Event.next('Hello')));
+      check(event == const Event.next(42)).isTrue();
+      // ignore: unrelated_type_equality_checks
+      check(event == const Event.next('Hello')).isFalse();
     });
     test('hashCode', () {
-      expect(event.hashCode, const Event.next(42).hashCode);
-      expect(event.hashCode, isNot(const Event.next('Hello').hashCode));
+      check(event.hashCode).equals(const Event.next(42).hashCode);
+      check(event.hashCode != const Event.next('Hello').hashCode).isTrue();
     });
     test('toString', () {
-      expect(event.toString(), startsWith('NextEvent<int>'));
+      check(event.toString()).startsWith('NextEvent<int>');
     });
   });
+
   group('error', () {
     final eventError = UnimplementedError();
     final eventStackTrace = StackTrace.current;
     final event = Event<int>.error(eventError, eventStackTrace);
     test('testing', () {
-      expect(event.isNext, isFalse);
-      expect(event.isError, isTrue);
-      expect(event.isComplete, isFalse);
+      check(event)
+        ..isNext.isFalse()
+        ..isError.isTrue()
+        ..isComplete.isFalse();
     });
     test('value', () {
-      expect(() => event.value, throwsUnimplementedError);
+      check(() => event.value).throws<UnimplementedError>();
     });
     test('error', () {
-      expect(event.error, eventError);
-      expect(event.stackTrace, eventStackTrace);
+      check(event)
+        ..error.equals(eventError)
+        ..stackTrace.equals(eventStackTrace);
     });
     test('observe', () {
       late final Object seenError;
@@ -69,40 +77,42 @@ void main() {
           complete: () => fail('unexpected complete'),
         ),
       );
-      expect(seenError, eventError);
-      expect(seenStackTrace, eventStackTrace);
+      check(seenError).equals(eventError);
+      check(seenStackTrace).equals(eventStackTrace);
     });
     test('equals', () {
-      expect(event, Event<String>.error(eventError, eventStackTrace));
-      expect(event, isNot(Event<String>.error(Error(), StackTrace.empty)));
+      // ignore: unrelated_type_equality_checks
+      check(event == Event<String>.error(eventError, eventStackTrace)).isTrue();
+      // ignore: unrelated_type_equality_checks
+      check(event == Event<String>.error(Error(), StackTrace.empty)).isFalse();
     });
     test('hashCode', () {
-      expect(
-        event.hashCode,
-        Event<String>.error(eventError, eventStackTrace).hashCode,
-      );
-      expect(
-        event.hashCode,
-        isNot(Event<String>.error(Error(), StackTrace.empty).hashCode),
-      );
+      check(event.hashCode)
+          .equals(Event<String>.error(eventError, eventStackTrace).hashCode);
+      check(
+        event.hashCode !=
+            Event<String>.error(Error(), StackTrace.empty).hashCode,
+      ).isTrue();
     });
     test('toString', () {
-      expect(event.toString(), startsWith('ErrorEvent<int>'));
+      check(event.toString()).startsWith('ErrorEvent<int>');
     });
   });
+
   group('complete', () {
     const event = Event<int>.complete();
     test('testing', () {
-      expect(event.isNext, isFalse);
-      expect(event.isError, isFalse);
-      expect(event.isComplete, isTrue);
+      check(event)
+        ..isNext.isFalse()
+        ..isError.isFalse()
+        ..isComplete.isTrue();
     });
     test('value', () {
-      expect(() => event.value, throwsUnimplementedError);
+      check(() => event.value).throws<UnimplementedError>();
     });
     test('error', () {
-      expect(() => event.error, throwsUnimplementedError);
-      expect(() => event.stackTrace, throwsUnimplementedError);
+      check(() => event.error).throws<UnimplementedError>();
+      check(() => event.stackTrace).throws<UnimplementedError>();
     });
     test('observe', () {
       late final bool seenComplete;
@@ -113,50 +123,51 @@ void main() {
           complete: () => seenComplete = true,
         ),
       );
-      expect(seenComplete, isTrue);
+      check(seenComplete).isTrue();
     });
     test('equals', () {
-      expect(event, const Event<int>.complete());
-      expect(event, isNot(const Event<int>.next(42)));
+      check(event == const Event<int>.complete()).isTrue();
+      check(event == const Event<int>.next(42)).isFalse();
     });
     test('hashCode', () {
-      expect(event.hashCode, const Event<int>.complete().hashCode);
-      expect(event.hashCode, isNot(const Event.next(42).hashCode));
+      check(event.hashCode).equals(const Event<int>.complete().hashCode);
+      check(event.hashCode != const Event.next(42).hashCode).isTrue();
     });
     test('toString', () {
-      expect(event.toString(), startsWith('CompleteEvent<int>'));
+      check(event.toString()).startsWith('CompleteEvent<int>');
     });
   });
+
   group('mapping', () {
     final error = Error();
     group('map0', () {
       test('next', () {
         final nextEvent = Event.map0(() => 42);
-        expect(nextEvent.value, 42);
+        check(nextEvent).value.equals(42);
       });
       test('error', () {
         final errorEvent = Event.map0(() => throw error);
-        expect(errorEvent.error, error);
+        check(errorEvent).error.equals(error);
       });
     });
     group('map1', () {
       test('next', () {
         final nextEvent = Event.map1((int x) => x, 42);
-        expect(nextEvent.value, 42);
+        check(nextEvent).value.equals(42);
       });
       test('error', () {
         final errorEvent = Event.map1((int x) => throw error, 42);
-        expect(errorEvent.error, error);
+        check(errorEvent).error.equals(error);
       });
     });
     group('map2', () {
       test('next', () {
         final nextEvent = Event.map2((int x, int y) => x + y, 40, 2);
-        expect(nextEvent.value, 42);
+        check(nextEvent).value.equals(42);
       });
       test('error', () {
         final errorEvent = Event.map2((int x, int y) => throw error, 40, 2);
-        expect(errorEvent.error, error);
+        check(errorEvent).error.equals(error);
       });
     });
   });

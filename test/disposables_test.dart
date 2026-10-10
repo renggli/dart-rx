@@ -1,5 +1,6 @@
+import 'package:checks/checks.dart';
 import 'package:rx/disposables.dart';
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
 
 import 'test_utils.dart';
 
@@ -9,145 +10,146 @@ void main() {
       final disposable = ActionDisposable(() {});
       DisposedError.checkNotDisposed(disposable);
       disposable.dispose();
-      expect(
-        () => DisposedError.checkNotDisposed(disposable),
-        throwsA(
-          isA<DisposedError>().having(
-            (value) => value.toString(),
-            'toString',
-            'DisposedError',
-          ),
-        ),
-      );
+      check(() => DisposedError.checkNotDisposed(disposable))
+          .throws<DisposedError>()
+          .has((v) => v.toString(), 'toString')
+          .equals('DisposedError');
     });
+
     test('DisposeError', () {
       DisposeError.checkList([]);
       final innerErrors = [ArgumentError(), UnimplementedError()];
       final errors = [Error(), DisposeError(innerErrors)];
-      expect(
-        () => DisposeError.checkList(errors),
-        throwsA(
-          isA<DisposeError>()
-              .having((value) => value.errors, 'errors', [
-                errors[0],
-                ...innerErrors,
-              ])
-              .having(
-                (value) => value.toString(),
-                'toString()',
-                startsWith('DisposeError'),
-              ),
-        ),
-      );
+      check(() => DisposeError.checkList(errors)).throws<DisposeError>()
+        ..has(
+          (value) => value.errors,
+          'errors',
+        ).deepEquals([errors[0], ...innerErrors])
+        ..has((v) => v.toString(), 'toString').startsWith('DisposeError');
     });
   });
+
   group('action', () {
     test('creation', () {
       var disposeCount = 0;
       final disposable = ActionDisposable(() => disposeCount++);
-      expect(disposable.isDisposed, isFalse);
-      expect(disposeCount, 0);
+      check(disposable).isDisposed.isFalse();
+      check(disposeCount).equals(0);
     });
+
     test('dispose', () {
       var disposeCount = 0;
       final disposable = ActionDisposable(() => disposeCount++);
       disposable.dispose();
-      expect(disposable.isDisposed, isTrue);
-      expect(disposeCount, 1);
+      check(disposable).isDisposed.isTrue();
+      check(disposeCount).equals(1);
     });
+
     test('double dispose', () {
       var disposeCount = 0;
       final disposable = ActionDisposable(() => disposeCount++);
       disposable.dispose();
       disposable.dispose();
-      expect(disposable.isDisposed, isTrue);
-      expect(disposeCount, 1);
+      check(disposable).isDisposed.isTrue();
+      check(disposeCount).equals(1);
     });
+
     test('throwing disposable', () {
       final disposable = ActionDisposable(() => throw 'Error');
-      expect(disposable.dispose, throwsDisposeError);
-      expect(disposable.isDisposed, isTrue);
+      check(disposable.dispose).throwsDisposeError();
+      check(disposable).isDisposed.isTrue();
     });
+
     test('double dispose throwing disposable', () {
       final disposable = ActionDisposable(() => throw 'Error');
-      expect(disposable.dispose, throwsDisposeError);
+      check(disposable.dispose).throwsDisposeError();
       disposable.dispose();
     });
   });
+
   group('collection', () {
     test('list', () {
       final collection = <int>[];
       final disposable = CollectionDisposable.forList(collection, 42);
-      expect(collection, [42]);
-      expect(disposable.isDisposed, isFalse);
+      check(collection).deepEquals([42]);
+      check(disposable).isDisposed.isFalse();
       disposable.dispose();
-      expect(collection, isEmpty);
-      expect(disposable.isDisposed, isTrue);
+      check(collection).isEmpty();
+      check(disposable).isDisposed.isTrue();
     });
+
     test('set', () {
       final collection = <int>{};
       final disposable = CollectionDisposable.forSet(collection, 42);
-      expect(collection, {42});
-      expect(disposable.isDisposed, isFalse);
+      check(collection).deepEquals({42});
+      check(disposable).isDisposed.isFalse();
       disposable.dispose();
-      expect(collection, isEmpty);
-      expect(disposable.isDisposed, isTrue);
+      check(collection).isEmpty();
+      check(disposable).isDisposed.isTrue();
     });
   });
+
   group('composite', () {
     test('creation', () {
       final outer = CompositeDisposable();
-      expect(outer.disposables, isEmpty);
-      expect(outer.isDisposed, isFalse);
+      check(outer.disposables).isEmpty();
+      check(outer).isDisposed.isFalse();
     });
+
     test('initialization', () {
       final inner = StatefulDisposable();
       final outer = CompositeDisposable([inner, const DisposedDisposable()]);
-      expect(outer.disposables, [inner]);
-      expect(outer.isDisposed, isFalse);
-      expect(inner.isDisposed, isFalse);
+      check(outer.disposables).deepEquals([inner]);
+      check(outer).isDisposed.isFalse();
+      check(inner).isDisposed.isFalse();
     });
+
     test('add', () {
       final outer = CompositeDisposable();
       final inner = StatefulDisposable();
       outer.add(inner);
-      expect(outer.disposables, [inner]);
-      expect(outer.isDisposed, isFalse);
-      expect(inner.isDisposed, isFalse);
+      check(outer.disposables).deepEquals([inner]);
+      check(outer).isDisposed.isFalse();
+      check(inner).isDisposed.isFalse();
     });
+
     test('add inner disposed', () {
       final outer = CompositeDisposable();
       const inner = DisposedDisposable();
       outer.add(inner);
-      expect(outer.disposables, isEmpty);
-      expect(outer.isDisposed, isFalse);
+      check(outer.disposables).isEmpty();
+      check(outer).isDisposed.isFalse();
     });
+
     test('add outer disposed', () {
       final outer = CompositeDisposable();
       final inner = StatefulDisposable();
       outer.dispose();
       outer.add(inner);
-      expect(outer.disposables, isEmpty);
-      expect(outer.isDisposed, isTrue);
-      expect(inner.isDisposed, isTrue);
+      check(outer.disposables).isEmpty();
+      check(outer).isDisposed.isTrue();
+      check(inner).isDisposed.isTrue();
     });
+
     test('remove inner disposable', () {
       final outer = CompositeDisposable();
       final inner = StatefulDisposable();
       outer.add(inner);
       outer.remove(inner);
-      expect(outer.disposables, isEmpty);
-      expect(outer.isDisposed, isFalse);
-      expect(inner.isDisposed, isTrue);
+      check(outer.disposables).isEmpty();
+      check(outer).isDisposed.isFalse();
+      check(inner).isDisposed.isTrue();
     });
+
     test('remove unknown inner disposable', () {
       final outer = CompositeDisposable();
       final inner = StatefulDisposable();
       outer.remove(inner);
-      expect(outer.disposables, isEmpty);
-      expect(outer.isDisposed, isFalse);
-      expect(inner.isDisposed, isFalse);
+      check(outer.disposables).isEmpty();
+      check(outer).isDisposed.isFalse();
+      check(inner).isDisposed.isFalse();
     });
+
     test('dispose multiple', () {
       final outer = CompositeDisposable();
       final inner1 = StatefulDisposable();
@@ -155,104 +157,117 @@ void main() {
       outer.add(inner1);
       outer.add(inner2);
       outer.dispose();
-      expect(outer.disposables, isEmpty);
-      expect(outer.isDisposed, isTrue);
-      expect(inner1.isDisposed, isTrue);
-      expect(inner2.isDisposed, isTrue);
+      check(outer.disposables).isEmpty();
+      check(outer).isDisposed.isTrue();
+      check(inner1).isDisposed.isTrue();
+      check(inner2).isDisposed.isTrue();
     });
+
     test('dispose throwing', () {
       final outer = CompositeDisposable();
       final inner1 = ActionDisposable(() => throw 'Error');
       final inner2 = StatefulDisposable();
       outer.add(inner1);
       outer.add(inner2);
-      expect(outer.dispose, throwsDisposeError);
-      expect(outer.disposables, isEmpty);
-      expect(outer.isDisposed, isTrue);
-      expect(inner1.isDisposed, isTrue);
-      expect(inner2.isDisposed, isTrue);
+      check(outer.dispose).throwsDisposeError();
+      check(outer.disposables).isEmpty();
+      check(outer).isDisposed.isTrue();
+      check(inner1).isDisposed.isTrue();
+      check(inner2).isDisposed.isTrue();
     });
   });
+
   group('disposed', () {
     const disposable = DisposedDisposable();
     test('creation', () {
-      expect(disposable.isDisposed, isTrue);
+      check(disposable).isDisposed.isTrue();
     });
+
     test('dispose', () {
       disposable.dispose();
-      expect(disposable.isDisposed, isTrue);
+      check(disposable).isDisposed.isTrue();
     });
+
     test('double dispose', () {
       disposable.dispose();
       disposable.dispose();
-      expect(disposable.isDisposed, isTrue);
+      check(disposable).isDisposed.isTrue();
     });
   });
+
   group('sequential', () {
     test('creation', () {
       final outer = SequentialDisposable();
-      expect(outer.current.isDisposed, isTrue);
-      expect(outer.isDisposed, isFalse);
+      check(outer.current).isDisposed.isTrue();
+      check(outer).isDisposed.isFalse();
     });
+
     test('set', () {
       final outer = SequentialDisposable();
       final inner = StatefulDisposable();
       outer.current = inner;
-      expect(outer.current, inner);
-      expect(outer.current.isDisposed, isFalse);
-      expect(outer.isDisposed, isFalse);
+      check(outer.current).equals(inner);
+      check(outer.current).isDisposed.isFalse();
+      check(outer).isDisposed.isFalse();
     });
+
     test('set inner disposed', () {
       final outer = SequentialDisposable();
       const inner = DisposedDisposable();
       outer.current = inner;
-      expect(outer.current, inner);
-      expect(outer.current.isDisposed, isTrue);
-      expect(outer.isDisposed, isFalse);
+      check(outer.current).equals(inner);
+      check(outer.current).isDisposed.isTrue();
+      check(outer).isDisposed.isFalse();
     });
+
     test('set outer disposed', () {
       final outer = SequentialDisposable();
       final inner = StatefulDisposable();
       outer.dispose();
       outer.current = inner;
-      expect(outer.current.isDisposed, isTrue);
-      expect(outer.isDisposed, isTrue);
+      check(outer.current).isDisposed.isTrue();
+      check(outer).isDisposed.isTrue();
     });
+
     test('set replace', () {
       final outer = SequentialDisposable();
       final inner1 = StatefulDisposable();
       final inner2 = StatefulDisposable();
       outer.current = inner1;
       outer.current = inner2;
-      expect(inner1.isDisposed, isTrue);
-      expect(inner2.isDisposed, isFalse);
-      expect(outer.current, inner2);
-      expect(outer.isDisposed, isFalse);
+      check(inner1).isDisposed.isTrue();
+      check(inner2).isDisposed.isFalse();
+      check(outer.current).equals(inner2);
+      check(outer).isDisposed.isFalse();
     });
+
     test('dispose throwing', () {
       final outer = SequentialDisposable();
       final inner = ActionDisposable(() => throw 'Error');
       outer.current = inner;
-      expect(outer.dispose, throwsDisposeError);
-      expect(outer.isDisposed, isTrue);
-      expect(inner.isDisposed, isTrue);
+      check(outer.dispose).throwsDisposeError();
+      check(outer).isDisposed.isTrue();
+      check(inner).isDisposed.isTrue();
     });
   });
+
   group('stateful', () {
     test('creation', () {
       final disposable = StatefulDisposable();
-      expect(disposable.isDisposed, isFalse);
+      check(disposable).isDisposed.isFalse();
     });
+
     test('dispose', () {
       final disposable = StatefulDisposable();
       disposable.dispose();
-      expect(disposable.isDisposed, isTrue);
+      check(disposable).isDisposed.isTrue();
     });
+
     test('double dispose', () {
       final disposable = StatefulDisposable();
       disposable.dispose();
       disposable.dispose();
-      expect(disposable.isDisposed, isTrue);
+      check(disposable).isDisposed.isTrue();
     });
   });
 }
