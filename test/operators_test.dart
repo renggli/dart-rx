@@ -1870,15 +1870,15 @@ void main() {
     test('simple connect', () {
       final input = Subject<int>();
       final multicast = input.multicast();
-      check(multicast.isConnected).isFalse();
+      check(multicast.isConnected).isFalse;
       final actual = multicast.refCount();
-      check(multicast.isConnected).isFalse();
+      check(multicast.isConnected).isFalse;
       input.next(1);
       // Add a first listener.
       final firstCollector = <int>[];
       final firstListener = actual.subscribe(Observer.next(firstCollector.add));
-      check(multicast.isConnected).isTrue();
-      check(firstCollector).isEmpty();
+      check(multicast.isConnected).isTrue;
+      check(firstCollector).isEmpty;
       input.next(2);
       check(firstCollector).deepEquals([2]);
       // Add a second listener.
@@ -1886,20 +1886,20 @@ void main() {
       final secondListener = actual.subscribe(
         Observer.next(secondCollector.add),
       );
-      check(multicast.isConnected).isTrue();
-      check(secondCollector).isEmpty();
+      check(multicast.isConnected).isTrue;
+      check(secondCollector).isEmpty;
       input.next(3);
       check(firstCollector).deepEquals([2, 3]);
       check(secondCollector).deepEquals([3]);
       // Remove the first listener.
       firstListener.dispose();
-      check(multicast.isConnected).isTrue();
+      check(multicast.isConnected).isTrue;
       input.next(4);
       check(firstCollector).deepEquals([2, 3]);
       check(secondCollector).deepEquals([3, 4]);
       // Remove the second listener.
       secondListener.dispose();
-      check(multicast.isConnected).isFalse();
+      check(multicast.isConnected).isFalse;
       input.next(5);
       check(firstCollector).deepEquals([2, 3]);
       check(secondCollector).deepEquals([3, 4]);
@@ -2517,7 +2517,7 @@ void main() {
       final input = scheduler.cold<String>('--|');
       final actual = input.tap(Observer.complete(() => completed = true));
       check(actual).matches(scheduler.isObservable<String>('--|'));
-      check(completed).isTrue();
+      check(completed).isTrue;
     });
     test('only error', () {
       late Object seen;

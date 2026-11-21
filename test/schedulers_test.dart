@@ -31,7 +31,7 @@ void checkDateTime(
       '  Actual: $actual\n'
       'Expected: $accuracy\n'
       '   Delta: $duration';
-  check(because: reason, duration.compareTo(accuracy) <= 0).isTrue();
+  check(because: reason, duration.compareTo(accuracy) <= 0).isTrue;
 }
 
 void checkDateTimeList(
@@ -55,17 +55,17 @@ void main() {
     tearDown(() => defaultScheduler = null);
     test('default', () {
       const scheduler = ImmediateScheduler();
-      check(defaultScheduler != scheduler).isTrue();
+      check(defaultScheduler != scheduler).isTrue;
       defaultScheduler = scheduler;
       check(defaultScheduler).equals(scheduler);
     });
     test('replace', () {
       const scheduler = ImmediateScheduler();
-      check(defaultScheduler != scheduler).isTrue();
+      check(defaultScheduler != scheduler).isTrue;
       final subscription = replaceDefaultScheduler(scheduler);
       check(defaultScheduler).equals(scheduler);
       subscription.dispose();
-      check(defaultScheduler != scheduler).isTrue();
+      check(defaultScheduler != scheduler).isTrue;
     });
   });
 
@@ -81,14 +81,14 @@ void main() {
       var called = 0;
       final subscription = scheduler.schedule(() => ++called);
       check(called).equals(1);
-      check(subscription).isDisposed.isTrue();
+      check(subscription).isDisposed.isTrue;
     });
 
     test('scheduleIteration', () {
       var called = 0;
       final subscription = scheduler.scheduleIteration(() => ++called < 10);
       check(called).equals(10);
-      check(subscription).isDisposed.isTrue();
+      check(subscription).isDisposed.isTrue;
     });
 
     test('scheduleAbsolute', () {
@@ -99,7 +99,7 @@ void main() {
         actual = scheduler.now;
       });
       checkDateTime(actual, expected, accuracy);
-      check(subscription).isDisposed.isTrue();
+      check(subscription).isDisposed.isTrue;
     }, retry: retry);
 
     test('scheduleRelative', () {
@@ -110,7 +110,7 @@ void main() {
         actual = scheduler.now;
       });
       checkDateTime(actual, expected, accuracy);
-      check(subscription).isDisposed.isTrue();
+      check(subscription).isDisposed.isTrue;
     }, retry: retry);
 
     test('schedulePeriodic', () {
@@ -122,7 +122,7 @@ void main() {
           subscription.dispose();
         }
       });
-      check(subscription).isDisposed.isTrue();
+      check(subscription).isDisposed.isTrue;
       final expected = iterate<DateTime>(
         start,
         (prev) => prev.add(offset),
@@ -165,7 +165,7 @@ void testScheduler(Scheduler scheduler) {
     });
     final actual = await completer.future;
     checkDateTime(actual, expected, accuracy);
-    check(subscription).isDisposed.isFalse();
+    check(subscription).isDisposed.isFalse;
   }, retry: retry);
 
   test('scheduleIteration', () async {
@@ -181,10 +181,10 @@ void testScheduler(Scheduler scheduler) {
         return false;
       }
     });
-    check(subscription).isDisposed.isFalse();
+    check(subscription).isDisposed.isFalse;
     final actual = await completer.future;
     checkDateTime(actual, expected, accuracy);
-    check(subscription).isDisposed.isTrue();
+    check(subscription).isDisposed.isTrue;
     check(called).equals(10);
   });
 
@@ -195,7 +195,7 @@ void testScheduler(Scheduler scheduler) {
       expected,
       () => completer.complete(scheduler.now),
     );
-    check(subscription).isDisposed.isFalse();
+    check(subscription).isDisposed.isFalse;
     final actual = await completer.future;
     checkDateTime(actual, expected, accuracy);
   }, retry: retry);
@@ -207,7 +207,7 @@ void testScheduler(Scheduler scheduler) {
       offset,
       () => completer.complete(scheduler.now),
     );
-    check(subscription).isDisposed.isFalse();
+    check(subscription).isDisposed.isFalse;
     final actual = await completer.future;
     checkDateTime(actual, expected, accuracy);
   });
@@ -223,13 +223,13 @@ void testScheduler(Scheduler scheduler) {
         subscription.dispose();
       }
     });
-    check(subscription).isDisposed.isFalse();
+    check(subscription).isDisposed.isFalse;
     await completer.future;
     final expected = iterate<DateTime>(
       start,
       (prev) => prev.add(offset),
     ).take(5).toList();
     checkDateTimeList(expected, actual, accuracy);
-    check(subscription).isDisposed.isTrue();
+    check(subscription).isDisposed.isTrue;
   }, retry: retry);
 }

@@ -53,7 +53,7 @@ void sharedStoreTests(Store<T> Function<T>(T initialValue) createStore) {
     final listener = store.subscribe(Observer.next(log.add));
     listener.dispose();
     store.update((state) => state + 1);
-    check(log).isEmpty();
+    check(log).isEmpty;
   });
 
   test('multiple observer', () {
@@ -105,30 +105,30 @@ void main() {
 
     test('initial state', () {
       final store = createStore<int>(0);
-      check(store.canUndo).isFalse();
-      check(store.past).isEmpty();
-      check(store.canRedo).isFalse();
-      check(store.future).isEmpty();
+      check(store.canUndo).isFalse;
+      check(store.past).isEmpty;
+      check(store.canRedo).isFalse;
+      check(store.future).isEmpty;
     });
 
     test('after update', () {
       final store = createStore<int>(0);
       store.update((state) => state + 1);
-      check(store.canUndo).isTrue();
+      check(store.canUndo).isTrue;
       check(store.past).deepEquals([0]);
       check(store.state).equals(1);
-      check(store.canRedo).isFalse();
-      check(store.future).isEmpty();
+      check(store.canRedo).isFalse;
+      check(store.future).isEmpty;
     });
 
     test('after undo', () {
       final store = createStore<int>(0);
       store.update((state) => state + 1);
       store.undo();
-      check(store.canUndo).isFalse();
-      check(store.past).isEmpty();
+      check(store.canUndo).isFalse;
+      check(store.past).isEmpty;
       check(store.state).equals(0);
-      check(store.canRedo).isTrue();
+      check(store.canRedo).isTrue;
       check(store.future).deepEquals([1]);
     });
 
@@ -137,11 +137,11 @@ void main() {
       store.update((state) => state + 1);
       store.undo();
       store.redo();
-      check(store.canUndo).isTrue();
+      check(store.canUndo).isTrue;
       check(store.past).deepEquals([0]);
       check(store.state).equals(1);
-      check(store.canRedo).isFalse();
-      check(store.future).isEmpty();
+      check(store.canRedo).isFalse;
+      check(store.future).isEmpty;
     });
 
     test('limit history', () {
@@ -161,7 +161,7 @@ void main() {
         completer.future,
         onValue: (state, value) => [...state, 'Value: $value'],
       );
-      check(store.state).isEmpty();
+      check(store.state).isEmpty;
       completer.complete(42);
       await future;
       check(store.state).deepEquals(['Value: 42']);
@@ -174,7 +174,7 @@ void main() {
         completer.future,
         onError: (state, error, stackTrace) => [...state, 'Error: $error'],
       );
-      check(store.state).isEmpty();
+      check(store.state).isEmpty;
       completer.completeError(StateError('Hello'), StackTrace.empty);
       await future;
       check(store.state).deepEquals(['Error: Bad state: Hello']);
@@ -189,7 +189,7 @@ void main() {
         subject,
         next: (state, value) => [...state, 'Value: $value'],
       );
-      check(store.state).isEmpty();
+      check(store.state).isEmpty;
       subject
         ..next(42)
         ..next(43)
@@ -204,7 +204,7 @@ void main() {
         subject,
         error: (state, error, stackTrace) => [...state, 'Error: $error'],
       );
-      check(store.state).isEmpty();
+      check(store.state).isEmpty;
       subject
         ..next(42)
         ..error(StateError('Hello'), StackTrace.empty);
@@ -218,7 +218,7 @@ void main() {
         subject,
         complete: (state) => [...state, 'Complete'],
       );
-      check(store.state).isEmpty();
+      check(store.state).isEmpty;
       subject
         ..next(42)
         ..complete();
@@ -234,7 +234,7 @@ void main() {
         controller.stream,
         onData: (state, value) => [...state, 'Value: $value'],
       );
-      check(store.state).isEmpty();
+      check(store.state).isEmpty;
       controller
         ..add(42)
         ..add(43)
@@ -250,7 +250,7 @@ void main() {
         controller.stream,
         onError: (state, error, stackTrace) => [...state, 'Error: $error'],
       );
-      check(store.state).isEmpty();
+      check(store.state).isEmpty;
       controller
         ..add(42)
         ..addError(StateError('Hello'), StackTrace.empty)
@@ -266,7 +266,7 @@ void main() {
         controller.stream,
         onDone: (state) => [...state, 'Complete'],
       );
-      check(store.state).isEmpty();
+      check(store.state).isEmpty;
       controller
         ..add(42)
         ..close();

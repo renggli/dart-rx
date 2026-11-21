@@ -30,7 +30,7 @@ void main() {
         values: values,
         error: error,
       );
-      check(result == other).isTrue();
+      check(result == other).isTrue;
       check(result.hashCode).equals(other.hashCode);
     }
 
@@ -105,8 +105,8 @@ void main() {
       check(subscribe.toString()).startsWith('SubscribeEvent<String>');
       check(unsubscribe.toString()).startsWith('UnsubscribeEvent<String>');
       // ignore: unrelated_type_equality_checks
-      check(subscribe == unsubscribe).isFalse();
-      check(subscribe.hashCode != unsubscribe.hashCode).isTrue();
+      check(subscribe == unsubscribe).isFalse;
+      check(subscribe.hashCode != unsubscribe.hashCode).isTrue;
     });
 
     test('invalid subscription and unsubscription', () {
@@ -163,13 +163,13 @@ void main() {
         check(scheduler.observables).deepEquals([observable]);
         check(scheduler.subscribers).length.equals(2);
         final firstSubscriber = scheduler.subscribers.first;
-        check(firstSubscriber.isDisposed).isTrue();
+        check(firstSubscriber.isDisposed).isTrue;
         check(firstSubscriber.subscriptionTimestamp)
             .equals(scheduler.now.subtract(scheduler.stepDuration * 6));
         check(firstSubscriber.unsubscriptionTimestamp)
             .equals(scheduler.now.subtract(scheduler.stepDuration * 3));
         final secondSubscriber = scheduler.subscribers.last;
-        check(secondSubscriber.isDisposed).isTrue();
+        check(secondSubscriber.isDisposed).isTrue;
         check(secondSubscriber.subscriptionTimestamp)
             .equals(scheduler.now.subtract(scheduler.stepDuration * 3));
         check(secondSubscriber.unsubscriptionTimestamp).equals(scheduler.now);
@@ -198,12 +198,12 @@ void main() {
         check(scheduler.observables).deepEquals([observable]);
         check(scheduler.subscribers).length.equals(2);
         final firstSubscriber = scheduler.subscribers.first;
-        check(firstSubscriber.isDisposed).isTrue();
+        check(firstSubscriber.isDisposed).isTrue;
         check(firstSubscriber.subscriptionTimestamp)
             .equals(scheduler.now.subtract(scheduler.stepDuration * 3));
         check(firstSubscriber.unsubscriptionTimestamp).equals(scheduler.now);
         final secondSubscriber = scheduler.subscribers.last;
-        check(secondSubscriber.isDisposed).isTrue();
+        check(secondSubscriber.isDisposed).isTrue;
         check(secondSubscriber.subscriptionTimestamp).equals(scheduler.now);
         check(secondSubscriber.unsubscriptionTimestamp).equals(scheduler.now);
       });
@@ -218,7 +218,7 @@ void main() {
         check(scheduler.observables).deepEquals([observable]);
         check(scheduler.subscribers).length.equals(1);
         final subscriber = scheduler.subscribers.first;
-        check(subscriber.isDisposed).isFalse();
+        check(subscriber.isDisposed).isFalse;
         check(subscriber.subscriptionTimestamp)
             .equals(scheduler.now.subtract(scheduler.stepDuration));
         check(() => subscriber.unsubscriptionTimestamp).throws<StateError>();

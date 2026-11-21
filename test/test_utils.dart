@@ -46,21 +46,21 @@ extension MatcherChecks<T> on Subject<T> {
 
 /// Extension on [Subject] of [Disposable].
 extension DisposableChecks on Subject<Disposable> {
-  Subject<bool> get isDisposed => has((d) => d.isDisposed, 'isDisposed');
+  Subject<bool> get isDisposed => has('isDisposed', (d) => d.isDisposed);
 }
 
 /// Extension on [Subject] of [Event].
 extension EventChecks<T> on Subject<Event<T>> {
-  Subject<bool> get isNext => has((e) => e.isNext, 'isNext');
-  Subject<bool> get isError => has((e) => e.isError, 'isError');
-  Subject<bool> get isComplete => has((e) => e.isComplete, 'isComplete');
-  Subject<T> get value => has((e) => e.value, 'value');
-  Subject<Object> get error => has((e) => e.error, 'error');
-  Subject<StackTrace> get stackTrace => has((e) => e.stackTrace, 'stackTrace');
+  Subject<bool> get isNext => has('isNext', (e) => e.isNext);
+  Subject<bool> get isError => has('isError', (e) => e.isError);
+  Subject<bool> get isComplete => has('isComplete', (e) => e.isComplete);
+  Subject<T> get value => has('value', (e) => e.value);
+  Subject<Object> get error => has('error', (e) => e.error);
+  Subject<StackTrace> get stackTrace => has('stackTrace', (e) => e.stackTrace);
 }
 
 /// Extension on [Subject] of [UnhandledError].
 extension UnhandledErrorChecks on Subject<UnhandledError> {
-  Subject<Object> get error => has((u) => u.error, 'error');
-  Subject<StackTrace> get stackTrace => has((u) => u.stackTrace, 'stackTrace');
+  Subject<Object> get error => has('error', (u) => u.error);
+  Subject<StackTrace> get stackTrace => has('stackTrace', (u) => u.stackTrace);
 }

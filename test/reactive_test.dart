@@ -11,7 +11,7 @@ void main() {
       final ref = Mutable(0);
       final log = <int>[];
       ref.subscribe(Observer.next(log.add));
-      check(log).isEmpty();
+      check(log).isEmpty;
       ref.value = 1;
       check(log).deepEquals([1]);
     });
@@ -20,7 +20,7 @@ void main() {
       final ref = Mutable(0);
       final log = <int>[];
       ref.subscribe(Observer.next(log.add));
-      check(log).isEmpty();
+      check(log).isEmpty;
       ref.value = 1;
       ref.value = 2;
       ref.value = 3;
@@ -31,9 +31,9 @@ void main() {
       final ref = Mutable(0);
       final log = <int>[];
       ref.subscribe(Observer.next(log.add));
-      check(log).isEmpty();
+      check(log).isEmpty;
       ref.value = 0;
-      check(log).isEmpty();
+      check(log).isEmpty;
     });
   });
 
@@ -100,7 +100,7 @@ void main() {
             .throws<UnhandledError>()
             .error
             .isA<StateError>()
-            .has((err) => err.message, 'message')
+            .has('message', (err) => err.message)
             .equals('Failure');
       });
 
@@ -117,7 +117,7 @@ void main() {
             .throws<UnhandledError>()
             .error
             .isA<StateError>()
-            .has((err) => err.message, 'message')
+            .has('message', (err) => err.message)
             .equals('Failure');
         dep.value = 2;
         check(ref.value).equals(2);

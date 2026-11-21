@@ -158,9 +158,9 @@ void main() {
         subscriber.add(ActionDisposable(() => disposed = true));
       });
       check(actual).matches(scheduler.isObservable<String>('a'));
-      check(disposed).isFalse();
+      check(disposed).isFalse;
       actual.subscribe(Observer()).dispose();
-      check(disposed).isTrue();
+      check(disposed).isTrue;
     });
   });
   group('defer', () {
@@ -170,9 +170,9 @@ void main() {
         seen = true;
         return just('a');
       });
-      check(seen).isFalse();
+      check(seen).isFalse;
       check(actual).matches(scheduler.isObservable<String>('(a|)'));
-      check(seen).isTrue();
+      check(seen).isTrue;
     });
     test('throws error', () {
       var seen = false;
@@ -180,9 +180,9 @@ void main() {
         seen = true;
         throw 'Error';
       });
-      check(seen).isFalse();
+      check(seen).isFalse;
       check(actual).matches(scheduler.isObservable<String>('#'));
-      check(seen).isTrue();
+      check(seen).isTrue;
     });
     test('does not return', () {
       var seen = false;
@@ -190,9 +190,9 @@ void main() {
         seen = true;
         return empty();
       });
-      check(seen).isFalse();
+      check(seen).isFalse;
       check(actual).matches(scheduler.isObservable<String>('|'));
-      check(seen).isTrue();
+      check(seen).isTrue;
     });
   });
   group('empty', () {
@@ -204,15 +204,15 @@ void main() {
       final actual = empty();
       var seen = false;
       actual.subscribe(Observer.complete(() => seen = true));
-      check(seen).isTrue();
+      check(seen).isTrue;
     });
     test('asynchronous with custom scheduler', () {
       final actual = empty(scheduler: scheduler);
       var seen = false;
       actual.subscribe(Observer.complete(() => seen = true));
-      check(seen).isFalse();
+      check(seen).isFalse;
       scheduler.flush();
-      check(seen).isTrue();
+      check(seen).isTrue;
     });
   });
   group('forkJoin', () {
@@ -320,7 +320,7 @@ void main() {
       final actual = just('a', scheduler: scheduler);
       String? seen;
       actual.subscribe(Observer.next((value) => seen = value));
-      check(seen).isNull();
+      check(seen).isNull;
       scheduler.flush();
       check(seen).equals('a');
     });
@@ -371,7 +371,7 @@ void main() {
           complete: () => fail('No completion expected'),
         ),
       );
-      check(subscription.isDisposed).isTrue();
+      check(subscription.isDisposed).isTrue;
     });
   });
   group('race', () {
@@ -459,7 +459,7 @@ void main() {
       final actual = throwError(error, scheduler: scheduler);
       Object? seen;
       actual.subscribe(Observer.error((error, stackTrace) => seen = error));
-      check(seen).isNull();
+      check(seen).isNull;
       scheduler.flush();
       check(seen).equals(error);
     });

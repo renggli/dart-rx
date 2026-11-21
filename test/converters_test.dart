@@ -55,7 +55,7 @@ void main() {
         Observer(
           next: (value) => fail('No value expected'),
           error: (error, stackTrace) => fail('No error expected'),
-          complete: () => check(observed).isEmpty(),
+          complete: () => check(observed).isEmpty,
         ),
       );
     });
@@ -93,9 +93,9 @@ void main() {
           complete: () => fail('No completion expected'),
         ),
       );
-      check(subscription).isDisposed.isFalse();
+      check(subscription).isDisposed.isFalse;
       subscription.dispose();
-      check(subscription).isDisposed.isTrue();
+      check(subscription).isDisposed.isTrue;
     });
   });
 
@@ -107,7 +107,7 @@ void main() {
 
     test('single value', () async {
       final actual = just(42).toFuture();
-      await check(actual).completes((it) => it.equals(42));
+      await check(actual).completes(.it()..equals(42));
     });
 
     test('multiple values', () async {
@@ -116,7 +116,7 @@ void main() {
         2,
         3,
       ].toObservable(scheduler: const ImmediateScheduler()).toFuture();
-      await check(actual).completes((it) => it.equals(1));
+      await check(actual).completes(.it()..equals(1));
     });
 
     test('immediate error', () async {
@@ -128,7 +128,7 @@ void main() {
   group('Observable.toStream', () {
     test('empty observable', () async {
       final actual = empty().toStream();
-      await check(actual).withQueue.isDone();
+      await check(actual).withQueue.isDone;
     });
 
     test('single value', () async {

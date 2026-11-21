@@ -79,7 +79,7 @@ void main() {
         ),
       );
       subject.complete();
-      check(seenComplete).isTrue();
+      check(seenComplete).isTrue;
       subject.next(42);
       subject.error(Error(), StackTrace.current);
       subject.complete();
@@ -96,14 +96,14 @@ void main() {
           complete: () => seenComplete = true,
         ),
       );
-      check(seenComplete).isTrue();
+      check(seenComplete).isTrue;
     });
 
     test('disposed', () {
       final subject = Subject<int>();
-      check(subject.isDisposed).isFalse();
+      check(subject.isDisposed).isFalse;
       subject.dispose();
-      check(subject.isDisposed).isTrue();
+      check(subject.isDisposed).isTrue;
       check(() => subject.next(42)).throwsDisposedError();
       check(() => subject.error(Error(), StackTrace.empty))
           .throwsDisposedError();
@@ -113,11 +113,11 @@ void main() {
 
     test('isObserved', () {
       final subject = Subject<int>();
-      check(subject.isObserved).isFalse();
+      check(subject.isObserved).isFalse;
       final subscription = subject.subscribe(Observer());
-      check(subject.isObserved).isTrue();
+      check(subject.isObserved).isTrue;
       subscription.dispose();
-      check(subject.isObserved).isFalse();
+      check(subject.isObserved).isFalse;
     });
   });
 

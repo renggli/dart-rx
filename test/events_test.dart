@@ -10,9 +10,9 @@ void main() {
     const event = Event<int>.next(42);
     test('testing', () {
       check(event)
-        ..isNext.isTrue()
-        ..isError.isFalse()
-        ..isComplete.isFalse();
+        ..isNext.isTrue
+        ..isError.isFalse
+        ..isComplete.isFalse;
     });
     test('value', () {
       check(event).value.equals(42);
@@ -33,13 +33,13 @@ void main() {
       check(seenValue).equals(42);
     });
     test('equals', () {
-      check(event == const Event.next(42)).isTrue();
+      check(event == const Event.next(42)).isTrue;
       // ignore: unrelated_type_equality_checks
-      check(event == const Event.next('Hello')).isFalse();
+      check(event == const Event.next('Hello')).isFalse;
     });
     test('hashCode', () {
       check(event.hashCode).equals(const Event.next(42).hashCode);
-      check(event.hashCode != const Event.next('Hello').hashCode).isTrue();
+      check(event.hashCode != const Event.next('Hello').hashCode).isTrue;
     });
     test('toString', () {
       check(event.toString()).startsWith('NextEvent<int>');
@@ -52,9 +52,9 @@ void main() {
     final event = Event<int>.error(eventError, eventStackTrace);
     test('testing', () {
       check(event)
-        ..isNext.isFalse()
-        ..isError.isTrue()
-        ..isComplete.isFalse();
+        ..isNext.isFalse
+        ..isError.isTrue
+        ..isComplete.isFalse;
     });
     test('value', () {
       check(() => event.value).throws<UnimplementedError>();
@@ -82,9 +82,9 @@ void main() {
     });
     test('equals', () {
       // ignore: unrelated_type_equality_checks
-      check(event == Event<String>.error(eventError, eventStackTrace)).isTrue();
+      check(event == Event<String>.error(eventError, eventStackTrace)).isTrue;
       // ignore: unrelated_type_equality_checks
-      check(event == Event<String>.error(Error(), StackTrace.empty)).isFalse();
+      check(event == Event<String>.error(Error(), StackTrace.empty)).isFalse;
     });
     test('hashCode', () {
       check(event.hashCode)
@@ -92,7 +92,7 @@ void main() {
       check(
         event.hashCode !=
             Event<String>.error(Error(), StackTrace.empty).hashCode,
-      ).isTrue();
+      ).isTrue;
     });
     test('toString', () {
       check(event.toString()).startsWith('ErrorEvent<int>');
@@ -103,9 +103,9 @@ void main() {
     const event = Event<int>.complete();
     test('testing', () {
       check(event)
-        ..isNext.isFalse()
-        ..isError.isFalse()
-        ..isComplete.isTrue();
+        ..isNext.isFalse
+        ..isError.isFalse
+        ..isComplete.isTrue;
     });
     test('value', () {
       check(() => event.value).throws<UnimplementedError>();
@@ -123,15 +123,15 @@ void main() {
           complete: () => seenComplete = true,
         ),
       );
-      check(seenComplete).isTrue();
+      check(seenComplete).isTrue;
     });
     test('equals', () {
-      check(event == const Event<int>.complete()).isTrue();
-      check(event == const Event<int>.next(42)).isFalse();
+      check(event == const Event<int>.complete()).isTrue;
+      check(event == const Event<int>.next(42)).isFalse;
     });
     test('hashCode', () {
       check(event.hashCode).equals(const Event<int>.complete().hashCode);
-      check(event.hashCode != const Event.next(42).hashCode).isTrue();
+      check(event.hashCode != const Event.next(42).hashCode).isTrue;
     });
     test('toString', () {
       check(event.toString()).startsWith('CompleteEvent<int>');

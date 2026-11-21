@@ -19,7 +19,7 @@ void main() {
       check(() => observer.error(error, stackTrace)).throws<UnhandledError>()
         ..error.equals(error)
         ..stackTrace.equals(stackTrace)
-        ..has((v) => v.toString(), 'toString').startsWith('UnhandledError');
+        ..has('toString', (v) => v.toString()).startsWith('UnhandledError');
     });
     test('custom', () {
       Object? observedError;
@@ -30,7 +30,7 @@ void main() {
         throw error;
       }
 
-      check(defaultErrorHandler).not((it) => it.equals(customErrorHandler));
+      check(defaultErrorHandler).not(.it()..equals(customErrorHandler));
       defaultErrorHandler = customErrorHandler;
       check(defaultErrorHandler).equals(customErrorHandler);
       final observer = Observer<int>();
@@ -41,11 +41,11 @@ void main() {
     test('replace', () {
       void customErrorHandler(Object error, StackTrace stackTrace) =>
           throw error;
-      check(defaultErrorHandler).not((it) => it.equals(customErrorHandler));
+      check(defaultErrorHandler).not(.it()..equals(customErrorHandler));
       final subscription = replaceErrorHandler(customErrorHandler);
       check(defaultErrorHandler).equals(customErrorHandler);
       subscription.dispose();
-      check(defaultErrorHandler).not((it) => it.equals(customErrorHandler));
+      check(defaultErrorHandler).not(.it()..equals(customErrorHandler));
     });
   });
 }
